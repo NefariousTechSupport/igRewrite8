@@ -73,7 +73,7 @@ namespace igCauldron3
 			string val = raw!.ToString()!;
 			ImGui.PushID(id);
 			ImGui.PushItemWidth(128);
-			bool changed = ImGui.InputText(string.Empty, ref val, 128);
+			bool changed = ImGui.InputText(string.Empty, ref val, 128, ImGuiInputTextFlags.NoUndoRedo);
 			ImGui.PopItemWidth();
 			ImGui.PopID();
 			if(changed)
@@ -217,7 +217,7 @@ namespace igCauldron3
 		{
 			ImGui.PushID(id);
 			string value = (string)raw ?? string.Empty;
-			bool changed = ImGui.InputText(string.Empty, ref value, ushort.MaxValue);
+			bool changed = ImGui.InputText(string.Empty, ref value, ushort.MaxValue, ImGuiInputTextFlags.NoUndoRedo);
 			ImGui.PopID();
 			if(changed) cb.Invoke(value);
 		}

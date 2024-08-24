@@ -7,6 +7,7 @@ using OpenTK.Graphics.OpenGL4;
 using igLibrary.Core;
 using igCauldron3.Graphics;
 using igLibrary.Graphics;
+using igCauldron3.Transactions;
 
 namespace igCauldron3
 {
@@ -54,6 +55,21 @@ namespace igCauldron3
 				ImGui.SaveIniSettingsToDisk(CauldronConfig.ImGuiConfigFilePath);
 			}
 
+			if(KeyboardState.IsKeyPressed(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Z)
+			   && (KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.LeftControl)
+			   ||  KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.RightControl))
+			  )
+			{
+				if(   KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.LeftShift)
+				   || KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.RightShift))
+				{
+					TransactionManager.Redo();
+				}
+				else
+				{
+					TransactionManager.Undo();
+				}
+			}
 
 			base.OnUpdateFrame(e);
 		}

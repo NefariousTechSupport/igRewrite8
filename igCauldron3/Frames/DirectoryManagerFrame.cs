@@ -1,4 +1,5 @@
 using System.Reflection;
+using igCauldron3.Transactions;
 using igLibrary.Core;
 using ImGuiNET;
 
@@ -134,9 +135,10 @@ namespace igCauldron3
 			{
 				if(meta._metaFields[i] is igStaticMetaField) continue;
 				if(meta._metaFields[i] is igPropertyFieldMetaField) continue;
+
 				FieldInfo fi = meta._metaFields[i]._fieldHandle!;
 				object? raw = fi.GetValue(obj);
-				FieldRenderer.RenderField(id, meta._metaFields[i]._fieldName!, raw, meta._metaFields[i], (value) => fi.SetValue(obj, value));
+				FieldRenderer.RenderField(id, meta._metaFields[i]._fieldName!, raw, meta._metaFields[i], (value) => SetFieldAction.Create(obj, fi, value));
 			}
 		}
 	}
