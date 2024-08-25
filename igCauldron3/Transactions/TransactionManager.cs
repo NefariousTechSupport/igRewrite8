@@ -6,7 +6,7 @@ namespace igCauldron3.Transactions
 	public static class TransactionManager
 	{
 		private static List<Transaction> _transactions = new List<Transaction>();
-		private static int _index;
+		private static int _index = -1;
 
 
 		/// <summary>
@@ -32,10 +32,11 @@ namespace igCauldron3.Transactions
 		/// </summary>
 		public static void Undo()
 		{
-			if(_index == 0) return;
+			if(_index < 0) return;
+
+			_transactions[_index].Revert();
 
 			_index--;
-			_transactions[_index].Revert();
 		}
 
 
@@ -44,9 +45,10 @@ namespace igCauldron3.Transactions
 		/// </summary>
 		public static void Redo()
 		{
-			if(_index == _transactions.Count - 1) return;
+			if(_index >= _transactions.Count - 1) return;
 
 			_index++;
+
 			_transactions[_index].Commit();
 		}
 	} 
