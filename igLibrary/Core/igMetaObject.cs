@@ -366,5 +366,36 @@ namespace igLibrary.Core
 				_children[i].ApplyFixup(index, field);
 			}
 		}
+
+
+		/// <summary>
+		/// Constructs an instance of a given type
+		/// </summary>
+		/// <typeparam name="T">The igObject to construct</typeparam>
+		/// <param name="memPool">The memory pool to create it in</param>
+		public static T ConstructInstance<T>(igMemoryPool? memPool = null) where T : igObject
+		{
+			igMetaObject? meta = igArkCore.GetObjectMeta(typeof(T).Name);
+			if(meta == null)
+			{
+				throw new TypeLoadException($"Failed to load type {typeof(T).Name} while constructing");
+			}
+
+			if(memPool == null)
+			{
+				memPool = igMemoryContext.Default;
+			}
+
+			return (T)meta.ConstructInstance(memPool);
+		}
+
+
+		/// <summary>
+		/// Constructs an instance of a given type
+		/// </summary>
+		/// <typeparam name="T">The igObject to construct</typeparam>
+		/// <param name="memPool">The name of the memory pool to use</param>
+		/// <returns></returns>
+		public static T ConstructInstance<T>(string memPool) where T : igObject => ConstructInstance<T>(igMemoryContext.Singleton.GetMemoryPoolByName(memPool)!);
 	}
 }
