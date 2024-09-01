@@ -21,6 +21,13 @@ namespace igLibrary.Core
 			_alias = name._name;
 			_namespace = name._ns;
 		}
+		public igHandle(string name)
+		{
+			string[] parts = name.Split('.');
+			if(parts.Length != 2) throw new FormatException("Handle string must be namespace.name");
+			_alias = new igName(parts[1]);
+			_namespace = new igName(parts[0]);
+		}
 		public T? GetObjectAlias<T>() where T : igObject
 		{
 			if(_object != null) return (T)_object;
