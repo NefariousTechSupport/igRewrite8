@@ -7,8 +7,8 @@ namespace igLibrary.Gfx
 		public igMemory<byte> _data;
 		public igIndexFormat _format;
 		public IG_GFX_DRAW _primitiveType;
-		public igVertexFormat _vertexFormat;
-		public igIndexArray2 _indexArray;
+		public igVertexFormat? _vertexFormat;
+		public igIndexArray2? _indexArray;
 		public int _indexArrayRefCount;
 	}
 }
