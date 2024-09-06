@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\igLibrary\igLibrary.csproj" />
+    <ProjectReference Include="..\igLibrary.AssetConverters\igLibrary.AssetConverters.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

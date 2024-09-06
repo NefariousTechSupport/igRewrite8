@@ -5,6 +5,10 @@ using igRewrite8.Devel;
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
+using igLibrary.AssetConversion.Models;
+using igLibrary.Render;
+
+using Assimp;
 
 namespace igRewrite8
 {
@@ -19,23 +23,46 @@ namespace igRewrite8
 
 			igArkCore.ReadFromFile(igArkCore.EGame.EV_SkylandersSuperchargers);
 
+			igAlchemyCore.InitializeSystems();
+
+			igMemoryContext.Singleton.GetHashCode();
+
 			igFileContext.Singleton.Initialize(args[0]);
+			igFileContext.Singleton.InitializeUpdate(args[1]);
+			igRegistry.GetRegistry()._platform = IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS3;
+			igRegistry.GetRegistry()._gfxPlatform = igLibrary.Gfx.IG_GFX_PLATFORM.IG_GFX_PLATFORM_PS3;
 
-			TypeBuilder item = igArkCore.GetNewTypeBuilder("notAComponent");
-			TypeBuilder list = igArkCore.GetNewTypeBuilder("notAComponentList");
-			TypeBuilder reference = igArkCore.GetNewTypeBuilder("notAnEntity");
+			AssimpContext ctx = new AssimpContext();
+			Scene scene = ctx.ImportFile("C:/Users/neffy/Documents/MikuSupercharger.obj", PostProcessSteps.Triangulate | PostProcessSteps.GenerateSmoothNormals | PostProcessSteps.CalculateTangentSpace);
 
-			item.SetParent(typeof(igObject));
-			list.SetParent(typeof(igTObjectList<>).MakeGenericType(item));
+			SuperChargersModel sscmodel = new SuperChargersModel();
+			igModelInfo modelInfo = sscmodel.ImportModel(scene);
 
-			item.DefineField("_refToEntity", reference, FieldAttributes.Public);
-			reference.DefineField("_refToItem", list, FieldAttributes.Public);
+			igMetaObject materialHandleTableInfoMeta = igArkCore.GetObjectMeta("CMaterialHandleTableInfo")!;
+			igObject materialHandleTableInfo = materialHandleTableInfoMeta.ConstructInstance(igMemoryContext.Default);
+			igStringInsensitiveStringHashTable hashTable = igMetaObject.ConstructInstance<igStringInsensitiveStringHashTable>();
+			materialHandleTableInfoMeta.GetFieldByName("_handleTable")!._fieldHandle!.SetValue(materialHandleTableInfo, hashTable);
 
-			//item has to come before list
+			igObjectDirectory dir = new igObjectDirectory("models/jasleencube.igz");
+			dir._useNameList = true;
+			dir._nameList = igMetaObject.ConstructInstance<igNameList>();
+			dir._type = igObjectDirectory.FileType.kIGZ;
+			dir.AddObject(modelInfo, default, new igName("igSceneInfo0"));
+			dir.AddObject(materialHandleTableInfo, default, new igName("CMaterialHandleTableInfo"));
+			FileStream dst = File.Create("modeltest.igz");
+			dir.WriteFile(dst, IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS3);
+			dst.Seek(0, SeekOrigin.Begin);
 
-			reference.CreateType();
-			item.CreateType();
-			list.CreateType();
+			igFilePath fp = new igFilePath();
+			fp.Set(dir._path);
+			igArchive arc = igFileContext.Singleton._archiveManager._patchArchives[0];
+			arc.GetAddFile(fp._path);
+			arc.Compress(fp._path, dst);
+			dst.Close();
+			if(arc._path[1] == ':') arc.Save(arc._path);
+			else arc.Save($"{igFileContext.Singleton._root}/archives/{Path.GetFileName(arc._path)}");
+
+			dst.Close();
 
 			return;
 		}
