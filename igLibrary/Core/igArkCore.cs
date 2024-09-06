@@ -16,6 +16,7 @@ namespace igLibrary.Core
 		/// </summary>
 		public enum EGame
 		{
+			EV_None = -1,
 			EV_ZooCube,
 			EV_HootersRoadTrip,
 			EV_DogsPlayingPoker,
@@ -117,6 +118,11 @@ namespace igLibrary.Core
 		public static IEnumerable<igMetaFieldPlatformInfo> MetaFieldPlatformInfos => _metaFieldPlatformInfos.Values;
 
 
+		/// <summary>
+		/// The currently loaded game
+		/// </summary>
+		public static EGame Game => _game;
+
 
 
 
@@ -196,12 +202,16 @@ namespace igLibrary.Core
 		private static Dictionary<string, Type>? _dynamicStructs = new Dictionary<string, Type>();
 
 
-
-
 		/// <summary>
 		/// Types to generate dynamic classes for
 		/// </summary>
 		public static List<igBaseMeta> _pendingTypes = new List<igBaseMeta>();
+
+
+		/// <summary>
+		/// The currently loade game
+		/// </summary>
+		private static EGame _game;
 
 
 
@@ -270,6 +280,7 @@ namespace igLibrary.Core
 			_metaEnums.Clear();
 			_metaFieldPlatformInfos.Clear();
 			_compoundFieldInfos.Clear();
+			_game = EGame.EV_None;
 		}
 
 
@@ -278,6 +289,8 @@ namespace igLibrary.Core
 		/// </summary>
 		public static void ReadFromFile(EGame game)
 		{
+			_game = game;
+
 			System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
 
 			stopwatch.Start();
