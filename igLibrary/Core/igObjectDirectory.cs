@@ -55,6 +55,8 @@ namespace igLibrary.Core
 		}
 		public void WriteFile(Stream dst, IG_CORE_PLATFORM platform = IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEFAULT)
 		{
+			_objectList.internalMemoryPool = igMemoryContext.Default;
+			if(_nameList != null) _nameList.internalMemoryPool = igMemoryContext.Default;
 			if(_type == FileType.kIGZ)
 			{
 				igIGZSaver saver = new igIGZSaver();

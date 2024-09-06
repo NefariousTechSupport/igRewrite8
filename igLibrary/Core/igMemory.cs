@@ -27,7 +27,7 @@ namespace igLibrary.Core
 
 		public igMemory()
 		{
-			_memoryPool = igMemoryContext.Singleton.GetMemoryPoolByName("Default");
+			_memoryPool = igMemoryContext.Default;
  			_data = null;
 			_implicitMemoryPool = true;
 			_optimalCPUReadWrite = true;
@@ -43,7 +43,7 @@ namespace igLibrary.Core
 			_optimalGPURead = false;
 			_alignmentMultiple = 1;
 		}
-		public igMemory(igMemoryPool pool, byte[] data)
+		public igMemory(igMemoryPool pool, T[] data)
 		{
 			_memoryPool = pool;
 			_data = new T[data.Length];
