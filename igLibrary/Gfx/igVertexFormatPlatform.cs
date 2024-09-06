@@ -1,5 +1,10 @@
 namespace igLibrary.Gfx
 {
+	// If you're going to implement any of these, move it into its own file
+
+	/// <summary>
+	/// Base class for various vertex formats
+	/// </summary>
 	public class igVertexFormatPlatform : igObject
 	{
 		public bool _disableSoftwareBlending;
@@ -9,7 +14,6 @@ namespace igLibrary.Gfx
 	public class igVertexFormatDurango : igVertexFormatPlatform {}
 	public class igVertexFormatDX : igVertexFormatPlatform {}
 	public class igVertexFormatMetal : igVertexFormatPlatform {}
-	public class igVertexFormatPS3 : igVertexFormatPlatform {}
 	public class igVertexFormatWii : igVertexFormatPlatform {}
 	public class igVertexFormatXenon : igVertexFormatPlatform {}
 	public class igVertexFormatOSX : igVertexFormatPlatform {}
