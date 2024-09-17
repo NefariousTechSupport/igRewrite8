@@ -1,16 +1,20 @@
 # IGZ
 
-Disclaimer: this documentation is only correct for version 9, it may be incorrect for other versions
+Disclaimer: this documentation is only correct for version 9, it may be incorrect for other
+versions.
 
 NEED TO DESCRIBE THE PRE VERSION 9 RUNTIME FIXUP PACKING
 
-IGZs are essentially memory images, with a "fixup" section to allow for in place pointer fix up.
+IGZs are essentially memory images, with a "fixup" section to allow for in place pointer
+fix up.
 
-As a result, they are incredibly fast to load, however they are not designed to be easily modified and are also incredibly platform and version specific.
+As a result, they are incredibly fast to load, however they are not designed to be easily
+modified and are also incredibly platform and version specific.
 
 ## Background reading
 
-Many parts of the IGZ format rely on very technical concepts. I've linked resources to explain some of those concepts
+Many parts of the IGZ format rely on very technical concepts. I've linked resources to
+explain some of those concepts
 
 - Classes & Objects:
 - Inheritance:
@@ -59,7 +63,8 @@ igz header:
 - `_memoryPoolNames`: list of memory pool names, stored as null terminated strings
 
 igz chunk header:
-- `_memoryPoolNameOffset`: offset of the name of the memory pool to load this into, relative to the start of `_memoryPoolNames` in `igzHeader`
+- `_memoryPoolNameOffset`: offset of the name of the memory pool to load this into, relative
+  to the start of `_memoryPoolNames` in `igzHeader`.
 - `_offset`: the offset at which this section begins
 - `_length`: the size of this section
 - `_alignment`: the alignment of this section.
@@ -112,7 +117,8 @@ enum IG_CORE_PLATFORM {
 
 ## Fixups
 
-Fixup sections contain information needed to fix things like pointers to be actually usable as memory.
+Fixup sections contain information needed to fix things like pointers to be actually usable
+as memory.
 
 There are many types of fixups
 
@@ -135,17 +141,21 @@ struct FixupHeader {
 
 ### TDEP: Dependency Table
 
-This is a string array, it contains two strings per item. The first is the namespace of the string, the second is the file path of the dependency. If the filepath begins with `<build>`, then it should be ignored
+This is a string array, it contains two strings per item. The first is the namespace of the
+string, the second is the file path of the dependency. If the filepath begins with `<build>`,
+then it should be ignored.
 
 the dependencies are read into an `igObjectDirectory`'s dependency list.
 
 ### TSTR: String Table
 
-This is a string array, it contains one string per item. The strings are aligned to 2 bytes on igz version 7 and above, and 1 byte on igz version 6 and below.
+This is a string array, it contains one string per item. The strings are aligned to 2 bytes
+on igz version 7 and above, and 1 byte on igz version 6 and below.
 
 ### TMET: MetaObject Table
 
-Structured the same way as TMET, the strings stored here represent the names of classes as defined in the reflection system.
+Structured the same way as TMET, the strings stored here represent the names of classes as
+defined in the reflection system.
 
 ### EXNM: External Names
 
@@ -155,13 +165,17 @@ The lower 32 bits are the index into TSTR for the name of the object the handle 
 
 When resolving handles, the namespaces in the dependency list gets priority.
 
-if the namespace index has the most significant bit set, then the external is appended to the `_namedHandleList`. The handle doesn't need to be resolved for this.
+if the namespace index has the most significant bit set, then the external is appended to
+the `_namedHandleList`. The handle doesn't need to be resolved for this.
 
-If the namespace index does not have the most significant bit set, then it's appended to the `_namedExternalList`. This requires the handle be resolved when loading the file, rather than it being resolved when actually being used.
+If the namespace index does not have the most significant bit set, then it's appended to
+the `_namedExternalList`. This requires the handle be resolved when loading the file, rather
+than it being resolved when actually being used.
 
 ### EXID: External Identifiers
 
-Similar to EXNM in premise, except instead of storing the namespace and name's string, it stores their fnv1a32 hashes.
+Similar to EXNM in premise, except instead of storing the namespace and name's string, it
+stores their fnv1a32 hashes.
 
 When resolving handles, the namespaces in the dependency list gets priority.
 
@@ -175,7 +189,8 @@ Runtime fixups contain a list of pointers to pointers
 
 This list is compressed
 
-First off, pointers are all serialized as described __here__, as well as being ordered in ascending order.
+First off, pointers are all serialized as described __here__, as well as being ordered in
+ascending order.
 
 Here's an example of a set of pointers
 
@@ -187,7 +202,8 @@ Here's an example of a set of pointers
 08000010
 ```
 
-Second off, all stored as the difference from the previous one, with the first one just being the first one (demonstrated by subtracting zero from it).
+Second off, all stored as the difference from the previous one, with the first one just
+being the first one (demonstrated by subtracting zero from it).
 
 ```
 00000004 - 00000000 => 00000004
@@ -209,11 +225,15 @@ Next, all of the items are divided by 4.
 
 This final list is what's actually compressed.
 
-data is compressed into 4 bit chunks. The most significant bit states whether or not the data continues to the next chunk. The remaining 3 bits are the least significant bits of the integer.
+data is compressed into 4 bit chunks. The most significant bit states whether or not the
+data continues to the next chunk. The remaining 3 bits are the least significant bits of
+the integer.
 
-so, let's start with the first item in the list, it'll be compressed to one chunk, `0001`. The next one will be compressed to one chunk as well, `0011`, then `0001`, `0100`.
+so, let's start with the first item in the list, it'll be compressed to one chunk, `0001`.
+The next one will be compressed to one chunk as well, `0011`, then `0001`, `0100`.
 
-`01FFFFFB` on the other hand will be compressed into multiple chunks. Let's convert it to its binary representation to make it easier to read for this purpose
+`01FFFFFB` on the other hand will be compressed into multiple chunks. Let's convert it
+to its binary representation to make it easier to read for this purpose.
 
 ```
 0001111111111111111111111011
@@ -225,7 +245,8 @@ Now let's split it up into 3 bit chunks
 0 001 111 111 111 111 111 111 111 011
 ```
 
-Now let's take each chunk and add that fourth bit to it, which states whether or not it's the end of a chunk
+Now let's take each chunk and add that fourth bit to it, which states whether or not it's
+the end of a chunk.
 
 ```
 0001 1111 1111 1111 1111 1111 1111 1111 1011
@@ -245,7 +266,8 @@ now let's combine all these chunks
 1011 0000 (the 0 is padding since there's 8 bits in a byte)
 ```
 
-now, the least significant bits are read, and then the most significant 4 bits, so it should be stored as such
+now, the least significant bits are read, and then the most significant 4 bits, so it should
+be stored as such.
 
 ```
 0011 0001
@@ -276,7 +298,9 @@ Unpacking the integers is simply this process in reverse.
 
 ### RVTB: Runtime Virtual Tables
 
-The RVTB contains a list of pointers to the starts of objects, specifically their vtable pointers. The value contained at one of these pointers is a 32 bit number representing the index of the type that this object is in the [TMET](#tmet-metaobject-table), or `_vtableList`.
+The RVTB contains a list of pointers to the starts of objects, specifically their vtable
+pointers. The value contained at one of these pointers is a 32 bit number representing the
+index of the type that this object is in the [TMET](#tmet-metaobject-table), or `_vtableList`.
 
 ### ROOT: Runtime Root Object List
 
@@ -284,7 +308,9 @@ This fixup contains only one pointer, a pointer to the root object list.
 
 ### ROFS: Runtime Offsets
 
-This fixup contains a list of pointers to all serialized offsets. The value contained at one of these pointers is a 32 bit number representing an offset, this offset is deserialized and converted to a proper pointer.
+This fixup contains a list of pointers to all serialized offsets. The value contained at one
+of these pointers is a 32 bit number representing an offset, this offset is deserialized and
+converted to a proper pointer.
 
 ### RPID: Runtime Pool IDs
 
@@ -292,24 +318,38 @@ Honestly a bit unsure, i just know it points to the offset field of empty igMemo
 
 ### RSTT: Runtime String Table
 
-This fixup contains a list of pointers to all references to strings stored in [TSTR](#tstr-string-table) (excluding [EXNM](#exnm-external-names)). The value contained at one of these pointers is a 32 bit number representing an index into [TSTR](#tstr-string-table) or `_stringList`, the string is looked up in this list and then the index is replaced by a pointer to that string.
+This fixup contains a list of pointers to all references to strings stored in
+[TSTR](#tstr-string-table) (excluding [EXNM](#exnm-external-names)). The value contained at
+one of these pointers is a 32 bit number representing an index into [TSTR](#tstr-string-table)
+or `_stringList`, the string is looked up in this list and then the index is replaced by a
+pointer to that string.
 
-Either this or [RSTR](#rstr-runtime-string-references) are used, but not both. Though both may be usable at the same time.
+Either this or [RSTR](#rstr-runtime-string-references) are used, but not both. Though both
+may be usable at the same time.
 
 ### RSTR: Runtime String References
 
-Very similar to [ROFS](#rofs-runtime-offsets), except only for strings, it's a separate fixup since the engine has a whole system for managing strings.
+Very similar to [ROFS](#rofs-runtime-offsets), except only for strings, it's a separate
+fixup since the engine has a whole system for managing strings.
 
-Either this or [RSTT](#rstt-runtime-string-table) are used, but not both. Though both may be usable at the same time.
+Either this or [RSTT](#rstt-runtime-string-table) are used, but not both. Though both may
+be usable at the same time.
 
 ### RMHN: Runtime Memory Handle
 
-This fixup contains a list of pointers to all memory handles. The value contained at one of these pointers is a 32 bit number representing an index into the [TMHN](#tmhn-memory-handle-table), this index is looked up and converted to a thumbnail/memory handle.
+This fixup contains a list of pointers to all memory handles. The value contained at one
+of these pointers is a 32 bit number representing an index into the
+[TMHN](#tmhn-memory-handle-table), this index is looked up and converted to a
+thumbnail/memory handle.
 
 ### REXT: Runtime External Identifiers
 
-This fixup contains a list of pointers to all references to an EXID object ref. The value contained at one of these pointers is a 32 bit number representing an index into the EXID, this index is deserialized and converted to a proper pointer to the object in question.
+This fixup contains a list of pointers to all references to an EXID object ref. The value
+contained at one of these pointers is a 32 bit number representing an index into the EXID,
+this index is deserialized and converted to a proper pointer to the object in question.
 
 ### RNEX: Runtime Named Externals
 
-This fixup contains a list of pointers to all references to an EXNM object ref. The value contained at one of these pointers is a 32 bit number representing an index into the EXID, this index is deserialized and converted to a proper pointer to the object in question.
+This fixup contains a list of pointers to all references to an EXNM object ref. The value
+contained at one of these pointers is a 32 bit number representing an index into the EXID,
+this index is deserialized and converted to a proper pointer to the object in question.
