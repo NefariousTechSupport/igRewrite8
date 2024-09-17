@@ -2,6 +2,15 @@ namespace igLibrary.Math
 {
 	public struct igVec3uc
 	{
+		public igVec3uc Zero => new igVec3uc(0, 0, 0);
+		public igVec3uc One => new igVec3uc(1, 1, 1);
+		public igVec3uc UnitX => new igVec3uc(1, 0, 0);
+		public igVec3uc UnitY => new igVec3uc(0, 1, 0);
+		public igVec3uc UnitZ => new igVec3uc(0, 0, 1);
+
+		public float SqrMagnitude => _x * _x + _y * _y + _z * _z;
+		public float Magnitude => MathF.Sqrt(SqrMagnitude);
+
 		public byte _x;
 		public byte _y;
 		public byte _z;
@@ -19,5 +28,7 @@ namespace igLibrary.Math
 		{
 			return new igVec3uc((byte)vec.X, (byte)vec.Y, (byte)vec.Z);
 		}
+		public static igVec3uc operator+(igVec3uc a, igVec3uc b) => new igVec3uc((byte)(a._x + b._x), (byte)(a._y + b._y), (byte)(a._z + b._z));
+		public static igVec3uc operator-(igVec3uc a, igVec3uc b) => new igVec3uc((byte)(a._x - b._x), (byte)(a._y - b._y), (byte)(a._z - b._z));
 	}
 }

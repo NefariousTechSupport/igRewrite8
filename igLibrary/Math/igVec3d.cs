@@ -2,6 +2,15 @@ namespace igLibrary.Math
 {
 	public struct igVec3d
 	{
+		public igVec3d Zero => new igVec3d(0, 0, 0);
+		public igVec3d One => new igVec3d(1, 1, 1);
+		public igVec3d UnitX => new igVec3d(1, 0, 0);
+		public igVec3d UnitY => new igVec3d(0, 1, 0);
+		public igVec3d UnitZ => new igVec3d(0, 0, 1);
+
+		public double SqrMagnitude => _x * _x + _y * _y + _z * _z;
+		public double Magnitude => MathF.Sqrt((float)SqrMagnitude);
+
 		public double _x;
 		public double _y;
 		public double _z;
@@ -19,5 +28,7 @@ namespace igLibrary.Math
 		{
 			return new igVec3d(vec.X, vec.Y, vec.Z);
 		}
+		public static igVec3d operator+(igVec3d a, igVec3d b) => new igVec3d(a._x + b._x, a._y + b._y, a._z + b._z);
+		public static igVec3d operator-(igVec3d a, igVec3d b) => new igVec3d(a._x - b._x, a._y - b._y, a._z - b._z);
 	}
 }

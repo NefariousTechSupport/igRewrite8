@@ -17,6 +17,9 @@ namespace igLibrary
 		public Endianness _endianness = Endianness.Little;
 		public byte bitPosition = 0;
 
+		//THIS MAKES IT NOT THREAD SAFE
+		private readonly byte[] _integerBuffer = new byte[8];
+
 		public StreamHelper(byte[] input) : base(new MemoryStream(input)) {}
 		public StreamHelper(Stream input) : base(input) {}
 		public StreamHelper(byte[] input, Encoding encoding) : base(new MemoryStream(input), encoding) {}
@@ -137,13 +140,12 @@ namespace igLibrary
 			return sb.ToString();
 		}
 
-		public new byte ReadByte() => ReadByte((uint)BaseStream.Position);
+		public override byte ReadByte() => ReadByte((uint)BaseStream.Position);
 		public byte ReadByte(uint offset)
 		{
 			BaseStream.Seek(offset, SeekOrigin.Begin);
-			byte[] buffer = new byte[1];
-			BaseStream.Read(buffer, 0x00, 0x01);
-			return buffer[0];
+			BaseStream.Read(_integerBuffer, 0, 1);
+			return _integerBuffer[0];
 		}
 		public void WriteBoolean(bool data) => WriteBoolean(data, (uint)BaseStream.Position);
 		public void WriteBoolean(bool data, uint offset) => WriteByte((byte)(data ? 1 : 0), offset);
@@ -151,8 +153,8 @@ namespace igLibrary
 		public void WriteByte(byte data, uint offset)
 		{
 			BaseStream.Seek(offset, SeekOrigin.Begin);
-			byte[] buffer = new byte[1]{data};
-			BaseStream.Write(buffer, 0x00, 0x01);
+			_integerBuffer[0] = data;
+			BaseStream.Write(_integerBuffer, 0x00, 0x01);
 		}
 		public void WriteSByte(sbyte data) => WriteByte(unchecked((byte)data), (uint)BaseStream.Position);
 		public void WriteSByte(sbyte data, uint offset) => WriteByte(unchecked((byte)data), offset);
@@ -405,10 +407,10 @@ namespace igLibrary
 		public void WriteInt64(long data) => WriteInt64(data, _endianness);
 		public void WriteInt64(long data, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(data), endianness);
 
-		public byte[] ReadForEndianness(int bytesToRead, Endianness endianness)
+		private byte[] ReadForEndianness(int bytesToRead, Endianness endianness)
 		{
-			byte[] bytesRead = new byte[bytesToRead];
-			int res = BaseStream.Read(bytesRead, 0, bytesToRead);
+			if(bytesToRead > _integerBuffer.Length) throw new ArgumentException($"read size must be less than {_integerBuffer.Length}");
+			int res = BaseStream.Read(_integerBuffer, 0, bytesToRead);
 			if(res != bytesToRead)
 			{
 				throw new Exception($"Read {res} instead of {bytesToRead}");
@@ -418,22 +420,22 @@ namespace igLibrary
 				case Endianness.Little:
 					if (!BitConverter.IsLittleEndian)
 					{
-						Array.Reverse(bytesRead);
+						Array.Reverse(_integerBuffer, 0, bytesToRead);
 					}
 					break;
 
 				case Endianness.Big:
 					if (BitConverter.IsLittleEndian)
 					{
-						Array.Reverse(bytesRead);
+						Array.Reverse(_integerBuffer, 0, bytesToRead);
 					}
 					break;
 			}
 
-			return bytesRead;
+			return _integerBuffer;
 		}
 		
-		public void WriteForEndianness(byte[] bytes, Endianness endianness)
+		private void WriteForEndianness(byte[] bytes, Endianness endianness)
 		{
 			switch (endianness)
 			{

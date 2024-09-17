@@ -14,8 +14,7 @@ namespace igLibrary.Core
 				_directoriesByName.Add(dir._name._hash, list);
 			}
 			list.Append(dir);
-			_directoriesByPath.Add(igHash.Hash(filePath), dir);
-			igObjectHandleManager.Singleton.AddDirectory(dir);
+			_directoriesByPath.Add(igHash.HashI(filePath), dir);
 		}
 		public igObjectDirectory? Load(string path)
 		{
@@ -24,18 +23,27 @@ namespace igLibrary.Core
 		public igObjectDirectory? Load(string path, igName nameSpace)
 		{
 			string filePath = igFilePath.GetNativePath(path);
-			uint filePathHash = igHash.Hash(filePath);
-			Console.Write($"igObjectStreamManager was asked to load {filePath}...");
+			uint filePathHash = igHash.HashI(filePath);
+
+			igObjectDirectory objDir;
+			string result;
+
 			if(_directoriesByPath.ContainsKey(filePathHash))
 			{
-				Console.Write("was previously loaded.\n");
-				return _directoriesByPath[filePathHash];
+				result = "was previously loaded.";
+				objDir = _directoriesByPath[filePathHash];
 			}
-			Console.Write("was not previously loaded.\n");
+			else
+			{
+				result = "was not previously loaded.";
+				objDir = new igObjectDirectory(filePath, nameSpace);
+				AddObjectDirectory(objDir, filePath);
+				objDir.ReadFile();
+				igObjectHandleManager.Singleton.AddDirectory(objDir);
+			}
 
-			igObjectDirectory objDir = new igObjectDirectory(filePath, nameSpace);
-			AddObjectDirectory(objDir, filePath);
-			objDir.ReadFile();
+			Logging.Info("igObjectStreamManager was asked to load {0}... {1}", filePath, result);
+
 			return objDir;
 		}
 	}

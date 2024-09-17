@@ -2,6 +2,8 @@ namespace igLibrary.Math
 {
 	public struct igQuaternionf
 	{
+		public igQuaternionf Identity => new igQuaternionf(0, 0, 0, 1);
+
 		public float _x;
 		public float _y;
 		public float _z;

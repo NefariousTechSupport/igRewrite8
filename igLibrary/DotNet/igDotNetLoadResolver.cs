@@ -21,8 +21,8 @@ namespace igLibrary.DotNet
 		{
 			for(int i = 0; i < library._ownedTypes._count; i++)
 			{
-				if(library._ownedTypes[i] is igMetaObject metaObject)  metaObject.AppendToArkCore();
-				else if(library._ownedTypes[i] is igMetaEnum metaEnum) igArkCore._metaEnums.Add(metaEnum);
+				if(library._ownedTypes[i] is igDotNetDynamicMetaObject metaObject)  metaObject.AppendToArkCore();
+				else if(library._ownedTypes[i] is igDotNetDynamicMetaEnum metaEnum) metaEnum.AppendToArkCore();
 			}
 		}
 	}

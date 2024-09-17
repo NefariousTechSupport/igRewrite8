@@ -295,6 +295,69 @@ namespace igLibrary.Gfx
 		};
 		public static void Initialize()
 		{
+			InitializeIndexFormats();
+			InitializeVertexFormatPlatforms();
+			InitializeMetaImages();
+		}
+		public static void InitializeIndexFormats()
+		{
+			igObjectDirectory indexformats = new igObjectDirectory();
+			indexformats._name = new igName(igIndexFormat._indexFormatNamespace);
+			indexformats._useNameList = true;
+			indexformats._nameList = new igNameList();
+			igObjectStreamManager.Singleton.AddObjectDirectory(indexformats, indexformats._name._string);
+			igObjectHandleManager.Singleton.AddSystemNamespace(igIndexFormat._indexFormatNamespace);
+
+			for(IG_INDEX_TYPE indexType = IG_INDEX_TYPE.IG_INDEX_TYPE_INT8; indexType <= IG_INDEX_TYPE.IG_INDEX_TYPE_INT32; indexType++)
+			{
+				if(indexType == (IG_INDEX_TYPE)3) continue;
+
+				for(IG_GFX_PLATFORM platform = IG_GFX_PLATFORM.IG_GFX_PLATFORM_DEFAULT; platform < IG_GFX_PLATFORM.IG_GFX_PLATFORM_MAX; platform++)
+				{
+					igIndexFormat indexFormat = igIndexFormat.CreateIndexFormat(indexType, platform, false);
+					indexformats.AddObject(indexFormat, default(igName), new igName(igIndexFormat.GetFormatName(indexType, platform, false)));
+					igIndexFormat._indexFormats.Append(indexFormat);
+
+					indexFormat = igIndexFormat.CreateIndexFormat(indexType, platform, true);
+					indexformats.AddObject(indexFormat, default(igName), new igName(igIndexFormat.GetFormatName(indexType, platform, true)));
+					igIndexFormat._indexFormats.Append(indexFormat);
+				}
+			}
+		}
+		public static void InitializeVertexFormatPlatforms()
+		{
+			igObjectDirectory vertexformat = new igObjectDirectory();
+			vertexformat._name = new igName("vertexformat");
+			vertexformat._useNameList = true;
+			vertexformat._nameList = new igNameList();
+			igObjectStreamManager.Singleton.AddObjectDirectory(vertexformat, vertexformat._name._string);
+			igObjectHandleManager.Singleton.AddSystemNamespace("vertexformat");
+
+			AddVertexFormatPlatform<igVertexFormatAspen>  (vertexformat);
+			AddVertexFormatPlatform<igVertexFormatCafe>   (vertexformat);
+			AddVertexFormatPlatform<igVertexFormatDurango>(vertexformat);
+			AddVertexFormatPlatform<igVertexFormatDX>     (vertexformat);
+			AddVertexFormatPlatform<igVertexFormatMetal>  (vertexformat);
+			AddVertexFormatPlatform<igVertexFormatPS3>    (vertexformat);
+			AddVertexFormatPlatform<igVertexFormatWii>    (vertexformat);
+			AddVertexFormatPlatform<igVertexFormatXenon>  (vertexformat);
+			AddVertexFormatPlatform<igVertexFormatOSX>    (vertexformat);
+			AddVertexFormatPlatform<igVertexFormatDX11>   (vertexformat);
+			AddVertexFormatPlatform<igVertexFormatRaspi>  (vertexformat);
+			AddVertexFormatPlatform<igVertexFormatNull>   (vertexformat);
+			AddVertexFormatPlatform<igVertexFormatAndroid>(vertexformat);
+			AddVertexFormatPlatform<igVertexFormatWgl>    (vertexformat);
+			AddVertexFormatPlatform<igVertexFormatLGTV>   (vertexformat);
+			AddVertexFormatPlatform<igVertexFormatPS4>    (vertexformat);
+		}
+		private static void AddVertexFormatPlatform<T>(igObjectDirectory vertexformat) where T : igVertexFormatPlatform, new()
+		{
+			// I'm aware that it's igVertexFormatPlatform and not new T(), this is because there's a lack of metadata
+			// It's easier to just lie
+			vertexformat.AddObject(new igVertexFormatPlatform(), default(igName), new igName(typeof(T).Name));
+		}
+		public static void InitializeMetaImages()
+		{
 			igObjectDirectory metaimages = new igObjectDirectory();
 			metaimages._name = new igName("metaimages");
 			metaimages._useNameList = true;

@@ -71,7 +71,7 @@ namespace igLibrary.Core
 			}
 			return _internalFieldList;
 		}
-        public override Type GetOutputType()
+		public override Type GetOutputType()
 		{
 			return typeof(igOrderedMap<,>).MakeGenericType(_t.GetOutputType(), _u.GetOutputType());
 		}

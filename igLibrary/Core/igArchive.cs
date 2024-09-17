@@ -69,28 +69,28 @@ namespace igLibrary.Core
 			}
 		}
 
-        static CoderPropID[] propIDs =
-        {
-            CoderPropID.DictionarySize,
-            CoderPropID.PosStateBits,
-            CoderPropID.LitContextBits,
-            CoderPropID.LitPosBits,
-            CoderPropID.Algorithm,
-            CoderPropID.NumFastBytes,
-            CoderPropID.EndMarker,
-            CoderPropID.MatchFinder,
-        };
-        static object[] properties =
-        {
-            0x8000,
-            2,
-            3,
-            0,
-            2,
-            0x80,
-            false,
-            "bt4",
-        };
+		static CoderPropID[] propIDs =
+		{
+			CoderPropID.DictionarySize,
+			CoderPropID.PosStateBits,
+			CoderPropID.LitContextBits,
+			CoderPropID.LitPosBits,
+			CoderPropID.Algorithm,
+			CoderPropID.NumFastBytes,
+			CoderPropID.EndMarker,
+			CoderPropID.MatchFinder,
+		};
+		static object[] properties =
+		{
+			0x8000,
+			2,
+			3,
+			0,
+			2,
+			0x80,
+			false,
+			"bt4",
+		};
 
 
 		public bool _loadNameTable;
@@ -377,7 +377,6 @@ namespace igLibrary.Core
 			{
 				pathToHash = pathToHash.Replace('\\', '/');
 				pathToHash = pathToHash.ToLower();
-				//Console.WriteLine("kCaseInsensitiveHash");
 			}
 			if((_archiveHeader._flags & 2u) != 0) pathToHash = Path.GetFileName(pathToHash);
 			pathToHash = pathToHash.TrimStart('/', '\\');
@@ -460,6 +459,11 @@ namespace igLibrary.Core
 				return;
 			}
 			CompressionType type = (CompressionType)(fileInfo._blockIndex >> 28);
+			byte[]? lzmaProps = null;
+			if(type == CompressionType.kLzma)
+			{
+				lzmaProps = new byte[5];
+			}
 			for(int i = 0; i < fileInfo._blocks.Length; i++)
 			{
 				uint decompressedSize = (fileInfo._length < (i + 1) * 0x8000) ? fileInfo._length & 0x7FFF : 0x8000;
@@ -485,11 +489,10 @@ namespace igLibrary.Core
 						tempMs.Close();
 						break;
 					case CompressionType.kLzma:
-						byte[] properties = new byte[5];
-						Array.Copy(fileInfo._compressedData, offset, properties, 0, 5);
+						Array.Copy(fileInfo._compressedData, offset, lzmaProps!, 0, 5);
 						tempMs = new MemoryStream(fileInfo._compressedData, (int)offset + 5, (int)compressedSize);
 						SevenZip.Compression.LZMA.Decoder dec = new SevenZip.Compression.LZMA.Decoder();
-						dec.SetDecoderProperties(properties);
+						dec.SetDecoderProperties(lzmaProps);
 						dec.Code(tempMs, dst, compressedSize, decompressedSize, null);
 						tempMs.Close();
 						break;

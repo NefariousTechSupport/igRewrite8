@@ -8,9 +8,41 @@ namespace igCauldron3
 {
 	public class ConfigFrame : Frame
 	{
+		public (IG_CORE_PLATFORM, string)[] _platformNames = new (IG_CORE_PLATFORM, string)[]
+		{
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_ANDROID, "Android 32-bit"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_ASPEN, "iOS 32-bit"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_ASPEN64, "iOS 64-bit"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_LINUX, "Linux"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_LGTV, "LG Smart TV"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_OSX, "Mac OS 32-bit"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_MARMALADE, "Marmalade"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_NGP, "PSVita"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS3, "PS3"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS4, "PS4"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_RASPI, "Raspberry Pi"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_WII, "Wii"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_CAFE, "Wii U"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_WIN32, "Windows 32-bit"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_WIN64, "Windows 64-bit"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_WP8, "Windows Phone"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_XENON, "Xbox 360"),
+			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_DURANGO, "Xbox One")
+		};
 		public ConfigFrame(Window wnd) : base(wnd)
 		{
 			CauldronConfig.ReadConfig();
+		}
+		private string GetPlatformName(IG_CORE_PLATFORM platform)
+		{
+			for(int i = 0; i < _platformNames.Length; i++)
+			{
+				if(_platformNames[i].Item1 == platform)
+				{
+					return _platformNames[i].Item2;
+				}
+			}
+			return "Select a Platform";
 		}
 		public override void Render()
 		{
@@ -29,12 +61,23 @@ namespace igCauldron3
 					ImGui.Text("Platform");
 					ImGui.SameLine();
 					ImGui.PushID("platform");
-					int selectedItem = (int)game._platform;
-					bool changed = ImGui.Combo(string.Empty, ref selectedItem, typeof(IG_CORE_PLATFORM).GetEnumNames(), (int)IG_CORE_PLATFORM.IG_CORE_PLATFORM_MAX);
+					bool comboing = ImGui.BeginCombo(string.Empty, GetPlatformName(game._platform));
 					ImGui.PopID();
-					if(changed)
+					if(comboing)
 					{
-						game._platform = (IG_CORE_PLATFORM)selectedItem;
+						for(int p = 0; p < _platformNames.Length; p++)
+						{
+							ImGui.PushID(p);
+							if(ImGui.Selectable(_platformNames[p].Item2, game._platform == _platformNames[p].Item1))
+							{
+								game._platform = _platformNames[p].Item1;
+							}
+							if(game._platform == _platformNames[p].Item1)
+							{
+								ImGui.SetItemDefaultFocus();
+							}
+							ImGui.PopID();
+						}
 					}
 
 					bool full = ImGui.Button("Load Game");
@@ -82,13 +125,13 @@ namespace igCauldron3
 							CPrecacheManager._Instance.PrecachePackage("generated/UI/Domains/JuiceDomain_FrontEnd", EMemoryPoolID.MP_DEFAULT);
 						}
 
-						_wnd.frames.Remove(this);
-						_wnd.frames.Add(new ObjectManagerFrame(_wnd));
-						_wnd.frames.Add(new ArchiveFrame(_wnd));
-						_wnd.frames.Add(new MenuBarFrame(_wnd));
+						_wnd._frames.Remove(this);
+						_wnd._frames.Add(new DirectoryManagerFrame(_wnd));
+						_wnd._frames.Add(new ArchiveFrame(_wnd));
+						_wnd._frames.Add(new MenuBarFrame(_wnd));
 
 						timer.Stop();
-						Console.WriteLine($"Loaded game in {timer.Elapsed.TotalSeconds}");
+						Logging.Info("Loaded game in {0}", timer.Elapsed.TotalSeconds);
 					}
 					ImGui.SameLine();
 					if(ImGui.Button("Remove Game"))

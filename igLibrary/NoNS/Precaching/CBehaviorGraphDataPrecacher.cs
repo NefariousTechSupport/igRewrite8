@@ -2,10 +2,10 @@ namespace igLibrary
 {
 	public class CBehaviorGraphDataPrecacher : CResourcePrecacher
 	{
-        public override void Precache(string filePath)
-        {
+		public override void Precache(string filePath)
+		{
 			//Unimplemented
-            igObjectStreamManager.Singleton.Load(filePath);
-        }
-    }
+			igObjectStreamManager.Singleton.Load(filePath);
+		}
+	}
 }

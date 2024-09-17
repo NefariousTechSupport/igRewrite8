@@ -30,7 +30,7 @@ namespace igLibrary.Core
 			_memoryPool = igMemoryContext.Singleton.GetMemoryPoolByName("Default");
  			_data = null;
 			_implicitMemoryPool = true;
-			_optimalCPUReadWrite = false;
+			_optimalCPUReadWrite = true;
 			_optimalGPURead = false;
 			_alignmentMultiple = 1;
  		}
@@ -39,7 +39,7 @@ namespace igLibrary.Core
 			_memoryPool = pool;
 			_data = new T[size];
 			_implicitMemoryPool = true;
-			_optimalCPUReadWrite = false;
+			_optimalCPUReadWrite = true;
 			_optimalGPURead = false;
 			_alignmentMultiple = 1;
 		}
@@ -64,6 +64,7 @@ namespace igLibrary.Core
 		igMemoryPool IigMemory.GetMemoryPool() => _memoryPool;
 		void IigMemory.SetMemoryPool(igMemoryPool pool) => _memoryPool = pool;
 		Array IigMemory.GetData() => _data;
+		uint IigMemory.GetCount() => (uint)Length;
 		void IigMemory.SetData(Array data)
 		{
 			if(data.GetType().GetElementType().IsAssignableTo(typeof(T)))
@@ -71,12 +72,15 @@ namespace igLibrary.Core
 				_data = data.Cast<T>().ToArray();
 			}
 		}
+		object? IigMemory.GetItem(int i) => this[i];
+		void IigMemory.SetItem(int i, object? obj) => this[i] = (T)obj;
 		public void Alloc(int itemCount)
 		{
 			_data = new T[itemCount];
 		}
 		public void Realloc(int itemCount)
 		{
+			if(_data != null && itemCount == _data!.Length) return;
 			Array.Resize<T>(ref _data, itemCount);
 		}
 		public ulong GetFlags(igMemoryRefMetaField ioField, IG_CORE_PLATFORM platform) => GetFlagsInternal(ioField._memType, platform);
@@ -139,15 +143,21 @@ namespace igLibrary.Core
 	}
 	public interface IigMemory
 	{
+		public int Length { get; }
 		igMemoryPool GetMemoryPool();
 		void SetMemoryPool(igMemoryPool pool);
 		Array GetData();
+		uint GetCount();
 		void SetData(Array data);
+		object? GetItem(int i);
+		void SetItem(int i, object? obj);
 		ulong GetFlags(igMemoryRefMetaField ioField, IG_CORE_PLATFORM platform);
 		ulong GetFlags(igMemoryRefHandleMetaField ioField, IG_CORE_PLATFORM platform);
 		uint GetPlatformAlignment(igMemoryRefMetaField ioField, IG_CORE_PLATFORM platform);
 		uint GetPlatformAlignment(igMemoryRefHandleMetaField ioField, IG_CORE_PLATFORM platform);
 		void SetFlags(ulong flags, igMemoryRefMetaField ioField, IG_CORE_PLATFORM platform);
 		void SetFlags(ulong flags, igMemoryRefHandleMetaField ioField, IG_CORE_PLATFORM platform);
+		void Alloc(int itemCount);
+		void Realloc(int itemCount);
 	}
 }

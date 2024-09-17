@@ -5,9 +5,20 @@ namespace igCauldron3
 {
 	public class CauldronConfig
 	{
-		private const string _configFilename = "gameconfig.json";
+		public static string ConfigFolder
+		{
+			get
+			{
+				string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NefariousTechSupport", "igCauldron");
+				Directory.CreateDirectory(path);
+				return path;
+			}
+		}
+		private static string GameConfigFilePath => Path.Combine(ConfigFolder, "gameconfig.json");
+		public static string ImGuiConfigFilePath => Path.Combine(ConfigFolder, "imgui.ini");
 		public static CauldronConfig _config { get; private set; }
 
+		public int _version = 1;
 		public List<GameConfig> _games = new List<GameConfig>();
 
 		public class GameConfig
@@ -20,11 +31,11 @@ namespace igCauldron3
 
 		public static void ReadConfig()
 		{
-			if(File.Exists(_configFilename))
+			if(File.Exists(GameConfigFilePath))
 			{
-				string json = File.ReadAllText(_configFilename);
+				string json = File.ReadAllText(GameConfigFilePath);
 				_config = JsonConvert.DeserializeObject<CauldronConfig>(json);
-				if(_config == null) throw new ApplicationException($"Failed to load config. Try deleting {_configFilename} and trying again.");
+				if(_config == null) throw new ApplicationException($"Failed to load config. Try deleting \"{GameConfigFilePath}\" and trying again.");
 			}
 			else
 			{
@@ -34,7 +45,7 @@ namespace igCauldron3
 		public static void WriteConfig()
 		{
 			string json = JsonConvert.SerializeObject(_config);
-			File.WriteAllText(_configFilename, json);
+			File.WriteAllText(GameConfigFilePath, json);
 		}
 	}
 }

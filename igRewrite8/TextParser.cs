@@ -30,7 +30,7 @@ namespace igRewrite8.Devel
 					metaEnum._names.Add(memberInfo[0]);
 					metaEnum._values.Add(int.Parse(memberInfo[2].TrimEnd(',')));
 				}
-				igArkCore._metaEnums.Add(metaEnum);
+				igArkCore.AddEnumMeta(metaEnum);
 			}
 		}
 		public void ReadMetaFieldFile(string filePath)
@@ -80,7 +80,7 @@ namespace igRewrite8.Devel
 					platformInfo._alignments.Add(platform, alignment);
 				}
 
-				igArkCore._metaFieldPlatformInfos.Add(platformInfo);
+				igArkCore.AddPlatformMeta(platformInfo);
 			}
 		}
 		public void ReadMetaObjectFile(string filePath)
@@ -232,7 +232,10 @@ namespace igRewrite8.Devel
 			{
 				kvp.Value.AppendToArkCore();
 			}
-			igArkCore._compoundFieldInfos.AddRange(compoundInfoLookup.Values);
+			foreach(KeyValuePair<string, igCompoundMetaFieldInfo> kvp in compoundInfoLookup)
+			{
+				igArkCore.AddCompoundMeta(kvp.Value);
+			}
 		}
 
 		private igMetaField ReadFieldType(string[] data, ref int index, igBaseMeta? meta = null)

@@ -2,9 +2,9 @@ namespace igLibrary.Gfx
 {
 	public class igCanonicalMetaImage : igMetaImage
 	{
-        public override ushort GetAlignment() => 1;
-        public override uint GetPadding(uint width) => 1;
-        public override uint GetTextureLevelOffset(int width, int height, int depth, int levelCount, int imageCount, int targetLevel, int imageIndex)
+		public override ushort GetAlignment() => 1;
+		public override uint GetPadding(uint width) => 1;
+		public override uint GetTextureLevelOffset(int width, int height, int depth, int levelCount, int imageCount, int targetLevel, int imageIndex)
 		{
 			if(targetLevel == 0 && imageIndex == 0) return 0;
 			int corDepth = depth < 0 ? 1 : depth;

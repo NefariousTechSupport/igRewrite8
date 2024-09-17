@@ -53,8 +53,8 @@ namespace igLibrary.Core
 			kStatusUnsupported,
 		}
 		public string _path;
-		public igFileDescriptor _file;
-		public object _buffer;
+		public igFileDescriptor? _file;
+		public object? _buffer;
 		public ulong _offset;
 		public uint _size;
 		public uint _bytesProcessed;

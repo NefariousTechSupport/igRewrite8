@@ -19,7 +19,7 @@ namespace igLibrary.Core
 
 				//if(!metaFields[i]._properties._persistent) continue;
 
-#if RELEASE
+#if !DEBUG
 				try
 				{
 #endif
@@ -32,7 +32,7 @@ namespace igLibrary.Core
 					{
 						field.SetValue(this, data);
 					}
-#if RELEASE
+#if !DEBUG
 				}
 				catch(Exception e)
 				{

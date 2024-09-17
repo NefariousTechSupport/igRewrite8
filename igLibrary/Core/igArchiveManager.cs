@@ -52,11 +52,11 @@ namespace igLibrary.Core
 		{
 			if(workItem._type == igFileWorkItem.WorkType.kTypeFileList)
 			{
-				uint pathHash = igHash.Hash(workItem._file._path);
+				uint pathHash = igHash.Hash(workItem._path);
 				for(int i = 0; i < _patchArchives._count; i++)
 				{
 					igArchive archive = _patchArchives[i];
-					if(igHash.Hash(archive._nativePath) == pathHash)
+					if(igHash.Hash(archive._path) == pathHash)
 					{
 						archive.Process(workItem);
 						return;
@@ -65,7 +65,7 @@ namespace igLibrary.Core
 				for(int i = 0; i < _archiveList._count; i++)
 				{
 					igArchive archive = _archiveList[i];
-					if(igHash.Hash(archive._nativePath) == pathHash)
+					if(igHash.Hash(archive._path) == pathHash)
 					{
 						archive.Process(workItem);
 						return;

@@ -115,10 +115,10 @@ namespace igCauldron3.Graphics
 
 		public igOpenGLGraphicsDevice() : base(){}
 
-        public override unsafe int CreateTexture(igResourceUsage usage, igImage2 image)
-        {
+		public override unsafe int CreateTexture(igResourceUsage usage, igImage2 image)
+		{
 			if(image == null) throw new ArgumentNullException("image is null!");
-            if(image._texHandle != -1) return image._texHandle;
+			if(image._texHandle != -1) return image._texHandle;
 			if(image._format == null) throw new ArgumentNullException($"image._format for {image._name} is null! this shouldn't happen!");
 
 			image._texHandle = GL.GenTexture();
@@ -177,10 +177,10 @@ namespace igCauldron3.Graphics
 				}
 			}
 			return image._texHandle;
-        }
+		}
 		public override void FreeTexture(int texture)
 		{
 			GL.DeleteTexture(texture);
 		}
-    }
+	}
 }

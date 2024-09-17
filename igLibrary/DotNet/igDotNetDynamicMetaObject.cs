@@ -11,7 +11,7 @@ namespace igLibrary.DotNet
 		{
 			igObject obj = base.ConstructInstance(memPool, setFields);
 			obj.dynamicMeta = true;
-			_vTablePointer.GetField("_meta")!.SetValue(obj, this);
+			_vTablePointer!.GetField("_meta")!.SetValue(obj, this);
 			return obj;
 		}
 	}

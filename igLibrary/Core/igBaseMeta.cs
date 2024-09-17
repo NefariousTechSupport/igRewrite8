@@ -9,6 +9,7 @@ namespace igLibrary.Core
 		protected bool _finishedFinalization = false;
 		protected bool _finishedFinalizationPrep = false;
 		protected bool _gatheredDependancies = false;
+		protected bool _inArkCore = false;
 		public BuildPriority _priority = BuildPriority.Normal;
 		public enum BuildPriority
 		{

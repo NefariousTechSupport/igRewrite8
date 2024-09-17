@@ -4,6 +4,11 @@ namespace igLibrary.Core
 {
 	public class igArkCoreFile
 	{
+		public const uint _magicCookie = 0x41726B00;
+		public const uint _magicVersion = 0x01;
+		public const string ArkCoreFolder = "ArkCore";
+
+
 		private StreamHelper _sh;
 		private List<string?> _stringTable;
 		public List<igMetaObject> _metaObjectsInFile;
@@ -94,7 +99,7 @@ namespace igLibrary.Core
 			{
 				igMetaEnum metaEnum = ReadMetaEnum();
 				if(metaEnum == null) continue;
-				igArkCore._metaEnums.Add(metaEnum);
+				igArkCore.AddEnumMeta(metaEnum);
 				_metaEnumsInFile.Add(metaEnum);
 			}
 			ReadPlatformInfos(metaFieldPlatformCount);
@@ -119,7 +124,7 @@ namespace igLibrary.Core
 				igCompoundMetaFieldInfo compoundInfo = new igCompoundMetaFieldInfo();
 				compoundInfo._name = ReadString(_shs[Section.CompoundInst]);
 				_compoundsInFile.Add(compoundInfo);
-				igArkCore._compoundFieldInfos.Add(compoundInfo);
+				igArkCore.AddCompoundMeta(compoundInfo);
 			}
 		}
 
@@ -188,7 +193,7 @@ namespace igLibrary.Core
 					metaFieldPlatformInfo._alignments.Add(platformValue, align);
 				}
 				_metaFieldPlatformInfosInFile.Add(metaFieldPlatformInfo);
-				igArkCore._metaFieldPlatformInfos.Add(metaFieldPlatformInfo);
+				igArkCore.AddPlatformMeta(metaFieldPlatformInfo);
 			}
 		}
 		public void SaveMetaFieldPlatformInfo(igMetaFieldPlatformInfo metaFieldPlatformInfo)
@@ -408,7 +413,6 @@ namespace igLibrary.Core
 
 				for(int j = 0; j < fieldCount; j++)
 				{
-					//Console.WriteLine($"Compound {i}, metafield {j} @ {GetOffset(Section.CompoundInfo).ToString("X08")}");
 					compoundInfo._fieldList.Add(ReadMetaField(_shs[Section.CompoundInfo], compoundInfo));
 				}
 				compoundInfo.PostUndump();
@@ -417,8 +421,8 @@ namespace igLibrary.Core
 		public void FinishSave()
 		{
 			_sh.Seek(0);
-			_sh.WriteUInt32(igArkCore._magicCookie);
-			_sh.WriteUInt32(igArkCore._magicVersion);
+			_sh.WriteUInt32(_magicCookie);
+			_sh.WriteUInt32(_magicVersion);
 			_sh.Seek(0x10);
 			_sh.WriteInt32(_stringTable.Count);
 			_sh.WriteInt32(_compoundsInFile.Count);

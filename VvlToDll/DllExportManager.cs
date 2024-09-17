@@ -6,7 +6,7 @@ namespace VvlToDll
 	public static class DllExportManager
 	{
 		public static Dictionary<DotNetLibrary, DllExporter> _libExporterLookup = new Dictionary<DotNetLibrary, DllExporter>();
-		public static void ExportAllVvls()
+		public static void ExportAllVvls(string outputDir)
 		{
 			_libExporterLookup.Clear();
 			foreach(KeyValuePair<string, DotNetLibrary> kvp in CDotNetaManager._Instance._libraries)
@@ -32,7 +32,7 @@ namespace VvlToDll
 			}
 			foreach(KeyValuePair<DotNetLibrary, DllExporter> kvp in _libExporterLookup)
 			{
-				kvp.Value.Finish();
+				kvp.Value.Finish(outputDir);
 			}
 		}
 	}

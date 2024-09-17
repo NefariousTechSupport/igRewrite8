@@ -79,7 +79,7 @@ namespace igLibrary.Core
 			{
 				if(igObjectHandleManager.Singleton.IsSystemObject(hnd))
 				{
-					Console.WriteLine("EXID object found, reference to " + hnd.ToString());
+					Logging.Info("EXID object found, reference to {0}", hnd.ToString());
 					int index = saver._externalList.FindIndex(x => x == hnd);
 					if(index < 0)
 					{
@@ -91,7 +91,7 @@ namespace igLibrary.Core
 				}
 				else
 				{
-					Console.WriteLine("EXNM object found, reference to " + hnd.ToString());
+					Logging.Info("EXNM object found, reference to {0}", hnd.ToString());
 					section._runtimeFields._namedExternals.Add(section._sh.Tell64());
 					section._sh.WriteUInt32((uint)saver.GetOrAddHandle((hnd, false)) | (_refCounted ? 0x80000000 : 0));
 				}
@@ -123,19 +123,22 @@ namespace igLibrary.Core
 					if(obj is igHandle hnd) item = hnd.GetObjectAlias<igObject>();
 					else throw new InvalidOperationException("Item type is not valid");
 				}
-				item.GetDependencies(platform, dir, out igStringRefList? itemBuildDeps, out igStringRefList? itemFileDeps);
-				if(itemBuildDeps != null)
+				if(item != null)
 				{
-					for(int j = 0; j < itemBuildDeps._count; j++)
+					item.GetDependencies(platform, dir, out igStringRefList? itemBuildDeps, out igStringRefList? itemFileDeps);
+					if(itemBuildDeps != null)
 					{
-						buildDeps.Append(itemBuildDeps[i]);
+						for(int j = 0; j < itemBuildDeps._count; j++)
+						{
+							buildDeps.Append(itemBuildDeps[i]);
+						}
 					}
-				}
-				if(itemFileDeps != null)
-				{
-					for(int j = 0; j < itemFileDeps._count; j++)
+					if(itemFileDeps != null)
 					{
-						fileDeps.Append(itemFileDeps[i]);
+						for(int j = 0; j < itemFileDeps._count; j++)
+						{
+							fileDeps.Append(itemFileDeps[i]);
+						}
 					}
 				}
 			}
@@ -150,9 +153,8 @@ namespace igLibrary.Core
 		}
 		public override Type GetOutputType()
 		{
-			//if(_metaObject._vTablePointer == typeof(igBlindObject)) return typeof(igObject);
 			if(_metaObject._vTablePointer == null) _metaObject.GatherDependancies();
-			return _metaObject._vTablePointer;
+			return _metaObject._vTablePointer!;
 		}
 		public override object? GetDefault(igMemoryPool pool)
 		{
@@ -184,44 +186,6 @@ namespace igLibrary.Core
 		public override void UndumpDefault(igArkCoreFile loader, StreamHelper sh)
 		{
 			_default = igArkCore.GetObjectMeta(loader.ReadString(sh));
-		}
-	}
-	public class igObjectRefArrayMetaField : igObjectRefMetaField
-	{
-		public short _num;
-		public override object? ReadIGZField(igIGZLoader loader)
-		{
-			Array data = Array.CreateInstance(base.GetOutputType(), _num);
-			for(int i = 0; i < _num; i++)
-			{
-				data.SetValue(base.ReadIGZField(loader), i);
-			}
-			return data;
-		}
-		public override void WriteIGZField(igIGZSaver saver, igIGZSaver.SaverSection section, object? value)
-		{
-			Array data = (Array)value;
-			for(int i = 0; i < _num; i++)
-			{
-				base.WriteIGZField(saver, section, data.GetValue(i));
-			}
-		}
-		public override uint GetSize(IG_CORE_PLATFORM platform)
-		{
-			return base.GetSize(platform) * (uint)_num;
-		}
-		public override Type GetOutputType()
-		{
-			return base.GetOutputType().MakeArrayType();
-		}
-		public override object? GetDefault(igMemoryPool pool)
-		{
-			Array arr = Array.CreateInstance(base.GetOutputType(), _num);
-			for(int i = 0; i < _num; i++)
-			{
-				arr.SetValue(base.GetDefault(pool), i);
-			}
-			return arr;
 		}
 	}
 }

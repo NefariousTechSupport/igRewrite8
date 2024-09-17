@@ -2,6 +2,14 @@ namespace igLibrary.Math
 {
 	public struct igMatrix44f
 	{
+		public igMatrix44f Identity => new igMatrix44f()
+		{
+			_m11 = 1f, _m12 = 0f, _m13 = 0f, _m14 = 0f,
+			_m21 = 0f, _m22 = 1f, _m23 = 0f, _m24 = 0f,
+			_m31 = 0f, _m32 = 0f, _m33 = 1f, _m34 = 0f,
+			_m41 = 0f, _m42 = 0f, _m43 = 0f, _m44 = 1f
+		};
+
 		public float _m11;
 		public float _m12;
 		public float _m13;

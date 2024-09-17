@@ -3,9 +3,9 @@ namespace igLibrary.Gfx
 	public class igPlatformMetaImage : igMetaImage
 	{
 		public IG_GFX_PLATFORM _platform;
-        public override uint GetPadding(uint width)
-        {
-            switch(_platform)
+		public override uint GetPadding(uint width)
+		{
+			switch(_platform)
 			{
 				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_WII:
 					if(_bitsPerPixel == 0x20) return 0x40;
@@ -25,9 +25,9 @@ namespace igLibrary.Gfx
 				default:
 					return 1;
 			}
-        }
-        public override ushort GetAlignment()
-        {
+		}
+		public override ushort GetAlignment()
+		{
 			switch(_platform)
 			{
 				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_WII:
@@ -56,8 +56,8 @@ namespace igLibrary.Gfx
 					return 0x100;
 			}
 			return 1;
-        }
-        public override uint GetTextureLevelOffset(int width, int height, int depth, int levelCount, int imageCount, int targetLevel, int imageIndex)
+		}
+		public override uint GetTextureLevelOffset(int width, int height, int depth, int levelCount, int imageCount, int targetLevel, int imageIndex)
 		{
 			if(targetLevel == 0 && imageIndex == 0) return 0;
 			int corDepth = depth < 0 ? 1 : depth;
@@ -140,5 +140,5 @@ namespace igLibrary.Gfx
 			if(numBlocksY == 0) numBlocksY = 1;
 			return Align(numBlocksY * padding, GetAlignment());
 		}
-    }
+	}
 }

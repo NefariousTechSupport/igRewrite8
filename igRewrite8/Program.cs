@@ -153,10 +153,6 @@ namespace igRewrite8
 			parser.ReadMetaObjectFile(args[2]);	//regular one
 			//parser.ReadMetaObjectFile(args[3]);	//extra one
 			
-			List<igMetaEnum> enums = igArkCore._metaEnums;
-			List<igMetaFieldPlatformInfo> platformInfos = igArkCore._metaFieldPlatformInfos;
-			List<igMetaObject> objects = igArkCore._metaObjects;
-
 			igArkCore.WriteToFile(igArkCore.EGame.EV_SkylandersSuperchargers);
 			
 			igArkCore.Reset();

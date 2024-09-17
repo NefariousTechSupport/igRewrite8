@@ -1,23 +1,89 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!--===================-->
+  <!-- Common Properties -->
+  <!--===================-->
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <!--============-->
+  <!-- References -->
+  <!--============-->
+
+
+  <!-- Project References -->
+
   <ItemGroup>
     <ProjectReference Include="..\igLibrary\igLibrary.csproj" />
   </ItemGroup>
+
+  <!-- Package References -->
 
   <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.89.4" />
     <PackageReference Include="OpenTK" Version="4.7.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
   </ItemGroup>
 
-  <PropertyGroup>
+
+
+  <!--===================-->
+  <!-- Platform Specific -->
+  <!--===================-->
+
+  <!-- Windows Specific -->
+
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <DefineConstants>_WINDOWS</DefineConstants>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformConstant>_WINDOWS</PlatformConstant>
   </PropertyGroup>
+
+  <!-- OSX Specific -->
+
+  <!-- Linux Specific -->
+
+
+
+  <!--========================-->
+  <!-- Configuration Specific -->
+  <!--========================-->
+
+  <!-- Debug Specific -->
+
+  <!-- Release Specific -->
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+  </PropertyGroup>
+
+  <!--=======-->
+  <!-- Setup -->
+  <!--=======-->
+
+  <!-- Apply set variables -->
+
+  <PropertyGroup>
+    <DefineConstants>$(PlatformConstant);$(FeatureConstants)</DefineConstants>
+  </PropertyGroup>
+
+  <!--==================-->
+  <!-- Post Build Tasks -->
+  <!--==================-->
+
+  <ItemGroup>
+    <ArkFiles Include="../Resources/ArkCore/*.ark"/>
+  </ItemGroup>
+
+  <Target Name="Debug|Release" AfterTargets="AfterBuild">
+    <Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/ArkCore" SkipUnchangedFiles="true"/>
+  </Target>
+  <Target Name="Debug|Release" AfterTargets="Publish">
+    <Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/publish/ArkCore" SkipUnchangedFiles="true"/>
+  </Target>
 </Project>

@@ -52,7 +52,6 @@ namespace igLibrary.Core
 		{
 			igObjectLoader loader = igObjectLoader.FindLoader(_path);
 			loader.ReadFile(this, _path, igBlockingType.kMayBlock);
-			igObjectHandleManager.Singleton.AddDirectory(this);
 		}
 		public void WriteFile(Stream dst, IG_CORE_PLATFORM platform = IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEFAULT)
 		{
@@ -80,8 +79,12 @@ namespace igLibrary.Core
 			_objectList.Append(obj);
 			if(_useNameList)
 			{
-				_nameList.Append(name);
+				_nameList!.Append(name);
 				igObjectHandleManager.Singleton.AddObject(this, obj, name);
+			}
+			else
+			{
+				if(name._hash != 0) throw new ArgumentException("Name is not null even though namelist is!");
 			}
 		}
 		public static igObjectDirectory? LoadDependancyDefault(string path, igName name, igBlockingType idk)

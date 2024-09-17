@@ -43,7 +43,7 @@ namespace igLibrary.Core
 					}
 				}
 			}
-			Console.WriteLine($"failed to load {_namespace._string}:/{_alias._string}");
+			Logging.Warn("failed to load {0}.{1}", _namespace._string, _alias._string);
 			return null;
 		}
 		public static bool operator ==(igHandle? a, igHandle? b)

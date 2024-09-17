@@ -1,6 +1,7 @@
 using igCauldron3.Conversion;
 using igCauldron3.Graphics;
 using igCauldron3.Utils;
+using igLibrary;
 using igLibrary.Core;
 using igLibrary.Gfx;
 using igLibrary.Graphics;
@@ -17,7 +18,7 @@ namespace igCauldron3
 			_t = typeof(igImage2);
 		}
 
-		public unsafe override void Draw(ObjectManagerFrame objFrame, igObject obj, igMetaObject meta)
+		public unsafe override void Draw2(DirectoryManagerFrame dirFrame, string id, igObject obj, igMetaObject meta)
 		{
 			igImage2 image = (igImage2)obj;
 			
@@ -25,17 +26,18 @@ namespace igCauldron3
 			{
 				if(image._format == null)
 				{
-					Console.WriteLine($"{image._name} has Unsupported Texture Format");
+					Logging.Error("{0} has Unsupported Texture Format", image._name);
 					return;
 				}
 
 				igTContext<igBaseGraphicsDevice>._instance.CreateTexture(igResourceUsage.kUsageDefault, image);
 			}
 
-			objFrame.RenderFieldWithName(image, meta.GetFieldByName("_name"));
+			object? castName = image._name;
+			FieldRenderer.RenderField(id, "_name", castName, meta.GetFieldByName("_name")!, (value) => image._name = (string)value!);
 			if(ImGui.Button("Extract"))
 			{
-				string filePath = CrossFileDialog.SaveFile("Save Image...", ".bmp;.dds;.gif;.jpg;.pbm;.png;.qoi;.tga;.tiff;.webp");
+				string filePath = CrossFileDialog.SaveFile("Save Image...", ".bmp;.dds;.gif;.jpg;.pbm;.png;.qoi;.tga;.tiff;.webp", image._name);
 				if(!string.IsNullOrWhiteSpace(filePath))
 				{
 					FileStream fs = File.Create(filePath);
@@ -47,7 +49,7 @@ namespace igCauldron3
 			}
 			if(ImGui.Button("Replace"))
 			{
-				string filePath = CrossFileDialog.OpenFile("Open Image...", ".bmp;.dds;.gif;.jpg;.pbm;.png;.qoi;.tga;.tiff;.webp");
+				string filePath = CrossFileDialog.OpenFile("Open Image...", ".bmp;.dds;.gif;.jpg;.pbm;.png;.qoi;.tga;.tiff;.webp", image._name);
 				if(!string.IsNullOrWhiteSpace(filePath))
 				{
 					FileStream fs = File.Open(filePath, FileMode.Open, FileAccess.Read);

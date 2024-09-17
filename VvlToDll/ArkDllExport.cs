@@ -10,25 +10,26 @@ namespace VvlToDll
 		public static Dictionary<igBaseMeta, TypeDefinition> _dynamicMetaTypeLookup = new Dictionary<igBaseMeta, TypeDefinition>();
 		public static ModuleDefinition module;
 
-		public static void Create()
+		public static void Create(string outputDir)
 		{
 			if(module != null) return;
-			module = ModuleDefinition.CreateModule("Ark.dll", ModuleKind.Dll);
+			Directory.CreateDirectory(outputDir);
+			module = ModuleDefinition.CreateModule( "Ark.dll", ModuleKind.Dll);
 			_metaTypeLookup = new Dictionary<igBaseMeta, TypeDefinition>();
 			InstantiateTypes();
 			DefineEnums();
 			DefineObjects();
-			module.Write("Ark.dll");
+			module.Write(Path.Combine(outputDir, "Ark.dll"));
 		}
 		private static void InstantiateTypes()
 		{
-			foreach(igMetaEnum metaEnum in igArkCore._metaEnums)
+			foreach(igMetaEnum metaEnum in igArkCore.MetaEnums)
 			{
 				TypeDefinition td = new TypeDefinition("Enums", metaEnum._name, TypeAttributes.Public | TypeAttributes.Sealed);
 				_metaTypeLookup.Add(metaEnum, td);
 				module.Types.Add(td);
 			}
-			foreach(igMetaObject metaObject in igArkCore._metaObjects)
+			foreach(igMetaObject metaObject in igArkCore.MetaObjects)
 			{
 				TypeDefinition td = new TypeDefinition("Classes", metaObject._name, TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AutoLayout | TypeAttributes.BeforeFieldInit | TypeAttributes.AnsiClass);
 				_metaTypeLookup.Add(metaObject, td);

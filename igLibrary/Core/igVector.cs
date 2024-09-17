@@ -48,13 +48,22 @@ namespace igLibrary.Core
 			}
 		}
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+		public object? GetItem(int index) => this[index];
+
+		public void SetItem(int index, object? item) => this[index] = (T)item!;
+
+		public int GetCapacity() => _data.Length;
 	}
 	public interface igVectorCommon
 	{
-		public void SetCount(uint count);
-		public void SetData(IigMemory data);
 		public uint GetCount();
+		public void SetCount(uint count);
+		public object? GetItem(int index);
+		public void SetItem(int index, object? item);
+		public int GetCapacity();
 		public void SetCapacity(int capacity);
 		public IigMemory GetData();
+		public void SetData(IigMemory data);
 	}
 }

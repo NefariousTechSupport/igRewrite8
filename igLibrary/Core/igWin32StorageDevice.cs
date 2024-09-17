@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace igLibrary.Core
 {
 	//This'd be called igWin32StorageDevice, igPosixStorageDevice, igPS3StorageDevice, etc but why bother
@@ -41,7 +43,19 @@ namespace igLibrary.Core
 
 		public override void GetFileList(igFileWorkItem workItem)
 		{
-			workItem.SetStatus(igFileWorkItem.Status.kStatusUnsupported);
+			igStringRefList? list = workItem._buffer as igStringRefList;
+
+			Debug.Assert(list != null);
+
+			string[] files = Directory.GetFiles(workItem._path);
+
+			list.SetCapacity(list._capacity + files.Length);
+			for(int i = 0; i < files.Length; i++)
+			{
+				list.Append(files[i]);
+			}
+
+			workItem.SetStatus(igFileWorkItem.Status.kStatusComplete);
 		}
 
 		public override void GetFileListWithSizes(igFileWorkItem workItem)

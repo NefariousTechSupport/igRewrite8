@@ -26,15 +26,25 @@ namespace igLibrary.Core
 			_count++;
 			return item;
 		}
+		public void Remove(int index)
+		{
+			if(index >= _count) throw new IndexOutOfRangeException($"Index {index} is out of bounds");
+			if(index < 0) throw new IndexOutOfRangeException($"Index {index} is below zero");
+
+			for(int i = index; i < _count-1; i++)
+			{
+				_data[i] = _data[i+1];
+			}
+			_count--;
+			_data[_count] = default!;
+		}
 
 		public int GetCapacity() => _capacity;
 
 		public int GetCount() => _count;
 
-		public IigMemory GetData()
-		{
-			return _data;
-		}
+		public IigMemory GetData() => _data;
+		public void SetData(IigMemory data) => _data = (igMemory<T>)data;
 
 		public Type GetMemoryType()
 		{
@@ -54,6 +64,7 @@ namespace igLibrary.Core
 
 		public void SetCount(int count)
 		{
+			_count = count;
 			SetCapacity(((count + 3) / 4) * 4);
 		}
 
@@ -80,6 +91,7 @@ namespace igLibrary.Core
 		public void SetCapacity(int capacity);
 		public Type GetMemoryType();
 		public IigMemory GetData();
+		public void SetData(IigMemory data);
 		public object GetObject(int index);
 		public void SetObject(int index, object data);
 	}

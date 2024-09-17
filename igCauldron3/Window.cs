@@ -12,14 +12,17 @@ namespace igCauldron3
 {
 	public class Window : GameWindow
 	{
+		public static Window _instance { get; private set; }
 		ImGuiController controller;
-		public List<Frame> frames = new List<Frame>();
+		public List<Frame> _frames = new List<Frame>();
 		string[] args;
 
 		public Window(GameWindowSettings gws, NativeWindowSettings nws, string[] args) : base(gws, nws)
 		{
+			_instance = this;
 			this.args = args;
 			igAlchemyCore.InitializeSystems();
+			FieldRenderer.Init();
 		}
 		protected override void OnLoad()
 		{
@@ -30,7 +33,7 @@ namespace igCauldron3
 			controller = new ImGuiController(ClientSize.X, ClientSize.Y);
 			igTContext<igBaseGraphicsDevice>._instance = new igOpenGLGraphicsDevice();
 
-			frames.Add(new ConfigFrame(this));
+			_frames.Add(new ConfigFrame(this));
 		}
 		protected override void OnResize(ResizeEventArgs e)
 		{
@@ -45,6 +48,12 @@ namespace igCauldron3
 			{
 				//Close();
 			}
+
+			if(ImGui.GetIO().WantSaveIniSettings)
+			{
+				ImGui.SaveIniSettingsToDisk(CauldronConfig.ImGuiConfigFilePath);
+			}
+
 
 			base.OnUpdateFrame(e);
 		}
@@ -63,9 +72,9 @@ namespace igCauldron3
 
 			controller.Update(this, (float)e.Time);
 
-			for(int i = 0; i < frames.Count; i++)
+			for(int i = 0; i < _frames.Count; i++)
 			{
-				frames[i].Render();
+				_frames[i].Render();
 			}
 
 			controller.Render();
@@ -124,7 +133,7 @@ namespace igCauldron3
 						break;
 					case "-f":
 						i++;
-						ObjectManagerFrame._dirs.Add(igObjectStreamManager.Singleton.Load(args[i]));
+						DirectoryManagerFrame._instance.AddDirectory(igObjectStreamManager.Singleton.Load(args[i]));
 						i++;
 						break;
 				}

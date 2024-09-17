@@ -728,9 +728,9 @@ namespace VvlToDll
 			}
 			return method.Parameters[index];
 		}
-		public void Finish()
+		public void Finish(string outputDir)
 		{
-			_module.Write($"{_module.Name}.dll");
+			_module.Write(Path.Combine(outputDir, $"{_module.Name}.dll"));
 		}
 	}
 }

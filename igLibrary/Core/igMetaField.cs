@@ -1,10 +1,15 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace igLibrary.Core
 {
+	/// <summary>
+	/// Represents the metadata for a field
+	/// </summary>
 	public class igMetaField : igObject
 	{
+		/// <summary>
+		/// Different ways to copy a field when copying an object
+		/// </summary>
 		public enum CopyType
 		{
 			kCopyByValue,
@@ -13,6 +18,11 @@ namespace igLibrary.Core
 			kCopyByDefault,
 			kCopyTypeMax
 		}
+
+
+		/// <summary>
+		/// Different ways to reset a field when resetting an object
+		/// </summary>
 		public enum ResetType
 		{
 			kResetByValue,
@@ -21,6 +31,11 @@ namespace igLibrary.Core
 			kResetByDefault,
 			kResetTypeMax
 		}
+
+
+		/// <summary>
+		/// Different ways to check for equality in the same field between two objects
+		/// </summary>
 		public enum IsAlikeCompareType
 		{
 			kIsAlikeCompareValue,
@@ -29,6 +44,11 @@ namespace igLibrary.Core
 			kIsAlikeCompareDefault,
 			kIsAlikeCompareTypeMax
 		}
+
+
+		/// <summary>
+		/// Decoded properties about the field, alchemy stores this as a bitfield
+		/// </summary>
 		public struct Properties
 		{
 			public CopyType _copyMethod;
@@ -42,6 +62,10 @@ namespace igLibrary.Core
 			public bool _mutable;
 			public bool _implicitAlignment;
 
+
+			/// <summary>
+			/// Constructor for igMetaField properties
+			/// </summary>
 			public Properties()
 			{
 				_copyMethod = CopyType.kCopyByDefault;
@@ -87,6 +111,14 @@ namespace igLibrary.Core
 		[Obsolete("This exists for the reflection system, do not use.")] public int _internalIndex = -1;
 		[Obsolete("This exists for the reflection system, use GetSize() instead.")] public ushort _size = 0;
 
+		public virtual bool IsArray => false;
+		public virtual int ArrayNum => throw new NotSupportedException($"Fields of type \"{GetType().FullName}\" do not support array based operations");
+
+		/// <summary>
+		/// Returns all attributes of the given type or derived types.
+		/// </summary>
+		/// <typeparam name="T">The type of attribute to search for</typeparam>
+		/// <returns>An array of all attributes matching the criteria</returns>
 		public T[] GetAttributes<T>() where T : igObject
 		{
 			List<T> attrs = new List<T>();
@@ -97,6 +129,13 @@ namespace igLibrary.Core
 			}
 			return attrs.ToArray();
 		}
+
+
+		/// <summary>
+		/// Returns the first attribute of the given type or derived types.
+		/// </summary>
+		/// <typeparam name="T">The type of attribute to search for</typeparam>
+		/// <returns>The first attribute matching the criteria, or null if there is none</returns>
 		public T? GetAttribute<T>() where T : igObject
 		{
 			if(_attributes == null) return null;
@@ -106,6 +145,13 @@ namespace igLibrary.Core
 			}
 			return null;
 		}
+
+
+		/// <summary>
+		/// Whether or not this field applies to a given platform.
+		/// </summary>
+		/// <param name="platform">The platform to check against</param>
+		/// <returns>Whether or not this field applies to the given platform</returns>
 		public bool IsApplicableForPlatform(IG_CORE_PLATFORM platform)
 		{
 			if(_attributes == null) return true;
@@ -125,6 +171,12 @@ namespace igLibrary.Core
 			return !foundPlatformAttribute;
 		}
 
+
+		/// <summary>
+		/// Dumps this field's metadata to an igArkCoreFile
+		/// </summary>
+		/// <param name="saver">The igArkCoreFile to save to</param>
+		/// <param name="sh">The section to write the metadata to</param>
 		public virtual void DumpArkData(igArkCoreFile saver, StreamHelper sh)
 		{
 			if(this is igPlaceHolderMetaField placeholder)
@@ -159,17 +211,38 @@ namespace igLibrary.Core
 
 			saver.SaveAttributes(sh, _attributes);
 		}
+
+
+		/// <summary>
+		/// Dump the default value of this field to the igArkCoreFile
+		/// </summary>
+		/// <param name="saver">The igArkCoreFile to save to</param>
+		/// <param name="sh">The section to write the default value to</param>
 		public virtual void DumpDefault(igArkCoreFile saver, StreamHelper sh){}
+
+
+		/// <summary>
+		/// Read the metadata of this field from the igArkCoreFile
+		/// </summary>
+		/// <param name="loader">The igArkCoreFile to load from</param>
+		/// <param name="sh">The section to read the metadata from</param>
 		public virtual void UndumpArkData(igArkCoreFile loader, StreamHelper sh)
 		{
+			// Read the properties bitfield
 			_properties.setArkStorage(sh.ReadInt32());
+
+			// Process template arguments
 			uint templateArgCount = sh.ReadUInt32();
 			SetTemplateParameterCount(templateArgCount);
 			for(uint i = 0; i < templateArgCount; i++)
 			{
 				SetTemplateParameter(i, loader.ReadMetaField(sh));
 			}
+
+			// Read the field name
 			_fieldName = loader.ReadString(sh);
+
+			// Read array metafield properties
 			short num = sh.ReadInt16();
 			_offset = sh.ReadUInt16();
 			FieldInfo? numField = GetType().GetField("_num");
@@ -180,32 +253,103 @@ namespace igLibrary.Core
 
 			_attributes = loader.ReadAttributes(sh);
 		}
+
+
+		/// <summary>
+		/// Read the default value of the field from the igArkCoreFile
+		/// </summary>
+		/// <param name="loader">The igArkCoreFile to read the default from</param>
+		/// <param name="sh">The section of the file to read the default from</param>
 		public virtual void UndumpDefault(igArkCoreFile loader, StreamHelper sh)
 		{
+			// Subtract 4 because the size was previously read to determine whether this is needed
 			sh.BaseStream.Position -= 4;
 			int size = sh.ReadInt32();
 			sh.BaseStream.Position += size;
 		}
 
+		/// <summary>
+		/// Reads a field from an IGZ file
+		/// </summary>
+		/// <param name="loader">the IGZ to read the data from, at the correct offset</param>
+		/// <returns>The value of the field</returns>
 		public virtual object? ReadIGZField(igIGZLoader loader) => throw new NotImplementedException();
+
+
+		/// <summary>
+		/// Writes a field to an IGZ file
+		/// </summary>
+		/// <param name="saver">The IGZ to write the data to</param>
+		/// <param name="section">The section of the igz to write the data to, at the correct offset</param>
+		/// <param name="value">The value to write</param>
 		public virtual void WriteIGZField(igIGZSaver saver, igIGZSaver.SaverSection section, object? value) => throw new NotImplementedException();
+
+
+		/// <summary>
+		/// The dotnet type of the field
+		/// </summary>
+		/// <returns>The type of the field</returns>
 		public virtual Type GetOutputType() => typeof(object);
+
+
+		/// <summary>
+		/// The size of the field (in bytes) for a given platform
+		/// </summary>
+		/// <param name="platform">The platform in question</param>
+		/// <returns>An unsigned integer representing how big the field is in bytes</returns>
 		public virtual uint GetSize(IG_CORE_PLATFORM platform) => throw new NotImplementedException();
+
+
+		/// <summary>
+		/// The alignment of the field (in bytes) for a given platform
+		/// </summary>
+		/// <param name="platform">The platfomr in question</param>
+		/// <returns>An unsigned integer represnting the alignment of the field in bytes</returns>
 		public virtual uint GetAlignment(IG_CORE_PLATFORM platform) => throw new NotImplementedException();
 
-		public virtual void Commission(ref object target){}
-		public virtual void SetTemplateParameter(uint index, igMetaField meta){}
-		public virtual void SetTemplateParameterCount(uint count){}
-		public virtual igMetaField? GetTemplateParameter(uint index) => null;
+
+		/// <summary>
+		/// Set a template parameter for this field
+		/// </summary>
+		/// <param name="index">Which template parameter to set</param>
+		/// <param name="meta">The metafield to set it to</param>
+		public virtual void SetTemplateParameter(uint index, igMetaField meta) => throw new NotImplementedException();
+
+
+		/// <summary>
+		/// Set the number of template parameters
+		/// </summary>
+		/// <param name="count">The number of template parameters</param>
+		public virtual void SetTemplateParameterCount(uint count) {}
+
+
+		/// <summary>
+		/// Get a template parameter
+		/// </summary>
+		/// <param name="index">Which template parameter to get</param>
+		/// <returns>The desired template parameter</returns>
+		public virtual igMetaField? GetTemplateParameter(uint index) => throw new NotImplementedException();
+
+
+		/// <summary>
+		/// Get the number of template parameters
+		/// </summary>
+		/// <returns>The number of template parameters</returns>
 		public virtual uint GetTemplateParameterCount() => 0;
 
+
+		/// <summary>
+		/// Constructs a default value for this field
+		/// </summary>
+		/// <param name="pool">The memory pool to construct the field for</param>
+		/// <returns>The default value</returns>
 		public virtual object? GetDefault(igMemoryPool pool)
 		{
 			FieldInfo? fi = GetType().GetField("_num");
 			if(fi != null)
 			{
-				short num = (short)fi.GetValue(this);
-				Array arrayDefault = Array.CreateInstance(GetOutputType().GetElementType(), num);
+				short num = (short)fi.GetValue(this)!;
+				Array arrayDefault = Array.CreateInstance(GetOutputType().GetElementType()!, num);
 				if(_default != null)
 				{
 					for(int i = 0; i < num; i++)
@@ -218,7 +362,17 @@ namespace igLibrary.Core
 			else return _default;
 		}
 
+
+		/// <summary>
+		/// Create a shallow copy of this field
+		/// </summary>
+		/// <returns>A shallow copy of this field</returns>
 		public virtual igMetaField CreateFieldCopy() => (igMetaField)this.MemberwiseClone();
 	}
+
+
+	/// <summary>
+	/// Represents a list of igMetaFields
+	/// </summary>
 	public class igMetaFieldList : igTObjectList<igMetaField>{}
 }

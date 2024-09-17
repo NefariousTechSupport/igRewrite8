@@ -20,7 +20,7 @@ namespace igLibrary.Core
 		public igObjectList? _attributes;
 		public Dictionary<IG_CORE_PLATFORM, ushort> _sizes = new Dictionary<IG_CORE_PLATFORM, ushort>();
 		public Dictionary<IG_CORE_PLATFORM, ushort> _alignments = new Dictionary<IG_CORE_PLATFORM, ushort>();
-		public Type _vTablePointer;
+		public Type? _vTablePointer;
 		private bool _baseFieldsInherited = false;
 		public List<igMetaObject> _children = new List<igMetaObject>();
 
@@ -111,8 +111,8 @@ namespace igLibrary.Core
 			{
 				_beganFinalization = true;
 
-				Console.Write($"Finalizing {_name}... ");
-				
+				Logging.Info("Finalizing {0}... ", _name);
+
 				Type testType = tb.CreateType()!;
 				igArkCore.AddDynamicTypeToCache(testType!);
 				_vTablePointer = testType;
@@ -162,7 +162,7 @@ namespace igLibrary.Core
 					_metaFields[4]._fieldHandle = parentType.GetField("_loadFactor")!;
 				}
 
-				Console.Write("Finalized!\n");
+				Logging.Info("Finalized!");
 
 				_finishedFinalization = true;
 			}
@@ -252,10 +252,10 @@ namespace igLibrary.Core
 		{
 			igMetaEnum platformEnum = igArkCore.GetMetaEnum("IG_CORE_PLATFORM");
 			IG_CORE_PLATFORM[] platforms = new IG_CORE_PLATFORM[platformEnum._names.Count];
-			
+
 			for(int i = 0; i < platforms.Length; i++)
 			{
-				platforms[i] = (IG_CORE_PLATFORM)platformEnum.GetEnumFromName(platformEnum._names[i]);
+				platforms[i] = (IG_CORE_PLATFORM)platformEnum._values[i];
 
 				if(platforms[i] == IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEFAULT) continue;
 				if(platforms[i] == IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEPRECATED) continue;
@@ -266,6 +266,8 @@ namespace igLibrary.Core
 		}
 		public void CalculateOffsetForPlatform(IG_CORE_PLATFORM platform)
 		{
+			//This feels a bit wasteful with how this is getting recalculated a lot but uhhh
+
 			if(_parent != null) _parent.CalculateOffsetForPlatform(platform);
 			ushort alignment = (ushort)igAlchemyCore.GetPointerSize(platform);	//alignment set to alignof pointer cos vtable
 			igMetaField[] metaFieldsByOffset = _metaFields.OrderBy(x => x._offset).ToArray();
@@ -331,7 +333,9 @@ namespace igLibrary.Core
 		}
 		public virtual void AppendToArkCore()
 		{
-			igArkCore._metaObjects.Add(this);
+			if(_inArkCore) return;
+			igArkCore.AddObjectMeta(this);
+			_inArkCore = true;
 		}
 		public virtual igObject ConstructInstance(igMemoryPool memPool, bool setFields = true)
 		{

@@ -19,7 +19,6 @@ namespace igLibrary.Gfx
 		}
 		public static void RegisterFormat(igMetaImage metaimage)
 		{
-			//Console.WriteLine($"I should've added {metaimage._name}");
 			_metaImageInfo._metaImagesTable.Add(metaimage._name, metaimage);
 			_metaImageInfo._metaimageDir.AddObject(metaimage, default, new igName(metaimage._name));
 			_metaImageInfo._metaImages.Append(metaimage);
@@ -35,6 +34,7 @@ namespace igLibrary.Gfx
 		}
 		public static void Debug()
 		{
+#if DEBUG
 			StringBuilder sb = new StringBuilder();
 			igObjectDirectory dir = igObjectStreamManager.Singleton.Load("metaimages");
 			for(int i = 0; i < dir._objectList._count; i++)
@@ -45,6 +45,7 @@ namespace igLibrary.Gfx
 				sb.Append('\n');
 			}
 			File.WriteAllText("metaimages.debug.log", sb.ToString());
+#endif
 		}
 	}
 	public class igStringMetaImageHashTable : igTUHashTable<igMetaImage, string> {}

@@ -136,6 +136,8 @@ namespace igLibrary.Core
 
 			igMetaObject meta = obj.GetMeta();
 
+			meta.CalculateOffsetForPlatform(_platform);
+
 			offset = section.MallocAligned(meta._sizes[_platform], meta._alignments[_platform]);
 			section._sh.Seek(offset);
 

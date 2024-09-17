@@ -174,21 +174,18 @@
 							igObject? obj = null;
 							if(!igObjectStreamManager.Singleton._directoriesByName.TryGetValue(depName._ns._hash, out igObjectDirectoryList? list))
 							{
-								Console.WriteLine($"igIGZ EXID load: Failed to find namespace {depName._ns._hash.ToString("X08")}, referenced in {_dir._path}");
+								Logging.Warn("igIGZ EXID load: Failed to find namespace {0}, referenced in {1}", depName._ns._hash.ToString("X08"), _dir._path);
 								goto finish;
 							}
 							for(int d = 0; d < list._count; d++)
 							{
 								igObjectDirectory dependantDir = list[d];
-								//depName._ns._string = dependantDir._name._string;
-								//Console.WriteLine($"igIGZ EXID load: Successfully found {depName._ns._string}, referenced in {_dir._path}");
 								if(dependantDir._useNameList)
 								{
 									for(int k = 0; k < dependantDir._nameList!._count; k++)
 									{
 										if(dependantDir._nameList[k]._hash == depName._name._hash)
 										{
-											//depName._name._string = dependantDir._nameList[k]._string;
 											obj = dependantDir._objectList[k];
 											break;
 										}
@@ -198,7 +195,7 @@
 							}
 							if(obj == null)
 							{
-								Console.WriteLine($"igIGZ EXID load: Failed to find object {depName._ns._hash.ToString("X08")} in {list[0]._name}, referenced in {_dir._path}");
+								Logging.Warn("igIGZ EXID load: Failed to find object {0} in {1}, referenced in {2}", depName._name._hash.ToString("X08"), list[0]._name._string, _dir._path);
 							}
 							finish:
 								_externalList.Add(new igHandle(depName));
@@ -217,7 +214,6 @@
 							igObject? obj = null;
 							if(dir._dependencies.Any(x => x._name._hash == depHandleName._ns._hash))
 							{
-								//Console.WriteLine($"igIGZ EXNM load: Successfully found namespace {depHandleName._ns._string}, referenced in {_dir._path}");
 								igObjectDirectory dependantDir = dir._dependencies.First(x => x._name._hash == depHandleName._ns._hash);
 								if(dependantDir._useNameList)
 								{

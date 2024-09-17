@@ -121,8 +121,8 @@ I've been looking into the IL bytecode for a few days now and I've learned that 
 |      0x71 | ldobj                                      | Removed                                                        | 
 |      0x72 | ldstr <str>                                |                                                                | 
 |      0x73 | newobj <ctortkn>                           |                                                                | 
-|      0x74 | castclass <tkn>                            | No `InvalidCastException` is thrown, instead null is retuend   | 
-|      0x75 | isinst <tkn>                               | Seems to be incorrect? seems to do the same as `castclass`??   | 
+|      0x74 | castclass <tkn>                            | Incorrect, identical to `isinst` for some reason.              | 
+|      0x75 | isinst <tkn>                               |                                                                | 
 |      0x76 | conv.r.un                                  | Removed                                                        | 
 |      0x79 | unbox                                      | Removed                                                        | 
 |      0x7A | throw                                      | Removed                                                        | 

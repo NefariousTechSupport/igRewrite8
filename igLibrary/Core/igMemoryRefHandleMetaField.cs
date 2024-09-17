@@ -39,16 +39,25 @@ namespace igLibrary.Core
 			IigMemory memory = (IigMemory)Activator.CreateInstance(memoryType);
 			memory.SetMemoryPool(pool);
 			memory.SetFlags(thumbnail.Item1, this, loader._platform);
-			Array objects = memory.GetData();
-			uint memSize = _memType.GetSize(loader._platform);
 
-			for(int i = 0; i < objects.Length; i++)
+			if(_memType.GetType() == typeof(igUnsignedCharMetaField))
 			{
-				loader._stream.Seek(offset + i * memSize);
-				objects.SetValue(_memType.ReadIGZField(loader), i);
+				loader._stream.Seek(offset);
+				memory.SetData(loader._stream.ReadBytes(memory.GetCount()));
 			}
+			else
+			{
+				Array objects = memory.GetData();
+				uint memSize = _memType.GetSize(loader._platform);
 
-			memory.SetData(objects);
+				for(int i = 0; i < objects.Length; i++)
+				{
+					loader._stream.Seek((long)offset + memSize * i);
+					objects.SetValue(_memType.ReadIGZField(loader), i);
+				}
+
+				memory.SetData(objects);
+			}
 			
 			return memory;
 		}
@@ -72,10 +81,9 @@ namespace igLibrary.Core
 			}
 
 			section._sh.Seek(start);
+			saver.WriteRawOffset((ulong)saver._thumbnails.Count, section);
 
 			saver._thumbnails.Add(new Tuple<ulong, ulong>(memory.GetFlags(this, saver._platform), (memOffset | (memorySection._index << (saver._version >= 7 ? 0x1B : 0x18)))));
-			//saver.WriteRawOffset(size, section);
-			//saver.WriteRawOffset(memOffset, section);
 			section._runtimeFields._memoryHandles.Add(start);
 		}
 
@@ -90,35 +98,6 @@ namespace igLibrary.Core
 			igMemoryRefMetaField field = (igMemoryRefMetaField)base.CreateFieldCopy();
 			field._memType = field._memType.CreateFieldCopy();
 			return field;
-		}
-	}
-	public class igMemoryRefHandleArrayMetaField : igMemoryRefHandleMetaField
-	{
-		public short _num;
-		public override object? ReadIGZField(igIGZLoader loader)
-		{
-			Array data = Array.CreateInstance(base.GetOutputType(), _num);
-			for(int i = 0; i < _num; i++)
-			{
-				data.SetValue(base.ReadIGZField(loader), i);
-			}
-			return data;
-		}
-		public override void WriteIGZField(igIGZSaver saver, igIGZSaver.SaverSection section, object? value)
-		{
-			Array data = (Array)value;
-			for(int i = 0; i < _num; i++)
-			{
-				base.WriteIGZField(saver, section, data.GetValue(i));
-			}
-		}
-		public override uint GetSize(IG_CORE_PLATFORM platform)
-		{
-			return base.GetSize(platform) * (uint)_num;
-		}
-		public override Type GetOutputType()
-		{
-			return base.GetOutputType().MakeArrayType();
 		}
 	}
 }

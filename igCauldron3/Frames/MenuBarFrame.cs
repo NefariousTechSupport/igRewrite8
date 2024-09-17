@@ -13,10 +13,14 @@ namespace igCauldron3
 			{
 				if(ImGui.BeginMenu("File"))
 				{
-					if(ImGui.MenuItem("Save"))
+					if(ImGui.MenuItem("Open"))
+					{
+						_wnd._frames.Add(new DirectoryOpenerFrame(_wnd));
+					}
+					else if(ImGui.MenuItem("Save"))
 					{
 						MemoryStream ms = new MemoryStream();
-						igObjectDirectory target = ObjectManagerFrame._dirs[ObjectManagerFrame._currentDir];
+						igObjectDirectory target = DirectoryManagerFrame._instance.CurrentDir;
 						target.WriteFile(ms, igRegistry.GetRegistry()._platform);
 						ms.Seek(0, SeekOrigin.Begin);
 #if DEBUG
@@ -34,9 +38,21 @@ namespace igCauldron3
 						if(arc._path[1] == ':') arc.Save(arc._path);
 						else arc.Save($"{igFileContext.Singleton._root}/archives/{Path.GetFileName(arc._path)}");
 					}
-					if(ImGui.MenuItem("New IGZ"))
+					else if(ImGui.MenuItem("New IGZ"))
 					{
-						_wnd.frames.Add(new DirectoryCreatorFrame(_wnd));
+						_wnd._frames.Add(new DirectoryCreatorFrame(_wnd));
+					}
+					else if(ImGui.MenuItem("Duplicate"))
+					{
+						_wnd._frames.Add(new DirectoryDuplicatorFrame(_wnd, DirectoryManagerFrame._instance.CurrentDir));
+					}
+					ImGui.EndMenu();
+				}
+				if(ImGui.BeginMenu("Developer"))
+				{
+					if(ImGui.MenuItem("Dump Class"))
+					{
+						_wnd._frames.Add(new DumpClassFrame(_wnd));
 					}
 					ImGui.EndMenu();
 				}

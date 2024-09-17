@@ -4,28 +4,32 @@ using ImGuiNET;
 
 namespace igCauldron3
 {
-	public sealed class DirectoryCreatorFrame : Frame
+	/// <summary>
+	/// UI Frame for creating a new igObjectDirectory
+	/// </summary>
+	public sealed class DirectoryCreatorFrame : DirectoryActionFrame
 	{
-		private string _path = "";
-		public DirectoryCreatorFrame(Window wnd) : base(wnd){}
+		/// <summary>
+		/// Constructor for the frame
+		/// </summary>
+		/// <param name="wnd">Reference to the main window object</param>
+		public DirectoryCreatorFrame(Window wnd) : base(wnd, "New Directory", "Create"){}
 
-		public override void Render()
+
+		/// <summary>
+		/// Callback function when the confirmation button is pressed
+		/// </summary>
+		protected override void OnActionStart()
 		{
-			ImGui.Begin("New Directory", ImGuiWindowFlags.NoDocking);
-			ImGui.Text("Path");
-			ImGui.SameLine();
-			ImGui.InputText(string.Empty, ref _path, 0x100);
-			if(ImGui.Button("Create"))
-			{
-				igObjectDirectory newDir = new igObjectDirectory(_path, new igName(Path.GetFileNameWithoutExtension(_path)));
-				newDir._nameList = new igNameList();
-				newDir._useNameList = true;
-				igObjectStreamManager.Singleton.AddObjectDirectory(newDir, _path);
-				ObjectManagerFrame._dirs.Add(newDir);
-				Close();
-			}
-			if(ImGui.Button("Close")) Close();
-			ImGui.End();
+			igObjectDirectory newDir = new igObjectDirectory(_path, new igName(Path.GetFileNameWithoutExtension(_path)));
+			newDir._nameList = new igNameList();
+			newDir._useNameList = true;
+
+			igObjectStreamManager.Singleton.AddObjectDirectory(newDir, _path);
+
+			DirectoryManagerFrame._instance.AddDirectory(newDir);
+
+			Close();
 		}
 	}
 }

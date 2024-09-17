@@ -2,6 +2,16 @@ namespace igLibrary.Math
 {
 	public struct igVec4i
 	{
+		public igVec4i Zero => new igVec4i(0, 0, 0, 0);
+		public igVec4i One => new igVec4i(1, 1, 1, 1);
+		public igVec4i UnitX => new igVec4i(1, 0, 0, 0);
+		public igVec4i UnitY => new igVec4i(0, 1, 0, 0);
+		public igVec4i UnitZ => new igVec4i(0, 0, 1, 0);
+		public igVec4i UnitW => new igVec4i(0, 0, 0, 1);
+
+		public float SqrMagnitude => _x * _x + _y * _y + _z * _z + _w * _w;
+		public float Magnitude => MathF.Sqrt(SqrMagnitude);
+
 		public int _x;
 		public int _y;
 		public int _z;
@@ -21,5 +31,7 @@ namespace igLibrary.Math
 		{
 			return new igVec4i((int)vec.X, (int)vec.Y, (int)vec.Z, (int)vec.W);
 		}
+		public static igVec4i operator+(igVec4i a, igVec4i b) => new igVec4i(a._x + b._x, a._y + b._y, a._z + b._z, a._w + b._w);
+		public static igVec4i operator-(igVec4i a, igVec4i b) => new igVec4i(a._x - b._x, a._y - b._y, a._z - b._z, a._w - b._w);
 	}
 }
