@@ -353,3 +353,55 @@ this index is deserialized and converted to a proper pointer to the object in qu
 This fixup contains a list of pointers to all references to an EXNM object ref. The value
 contained at one of these pointers is a 32 bit number representing an index into the EXID,
 this index is deserialized and converted to a proper pointer to the object in question.
+
+## Objects
+
+Remember that IGZ files just contain in-memory representations of C++ objects with some
+pointer fixup.
+
+The way objects are laid out is hence incredibly platform specific, but the base object type is:
+```cpp
+class __internalObjectBase
+{
+	void* _vTablePtr;
+	uint32_t _referenceCounter;
+}
+```
+
+The `_vTablePtr` field isn't an actual field, vtables are the most common way virtual methods
+are implemented in c++.
+
+Each vtable is defined in the executable by the compiler, the files do not know what the final
+compiled binary looks like so instead they store an index in its place as a 32 bit integer
+(even on 64 bit platforms) representing the type to grab the vtable for, this integer is an
+index into the type list defined in [TMET](#tmet-metaobject-table).
+
+The reference counter is a 32 bit integer representing how many times this object has been
+referenced within the current file or others, it is to be incremented when referenced and
+decremented when no longer referenced.
+
+The idea is that when the reference counter reaches 0, the object is destroyed as nothing
+references so it has no reason to exist.
+
+The consequence of this is that an IGZ writer must ensure the reference counters are correct,
+otherwise there will be memory leaks if reference counters are too high, or, even worse, objects
+being destroyed too early if reference counters are too low, leading to dangling pointers.
+This likely won't cause issues on load but will almost certainly lead to crashes on unloading.
+
+Whether or not to reference count an object when writing should be based off of the `_refCounted`
+field of the `igObjectRefMetaField` representing the field metadata for the object pointer.
+
+## igMemory
+
+igMemory is effectively how dynamically allocated, variable size arrays are represented.
+an igMemory consists of 3 fields, a size, a pointer to some data, and some flags. The size
+and flags occupy the same memory.
+
+The leftmost bit is currently unknown, but is assumed to dictate whether or not the memory
+is optimised for cpu read/write, whatever that means.
+
+The next 4 bits correspond to the alignment of the memory, such that the value stored is the
+power to raise 2 to in order to get the alignment, less 2. E.g., an alignment of 16 would be stored
+as 4-2, since 2 to the power of 4 is 16, then less 2.
+This means that the minimum alignment for an igMemory is 4 bytes.
+
