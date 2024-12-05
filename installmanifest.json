@@ -1,0 +1,14 @@
+{
+	"version": 1,
+	"game": "EV_SkylandersSuperChargers",
+	"platform": "IG_CORE_PLATFORM_PS3",
+	"modname": "hatsunemiku",
+	"modified": [
+		{
+			"filename": "models/jasleencube.igz",
+			"archive": "update.pak",
+			"before_md5": "N/A",
+			"after_md5": ""
+		}
+	]
+}

@@ -46,6 +46,10 @@ namespace igCauldron3
 					{
 						_wnd._frames.Add(new DirectoryDuplicatorFrame(_wnd, DirectoryManagerFrame._instance.CurrentDir));
 					}
+					if (ImGui.MenuItem("Create Mod"))
+					{
+						_wnd._frames.Add(new ModBuilderFrame(_wnd));
+					}
 					ImGui.EndMenu();
 				}
 				if(ImGui.BeginMenu("Developer"))

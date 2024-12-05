@@ -1,0 +1,17 @@
+{
+	"version": 1,
+	"game": "EV_SkylandersSuperChargers",
+	"platforms": [
+		"IG_CORE_PLATFORM_PS3"
+	],
+	"modified": [
+		{
+			"path": "models/jasleencube.igz",
+			"archive": null
+		},
+		{
+			"path": "models/mikuhair.igz",
+			"archive": null
+		}
+	]
+}
