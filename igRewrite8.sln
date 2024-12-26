@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "igLibrary.Tests", "igLibrar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "igLibrary.CodeGen", "igLibrary.CodeGen\igLibrary.CodeGen.csproj", "{2C008B2A-2034-4D19-A277-A92E44481488}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Potion", "Potion\Potion.csproj", "{A5605C1A-7100-4D6D-B89D-B3B8B48712E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{2C008B2A-2034-4D19-A277-A92E44481488}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C008B2A-2034-4D19-A277-A92E44481488}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C008B2A-2034-4D19-A277-A92E44481488}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5605C1A-7100-4D6D-B89D-B3B8B48712E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5605C1A-7100-4D6D-B89D-B3B8B48712E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5605C1A-7100-4D6D-B89D-B3B8B48712E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5605C1A-7100-4D6D-B89D-B3B8B48712E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
