@@ -188,7 +188,7 @@ namespace igLibrary.AssetConversion.Models
 			drawCall._primitiveType = IG_GFX_DRAW.IG_GFX_DRAW_TRIANGLES;
 			drawCall._lod = 1;
 			drawCall._enabled = true;
-			drawCall._instanceShaderConstants = 1;
+			drawCall._instanceShaderConstants = (byte)igInstanceShaderConstants.kHasVertexColor;
 
 			drawCall._graphicsIndexBuffer._usage = igResourceUsage.kUsageStatic;
 			drawCall._graphicsIndexBuffer._indexBuffer = indexBuffer;
