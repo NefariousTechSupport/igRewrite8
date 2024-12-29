@@ -148,8 +148,8 @@ namespace igLibrary.AssetConversion.Models
 				Array.Copy(BitConverter.GetBytes(mesh.Tangents[i].Y),                     0, vertexData, i * vertexFormat._vertexSize + 0x24, sizeof(float));
 				Array.Copy(BitConverter.GetBytes(mesh.Tangents[i].Z),                     0, vertexData, i * vertexFormat._vertexSize + 0x28, sizeof(float));
 				Array.Copy(BitConverter.GetBytes(1.0f),                                   0, vertexData, i * vertexFormat._vertexSize + 0x2C, sizeof(float));
-				Array.Copy(BitConverter.GetBytes(1.0f),                                   0, vertexData, i * vertexFormat._vertexSize + 0x2C, sizeof(float));
 				Array.Copy(BitConverter.GetBytes(1.0f),                                   0, vertexData, i * vertexFormat._vertexSize + 0x30, sizeof(float));
+				Array.Copy(BitConverter.GetBytes(1.0f),                                   0, vertexData, i * vertexFormat._vertexSize + 0x34, sizeof(float));
 				Array.Copy(BitConverter.GetBytes(1.0f),                                   0, vertexData, i * vertexFormat._vertexSize + 0x38, sizeof(float));
 			}
 
