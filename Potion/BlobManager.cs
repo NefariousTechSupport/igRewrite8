@@ -51,7 +51,7 @@ namespace Potion
 
 		public FileInfo? BlobToFile(Blob blob)
 		{
-			string filename = Convert.ToHexString(blob.Sha1);
+			string filename = Convert.ToHexString(blob.Sha1.ToArray());
 
 			string fullpath = Path.Combine(_blobDirectory.FullName, filename);
 
