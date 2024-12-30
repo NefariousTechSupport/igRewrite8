@@ -1,5 +1,7 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using igLibrary.Core;
 
 namespace Potion
 {
@@ -121,6 +123,32 @@ namespace Potion
 		public override string ToString()
 		{
 			return Convert.ToHexString(_sha1);
+		}
+
+
+		/// <summary>
+		/// Whether or not this object equals the parameter
+		/// </summary>
+		/// <param name="obj">The object to compare with</param>
+		/// <returns>Whether the two are equal</returns>
+		public override bool Equals([NotNullWhen(true)] object? obj)
+		{
+			if (obj is Blob blob)
+			{
+				return this == blob;
+			}
+
+			return false;
+		}
+
+
+		/// <summary>
+		/// Compute an Fnv1a hash of the blob
+		/// </summary>
+		/// <returns></returns>
+		public override int GetHashCode()
+		{
+			return unchecked((int)igHash.Hash(_sha1));
 		}
 	}
 }
