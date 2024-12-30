@@ -4,6 +4,7 @@ namespace Potion
 	{
 		protected TransactionType _type;
 
+		public abstract void Apply(BlobManager blobs);
 		public abstract void Revert(BlobManager blobs);
 	}
 }
