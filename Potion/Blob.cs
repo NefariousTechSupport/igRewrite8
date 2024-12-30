@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
@@ -13,16 +14,16 @@ namespace Potion
 		/// <summary>
 		/// A blob that represents nothing
 		/// </summary>
-		public static readonly Blob NullBlob = new Blob { _sha1 = new byte[SHA1.HashSizeInBytes] };
+		public static readonly Blob NullBlob = new Blob(new byte[SHA1.HashSizeInBytes]);
 
 
-		private byte[] _sha1;
+		private readonly ImmutableArray<byte> _sha1;
 
 
 		/// <summary>
 		/// The sha1 hash for the blob
 		/// </summary>
-		public byte[] Sha1 => _sha1;
+		public readonly ImmutableArray<byte> Sha1 => _sha1;
 
 
 		/// <summary>
@@ -31,7 +32,7 @@ namespace Potion
 		/// <param name="sha1">The 20 byte long array</param>
 		private Blob(byte[] sha1)
 		{
-			_sha1 = sha1;
+			_sha1 = sha1.ToImmutableArray();
 		}
 
 
@@ -122,7 +123,7 @@ namespace Potion
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return Convert.ToHexString(_sha1);
+			return Convert.ToHexString(_sha1.ToArray());
 		}
 
 
@@ -148,7 +149,7 @@ namespace Potion
 		/// <returns></returns>
 		public override int GetHashCode()
 		{
-			return unchecked((int)igHash.Hash(_sha1));
+			return unchecked((int)igHash.Hash(_sha1.ToArray()));
 		}
 	}
 }
