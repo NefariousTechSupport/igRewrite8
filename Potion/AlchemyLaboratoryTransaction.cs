@@ -1,3 +1,4 @@
+using igLibrary;
 using igLibrary.Core;
 
 namespace Potion
@@ -35,6 +36,7 @@ namespace Potion
 
 		public override void Revert(BlobManager blobs)
 		{
+			FileInfo? fi = null;
 			switch (_type)
 			{
 				case TransactionType.Addition:
@@ -48,12 +50,40 @@ namespace Potion
 					}
 					break;
 				case TransactionType.Modification:
-					FileInfo? fi = blobs.BlobToFile(_oldData);
+				case TransactionType.Deletion:
+					fi = blobs.BlobToFile(_oldData);
 					if (fi != null)
 					{
 						FileStream fs = fi.OpenRead();
+
+						Stream output;
+						if (_archive != null)
+						{
+							output = new MemoryStream();
+						}
+						else
+						{
+							igFileContext.Singleton.Open(_path, igFileContext.GetOpenFlags(FileAccess.Write, FileMode.Create), out igFileDescriptor fd, igBlockingType.kMayBlock, igFileWorkItem.Priority.kPriorityNormal);
+							output = fd._stream.BaseStream;
+						}
+
+						output.SetLength(fs.Length);
+
 						fs.Seek(0, SeekOrigin.Begin);
-						igFileContext.Singleton.
+						output.Seek(0, SeekOrigin.Begin);
+						fs.CopyTo(output);
+
+						if (_archive != null)
+						{
+							_archive.Compress(_archive.GetAddFile(_path), output);
+							output.Close();
+						}
+						else
+						{
+							Logging.Error("Unable to overwrite/create file {0} as the operation is not implemented", _path);
+						}
+
+						fs.Close();
 					}
 					break;
 			}
