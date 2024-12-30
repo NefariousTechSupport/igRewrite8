@@ -20,6 +20,17 @@ namespace igLibrary.Core
 
 
 		/// <summary>
+		/// Hashes a byte array to a 32 bit uint with Fnv1a
+		/// </summary>
+		/// <param name="input">The byte array</param>
+		/// <returns>The hash</returns>
+		public static uint Hash(byte[] input)
+		{
+			return Fnv1a.Hash32(input);
+		}
+
+
+		/// <summary>
 		/// Hashes a string as lowercase to a 32 bit uint with Fnv1a
 		/// </summary>
 		/// <param name="input">The string</param>
