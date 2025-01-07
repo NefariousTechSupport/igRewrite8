@@ -790,7 +790,7 @@ namespace igLibrary.Gfx
 		}
 
 
-		public static unsafe void Convert_r5g5b5a1_to_r8g8b8a8(igImageLevel source, igImageLevel target)
+        public static unsafe void Convert_r5g5b5a1_to_r8g8b8a8(igImageLevel source, igImageLevel target)
 		{
 			bool sourceEndian = false;
 			if(source._targetMeta is igPlatformMetaImage platSource) sourceEndian = IsPlatformLittleEndian(platSource._platform);
@@ -1072,6 +1072,12 @@ namespace igLibrary.Gfx
 				}
 			}
 		}
-#endregion Image conversion
-	}
+
+        public static unsafe void Convert_r8g8b8a8_to_r8g8b8a8(igImageLevel source, igImageLevel target)
+        {
+			for (int i = 0; i < source._imageSize; i++)
+				target._imageData[i] = source._imageData[i];
+        }
+        #endregion Image conversion
+    }
 }

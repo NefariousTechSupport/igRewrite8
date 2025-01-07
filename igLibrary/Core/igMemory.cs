@@ -92,7 +92,11 @@ namespace igLibrary.Core
 			if(_data != null && itemCount == _data!.Length) return;
 			Array.Resize<T>(ref _data, itemCount);
 		}
-		public ulong GetFlags(igMemoryRefMetaField ioField, IG_CORE_PLATFORM platform) => GetFlagsInternal(ioField._memType, platform);
+        public void SetData(Array data)
+        {
+            _data = data.Cast<T>().ToArray();
+        }
+        public ulong GetFlags(igMemoryRefMetaField ioField, IG_CORE_PLATFORM platform) => GetFlagsInternal(ioField._memType, platform);
 		public ulong GetFlags(igMemoryRefHandleMetaField ioField, IG_CORE_PLATFORM platform) => GetFlagsInternal(ioField._memType, platform);
 		private ulong GetFlagsInternal(igMetaField memType, IG_CORE_PLATFORM platform)
 		{
