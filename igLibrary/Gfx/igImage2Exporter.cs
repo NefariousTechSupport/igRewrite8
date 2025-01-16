@@ -144,12 +144,16 @@ namespace igLibrary.Gfx
 				throw new NotImplementedException("pixel formats aren't supported for export right now");
 			}
 
-			header.dwCaps |= DdsCapsFlags.DDSCAPS_MIPMAP;
+            byte[] imageData = image._data.Buffer;
+            if (image._format._name.EndsWith("_tile_cafe"))
+				imageData = igWiiUSwizzle.Deswizzle(imageData, image._width, image._height, image._format._name, image._levelCount);
+
+            header.dwCaps |= DdsCapsFlags.DDSCAPS_MIPMAP;
 
 			StreamHelper sh = new StreamHelper(dst, StreamHelper.Endianness.Little);
 			sh.WriteUInt32(DdsHeader.MagicCookie);
 			sh.WriteStruct<DdsHeader>(header);
-			sh.WriteBytes(image._data.Buffer);
+			sh.WriteBytes(imageData);
 			sh.Dispose();
 		}
 	}
