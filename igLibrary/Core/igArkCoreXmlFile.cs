@@ -1,5 +1,15 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Reflection;
 using System.Xml;
+using igLibrary.DotNet;
 
 namespace igLibrary.Core
 {
@@ -128,21 +138,19 @@ namespace igLibrary.Core
 		{
 			_metafieldDocument.Load(filePath);
 
-			if (_metafieldDocument.ChildNodes.Count != 1)
+			if (_metafieldDocument.FirstChild != _metafieldDocument.LastChild)
 			{
 				return new ArkCoreXmlError("\"{0}\" must have exactly one root node!", filePath);
 			}
-			_metafieldRoot = _metafieldDocument.ChildNodes[0]!;
+			_metafieldRoot = _metafieldDocument.FirstChild!;
 			if (_metafieldRoot.Name != "metafields")
 			{
 				return new ArkCoreXmlError("\"{0}\" must have exactly one root node named \"metafields\"!", filePath);
 			}
 
 
-			for (int f = 0; f < _metafieldRoot.ChildNodes.Count; f++)
+			for (XmlNode? node = _metafieldRoot.FirstChild; node != null; node = node.NextSibling)
 			{
-				// Why does indexing ChildNodes return a possibly null value???
-				XmlNode node = _metafieldRoot.ChildNodes[f]!;
 				if (node.Name != "metafield")
 				{
 					return new ArkCoreXmlError("All root metafield platform info elements must be named \"metafield\".");
@@ -157,12 +165,12 @@ namespace igLibrary.Core
 				}
 
 				platformInfo._name = nameAttr.Value!;
-				platformInfo._sizes.EnsureCapacity(node.ChildNodes.Count);
-				platformInfo._alignments.EnsureCapacity(node.ChildNodes.Count);
+				int capacity = node.ChildNodes.Count;
+				platformInfo._sizes.EnsureCapacity(capacity);
+				platformInfo._alignments.EnsureCapacity(capacity);
 
-				for (int p = 0; p < node.ChildNodes.Count; p++)
+				for (XmlNode? platformNode = node.FirstChild; platformNode != null; platformNode = platformNode.NextSibling)
 				{
-					XmlNode platformNode = node.ChildNodes[p]!;
 					if (platformNode.Name != "platforminfo")
 					{
 						return new ArkCoreXmlError("All metafield platform info subnodes must be named \"platforminfo\"");
@@ -213,20 +221,18 @@ namespace igLibrary.Core
 		{
 			_metaenumDocument.Load(filePath);
 
-			if (_metaenumDocument.ChildNodes.Count != 1)
+			if (_metaenumDocument.FirstChild == null)
 			{
 				return new ArkCoreXmlError("\"{0}\" must have exactly one root node!", filePath);
 			}
-			_metaenumRoot = _metaenumDocument.ChildNodes[0]!;
+			_metaenumRoot = _metaenumDocument.FirstChild!;
 			if (_metaenumRoot.Name != "metaenums")
 			{
 				return new ArkCoreXmlError("\"{0}\" must have exactly one root node named \"metaenums\"!", filePath);
 			}
 
-			for (int e = 0; e < _metaenumRoot.ChildNodes.Count; e++)
+			for (XmlNode? node = _metaenumRoot.FirstChild; node != null; node = node.NextSibling)
 			{
-				// Why does indexing ChildNodes return a possibly null value???
-				XmlNode node = _metaenumRoot.ChildNodes[e]!;
 				if (node.Name != "metaenum")
 				{
 					return new ArkCoreXmlError("All root metaenum elements must be named \"metaenum\".");
@@ -242,12 +248,11 @@ namespace igLibrary.Core
 
 				metaEnum._name = refnameAttr.Value;
 				metaEnum._names.Capacity  = node.ChildNodes.Count;
-				metaEnum._values.Capacity = node.ChildNodes.Count;
+				metaEnum._values.Capacity = metaEnum._names.Capacity;
 				_metaenumLookup.Add(metaEnum._name!, metaEnum);
 
-				for (int m = 0; m < node.ChildNodes.Count; m++)
+				for (XmlNode? memberNode = node.FirstChild; memberNode != null; memberNode = memberNode.NextSibling)
 				{
-					XmlNode memberNode = node.ChildNodes[m]!;
 					if (memberNode.Name != "value")
 					{
 						return new ArkCoreXmlError("All children of \"metaenum\" nodes must be named \"value\"");
@@ -291,11 +296,13 @@ namespace igLibrary.Core
 		{
 			_metaobjectDocument.Load(filePath);
 
-			if (_metaobjectDocument.ChildNodes.Count != 1)
+			if (_metaobjectDocument.FirstChild != _metaobjectDocument.LastChild)
 			{
 				return new ArkCoreXmlError("\"{0}\" must have exactly one root node!", filePath);
 			}
-			_metaobjectRoot = _metaobjectDocument.ChildNodes[0]!;
+
+			// Can't be null
+			_metaobjectRoot = _metaobjectDocument.FirstChild!;
 			if (_metaobjectRoot.Name != "metaobjects")
 			{
 				return new ArkCoreXmlError("\"{0}\" must have exactly one root node named \"metaobjects\"!", filePath);
@@ -303,10 +310,9 @@ namespace igLibrary.Core
 
 			ArkCoreXmlError? error = null;
 
-			for(int i = 0; i < _metaobjectRoot.ChildNodes.Count; i++)
+			for(XmlNode? node = _metaobjectRoot.FirstChild; node != null; node = node.NextSibling)
 			{
-				// Why does indexing ChildNodes return a possibly null value???
-				error = ParseMetaObjectNodePass1(_metaobjectRoot.ChildNodes[i]!);
+				error = ParseMetaObjectNodePass1(node);
 				if (error != null)
 				{
 					break;
@@ -360,10 +366,10 @@ namespace igLibrary.Core
 			metaobject._name = refnameAttribute.Value;
 			_metaobjectLookup.Add(metaobject._name!, metaobject);
 
-			for (int i = 0; i < node.ChildNodes.Count; i++)
+			for (XmlNode? compoundNode = node.FirstChild; compoundNode != null; compoundNode = compoundNode.NextSibling)
 			{
 				// This is compound pass 1
-				if (node.ChildNodes[i]!.Name == "compoundfields")
+				if (compoundNode.Name == "compoundfields")
 				{
 					igCompoundMetaFieldInfo compoundInfo = new igCompoundMetaFieldInfo();
 					compoundInfo._name = refnameAttribute.Value;
@@ -384,10 +390,8 @@ namespace igLibrary.Core
 		{
 			ArkCoreXmlError? error = null;
 
-			for(int i = 0; i < _metaobjectRoot.ChildNodes.Count; i++)
+			for(XmlNode? metaobjectNode = _metaobjectRoot.FirstChild; metaobjectNode != null; metaobjectNode = metaobjectNode.NextSibling)
 			{
-				// Why does indexing ChildNodes return a possibly null value???
-				XmlNode metaobjectNode = _metaobjectRoot.ChildNodes[i]!;
 				error = ParseMetaObjectNodePass2(metaobjectNode, _metaobjectLookup[metaobjectNode.Attributes!.GetNamedItem("refname")!.Value!]);
 				if (error != null)
 				{
@@ -436,15 +440,12 @@ namespace igLibrary.Core
 
 			ArkCoreXmlError? error = null;
 
-			for (int c = 0; c < node.ChildNodes.Count; c++)
+			for (XmlNode? childNode = node.FirstChild; childNode != null; childNode = childNode.NextSibling)
 			{
-				XmlNode childNode = node.ChildNodes[c]!;
 				if (childNode.Name == "metafields")
 				{
-					for (int f = 0; f < childNode.ChildNodes.Count; f++)
+					for (XmlNode? fieldNode = childNode.FirstChild; fieldNode != null; fieldNode = fieldNode.NextSibling)
 					{
-						XmlNode fieldNode = childNode.ChildNodes[f]!;
-
 						error = ParseMetaFieldNode(fieldNode, out igMetaField? field, metaobject);
 						if (error != null) return error;
 
@@ -453,10 +454,8 @@ namespace igLibrary.Core
 				}
 				else if (childNode.Name == "overriddenmetafields")
 				{
-					for (int f = 0; f < childNode.ChildNodes.Count; f++)
+					for (XmlNode? fieldNode = childNode.FirstChild; fieldNode != null; fieldNode = fieldNode.NextSibling)
 					{
-						XmlNode fieldNode = childNode.ChildNodes[f]!;
-
 						error = ParseMetaFieldNode(fieldNode, out igMetaField? field, metaobject);
 						if (error != null) return error;
 
@@ -507,6 +506,36 @@ namespace igLibrary.Core
 					error = ParseCompoundNodePass2(childNode, _compoundLookup[metaobject._name!]);
 					if (error != null) return null;
 				}
+				else if (childNode.Name == "dotnetfields"
+				      && metaobject is igDotNetMetaObject dnmo // This only applies to igDotNetMetaObject
+				      && childNode.FirstChild != null)         // If there are no children then do nothing
+				{
+					igStringRefList cppFields = new igStringRefList();
+					igStringRefList dnFields = new igStringRefList();
+
+					for (XmlNode? dnFieldNode = childNode.FirstChild; dnFieldNode != null; dnFieldNode = dnFieldNode.NextSibling)
+					{
+						if (dnFieldNode.Name != "field")
+						{
+							return new ArkCoreXmlError("\"dotnetfields\" node must have only \"field\" children");
+						}
+
+						XmlNode? cppNameAttr = dnFieldNode.Attributes!.GetNamedItem("cppName");
+						XmlNode? dnNameAttr  = dnFieldNode.Attributes!.GetNamedItem("dnName");
+
+						if (cppNameAttr == null || dnNameAttr == null)
+						{
+							return new ArkCoreXmlError("\"dotnetfields\".\"field\" node must have \"cppName\" and \"dnName\" string attributes");
+						}
+
+						cppFields.Append(cppNameAttr.Value!);
+						dnFields.Append(dnNameAttr.Value!);
+					}
+
+					dnmo._cppFieldNames = cppFields;
+					dnmo._dotNetFieldNames = dnFields;
+					dnmo._exposedFieldCount = cppFields._count;
+				}
 			}
 
 			return error;
@@ -526,10 +555,8 @@ namespace igLibrary.Core
 				return new ArkCoreXmlError("All compound field elements must be named \"compoundfields\".");
 			}
 
-			for (int f = 0; f < node.ChildNodes.Count; f++)
+			for (XmlNode? fieldNode = node.FirstChild; fieldNode != null; fieldNode = fieldNode.NextSibling)
 			{
-				XmlNode fieldNode = node.ChildNodes[f]!;
-
 				ArkCoreXmlError? error = ParseMetaFieldNode(fieldNode, out igMetaField? field, compoundInfo);
 				if (error != null) return error;
 
@@ -642,6 +669,8 @@ namespace igLibrary.Core
 			error = ParseMetaFieldPropertyBool(node, "mutable",            out metafield._properties._mutable,           false);
 			if (error != null) return error;
 			error = ParseMetaFieldPropertyBool(node, "implicitAlignment",  out metafield._properties._implicitAlignment, true);
+			if (error != null) return error;
+			error = ParseMetaFieldPropertyByte(node, "requiredAlignment",  out metafield._properties._requiredAlignment, 0x00);
 			if (error != null) return error;
 
 			if (metafield is igRefMetaField refMetaField)
@@ -758,20 +787,21 @@ namespace igLibrary.Core
 			}
 
 			XmlNode? templateArgsNode = null;
-			for (int i = 0; i < node.ChildNodes.Count; i++)
+			for (XmlNode? candidateNode = node.FirstChild; candidateNode != null; candidateNode = candidateNode.NextSibling)
 			{
-				if (node.ChildNodes[i]!.Name == "templateargs")
+				if (candidateNode.Name == "templateargs")
 				{
-					templateArgsNode = node.ChildNodes[i];
+					templateArgsNode = candidateNode;
 					continue;
 				}
 			}
 
 			if (templateArgsNode != null)
 			{
-				for (uint t = 0; t < templateArgsNode.ChildNodes.Count; t++)
+				uint t = 0;
+				for (XmlNode? templateArgNode = templateArgsNode.FirstChild; templateArgNode != null; templateArgNode = templateArgNode.NextSibling, t++)
 				{
-					error = ParseMetaFieldNode(templateArgsNode.ChildNodes[(int)t]!, out igMetaField? templateArg);
+					error = ParseMetaFieldNode(templateArgNode, out igMetaField? templateArg);
 					if (error != null) return error;
 
 					metafield.SetTemplateParameter(t, templateArg!);
@@ -811,12 +841,13 @@ namespace igLibrary.Core
 				{
 					return new ArkCoreXmlError("Invalid metafield reference attribute, must be formatted as \"f%u\"");
 				}
-				if (node.ChildNodes[(int)childIndex] == null)
+				XmlNode? fieldRefNode = node.ChildNodes[(int)childIndex];
+				if (fieldRefNode == null)
 				{
 					return new ArkCoreXmlError("Invalid metafield reference attribute, the metafield index must be less than the number of children and above zero");
 				}
 
-				return ParseMetaFieldNode(node.ChildNodes[(int)childIndex]!, out metaField);
+				return ParseMetaFieldNode(fieldRefNode, out metaField);
 			}
 
 			return null;
@@ -847,6 +878,23 @@ namespace igLibrary.Core
 			}
 
 			return null;
+		}
+
+
+		/// <summary>
+		/// Parses an attribute of an xml node as an unsigned byte.
+		/// </summary>
+		/// <param name="node">The xml node in question</param>
+		/// <param name="name">The name of the xml attribute</param>
+		/// <param name="output">The byte this is stored into</param>
+		/// <param name="defaultValue">The default value for if reading this errors or the attribute is missing</param>
+		/// <returns>null on success, and an ArkCoreXmlError containing a message on error</returns>
+		private ArkCoreXmlError? ParseMetaFieldPropertyByte(XmlNode node, string name, out byte output, byte defaultValue)
+		{
+			uint temp;
+			ArkCoreXmlError? error = ParseMetaFieldPropertyUInt(node, name, out temp, defaultValue);
+			output = unchecked((byte)temp);
+			return error;
 		}
 
 
@@ -884,7 +932,7 @@ namespace igLibrary.Core
 			{
 				string value = attribute.Value!;
 				System.Globalization.NumberStyles numberStyles = System.Globalization.NumberStyles.None;
-				if (value[0] == '0' && value[1] == 'x')
+				if (value.Length > 2 && value[0] == '0' && value[1] == 'x')
 				{
 					numberStyles |= System.Globalization.NumberStyles.HexNumber;
 					value = value.Substring(2);

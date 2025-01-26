@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Collections;
 using System.Diagnostics;
 using igLibrary.Core;
@@ -5,15 +14,29 @@ using ImGuiNET;
 
 namespace igCauldron3
 {
+	/// <summary>
+	/// UI override for rendering hash tables
+	/// </summary>
 	public class igHashTableOverride : InspectorDrawOverride
 	{
 		private static Dictionary<IigHashTable, UiData> _uiData = new Dictionary<IigHashTable, UiData>();
+
+
+		/// <summary>
+		/// Cached UI Data for a hashtable
+		/// </summary>
 		private class UiData
 		{
 			public List<object> _keys;
 			public List<object> _values;
 			public bool _stale;
 			public List<KeyStatus> _keyStatus;
+
+
+			/// <summary>
+			/// Constructor
+			/// </summary>
+			/// <param name="hashTable">The hashtable to build the data for</param>
 			public UiData(IigHashTable hashTable)
 			{
 				_keys = new List<object>(hashTable.GetHashItemCount());
@@ -37,6 +60,11 @@ namespace igCauldron3
 				}
 			}
 		}
+
+
+		/// <summary>
+		/// The status of the user inputted keys
+		/// </summary>
 		[Flags]
 		private enum KeyStatus
 		{
@@ -44,10 +72,24 @@ namespace igCauldron3
 			Duplicate = 1,
 			Invalid = 2
 		}
+
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public igHashTableOverride()
 		{
 			_t = typeof(IigHashTable);
 		}
+
+
+		/// <summary>
+		/// Renders the ui
+		/// </summary>
+		/// <param name="dirFrame">The directory manager frame</param>
+		/// <param name="id">the id to render with</param>
+		/// <param name="obj">the object</param>
+		/// <param name="meta">the type of the object</param>
 		public override void Draw2(DirectoryManagerFrame dirFrame, string id, igObject obj, igMetaObject meta)
 		{
 			IigHashTable hashTable = (IigHashTable)obj;

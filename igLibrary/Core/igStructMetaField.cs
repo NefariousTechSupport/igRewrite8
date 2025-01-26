@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 namespace igLibrary.Core
 {
 	public class igStructMetaField : igMetaField
@@ -38,6 +47,10 @@ namespace igLibrary.Core
 				size = _sizes[IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEFAULT];
 			}
 			return size;
+		}
+		public override object? GetDefault(igMemoryPool pool)
+		{
+			return new byte[GetSize(IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEFAULT)];
 		}
 		public override Type GetOutputType() => typeof(byte[]);
 	}

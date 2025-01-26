@@ -1,20 +1,41 @@
+/*
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Text;
 using igLibrary.Core;
 using ImGuiNET;
 
 namespace igCauldron3
 {
+	/// <summary>
+	/// UI frame for dumping class metadata as c# source files
+	/// </summary>
 	public class DumpClassFrame : Frame
 	{
 		private igMetaObject _meta = null;
 		private List<igMetaObject> _alphabeticalMetas;
 		private HashSet<igBaseMeta> _dumpedMetas = new HashSet<igBaseMeta>();
 
+
+		/// <summary>
+		/// constructor
+		/// </summary>
+		/// <param name="wnd">The window to parent to</param>
 		public DumpClassFrame(Window wnd) : base(wnd)
 		{
 			_alphabeticalMetas = igArkCore.MetaObjects.Where(x => x is not igDynamicMetaObject).OrderBy(x => x._name).ToList();
 		}
 
+
+		/// <summary>
+		/// Renders the UI
+		/// </summary>
 		public override void Render()
 		{
 			ImGui.Begin("Dump Class", ImGuiWindowFlags.NoDocking);
@@ -54,6 +75,12 @@ namespace igCauldron3
 			if(ImGui.Button("Close")) Close();
 			ImGui.End();
 		}
+
+
+		/// <summary>
+		/// Dumps a class
+		/// </summary>
+		/// <param name="meta">The class to dump</param>
 		private void DumpClass(igMetaObject meta)
 		{
 			if(meta is igDynamicMetaObject) return;
@@ -88,6 +115,12 @@ namespace igCauldron3
 
 			File.WriteAllText($"{meta._name}.cs", output.ToString());
 		}
+
+
+		/// <summary>
+		/// Dumps a struct
+		/// </summary>
+		/// <param name="compoundFieldInfo">The compound field to dump</param>
 		private void DumpStruct(igCompoundMetaFieldInfo compoundFieldInfo)
 		{
 			if(_dumpedMetas.Contains(compoundFieldInfo)) return;
@@ -114,6 +147,12 @@ namespace igCauldron3
 
 			File.WriteAllText($"{compoundFieldInfo._name}.cs", output.ToString());
 		}
+
+
+		/// <summary>
+		/// Dumps an enum
+		/// </summary>
+		/// <param name="metaenum">The enum to dump</param>
 		private void DumpEnum(igMetaEnum? metaenum)
 		{
 			// This is possible
@@ -136,6 +175,12 @@ namespace igCauldron3
 
 			File.WriteAllText($"{metaenum._name}.cs", output.ToString());
 		}
+
+
+		/// <summary>
+		/// Traverse the fields to find the next thing to dump
+		/// </summary>
+		/// <param name="field">The current field to traverse</param>
 		private void CheckShouldDump(igMetaField field)
 		{
 			if(field is igObjectRefMetaField objField) DumpClass(objField._metaObject);
@@ -153,24 +198,24 @@ namespace igCauldron3
 				CheckShouldDump(omField._u);
 			}
 		}
+
+
+		/// <summary>
+		/// Demangles a dotnet type name
+		/// </summary>
+		/// <param name="t">The type</param>
+		/// <returns>The demangled name</returns>
 		public static string DemangleTypeName(Type t)
 		{
-			string name = t.ToString();
-			/*if(t.ContainsGenericParameters)
-			{
-				name += '[';
-				for(int i = 0; i < t.GenericTypeArguments.Length; i++)
-				{
-					name += t.GenericTypeArguments[i].FullName;
-					if(i+1 != t.GenericTypeArguments.Length)
-					{
-						name += ',';
-					}
-				}
-				name += ']';
-			}*/
-			return DemangleTypeName(name);
+			return DemangleTypeName(t.ToString());
 		}
+
+
+		/// <summary>
+		/// Demangles a dotnet type name
+		/// </summary>
+		/// <param name="name">The mangled name</param>
+		/// <returns>The demangled name</returns>
 		public static string DemangleTypeName(string name)
 		{
 			string demangledName = string.Empty;

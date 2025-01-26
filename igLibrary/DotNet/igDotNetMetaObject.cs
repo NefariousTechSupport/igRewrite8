@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 namespace igLibrary.DotNet
 {
 	public class igDotNetMetaObject : igMetaObject
@@ -32,6 +41,27 @@ namespace igLibrary.DotNet
 				metaField._default = this;
 			}
 		}
+
+
+		public override igMetaField? GetFieldByName(string name)
+		{
+			igMetaField? field = base.GetFieldByName(name);
+			if (field == null && _cppFieldNames != null)
+			{
+				igStringRefList dnNames = (igStringRefList)_dotNetFieldNames!;
+				for (int i = 0; i < dnNames._count; i++)
+				{
+					if (dnNames[i] == name)
+					{
+						igStringRefList cppNames = (igStringRefList)_cppFieldNames;
+						field = base.GetFieldByName(cppNames[i]);
+						break;
+					}
+				}
+			}
+			return field;
+		}
+
 
 		public static igMetaObject? FindType(string name, DotNetRuntime runtime)
 		{

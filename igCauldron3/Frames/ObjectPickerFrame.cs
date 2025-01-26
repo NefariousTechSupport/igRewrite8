@@ -1,19 +1,42 @@
+/*
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using igCauldron3.Utils;
 using igLibrary.Core;
 using ImGuiNET;
 
 namespace igCauldron3
 {
+	/// <summary>
+	/// UI frame for selecting an object (changing reference)
+	/// </summary>
 	public class ObjectPickerFrame : Frame
 	{
+		/// <summary>
+		/// A directory filtered to only contain the objects that can be assigned
+		/// </summary>
 		private class FilteredDir
 		{
 			public igObjectDirectory _dir;
 			public List<igObject> _objects = new List<igObject>();
 			public List<igName> _names = new List<igName>();
+
+
+			/// <summary>
+			/// Constructor
+			/// </summary>
+			/// <param name="dir">The directory</param>
+			/// <param name="filter">The type to filter by</param>
+			/// <exception cref="ArgumentNullException">Filter must not be null</exception>
 			public FilteredDir(igObjectDirectory dir, igMetaObject filter)
 			{
-				if(filter == null) throw new ArgumentNullException("Filter cannot be null!");
+				if(filter == null) throw new ArgumentNullException(nameof(filter));
 
 				_dir = dir;
 				for(int i = 0; i < dir._objectList._count; i++)
@@ -33,7 +56,15 @@ namespace igCauldron3
 		private Action<igObject?> _selectedCb;
 		private igMetaObject _metaObject;
 		private igObjectDirectory _dir;
-		
+
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="wnd">The window to parent to</param>
+		/// <param name="dir">The directory</param>
+		/// <param name="metaObject">The type to filter by</param>
+		/// <param name="selectedCallback">The callback for when the user confirms</param>
 		public ObjectPickerFrame(Window wnd, igObjectDirectory dir, igMetaObject metaObject, Action<igObject?> selectedCallback) : base(wnd)
 		{
 			_selectedCb = selectedCallback;
@@ -51,9 +82,20 @@ namespace igCauldron3
 			}
 			FieldTraversal.TraverseObjectDir(dir, metaObject, out _curDirObjects, out _curDirNames);
 		}
+
+
+		/// <summary>
+		/// Renders the ui
+		/// </summary>
 		public override void Render()
 		{
-			ImGui.Begin("Select Object");
+			bool windowOpen = true;
+			ImGui.Begin("Select Object", ref windowOpen);
+
+			if (!windowOpen)
+			{
+				Close();
+			}
 
 			if(ImGui.Button("Use null"))
 			{

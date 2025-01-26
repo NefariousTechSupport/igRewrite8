@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using igLibrary.Core;
 
 namespace igLibrary.Vfx
@@ -23,7 +32,7 @@ namespace igLibrary.Vfx
 			data._field_0x44 = loader._stream.ReadSingle();
 			data._field_0x48 = loader._stream.ReadSingle();
 			data._field_0x4C = loader._stream.ReadUInt16();
-			data._field_0x4E = loader._stream.ReadBoolean();
+			data._field_0x4E = loader._stream.ReadByte();
 			data._flags = loader._stream.ReadByte();
 			data._field_0x50 = loader._stream.ReadUInt16();
 			data._field_0x52 = loader._stream.ReadUInt16();
@@ -48,7 +57,7 @@ namespace igLibrary.Vfx
 			section._sh.WriteSingle(data._field_0x44);
 			section._sh.WriteSingle(data._field_0x48);
 			section._sh.WriteUInt16(data._field_0x4C);
-			section._sh.WriteBoolean(data._field_0x4E);
+			section._sh.WriteByte(data._field_0x4E);
 			section._sh.WriteByte(data._flags);
 			section._sh.WriteUInt16(data._field_0x50);
 			section._sh.WriteUInt16(data._field_0x52);
@@ -56,6 +65,7 @@ namespace igLibrary.Vfx
 		}
 		public override uint GetAlignment(IG_CORE_PLATFORM platform) => 0x04;
 		public override uint GetSize(IG_CORE_PLATFORM platform) => 0x54;
+		public override object? GetDefault(igMemoryPool pool) => new igVfxRangedCurve();
 		public override Type GetOutputType() => typeof(igVfxRangedCurve);
 
 

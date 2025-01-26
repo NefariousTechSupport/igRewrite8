@@ -1,8 +1,20 @@
+/*
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using igLibrary.Core;
 using ImGuiNET;
 
 namespace igCauldron3
 {
+	/// <summary>
+	/// UI frame for selecting an <c>igHandle</c>
+	/// </summary>
 	public class HandlePickerFrame : Frame
 	{
 		private List<igHandle> _orderedHandles;
@@ -10,7 +22,14 @@ namespace igCauldron3
 		private Action<igHandle?> _selectedCb;
 		private igMetaObject _metaObject;
 		private string _searchTerm = "";
-		
+
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="wnd">The window to parent to</param>
+		/// <param name="metaObject">The base metaobject of the target field</param>
+		/// <param name="selectedCallback">The selection callback for when the user confirms</param>
 		public HandlePickerFrame(Window wnd, igMetaObject metaObject, Action<igHandle?> selectedCallback) : base(wnd)
 		{
 			_selectedCb = selectedCallback;
@@ -30,9 +49,19 @@ namespace igCauldron3
 			_searchedHandles = _orderedHandles;
 		}
 
+
+		/// <summary>
+		/// Renders the ui
+		/// </summary>
 		public override void Render()
 		{
-			ImGui.Begin("Select Handle");
+			bool windowOpen = true;
+			ImGui.Begin("Select Handle", ref windowOpen);
+
+			if (!windowOpen)
+			{
+				Close();
+			}
 
 			if(ImGui.Button("Use NullHandle"))
 			{

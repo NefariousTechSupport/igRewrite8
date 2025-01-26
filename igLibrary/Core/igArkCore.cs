@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -188,13 +197,13 @@ namespace igLibrary.Core
 		/// <summary>
 		/// Dynamically generated types for igMetaObjects
 		/// </summary>
-		private static Dictionary<string, TypeBuilder>? _dynamicTypes = new Dictionary<string, TypeBuilder>();
+		private static Dictionary<string, TypeBuilder> _dynamicTypes = new Dictionary<string, TypeBuilder>();
 
 
 		/// <summary>
 		/// Dynamically generated types for igCompoundFieldInfo
 		/// </summary>
-		private static Dictionary<string, Type>? _dynamicStructs = new Dictionary<string, Type>();
+		private static Dictionary<string, Type> _dynamicStructs = new Dictionary<string, Type>();
 
 
 
@@ -205,18 +214,6 @@ namespace igLibrary.Core
 		public static List<igBaseMeta> _pendingTypes = new List<igBaseMeta>();
 
 
-
-
-
-		/// <summary>
-		/// Deals with differing metadata on different platforms.
-		/// </summary>
-		private static void FixupClasses(EGame game)
-		{
-			string funcName = game.ToString();
-			MethodInfo? func = typeof(igArkCoreFixups).GetMethod(funcName.ReplaceBeginning("EV_", ""));
-			func?.Invoke(null, null);
-		}
 
 
 
@@ -271,6 +268,13 @@ namespace igLibrary.Core
 			_metaEnums.Clear();
 			_metaFieldPlatformInfos.Clear();
 			_compoundFieldInfos.Clear();
+
+			// This doesn't fully work, the resources will remain loaded but igArkCore
+			// won't know about them at least
+			_dynamicTypes.Clear();
+			_dynamicStructs.Clear();
+			_dynamicTypeAssembly = null;
+			_dynamicTypeModule = null;
 		}
 
 

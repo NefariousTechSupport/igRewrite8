@@ -256,15 +256,21 @@ namespace igCauldron3.Utils
 				return String.Join('|', filters);
 			}
 
-			public static string OpenFile(string title, string filter = "", string defaultName = "")
+			public static string? OpenFile(string title, string filter = "", string defaultName = "")
 			{
 #if _WINDOWS
 				var dialog = new System.Windows.Forms.OpenFileDialog();
 				dialog.Title = title;
 				dialog.Filter = BuildFilterList(filter);
 				dialog.FileName = defaultName;
-				dialog.ShowDialog();
-				return dialog.FileName;
+				if (dialog.ShowDialog() == DialogResult.OK)
+				{
+					return dialog.FileName;
+				}
+				else
+				{
+					return null;
+				}
 #else
 				throw new NoImplementationException();
 #endif
@@ -279,28 +285,40 @@ namespace igCauldron3.Utils
 #endif
 			}
 
-			public static string SaveFile(string title, string filter = "", string defaultName = "")
+			public static string? SaveFile(string title, string filter = "", string defaultName = "")
 			{
 #if _WINDOWS
 				var dialog = new System.Windows.Forms.SaveFileDialog();
 				dialog.Title = title;
 				dialog.Filter = BuildFilterList(filter);
 				dialog.FileName = defaultName;
-				dialog.ShowDialog();
-				return dialog.FileName;
+				if (dialog.ShowDialog() == DialogResult.OK)
+				{
+					return dialog.FileName;
+				}
+				else
+				{
+					return null;
+				}
 #else
 				throw new NoImplementationException();
 #endif
 			}
 
-			public static string OpenFolder(string title)
+			public static string? OpenFolder(string title)
 			{
 #if _WINDOWS
 				var dialog = new System.Windows.Forms.FolderBrowserDialog();
 				dialog.Description = title;
 				dialog.UseDescriptionForTitle = true;
-				dialog.ShowDialog();
-				return dialog.SelectedPath;
+				if (dialog.ShowDialog() == DialogResult.OK)
+				{
+					return dialog.SelectedPath;
+				}
+				else
+				{
+					return null;
+				}
 #else
 				throw new NoImplementationException();
 #endif

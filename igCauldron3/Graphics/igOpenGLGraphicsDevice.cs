@@ -1,18 +1,41 @@
-using igLibrary;
+/*
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using igLibrary.Gfx;
 using igLibrary.Graphics;
 using OpenTK.Graphics.OpenGL4;
 
 namespace igCauldron3.Graphics
 {
+	/// <summary>
+	/// OpenGL graphics stuff
+	/// </summary>
 	public class igOpenGLGraphicsDevice : igBaseGraphicsDevice
 	{
+		/// <summary>
+		/// information about a pixel texture format
+		/// </summary>
 		private struct pixelMetaimage
 		{
 			public string _name;
 			public PixelInternalFormat _internalFormat;
 			public PixelFormat _format;
 			public PixelType _pixelType;
+
+
+			/// <summary>
+			/// Constructor
+			/// </summary>
+			/// <param name="name">The canonical name of the metaimage</param>
+			/// <param name="internalFormat">The opengl internal pixel format enum</param>
+			/// <param name="format">The opengl pixel format enum</param>
+			/// <param name="pixelType">The opengl pixel type</param>
 			public pixelMetaimage(string name, PixelInternalFormat internalFormat, PixelFormat format, PixelType pixelType)
 			{
 				_name = name;
@@ -21,16 +44,33 @@ namespace igCauldron3.Graphics
 				_pixelType = pixelType;
 			}
 		}
+
+
+		/// <summary>
+		/// information about a compressed texture format
+		/// </summary>
 		private struct compressedMetaimage
 		{
 			public string _name;
 			public InternalFormat _format;
+
+
+			/// <summary>
+			/// Constructor
+			/// </summary>
+			/// <param name="name">The name of the</param>
+			/// <param name="format">The opengl internal format enum</param>
 			public compressedMetaimage(string name, InternalFormat format)
 			{
 				_name = name;
 				_format = format;
 			}
 		}
+
+
+		/// <summary>
+		/// Array of pixel image formats
+		/// </summary>
 		private static readonly pixelMetaimage[] _pixelPlatformEnums = new pixelMetaimage[]
 		{
 			//new pixelMetaimage(                       "a8", 
@@ -86,8 +126,12 @@ namespace igCauldron3.Graphics
 			//new pixelMetaimage(                 "r8g8b8x8",),
 			//new pixelMetaimage(            "r8g8b8x8_srgb",),
 			//new pixelMetaimage(                 "shadow",),
-
 		};
+
+
+		/// <summary>
+		/// Array of compressed image formats 
+		/// </summary>
 		private static readonly compressedMetaimage[] _compressedPlatformEnums = new compressedMetaimage[]
 		{
 			//new compressedMetaimage(                    "atitc", InternalFormat.),
@@ -113,8 +157,21 @@ namespace igCauldron3.Graphics
 			//new compressedMetaimage(              "pvrtc4_srgb",)
 		};
 
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public igOpenGLGraphicsDevice() : base(){}
 
+
+		/// <summary>
+		/// Creates a texture based on an igImage2
+		/// </summary>
+		/// <param name="usage">How the texture should be used</param>
+		/// <param name="image">The igImage2 to create the texture with</param>
+		/// <returns>Returns an opengl texture handle</returns>
+		/// <exception cref="ArgumentNullException">thrown when the image is null</exception>
+		/// <exception cref="NotImplementedException">Thrown when a texture format isn't specified</exception>
 		public override unsafe int CreateTexture(igResourceUsage usage, igImage2 image)
 		{
 			if(image == null) throw new ArgumentNullException("image is null!");
@@ -172,6 +229,12 @@ namespace igCauldron3.Graphics
 			}
 			return image._texHandle;
 		}
+
+
+		/// <summary>
+		/// Free the opengl texture
+		/// </summary>
+		/// <param name="texture">the opengl texture handle</param>
 		public override void FreeTexture(int texture)
 		{
 			GL.DeleteTexture(texture);

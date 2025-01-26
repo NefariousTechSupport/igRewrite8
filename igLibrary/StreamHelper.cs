@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Reflection;
 using System.Text;
 using System.Runtime.InteropServices;
@@ -17,8 +26,8 @@ namespace igLibrary
 		public Endianness _endianness = Endianness.Little;
 		public byte bitPosition = 0;
 
-		//THIS MAKES IT NOT THREAD SAFE
-		private readonly byte[] _integerBuffer = new byte[8];
+		[ThreadStatic]
+		private static readonly byte[] _integerBuffer = new byte[8];
 
 		public StreamHelper(byte[] input) : base(new MemoryStream(input)) {}
 		public StreamHelper(Stream input) : base(input) {}
@@ -239,12 +248,10 @@ namespace igLibrary
 					Array.Reverse(data, 0, data.Length);
 				}
 			}
-
-			GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
-			T read = Marshal.PtrToStructure<T>(handle.AddrOfPinnedObject());
-			handle.Free();
-
-			return read;
+			fixed (byte* b = data)
+			{
+				return Marshal.PtrToStructure<T>((IntPtr)b);
+			}
 		}
 		public unsafe object ReadStructArray(Type t, uint count)
 		{

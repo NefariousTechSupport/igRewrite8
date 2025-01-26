@@ -1,5 +1,17 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 namespace igLibrary.Core
 {
+	/// <summary>
+	/// The archive manager
+	/// </summary>
 	public class igArchiveManager : igFileWorkItemProcessor
 	{
 		public igArchiveList _archiveList = new igArchiveList();
@@ -24,6 +36,13 @@ namespace igLibrary.Core
 		[Obsolete("This exists for the reflection system, do not use.")] public ulong _lastConsumedOffset;
 		[Obsolete("This exists for the reflection system, do not use.")] public object? _lastPriority;              //Priority
 		[Obsolete("This exists for the reflection system, do not use.")] public int _overrideArchives;
+
+
+		/// <summary>
+		/// Loads an archive
+		/// </summary>
+		/// <param name="path">The path to the archive</param>
+		/// <returns>The archive</returns>
 		public igArchive LoadArchive(string path)
 		{
 			if(TryGetArchive(path, out igArchive? loaded)) return loaded;
@@ -32,6 +51,14 @@ namespace igLibrary.Core
 			_archiveList.Append(loaded);
 			return loaded;
 		}
+
+
+		/// <summary>
+		/// Trys to get an already loaded archive
+		/// </summary>
+		/// <param name="path">The path of the archive to get</param>
+		/// <param name="archive">The output archive</param>
+		/// <returns>Whether the archive was in the cache</returns>
 		public bool TryGetArchive(string path, out igArchive? archive)
 		{
 			igFilePath fp = new igFilePath();
@@ -48,6 +75,11 @@ namespace igLibrary.Core
 			return false;
 		}
 
+
+		/// <summary>
+		/// Process a work item
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void Process(igFileWorkItem workItem)
 		{
 			if(workItem._type == igFileWorkItem.WorkType.kTypeFileList)

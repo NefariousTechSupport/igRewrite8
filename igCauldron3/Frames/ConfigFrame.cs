@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using ImGuiNET;
 using igLibrary.Core;
 using igLibrary;
@@ -6,6 +15,9 @@ using System.Diagnostics;
 
 namespace igCauldron3
 {
+	/// <summary>
+	/// Intitial configuration UI frame
+	/// </summary>
 	public class ConfigFrame : Frame
 	{
 		public (IG_CORE_PLATFORM, string)[] _platformNames = new (IG_CORE_PLATFORM, string)[]
@@ -29,15 +41,29 @@ namespace igCauldron3
 			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_XENON, "Xbox 360"),
 			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_DURANGO, "Xbox One")
 		};
+
 		public (igArkCore.EGame, string)[] _gameNames = new (igArkCore.EGame, string)[]
 		{
 			(igArkCore.EGame.EV_SkylandersSuperchargers, "Skylanders Superchargers 1.6.X"),
 			(igArkCore.EGame.EV_SkylandersImaginators,   "Skylanders Imaginators 1.1.X")
 		};
+
+
+		/// <summary>
+		/// Constructor for config frame
+		/// </summary>
+		/// <param name="wnd">The window to parent it to</param>
 		public ConfigFrame(Window wnd) : base(wnd)
 		{
 			CauldronConfig.ReadConfig();
 		}
+
+
+		/// <summary>
+		/// Lookup the name of a game based on the enum
+		/// </summary>
+		/// <param name="game">The game to grab the string for</param>
+		/// <returns>The name for the game</returns>
 		private string GetGameName(igArkCore.EGame game)
 		{
 			for(int i = 0; i < _gameNames.Length; i++)
@@ -49,6 +75,13 @@ namespace igCauldron3
 			}
 			return "Select a Game";
 		}
+
+
+		/// <summary>
+		/// Lookup the name of a platform based on the enum
+		/// </summary>
+		/// <param name="platform">The platform to grab the string for</param>
+		/// <returns>The name for the platform</returns>
 		private string GetPlatformName(IG_CORE_PLATFORM platform)
 		{
 			for(int i = 0; i < _platformNames.Length; i++)
@@ -60,6 +93,14 @@ namespace igCauldron3
 			}
 			return "Select a Platform";
 		}
+
+
+		/// <summary>
+		/// Renders the ui
+		/// </summary>
+		/// <exception cref="DirectoryNotFoundException">Thrown if the game directory is missing</exception>
+		/// <exception cref="FileNotFoundException">Thrown if the update file is missing</exception>
+		/// <exception cref="ArgumentException">If the platform specified is invalid</exception>
 		public override void Render()
 		{
 			ImGui.Begin("Configuration");
@@ -172,6 +213,14 @@ namespace igCauldron3
 
 			ImGui.End();
 		}
+
+
+		/// <summary>
+		/// Render one of the text fields
+		/// </summary>
+		/// <param name="label">The text to show</param>
+		/// <param name="id">The id to use</param>
+		/// <param name="val">The string value for the user to edit</param>
 		private void RenderTextField(string label, string id, ref string val)
 		{
 			ImGui.Text(label);

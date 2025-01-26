@@ -1,12 +1,26 @@
-using System.Diagnostics;
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.IO.Compression;
 using K4os.Compression.LZ4;
 using SevenZip;
 
 namespace igLibrary.Core
 {
+	/// <summary>
+	/// Represents an archive file
+	/// </summary>
 	public class igArchive : igStorageDevice
 	{
+		/// <summary>
+		/// Structure for a header
+		/// </summary>
 		[igStruct]
 		public struct Header
 		{
@@ -24,6 +38,11 @@ namespace igLibrary.Core
 			public uint _nameTableSize;
 			public uint _flags;
 		}
+
+
+		/// <summary>
+		/// Different compression formats
+		/// </summary>
 		enum CompressionType : uint
 		{
 			kUncompressed = 0,
@@ -35,6 +54,11 @@ namespace igLibrary.Core
 			kFirstBlockMask = 0x0FFFFFFF,
 			kOffsetBits = 40,
 		};
+
+
+		/// <summary>
+		/// Different block sizes
+		/// </summary>
 		public enum EBlockType : byte
 		{
 			kSmall,
@@ -42,18 +66,30 @@ namespace igLibrary.Core
 			kLarge,
 			kNone
 		}
+
+
+		/// <summary>
+		/// Information about a specific file
+		/// </summary>
 		public class FileInfo
 		{
-			public uint _hash;
-			public uint _offset;
-			public uint _ordinal;
-			public uint _length;
-			public uint _blockIndex;	//Change this for just compression mode at some point
-			public string _name;
-			public string _logicalName;
-			public uint _modificationTime;
-			public uint[]? _blocks;
-			public byte[] _compressedData;
+			public uint _hash;             // The hash of the file
+			public uint _offset;           // The offset within the file (do we really need to store this?)
+			public uint _ordinal;          // The ordinal, this represents the order of how the compressed data is written (could this be inferred?)
+			public uint _length;           // The uncompressed length of the file
+			public uint _blockIndex;       // Change this for just compression mode at some point, the block index is useless now
+			public string _name;           // The "real" name of the file
+			public string _logicalName;    // The "logical" name of the file, used to compute its hash
+			public uint _modificationTime; // The modification time of the file (for some reason this is never accurate)
+			public uint[]? _blocks;        // The block information
+			public byte[] _compressedData; // The actual compressed data
+
+
+			/// <summary>
+			/// Determines the size of the blocks
+			/// </summary>
+			/// <param name="sectorSize">The size of the sector (from the header)</param>
+			/// <returns>The block type</returns>
 			public EBlockType GetBlockType(uint sectorSize)
 			{
 				if(_blocks == null) return EBlockType.kNone;
@@ -69,7 +105,9 @@ namespace igLibrary.Core
 			}
 		}
 
-		static CoderPropID[] propIDs =
+
+		// LZMA compression stuff
+		static readonly CoderPropID[] propIDs =
 		{
 			CoderPropID.DictionarySize,
 			CoderPropID.PosStateBits,
@@ -80,7 +118,7 @@ namespace igLibrary.Core
 			CoderPropID.EndMarker,
 			CoderPropID.MatchFinder,
 		};
-		static object[] properties =
+		static readonly object[] properties =
 		{
 			0x8000,
 			2,
@@ -117,6 +155,13 @@ namespace igLibrary.Core
 		public string _nativePath;
 		public static string _nativeAppPath;
 
+		/// <summary>
+		/// Open an archive
+		/// </summary>
+		/// <param name="filePath">the path of the archive</param>
+		/// <param name="blockingType">the blocking type of the archive</param>
+		/// <exception cref="InvalidDataException">Thrown when the data for the archive isn't valid</exception>
+		/// <exception cref="NotImplementedException">Thrown for unimplemented versions</exception>
 		public void Open(string filePath, igBlockingType blockingType)
 		{
 			igFileContext.Singleton.Open(filePath, igFileContext.GetOpenFlags(FileAccess.ReadWrite, FileMode.Open), out _fileDescriptor, igBlockingType.kMayBlock, igFileWorkItem.Priority.kPriorityNormal);
@@ -246,10 +291,24 @@ namespace igLibrary.Core
 			igFileContext.Singleton.Close(_fileDescriptor, igBlockingType.kMayBlock, igFileWorkItem.Priority.kPriorityNormal);
 			_fileDescriptor = null;
 		}
+
+
+		/// <summary>
+		/// Close an archive
+		/// </summary>
+		/// <param name="blockingType">The blocking type</param>
 		public void Close(igBlockingType blockingType)
 		{
+			// Not supported atm
 			//igFileContext.Singleton._archiveMountManager.UnmountArchive(this);
 		}
+
+
+		/// <summary>
+		/// Save an archive
+		/// </summary>
+		/// <param name="filePath">The file path to write to</param>
+		/// <exception cref="NotImplementedException">Thrown for unimplemented versions</exception>
 		public void Save(string filePath)
 		{
 			FileStream fs = File.Create(filePath);
@@ -360,6 +419,11 @@ namespace igLibrary.Core
 			fs.Flush();
 			fs.Close();
 		}
+
+
+		/// <summary>
+		/// Go through and update all the file hashes
+		/// </summary>
 		private void UpdateFileHashes()
 		{
 			for(int i = 0; i < _files.Count; i++)
@@ -370,6 +434,13 @@ namespace igLibrary.Core
 			}
 			_files.OrderBy(x => x._hash);
 		}
+
+
+		/// <summary>
+		/// Hash a specific file path
+		/// </summary>
+		/// <param name="filepath"></param>
+		/// <returns></returns>
 		private uint HashFilePath(string filepath)
 		{
 			string pathToHash = filepath;
@@ -382,6 +453,14 @@ namespace igLibrary.Core
 			pathToHash = pathToHash.TrimStart('/', '\\');
 			return igHash.Hash(pathToHash);
 		}
+
+
+		/// <summary>
+		/// Fill the block buffers
+		/// </summary>
+		/// <param name="smallBlockTable">The output small block table</param>
+		/// <param name="mediumBlockTable">The output medium block table</param>
+		/// <param name="largeBlockTable">The output large block table</param>
 		private void FillBlockBuffers(out List<byte> smallBlockTable, out List<ushort> mediumBlockTable, out List<uint> largeBlockTable)
 		{
 			IOrderedEnumerable<FileInfo> files = _files.OrderBy(x => x._ordinal);
@@ -431,6 +510,13 @@ namespace igLibrary.Core
 				}
 			}
 		}
+
+
+		/// <summary>
+		/// Get the size of the file information structure
+		/// </summary>
+		/// <returns></returns>
+		/// <exception cref="NotSupportedException"></exception>
 		private byte GetFileInfoSize()
 		{
 			switch(_archiveHeader._version)
@@ -439,6 +525,13 @@ namespace igLibrary.Core
 				default: throw new NotSupportedException($"IGA version {_archiveHeader._version} is unsupported");
 			}
 		}
+
+
+		/// <summary>
+		/// Get the size of the header
+		/// </summary>
+		/// <returns></returns>
+		/// <exception cref="NotSupportedException"></exception>
 		private byte GetHeaderSize()
 		{
 			switch(_archiveHeader._version)
@@ -447,8 +540,29 @@ namespace igLibrary.Core
 				default: throw new NotSupportedException($"IGA version {_archiveHeader._version} is unsupported");
 			}
 		}
-		public void Decompress(string path, Stream src) => Decompress(HashFilePath(path), src);
+
+
+		/// <summary>
+		/// Decompress a file
+		/// </summary>
+		/// <param name="path">the logical path of the file</param>
+		/// <param name="dst">the destination stream</param>
+		public void Decompress(string path, Stream dst) => Decompress(HashFilePath(path), dst);
+
+
+		/// <summary>
+		/// Decompress a file
+		/// </summary>
+		/// <param name="hash">the logical hash of the file</param>
+		/// <param name="dst">the destination stream</param>
 		public void Decompress(uint hash, Stream dst) => Decompress(_files[HashSearch(_files, (uint)_files.Count, _archiveHeader._hashSearchDivider, _archiveHeader._hashSearchSlop, hash)], dst);
+
+
+		/// <summary>
+		/// Decompress a file
+		/// </summary>
+		/// <param name="fileInfo">the file information of the file</param>
+		/// <param name="dst">the destination stream</param>
 		public void Decompress(FileInfo fileInfo, Stream dst)
 		{
 			if(fileInfo._blockIndex == 0xFFFFFFFF)
@@ -508,8 +622,30 @@ namespace igLibrary.Core
 			dst.Flush();
 			dst.Seek(0, SeekOrigin.Begin);
 		}
+
+
+		/// <summary>
+		/// Compress a file
+		/// </summary>
+		/// <param name="path">The logical path to compress to</param>
+		/// <param name="src">The source stream</param>
 		public void Compress(string path, Stream src) => Compress(HashFilePath(path), src);
+
+
+		/// <summary>
+		/// Compress a file
+		/// </summary>
+		/// <param name="hash">The logical hash to compress to</param>
+		/// <param name="src">The source stream</param>
 		public void Compress(uint hash, Stream src) => Compress(_files[HashSearch(_files, (uint)_files.Count, _archiveHeader._hashSearchDivider, _archiveHeader._hashSearchSlop, hash)], src);
+
+
+		/// <summary>
+		/// Compress a file
+		/// </summary>
+		/// <param name="fileInfo">The file info to compress to</param>
+		/// <param name="src">The source stream</param>
+		/// <exception cref="NotImplementedException">Thrown when dealing with not implemented versions</exception>
 		public void Compress(FileInfo fileInfo, Stream src)
 		{
 			src.Seek(0, SeekOrigin.Begin);
@@ -563,6 +699,13 @@ namespace igLibrary.Core
 			Array.Copy(dst.GetBuffer(), fileInfo._compressedData, fileInfo._compressedData.Length);
 			File.WriteAllBytes("debugiga.dat", dst.GetBuffer());
 		}
+
+
+		/// <summary>
+		/// Get or add a file
+		/// </summary>
+		/// <param name="filePath">the logical path of the file</param>
+		/// <returns>The <c>FileInfo</c></returns>
 		public FileInfo GetAddFile(string filePath)
 		{
 			//check if the file already exists, return it if so
@@ -595,7 +738,12 @@ namespace igLibrary.Core
 			CalculateHashSearchProperties();
 			return file;
 		}
-		//Reverse engineered by DTZxPorter
+
+
+		/// <summary>
+		/// Reverse engineered by DTZxPorter.
+		/// Computes the hash search divider and slop
+		/// </summary>
 		private void CalculateHashSearchProperties()
 		{
 			_archiveHeader._hashSearchDivider = uint.MaxValue / _archiveHeader._numFiles;
@@ -620,7 +768,17 @@ namespace igLibrary.Core
 
 			_archiveHeader._hashSearchSlop = (uint)TopMatchIndex;
 		}
-		//Reverse engineered by DTZxPorter
+
+		/// <summary>
+		/// Reverse engineered by DTZxPorter
+		/// Search the list of files for a given hash
+		/// </summary>
+		/// <param name="fileInfos">The list of file objects</param>
+		/// <param name="numFiles">The number of files</param>
+		/// <param name="hashSearchDivider">The hash search divider</param>
+		/// <param name="hashSearchSlop">The hash search slop</param>
+		/// <param name="fileId">The logical hash of the file</param>
+		/// <returns>The index of the file info</returns>
 		private static int HashSearch(List<FileInfo> fileInfos, uint numFiles, uint hashSearchDivider, uint hashSearchSlop, uint fileId)
 		{
 			uint fileIdDivided = fileId / hashSearchDivider;
@@ -653,10 +811,29 @@ namespace igLibrary.Core
 
 			return -1;
 		}
+
+
+		/// <summary>
+		/// Whether this archive contains a file
+		/// </summary>
+		/// <param name="path">The logical path of the file</param>
+		/// <returns>Whether the archive has the file</returns>
 		public bool HasFile(string path) => HasFile(HashFilePath(path));
+
+
+		/// <summary>
+		/// Whether this archive contains a file
+		/// </summary>
+		/// <param name="hash">The logical hash of the file</param>
+		/// <returns>Whether the archive has the file</returns>
 		public bool HasFile(uint hash) => HashSearch(_files, (uint)_files.Count, _archiveHeader._hashSearchDivider, _archiveHeader._hashSearchSlop, hash) >= 0;
 
 
+		/// <summary>
+		/// Deletes a file
+		/// </summary>
+		/// <param name="path">The logical path</param>
+		/// <returns>Whether the operation succeeded</returns>
 		public bool Delete(string path)
 		{
 			int fileId = HashSearch(_files, (uint)_files.Count, _archiveHeader._hashSearchDivider, _archiveHeader._hashSearchSlop, HashFilePath(path));
@@ -671,6 +848,10 @@ namespace igLibrary.Core
 		}
 
 
+		/// <summary>
+		/// Whether the file exists (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void Exists(igFileWorkItem workItem)
 		{
 			if(HasFile(workItem._path))
@@ -682,6 +863,12 @@ namespace igLibrary.Core
 				workItem.SetStatus(igFileWorkItem.Status.kStatusInvalidPath);
 			}
 		}
+
+
+		/// <summary>
+		/// Opens a file (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void Open(igFileWorkItem workItem)
 		{
 			int fileId = HashSearch(_files, (uint)_files.Count, _archiveHeader._hashSearchDivider, _archiveHeader._hashSearchSlop, HashFilePath(workItem._path));
@@ -698,30 +885,72 @@ namespace igLibrary.Core
 			Decompress(_files[fileId], (MemoryStream)workItem._file._handle);
 			workItem.SetStatus(igFileWorkItem.Status.kStatusComplete);
 		}
+
+
+		/// <summary>
+		/// Closes a file (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void Close(igFileWorkItem workItem)
 		{
 			workItem.SetStatus(igFileWorkItem.Status.kStatusUnsupported);
 		}
+
+
+		/// <summary>
+		/// Reads a file (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void Read(igFileWorkItem workItem)
 		{
 			workItem.SetStatus(igFileWorkItem.Status.kStatusUnsupported);
 		}
+
+
+		/// <summary>
+		/// Writes a file (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void Write(igFileWorkItem workItem)
 		{
 			workItem.SetStatus(igFileWorkItem.Status.kStatusUnsupported);
 		}
+
+
+		/// <summary>
+		/// Truncate a file (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void Truncate(igFileWorkItem workItem)
 		{
 			workItem.SetStatus(igFileWorkItem.Status.kStatusUnsupported);
 		}
+
+
+		/// <summary>
+		/// Makes a directory (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void Mkdir(igFileWorkItem workItem)
 		{
 			workItem.SetStatus(igFileWorkItem.Status.kStatusUnsupported);
 		}
+
+
+		/// <summary>
+		/// Removes a directory (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void Rmdir(igFileWorkItem workItem)
 		{
 			workItem.SetStatus(igFileWorkItem.Status.kStatusUnsupported);
 		}
+
+
+		/// <summary>
+		/// Gets a list of files (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void GetFileList(igFileWorkItem workItem)
 		{
 			igStringRefList nameList = (igStringRefList)workItem._buffer;
@@ -732,27 +961,63 @@ namespace igLibrary.Core
 			}
 			workItem.SetStatus(igFileWorkItem.Status.kStatusComplete);
 		}
+
+
+		/// <summary>
+		/// Gets a list of files with their sizes (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void GetFileListWithSizes(igFileWorkItem workItem)
 		{
 			workItem.SetStatus(igFileWorkItem.Status.kStatusUnsupported);
 		}
+
+
+		/// <summary>
+		/// Unlinks (deletes) a file (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void Unlink(igFileWorkItem workItem)
 		{
 			bool success = Delete(workItem._path);
 			workItem.SetStatus(success ? igFileWorkItem.Status.kStatusComplete : igFileWorkItem.Status.kStatusInvalidPath);
 		}
+
+
+		/// <summary>
+		/// Renames a file (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void Rename(igFileWorkItem workItem)
 		{
 			workItem.SetStatus(igFileWorkItem.Status.kStatusUnsupported);
 		}
+
+
+		/// <summary>
+		/// Prefetches a file (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void Prefetch(igFileWorkItem workItem)
 		{
 			workItem.SetStatus(igFileWorkItem.Status.kStatusUnsupported);
 		}
+
+
+		/// <summary>
+		/// Formats a file (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void Format(igFileWorkItem workItem)
 		{
 			workItem.SetStatus(igFileWorkItem.Status.kStatusUnsupported);
 		}
+
+
+		/// <summary>
+		/// Commits a file (for the work item processor)
+		/// </summary>
+		/// <param name="workItem">The work item</param>
 		public override void Commit(igFileWorkItem workItem)
 		{
 			workItem.SetStatus(igFileWorkItem.Status.kStatusUnsupported);

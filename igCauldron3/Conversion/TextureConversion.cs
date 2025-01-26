@@ -1,13 +1,30 @@
+/*
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using igLibrary.Core;
 using igLibrary.Gfx;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing.Processors.Transforms;
 
 namespace igCauldron3.Conversion
 {
+	/// <summary>
+	/// Utilities for dealing with texture assets in the game
+	/// </summary>
 	public static class TextureConversion
 	{
+		/// <summary>
+		/// Exports <c>igImage2</c> textures to more normal files 
+		/// </summary>
+		/// <param name="image">The image to export</param>
+		/// <param name="dst">Where to output the converted texture</param>
+		/// <param name="ext">The file extension to write to</param>
 		public static void Export(igImage2 image, Stream dst, string ext)
 		{
 			int res = image.ConvertClone(igMetaImageInfo.FindFormat("r8g8b8a8"), igMemoryContext.Singleton.GetMemoryPoolByName("Image"), out igImage2? r8g8b8a8Image);
@@ -45,6 +62,18 @@ namespace igCauldron3.Conversion
 					break;
 			}
 		}
+
+
+		/// <summary>
+		/// Internal method for importing an <c>igImage2</c> texture
+		/// </summary>
+		/// <typeparam name="T">The pixel type</typeparam>
+		/// <param name="src">The source stream to import from</param>
+		/// <param name="image">The <c>igImage2</c> to export to</param>
+		/// <param name="normalFormatName">The regular metaimage format to export with</param>
+		/// <param name="srgbFormatName">The srgb metaimage format to export with</param>
+		/// <exception cref="InvalidImageContentException">Thrown when the image cannot be stored in an igImage2</exception>
+		/// <exception cref="InvalidOperationException">Thrown when some poorly written code fails</exception>
 		private static void ImportInternal<T>(Stream src, igImage2 image, string normalFormatName, string srgbFormatName) where T : unmanaged, IPixel<T>
 		{
 			Image<T> newImage = SixLabors.ImageSharp.Image.Load<T>(src);
@@ -63,10 +92,18 @@ namespace igCauldron3.Conversion
 			else if( image._format._isSrgb/* && !image._format._isTile*/) formatName = srgbFormatName;
 			//else if(!image._format._isSrgb &&  image._format._isTile) formatName = tileFormatName;
 			//else if( image._format._isSrgb &&  image._format._isTile) formatName = srgbTileFormatName;
-			else throw new Exception("This is impossible");
+			else throw new InvalidOperationException("This is impossible");
 			image._format = igMetaImageInfo.FindFormat(formatName);
 			newImage.CopyPixelDataTo(image._data.Buffer);
 		}
+
+
+		/// <summary>
+		/// Import a texture to an <c>igImage2</c>
+		/// </summary>
+		/// <param name="image">The <c>igImage2</c> to import to</param>
+		/// <param name="src">The source image to import from</param>
+		/// <exception cref="NotImplementedException">If a platform's not implemented</exception>
 		public static void Import(igImage2 image, Stream src)
 		{
 			switch((image._format as igPlatformMetaImage)._platform)

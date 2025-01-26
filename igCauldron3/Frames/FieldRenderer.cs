@@ -1,17 +1,36 @@
+/*
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Reflection;
-using System.Reflection.Metadata;
 using igLibrary.Core;
 using igLibrary.DotNet;
 using igLibrary.Math;
+using igLibrary.Vfx;
 using ImGuiNET;
 
 namespace igCauldron3
 {
+	/// <summary>
+	/// Methods for rendering each field type
+	/// </summary>
 	public static class FieldRenderer
 	{
+		// Delegates
 		public delegate void FieldSetCallback(object? newRaw);
 		private delegate void RenderFieldAction(string id, object? raw, igMetaField field, FieldSetCallback cb);
+
+		// The lookup table
 		private static Dictionary<Type, RenderFieldAction> _renderFuncLookup = new Dictionary<Type, RenderFieldAction>();
+
+		/// <summary>
+		/// Sets up the lookup table
+		/// </summary>
 		public static void Init()
 		{
 			_renderFuncLookup.Add(typeof(igCharMetaField), RenderField_SByte);
@@ -48,7 +67,23 @@ namespace igCauldron3
 			_renderFuncLookup.Add(typeof(igEnumMetaField), RenderField_Enum);
 			_renderFuncLookup.Add(typeof(igCompoundMetaField), RenderField_Compound);
 			_renderFuncLookup.Add(typeof(igTimeMetaField), RenderField_Time);
+			_renderFuncLookup.Add(typeof(igDotNetEnumMetaField), RenderField_Enum);
+			_renderFuncLookup.Add(typeof(igDotNetDynamicMetaEnum), RenderField_Enum);
+			_renderFuncLookup.Add(typeof(igRangedFloatMetaField), RenderField_RangedFloat);
+			_renderFuncLookup.Add(typeof(igRawRefMetaField), RenderField_RawRef);
+			_renderFuncLookup.Add(typeof(igStructMetaField), RenderField_Struct);
+			_renderFuncLookup.Add(typeof(igVfxRangedCurveMetaField), RenderField_RangedCurve);
 		}
+
+
+		/// <summary>
+		/// Renders a field with a label
+		/// </summary>
+		/// <param name="id">The id to render with</param>
+		/// <param name="label">The label to display</param>
+		/// <param name="value">The value to display</param>
+		/// <param name="field">The metafield to use</param>
+		/// <param name="cb">The callback for when a new value is entered</param>
 		public static void RenderField(string id, string label, object? value, igMetaField field, FieldSetCallback cb)
 		{
 			if(field is igStaticMetaField) return;
@@ -57,6 +92,15 @@ namespace igCauldron3
 			ImGui.SameLine();
 			RenderFieldNoLabel(id + label, value, field, cb);
 		}
+
+
+		/// <summary>
+		/// Render a field without a label
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="value"></param>
+		/// <param name="field"></param>
+		/// <param name="cb"></param>
 		private static void RenderFieldNoLabel(string id, object? value, igMetaField field, FieldSetCallback cb)
 		{
 			RenderFieldAction? renderFunc;
@@ -101,7 +145,16 @@ namespace igCauldron3
 			}
 		}
 
+
 #region Primitive Numeric Renderers
+		/// <summary>
+		/// Renders a primitive number
+		/// </summary>
+		/// <param name="id">The id to render with</param>
+		/// <param name="raw">The value to render with</param>
+		/// <param name="type">The type of value</param>
+		/// <param name="cb">The callback on setting the value</param>
+		/// <exception cref="ArgumentException">If a non-numeric type was passed</exception>
 		private static void RenderField_PrimitiveNumber(string id, object? raw, ElementType type, FieldSetCallback cb)
 		{
 			string val = raw!.ToString()!;
@@ -134,6 +187,7 @@ namespace igCauldron3
 				catch(Exception){ changed = false; }	//change nothing
 			}
 		}
+		// I'm not commenting these
 		private static void RenderField_SByte(string id, object? raw, igMetaField field, FieldSetCallback cb) => RenderField_PrimitiveNumber(id, raw, ElementType.kElementTypeI1, cb);
 		private static void RenderField_Byte(string id, object? raw, igMetaField field, FieldSetCallback cb) => RenderField_PrimitiveNumber(id, raw, ElementType.kElementTypeU1, cb);
 		private static void RenderField_Short(string id, object? raw, igMetaField field, FieldSetCallback cb) => RenderField_PrimitiveNumber(id, raw, ElementType.kElementTypeI2, cb);
@@ -462,6 +516,167 @@ namespace igCauldron3
 			RenderField_PrimitiveNumber(id, ((igTime)raw!)._elapsedDays, ElementType.kElementTypeR4, (value) => cb.Invoke(new igTime((float)value!)));
 			ImGui.SameLine();
 			ImGui.Text("days");
+		}
+		public static void RenderField_RangedFloat(string id, object? raw, igMetaField field, FieldSetCallback cb)
+		{
+			igRangedFloat rangedFloat = (igRangedFloat)raw!;
+
+			ImGui.PushID(id);
+
+			ImGui.Text("min");
+			ImGui.SameLine();
+			RenderField_PrimitiveNumber("$min$", rangedFloat._min, ElementType.kElementTypeR4, (value) =>
+			{
+				rangedFloat._min = (float)value!;
+				cb.Invoke(rangedFloat);
+			});
+
+			ImGui.SameLine();
+			ImGui.Spacing();
+			ImGui.SameLine();
+
+			ImGui.Text("max");
+			ImGui.SameLine();
+			RenderField_PrimitiveNumber("$max$", rangedFloat._max, ElementType.kElementTypeR4, (value) =>
+			{
+				rangedFloat._max = (float)value!;
+				cb.Invoke(rangedFloat);
+			});
+
+			ImGui.PopID();
+		}
+		public static void RenderField_RawRef(string id, object? raw, igMetaField field, FieldSetCallback cb)
+		{
+			ImGui.Text("Editing \"igRawRefMetaField\" is not allowed");
+		}
+		public static void RenderField_Struct(string id, object? raw, igMetaField field, FieldSetCallback cb)
+		{
+			// Just treat structs as raw bytes
+			if (raw is not byte[] data)
+			{
+				ImGui.Text($"Oopsie doopsie something went wrong here, log a bug and mention the following: {field._parentMeta?._name}::{field._fieldName}");
+				return;
+			}
+
+			if (ImGui.TreeNode(id, "Struct Data"))
+			{
+				for(int i = 0; i < data.Length; i++)
+				{
+					int capturedIndex = i;
+
+					ImGui.Text($"Element {i}");
+					ImGui.SameLine();
+					RenderField_PrimitiveNumber(i.ToString(), data.GetValue(i), ElementType.kElementTypeU1, (newValue) => data.SetValue(newValue, capturedIndex));
+				}
+				ImGui.TreePop();
+			}
+		}
+
+		static igCompoundMetaField? curveKeyframesField;
+		public static void RenderField_RangedCurve(string id, object? raw, igMetaField field, FieldSetCallback cb)
+		{
+			// Idrk how this works so just expose all the fields
+			if (curveKeyframesField == null)
+			{
+				igCompoundMetaFieldInfo? fieldInfo = igArkCore.GetCompoundFieldInfo("igVfxCurveKeyframeMetaField");
+				if (fieldInfo == null)
+				{
+					ImGui.Text("Mising metadata for \"igVfxCurveKeyframeMetaField\", log a bug for this");
+					return;
+				}
+
+				curveKeyframesField = new igCompoundMetaField();
+				curveKeyframesField._compoundFieldInfo = fieldInfo;
+			}
+
+			bool changed = false;
+			igVfxRangedCurve rangedCurve = (igVfxRangedCurve)raw!;
+
+			if (ImGui.TreeNode(id, "VfxRangedCurve"))
+			{
+				for (int i = 0; i < rangedCurve._keyframes.Length; i++)
+				{
+					int capturedI = i;
+					ImGui.Text($"Keyframe {i}");
+					ImGui.SameLine();
+					RenderFieldNoLabel(i.ToString(), rangedCurve._keyframes[i], curveKeyframesField, (newKeyframe) =>
+					{
+						rangedCurve._keyframes[capturedI] = (igVfxCurveKeyframe)newKeyframe!;
+						changed = true;
+					});
+				}
+
+				ImGui.Text(nameof(igVfxRangedCurve._field_0x3C));
+				ImGui.SameLine();
+				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x3C), rangedCurve._field_0x3C, ElementType.kElementTypeR4, (newValue) =>
+				{
+					rangedCurve._field_0x3C = (float)newValue!;
+					changed = true;
+				});
+				ImGui.Text(nameof(igVfxRangedCurve._field_0x40));
+				ImGui.SameLine();
+				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x40), rangedCurve._field_0x40, ElementType.kElementTypeR4, (newValue) =>
+				{
+					rangedCurve._field_0x40 = (float)newValue!;
+					changed = true;
+				});
+				ImGui.Text(nameof(igVfxRangedCurve._field_0x44));
+				ImGui.SameLine();
+				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x44), rangedCurve._field_0x44, ElementType.kElementTypeR4, (newValue) =>
+				{
+					rangedCurve._field_0x44 = (float)newValue!;
+					changed = true;
+				});
+				ImGui.Text(nameof(igVfxRangedCurve._field_0x48));
+				ImGui.SameLine();
+				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x48), rangedCurve._field_0x48, ElementType.kElementTypeR4, (newValue) =>
+				{
+					rangedCurve._field_0x48 = (float)newValue!;
+					changed = true;
+				});
+				ImGui.Text(nameof(igVfxRangedCurve._field_0x4C));
+				ImGui.SameLine();
+				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x4C), rangedCurve._field_0x4C, ElementType.kElementTypeU2, (newValue) =>
+				{
+					rangedCurve._field_0x4C = (ushort)newValue!;
+					changed = true;
+				});
+				ImGui.Text(nameof(igVfxRangedCurve._field_0x4E));
+				ImGui.SameLine();
+				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x4E), rangedCurve._field_0x4E, ElementType.kElementTypeU1, (newValue) =>
+				{
+					rangedCurve._field_0x4E = (byte)newValue!;
+					changed = true;
+				});
+				ImGui.Text(nameof(igVfxRangedCurve._flags));
+				ImGui.SameLine();
+				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._flags), rangedCurve._flags, ElementType.kElementTypeU1, (newValue) =>
+				{
+					rangedCurve._flags = (byte)newValue!;
+					changed = true;
+				});
+				ImGui.Text(nameof(igVfxRangedCurve._field_0x50));
+				ImGui.SameLine();
+				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x50), rangedCurve._field_0x50, ElementType.kElementTypeU2, (newValue) =>
+				{
+					rangedCurve._field_0x50 = (ushort)newValue!;
+					changed = true;
+				});
+				ImGui.Text(nameof(igVfxRangedCurve._field_0x52));
+				ImGui.SameLine();
+				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x52), rangedCurve._field_0x52, ElementType.kElementTypeU2, (newValue) =>
+				{
+					rangedCurve._field_0x52 = (ushort)newValue!;
+					changed = true;
+				});
+
+				if (changed)
+				{
+					cb.Invoke(rangedCurve);
+				}
+
+				ImGui.TreePop();
+			}
 		}
 	}
 }
