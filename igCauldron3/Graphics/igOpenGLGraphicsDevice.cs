@@ -186,7 +186,11 @@ namespace igCauldron3.Graphics
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureBaseLevel, 0);
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMaxLevel, image._levelCount - 1);
 
-			fixed(byte* data = image._data.Buffer)
+            byte[] imageData = image._data.Buffer;
+            if (image._format._name.EndsWith("_tile_cafe"))
+                imageData = igWiiUSwizzle.Deswizzle(imageData, image._width, image._height, image._format._name, image._levelCount);
+
+            fixed (byte* data = imageData)
 			{
 				if(image._format._isCompressed)
 				{

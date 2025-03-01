@@ -26,10 +26,10 @@ namespace igCauldron3.Conversion
 		/// <param name="dst">Where to output the converted texture</param>
 		/// <param name="ext">The file extension to write to</param>
 		public static void Export(igImage2 image, Stream dst, string ext)
-		{
-			int res = image.ConvertClone(igMetaImageInfo.FindFormat("r8g8b8a8"), igMemoryContext.Singleton.GetMemoryPoolByName("Image"), out igImage2? r8g8b8a8Image);
-			if(res != 0 || r8g8b8a8Image == null) return;
-			Image<Rgba32> output = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(r8g8b8a8Image._data.Buffer, r8g8b8a8Image._width, r8g8b8a8Image._height);
+        {
+            int res = image.ConvertClone(igMetaImageInfo.FindFormat("r8g8b8a8"), igMemoryContext.Singleton.GetMemoryPoolByName("Image"), out igImage2? r8g8b8a8Image);
+            if (res != 0 || r8g8b8a8Image == null) return;
+            Image<Rgba32> output = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(r8g8b8a8Image._data.Buffer, r8g8b8a8Image._width, r8g8b8a8Image._height);
 			switch(ext)
 			{
 				case ".png":
@@ -94,8 +94,13 @@ namespace igCauldron3.Conversion
 			//else if( image._format._isSrgb &&  image._format._isTile) formatName = srgbTileFormatName;
 			else throw new InvalidOperationException("This is impossible");
 			image._format = igMetaImageInfo.FindFormat(formatName);
-			newImage.CopyPixelDataTo(image._data.Buffer);
-		}
+            newImage.CopyPixelDataTo(image._data.Buffer);
+            if (formatName.StartsWith("r8g8b8a8") && formatName.EndsWith("_tile_cafe"))
+            {
+                byte[] swizzled_data = igWiiUSwizzle.Swizzle_rgba32(image._data.Buffer, image._width, image._height);
+                image._data.SetData(swizzled_data);
+            }
+        }
 
 
 		/// <summary>
@@ -116,7 +121,6 @@ namespace igCauldron3.Conversion
 				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_XENON:
 				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_OSX:
 				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_DX11:
-				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_CAFE:
 				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_RASPI:
 				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_NULL:
 				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_ANDROID:
@@ -131,7 +135,10 @@ namespace igCauldron3.Conversion
 					//read as Argb32 and write as Bgra32 because funky endianness
 					ImportInternal<Argb32>(src, image, "b8g8r8a8_big_ps3", "b8g8r8a8_srgb_big_ps3"/*, "b8g8r8a8_tile_big_ps3", "b8g8r8a8_srgb_tile_big_ps3"*/);
 					break;
-			}
+                case IG_GFX_PLATFORM.IG_GFX_PLATFORM_CAFE:
+                    ImportInternal<Rgba32>(src, image, "r8g8b8a8_tile_cafe", "r8g8b8a8_srgb_tile_cafe");
+                    break;
+            }
 		}
 	}
 }

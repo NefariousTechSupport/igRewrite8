@@ -42,9 +42,11 @@ namespace igLibrary.Core
 		public override void WriteIGZField(igIGZSaver saver, igIGZSaver.SaverSection section, object? value)
 		{
 			if(_metaEnum == null) section._sh.WriteInt32((int)value);
-
-			int raw = _metaEnum.GetValueFromEnum(value);
-			section._sh.WriteInt32(raw);
+            else //I'm assuming this is supposed to be here - Glitched
+            {
+                int raw = _metaEnum.GetValueFromEnum(value);
+                section._sh.WriteInt32(raw);
+            }
 		}
 		public override uint GetAlignment(IG_CORE_PLATFORM platform) => 4;
 		public override uint GetSize(IG_CORE_PLATFORM platform) => 4;
