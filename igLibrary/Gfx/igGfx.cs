@@ -1072,12 +1072,6 @@ namespace igLibrary.Gfx
 				}
 			}
 		}
-
-        public static unsafe void Convert_r8g8b8a8_to_r8g8b8a8(igImageLevel source, igImageLevel target)
-        {
-			for (int i = 0; i < source._imageSize; i++)
-				target._imageData[i] = source._imageData[i];
-        }
-        #endregion Image conversion
-    }
+#endregion Image conversion
+	}
 }
