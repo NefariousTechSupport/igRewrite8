@@ -67,11 +67,13 @@ namespace igLibrary.Gfx
 			File.WriteAllBytes("dxt1.dat", _data.Buffer);
 #endif // DEBUG
 
-            byte[] imageData = _data.Buffer;
-            if (_format._name.EndsWith("_tile_cafe"))
-                imageData = igWiiUSwizzle.Deswizzle(imageData, _width, _height, _format._name, _levelCount);
+			byte[] imageData = _data.Buffer;
+			if (_format.IsCafeSwizzled())
+			{
+				imageData = igWiiUSwizzle.Deswizzle(imageData, _width, _height, _format, _levelCount);
+			}
 
-            fixed (byte* sourcePtr = imageData, targetPtr = other._data.Buffer)
+			fixed (byte* sourcePtr = imageData, targetPtr = other._data.Buffer)
 			{
 				for(int i = 0; i < _levelCount; i++)
 				{
