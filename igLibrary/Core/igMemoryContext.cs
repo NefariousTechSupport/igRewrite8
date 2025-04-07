@@ -86,7 +86,7 @@ namespace igLibrary.Core
 			String = new igMemoryPool("String");                             _pools.Add("String", String);
 			Kernel = new igMemoryPool("Kernel");                             _pools.Add("Kernel", Kernel);
 			SystemDebug = new igMemoryPool("SystemDebug");                   _pools.Add("SystemDebug", SystemDebug);
-			Debug = new igMemoryPool("Debug")                                _pools.Add("Debug", Debug);
+			Debug = new igMemoryPool("Debug");                               _pools.Add("Debug", Debug);
 			Default = new igMemoryPool("Default");                           _pools.Add("Default", Default);
 			Current = new igMemoryPool("Current");                           _pools.Add("Current", Current);
 			Fast = new igMemoryPool("Fast");                                 _pools.Add("Fast", Fast);
