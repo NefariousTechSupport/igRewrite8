@@ -1,71 +1,71 @@
+/*
+	Copyright (c) 2022-2025, The VvlToDll Contributors.
+	VvlToDll and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Text;
 using igLibrary.Core;
 using igLibrary.Gfx;
 
 namespace igLibrary
 {
-	public class VvlPackagePrecacher : CManager
+	public static class VvlPackagePrecacher
 	{
-		public igVector<string> _packages;
-		public igVector<igObjectDirectoryList> mObjectDirectoryLists;
-		public static VvlPackagePrecacher _Instance = new VvlPackagePrecacher();
-
-		public override void Intialize()
+		public static void Intialize()
 		{
-			_packages = new igVector<string>();
-			_packages.SetCapacity((int)EMemoryPoolID.MP_MAX_POOL);
-			mObjectDirectoryLists = new igVector<igObjectDirectoryList>();
-			mObjectDirectoryLists.SetCapacity((int)EMemoryPoolID.MP_MAX_POOL);
+			// We're gonna really mess up the precacher lol
 
+			CPrecacheManager manager = CPrecacheManager._Instance;
+			manager._resourcePrecachers = new CResourcePrecacherList();
+			manager._resourcePrecachers.SetCapacity(0x24);
+			manager._resourcePrecacherLookup = new CStringResourcePrecacherHashTable();
+			manager._resourcePrecacherLookup.Activate(0x24);
+			RegisterResourcePrecacher(manager,                "pkg", new COtherPackagePrecacher());
+			RegisterResourcePrecacher(manager,     "character_data", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,          "actorskin", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,        "havokanimdb", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,     "havokrigidbody", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager, "havokphysicssystem", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,            "texture", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,             "effect", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,             "shader", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,         "motionpath", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,           "igx_file", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager, "material_instances", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,       "igx_entities", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,        "gui_project", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,               "font", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,          "lang_file", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,          "spawnmesh", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,              "model", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,          "sky_model", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,           "behavior", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager, "graphdata_behavior", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,    "events_behavior", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,     "asset_behavior", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,       "hkb_behavior", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,      "hkc_character", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,            "navmesh", new CDoNothingPrecacher());
+			RegisterResourcePrecacher(manager,             "script", new CScriptPrecacher());
 		}
-		public bool IsPackageCached(string packageName)
+
+
+		private static void RegisterResourcePrecacher(CPrecacheManager manager, string name, CResourcePrecacher precacher)
 		{
-			string packagePathToCheck = packageName.ToLower();
-			return _packages.Contains(packagePathToCheck);
+			manager._resourcePrecachers.Append(precacher);
+			manager._resourcePrecacherLookup.Add(name, precacher);
 		}
-		public bool PrecachePackage(string packageName)
+	}
+
+	public class CDoNothingPrecacher : CResourcePrecacher
+	{
+		public override void Precache(string filePath)
 		{
-			if(IsPackageCached(packageName)) return true;
-
-			string packagePath = packageName.ToLower();
-
-			if(!packagePath.StartsWith("packages"))
-			{
-				packagePath = "packages/" + packagePath;
-			}
-			if(!packagePath.EndsWith("_pkg.igz"))
-			{
-				packagePath += "_pkg.igz";
-			}
-
-			CArchive.Open(Path.GetFileNameWithoutExtension(packagePath.ReplaceEnd("_pkg.igz", "")), out igArchive? arc, EMemoryPoolID.MP_TEMPORARY, 0);
-
-			igObjectDirectory? pkgDir = igObjectStreamManager.Singleton.Load(packagePath);
-			if(pkgDir == null)
-			{
-				CArchive.Close(arc);
-				return false;
-			}
-			igStringRefList list = (igStringRefList)pkgDir._objectList[0];
-			CleanupDeadRules();
-			for(int i = 0; i < list._count; i += 2)
-			{
-				string type = list[i];
-				string file = list[i+1];
-				if(type == "pkg")
-				{
-					PrecachePackage(file);
-				}
-				else if(type == "script")
-				{
-					igObjectStreamManager.Singleton.Load(file);
-				}
-			}
-			return true;
-		}
-		public void CleanupDeadRules()
-		{
-
+			// Do nothing
 		}
 	}
 }

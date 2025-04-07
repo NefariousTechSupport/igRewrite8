@@ -1,4 +1,13 @@
-﻿using OpenTK.Mathematics;
+﻿/*
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using igLibrary.Core;
@@ -9,6 +18,9 @@ using System.Runtime.InteropServices;
 
 namespace igCauldron3
 {
+	/// <summary>
+	/// Needs no introduction
+	/// </summary>
 	public static class Program
 	{
 		[STAThread] 
@@ -64,20 +76,8 @@ namespace igCauldron3
 
 			Logging.FlushLog();
 		}
-		private static void ExtractSLIArchive(string[] args)
-		{
-			igFileContext.Singleton.Initialize(args[0]);
-			igArchive arc = new igArchive();
-			arc.Open(args[1], igBlockingType.kMayBlock);
-			for(int i = 0; i < arc._files.Count; i++)
-			{
-				string path = Path.Combine("F:/SLI", arc._files[i]._name);
-				Directory.CreateDirectory(Path.GetDirectoryName(path));
-				FileStream fs = File.Create(path);
-				arc.Decompress(arc._files[i], fs);
-				fs.Close();
-			}
-		}
+
+
 #if CAULDRON_FEATURE_EXTERNAL_CONSOLE && _WINDOWS
 		[DllImport("kernel32.dll", SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]

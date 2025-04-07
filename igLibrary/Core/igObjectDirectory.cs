@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 namespace igLibrary.Core
 {
 	public class igObjectDirectory : igObject
@@ -17,6 +26,7 @@ namespace igLibrary.Core
 		public igIGZLoader _loader;     //needs to be changed to igObjectLoader
 		[Obsolete("This exists for the reflection system, do not use.")] public FileType _sourceFileType;
 		[Obsolete("This exists for the reflection system, do not use.")] public int _loadCount;
+		[Obsolete("This exists for the reflection system, do not use.")] public bool _allowMultipleInstances;
 		[Obsolete("This exists for the reflection system, do not use.")] public igObjectList _debugObjects;
 		[Obsolete("This exists for the reflection system, do not use.")] public igObject _thumbnails;
 		[Obsolete("This exists for the reflection system, do not use.")] public igObjectList _createdMetaObjects;

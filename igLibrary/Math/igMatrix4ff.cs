@@ -1,7 +1,24 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 namespace igLibrary.Math
 {
 	public struct igMatrix44f
 	{
+		public igMatrix44f Identity => new igMatrix44f()
+		{
+			_m11 = 1f, _m12 = 0f, _m13 = 0f, _m14 = 0f,
+			_m21 = 0f, _m22 = 1f, _m23 = 0f, _m24 = 0f,
+			_m31 = 0f, _m32 = 0f, _m33 = 1f, _m34 = 0f,
+			_m41 = 0f, _m42 = 0f, _m43 = 0f, _m44 = 1f
+		};
+
 		public float _m11;
 		public float _m12;
 		public float _m13;

@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Reflection;
 
 namespace igLibrary.Core
@@ -54,6 +63,24 @@ namespace igLibrary.Core
 			if(_metaEnum == null) return _default;
 			if(_default != null) return _metaEnum.GetEnumFromValue((int)_default);
 			return Activator.CreateInstance(GetOutputType());
+		}
+
+
+		/// <summary>
+		/// Sets the target variable based on the string representation of the input
+		/// </summary>
+		/// <param name="target">The output field</param>
+		/// <param name="input">The input field</param>
+		/// <returns>boolean indicating whether the input was read successfully</returns>
+		public override bool SetMemoryFromString(ref object? target, string input)
+		{
+			if(int.TryParse(input, out int buffer))
+			{
+				target = buffer;
+				return true;
+			}
+
+			return Enum.TryParse(_metaEnum!._internalType, input, false, out target);
 		}
 	}
 }

@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -193,13 +202,13 @@ namespace igLibrary.Core
 		/// <summary>
 		/// Dynamically generated types for igMetaObjects
 		/// </summary>
-		private static Dictionary<string, TypeBuilder>? _dynamicTypes = new Dictionary<string, TypeBuilder>();
+		private static Dictionary<string, TypeBuilder> _dynamicTypes = new Dictionary<string, TypeBuilder>();
 
 
 		/// <summary>
 		/// Dynamically generated types for igCompoundFieldInfo
 		/// </summary>
-		private static Dictionary<string, Type>? _dynamicStructs = new Dictionary<string, Type>();
+		private static Dictionary<string, Type> _dynamicStructs = new Dictionary<string, Type>();
 
 
 		/// <summary>
@@ -214,18 +223,6 @@ namespace igLibrary.Core
 		private static EGame _game;
 
 
-
-
-
-		/// <summary>
-		/// Deals with differing metadata on different platforms.
-		/// </summary>
-		private static void FixupClasses(EGame game)
-		{
-			string funcName = game.ToString();
-			MethodInfo? func = typeof(igArkCoreFixups).GetMethod(funcName.ReplaceBeginning("EV_", ""));
-			func?.Invoke(null, null);
-		}
 
 
 
@@ -281,6 +278,13 @@ namespace igLibrary.Core
 			_metaFieldPlatformInfos.Clear();
 			_compoundFieldInfos.Clear();
 			_game = EGame.EV_None;
+
+			// This doesn't fully work, the resources will remain loaded but igArkCore
+			// won't know about them at least
+			_dynamicTypes.Clear();
+			_dynamicStructs.Clear();
+			_dynamicTypeAssembly = null;
+			_dynamicTypeModule = null;
 		}
 
 
@@ -298,6 +302,55 @@ namespace igLibrary.Core
 			igArkCoreFile loader = new igArkCoreFile();
 			loader.ReadFile($"{igArkCoreFile.ArkCoreFolder}/{game.ToString()}.ark");
 			loader.Dispose();
+
+			stopwatch.Stop();
+
+			Logging.Info("Loading and generating all types took {0} seconds", stopwatch.Elapsed.TotalSeconds);
+		}
+
+
+		/// <summary>
+		/// Reads metadata from an igArkCoreXmlFile.
+		/// </summary>
+		/// <param name="game">The game to load the metadata for</param>
+		public static void ReadFromXmlFile(EGame game)
+		{
+			System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+
+			stopwatch.Start();
+
+			igArkCoreXmlFile loader = new igArkCoreXmlFile();
+			igArkCoreXmlFile.ArkCoreXmlError? error = loader.Load($"{igArkCoreFile.ArkCoreFolder}/{game}/metaobjects.xml",
+			                                                      $"{igArkCoreFile.ArkCoreFolder}/{game}/metaenums.xml",
+			                                                      $"{igArkCoreFile.ArkCoreFolder}/{game}/metafields.xml");
+			if (error != null)
+			{
+				throw new Exception(error.Message);
+			}
+
+			List<igMetaObject> metaObjects = loader.MetaObjects;
+			List<igMetaEnum> metaEnums = loader.MetaEnums;
+			List<igMetaFieldPlatformInfo> platformInfos = loader.MetaFieldPlatformInfos;
+			List<igCompoundMetaFieldInfo> compounds = loader.Compounds;
+
+			foreach (igMetaObject metaObject in metaObjects)
+			{
+				_metaObjects.Add(metaObject._name!, metaObject);
+				metaObject.PostUndump();
+			}
+			foreach (igMetaEnum metaEnum in metaEnums)
+			{
+				_metaEnums.Add(metaEnum._name!, metaEnum);
+			}
+			foreach (igMetaFieldPlatformInfo platformInfo in platformInfos)
+			{
+				_metaFieldPlatformInfos.Add(platformInfo._name!, platformInfo);
+			}
+			foreach (igCompoundMetaFieldInfo compound in compounds)
+			{
+				_compoundFieldInfos.Add(compound._name!, compound);
+				compound.PostUndump();
+			}
 
 			stopwatch.Stop();
 

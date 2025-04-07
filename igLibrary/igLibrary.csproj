@@ -1,20 +1,28 @@
+<!--
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+-->
+
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="HashDepot" Version="2.0.3" />
-    <PackageReference Include="LZMA-SDK" Version="19.0.0" />
-    <PackageReference Include="K4os.Compression.LZ4" Version="1.2.16" />
+	<ItemGroup>
+		<PackageReference Include="HashDepot" Version="2.0.3" />
+		<PackageReference Include="LZMA-SDK" Version="19.0.0" />
+		<PackageReference Include="K4os.Compression.LZ4" Version="1.2.16" />
 
-    <ProjectReference Include="../igLibrary.CodeGen/igLibrary.CodeGen.csproj"
-                      OutputItemType="Analyzer"
-                      ReferenceOutputAssembly="false" />
-  </ItemGroup>
+		<ProjectReference Include="../igLibrary.CodeGen/igLibrary.CodeGen.csproj"
+											OutputItemType="Analyzer"
+											ReferenceOutputAssembly="false" />
+	</ItemGroup>
 </Project>

@@ -1,7 +1,24 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 namespace igLibrary.Math
 {
 	public struct igVec2uc
 	{
+		public igVec2uc Zero => new igVec2uc(0, 0);
+		public igVec2uc One => new igVec2uc(1, 1);
+		public igVec2uc UnitX => new igVec2uc(1, 0);
+		public igVec2uc UnitY => new igVec2uc(0, 1);
+
+		public float SqrMagnitude => _x * _x + _y * _y;
+		public float Magnitude => MathF.Sqrt(SqrMagnitude);
+
 		public byte _x;
 		public byte _y;
 		public igVec2uc(byte x, byte y)
@@ -17,5 +34,7 @@ namespace igLibrary.Math
 		{
 			return new igVec2uc((byte)vec.X, (byte)vec.Y);
 		}
+		public static igVec2uc operator+(igVec2uc a, igVec2uc b) => new igVec2uc((byte)(a._x + b._x), (byte)(a._y + b._y));
+		public static igVec2uc operator-(igVec2uc a, igVec2uc b) => new igVec2uc((byte)(a._x - b._x), (byte)(a._y - b._y));
 	}
 }

@@ -1,23 +1,43 @@
+/*
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using igCauldron3.Conversion;
-using igCauldron3.Graphics;
 using igCauldron3.Utils;
 using igLibrary;
 using igLibrary.Core;
 using igLibrary.Gfx;
 using igLibrary.Graphics;
 using ImGuiNET;
-using OpenTK.Graphics.OpenGL4;
-using SixLabors.ImageSharp;
 
 namespace igCauldron3
 {
+	/// <summary>
+	/// UI override for rendering hash tables
+	/// </summary>
 	public class igImage2Override : InspectorDrawOverride
 	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public igImage2Override()
 		{
 			_t = typeof(igImage2);
 		}
 
+
+		/// <summary>
+		/// Renders the ui
+		/// </summary>
+		/// <param name="dirFrame">The directory manager frame</param>
+		/// <param name="id">the id to render with</param>
+		/// <param name="obj">the object</param>
+		/// <param name="meta">the type of the object</param>
 		public unsafe override void Draw2(DirectoryManagerFrame dirFrame, string id, igObject obj, igMetaObject meta)
 		{
 			igImage2 image = (igImage2)obj;
@@ -37,7 +57,8 @@ namespace igCauldron3
 			FieldRenderer.RenderField(id, "_name", castName, meta.GetFieldByName("_name")!, (value) => image._name = (string)value!);
 			if(ImGui.Button("Extract"))
 			{
-				string filePath = CrossFileDialog.SaveFile("Save Image...", ".bmp;.dds;.gif;.jpg;.pbm;.png;.qoi;.tga;.tiff;.webp", image._name);
+				string defaultFile = Path.ChangeExtension(Path.GetFileName(image._name), ".png");
+				string? filePath = CrossFileDialog.SaveFile("Save Image...", ".bmp;.dds;.gif;.jpg;.pbm;.png;.qoi;.tga;.tiff;.webp", defaultFile);
 				if(!string.IsNullOrWhiteSpace(filePath))
 				{
 					FileStream fs = File.Create(filePath);
@@ -49,7 +70,8 @@ namespace igCauldron3
 			}
 			if(ImGui.Button("Replace"))
 			{
-				string filePath = CrossFileDialog.OpenFile("Open Image...", ".bmp;.dds;.gif;.jpg;.pbm;.png;.qoi;.tga;.tiff;.webp", image._name);
+				string defaultFile = Path.ChangeExtension(Path.GetFileName(image._name), ".png");
+				string? filePath = CrossFileDialog.OpenFile("Open Image...", ".bmp;.dds;.gif;.jpg;.pbm;.png;.qoi;.tga;.tiff;.webp", defaultFile);
 				if(!string.IsNullOrWhiteSpace(filePath))
 				{
 					FileStream fs = File.Open(filePath, FileMode.Open, FileAccess.Read);

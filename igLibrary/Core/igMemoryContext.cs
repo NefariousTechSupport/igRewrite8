@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 namespace igLibrary.Core
 {
 	//Inherits from igContext
@@ -11,6 +20,7 @@ namespace igLibrary.Core
 		public static igMemoryPool String { get; private set; }
 		public static igMemoryPool Kernel { get; private set; }
 		public static igMemoryPool SystemDebug { get; private set; }
+		public static igMemoryPool Debug { get; private set; }
 		public static igMemoryPool Default { get; private set; }
 		public static igMemoryPool Current { get; private set; }
 		public static igMemoryPool Fast { get; private set; }
@@ -36,6 +46,7 @@ namespace igLibrary.Core
 		public static igMemoryPool AudioStreamFile { get; private set; }
 		public static igMemoryPool AudioStreamDecode { get; private set; }
 		public static igMemoryPool Video { get; private set; }
+		public static igMemoryPool Temporary { get; private set; }
 		public static igMemoryPool DMA { get; private set; }
 		public static igMemoryPool Shader { get; private set; }
 		public static igMemoryPool ShaderBinary { get; private set; }
@@ -50,6 +61,7 @@ namespace igLibrary.Core
 		public static igMemoryPool VRAMTopDown { get; private set; }
 		public static igMemoryPool DotNet { get; private set; }
 		public static igMemoryPool VramA { get; private set; }
+		public static igMemoryPool VramB { get; private set; }
 		public static igMemoryPool VramStaging { get; private set; }
 		public static igMemoryPool MEM1 { get; private set; }
 		public static igMemoryPool MEM2 { get; private set; }
@@ -74,6 +86,7 @@ namespace igLibrary.Core
 			String = new igMemoryPool("String");                             _pools.Add("String", String);
 			Kernel = new igMemoryPool("Kernel");                             _pools.Add("Kernel", Kernel);
 			SystemDebug = new igMemoryPool("SystemDebug");                   _pools.Add("SystemDebug", SystemDebug);
+			Debug = new igMemoryPool("Debug")                                _pools.Add("Debug", Debug);
 			Default = new igMemoryPool("Default");                           _pools.Add("Default", Default);
 			Current = new igMemoryPool("Current");                           _pools.Add("Current", Current);
 			Fast = new igMemoryPool("Fast");                                 _pools.Add("Fast", Fast);
@@ -99,6 +112,7 @@ namespace igLibrary.Core
 			AudioStreamFile = new igMemoryPool("AudioStreamFile");           _pools.Add("AudioStreamFile", AudioStreamFile);
 			AudioStreamDecode = new igMemoryPool("AudioStreamDecode");       _pools.Add("AudioStreamDecode", AudioStreamDecode);
 			Video = new igMemoryPool("Video");                               _pools.Add("Video", Video);
+			Temporary = new igMemoryPool("Temporary");                       _pools.Add("Temporary", Temporary);
 			DMA = new igMemoryPool("DMA");                                   _pools.Add("DMA", DMA);
 			Shader = new igMemoryPool("Shader");                             _pools.Add("Shader", Shader);
 			ShaderBinary = new igMemoryPool("ShaderBinary");                 _pools.Add("ShaderBinary", ShaderBinary);
@@ -113,6 +127,7 @@ namespace igLibrary.Core
 			VRAMTopDown = new igMemoryPool("VRAMTopDown");                   _pools.Add("VRAMTopDown", VRAMTopDown);
 			DotNet = new igMemoryPool("DotNet");                             _pools.Add("DotNet", DotNet);
 			VramA = new igMemoryPool("VramA");                               _pools.Add("VramA", VramA);
+			VramB = new igMemoryPool("VramB");                               _pools.Add("VramB", VramB);
 			VramStaging = new igMemoryPool("VramStaging");                   _pools.Add("VramStaging", VramStaging);
 			MEM1 = Default;                                                  _pools.Add("MEM1", Default);
 			MEM2 = Default;                                                  _pools.Add("MEM2", Default);

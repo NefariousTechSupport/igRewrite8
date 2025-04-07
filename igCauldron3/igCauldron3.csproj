@@ -1,3 +1,11 @@
+<!--
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+-->
+
 <Project Sdk="Microsoft.NET.Sdk">
 
   <!--===================-->
@@ -27,7 +35,7 @@
     <PackageReference Include="ImGui.NET" Version="1.89.4" />
     <PackageReference Include="OpenTK" Version="4.7.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
   </ItemGroup>
 
 
@@ -77,13 +85,16 @@
   <!--==================-->
 
   <ItemGroup>
-    <ArkFiles Include="../Resources/ArkCore/*.ark"/>
+    <ArkFiles Include="../Resources/ArkCore/**"/>
+    <DefaultImGuiIni Include="../Resources/defaultimgui.ini"/>
   </ItemGroup>
 
   <Target Name="Debug|Release" AfterTargets="AfterBuild">
-    <Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/ArkCore" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/ArkCore/%(RecursiveDir)" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="@(DefaultImGuiIni)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
   </Target>
   <Target Name="Debug|Release" AfterTargets="Publish">
-    <Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/publish/ArkCore" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/publish/ArkCore/%(RecursiveDir)" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="@(DefaultImGuiIni)" DestinationFolder="$(OutDir)/publish" SkipUnchangedFiles="true"/>
   </Target>
 </Project>

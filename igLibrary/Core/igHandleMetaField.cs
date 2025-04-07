@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Reflection;
 
 namespace igLibrary.Core
@@ -65,5 +74,18 @@ namespace igLibrary.Core
 			else              section._sh.WriteUInt32((uint)handleIndex);
 		}
 		public override Type GetOutputType() => typeof(igHandle);
+
+
+		/// <summary>
+		/// Sets the target variable based on the string representation of the input
+		/// </summary>
+		/// <param name="target">The output field</param>
+		/// <param name="input">The input field</param>
+		/// <returns>boolean indicating whether the input was read successfully</returns>
+		public override bool SetMemoryFromString(ref object? target, string input)
+		{
+			target = new igHandle(input);
+			return true;
+		}
 	}
 }

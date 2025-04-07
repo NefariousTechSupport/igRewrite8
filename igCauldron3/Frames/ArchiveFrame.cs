@@ -1,7 +1,15 @@
+/*
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using ImGuiNET;
 using igLibrary.Core;
 using igLibrary;
-using System.Diagnostics;
 
 namespace igCauldron3
 {
@@ -18,6 +26,10 @@ namespace igCauldron3
 		private Dictionary<string, igArchive.FileInfo[]> _sortedFileHeaders = new Dictionary<string, igArchive.FileInfo[]>();
 		private Dictionary<string, PackageUiData> _packageUiData = new Dictionary<string, PackageUiData>();
 
+
+		/// <summary>
+		/// Cached data representing a package
+		/// </summary>
 		private struct PackageUiData
 		{
 			public igObjectDirectory _directory;

@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Reflection;
 using igLibrary.Core;
 using igLibrary.Math;
@@ -54,7 +63,9 @@ namespace igLibrary.Gfx
 			other._colorScale = _colorScale;
 			other._colorBias = _colorBias;
 
+#if DEBUG
 			File.WriteAllBytes("dxt1.dat", _data.Buffer);
+#endif // DEBUG
 
 			fixed(byte* sourcePtr = _data.Buffer, targetPtr = other._data.Buffer)
 			{

@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Collections.Generic;
 
 namespace igLibrary.Core
@@ -217,7 +226,14 @@ namespace igLibrary.Core
 				_stream.WriteUInt32(memoryOffset);
 				uint sectionSize = (uint)_sections[i]._sh.BaseStream.Length;
 				_stream.WriteUInt32(sectionSize);
-				_stream.WriteUInt32(_sections[i]._alignment);
+
+				uint alignment = _sections[i]._alignment;
+				if (alignment == 0)
+				{
+					Logging.Warn("The alignment of section {0} in file {1} has an alignment of 0, this is bad, forcing the alignment to 0x10 to prevent game crashes", i, _dir._path);
+					alignment = 0x10;
+				}
+				_stream.WriteUInt32(alignment);
 
 				_stream.Seek(memoryOffset);
 				_sections[i]._sh.BaseStream.Flush();
@@ -268,6 +284,12 @@ namespace igLibrary.Core
 		}
 		public SaverSection GetSaverSection(igMemoryPool pool)
 		{
+			if (pool == null)
+			{
+				Logging.Warn("Tried finding a saver section with a null pool, assigning default to prevent crash");
+				pool = igMemoryContext.Singleton.GetMemoryPoolByName("Default")!;
+			}
+
 			int index = _sections.FindIndex(x => x._pool == pool);
 			SaverSection ret;
 			if(index < 0)

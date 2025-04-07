@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 namespace igLibrary.Core
 {
 	[igStruct]
@@ -14,10 +23,18 @@ namespace igLibrary.Core
 		{
 			_hash = hash;
 		}
-		public void SetString(string newString)
+		public void SetString(string? newString)
 		{
-			_string = newString;
-			_hash = igHash.HashI(newString);
+			if (newString == null || newString == "(null)")
+			{
+				_string = null;
+				_hash = 0;
+			}
+			else
+			{
+				_string = newString;
+				_hash = igHash.HashI(newString);
+			}
 		}
 	}
 }

@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The VvlToDll Contributors.
+	VvlToDll and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using igLibrary.Core;
@@ -102,16 +111,39 @@ namespace VvlToDll
 		}
 		public MethodReference? ImportVvlMethodRef(uint callToken)
 		{
-			DotNetMethodDefinition dnMethod = _library.LookupMethod(callToken);
+			DotNetMethodDefinition dnMethod = _library.LookupMethod(callToken, out DotNetType[]? templateParameters);
 			if(dnMethod == null) return null;
+
+			MethodReference? methodRef = null;
 			if((callToken & 1) == 0)
 			{
-				return _methodLookup[dnMethod];
+				methodRef = _methodLookup[dnMethod];
 			}
 			else
 			{
-				return _methodRefLookup[dnMethod];
+				methodRef = _methodRefLookup[dnMethod];
 			}
+
+			if (methodRef != null
+			 && templateParameters != null)
+			{
+				if (methodRef.GenericParameters.Count != templateParameters.Length)
+				{
+					for (int i = 0; i < templateParameters.Length; i++)
+					{
+						methodRef.GenericParameters.Add(new GenericParameter($"TemplateParam{i}", methodRef));
+					}
+				}
+
+				GenericInstanceMethod genericInstanceMethod = new GenericInstanceMethod(methodRef);
+				for (int i = 0; i < templateParameters.Length; i++)
+				{
+					genericInstanceMethod.GenericArguments.Add(ImportVvlTypeRef(templateParameters[i]));
+				}
+				methodRef = genericInstanceMethod;
+			}
+
+			return methodRef;
 		}
 		public FieldReference ImportVvlFieldRef(int fieldToken)
 		{
@@ -187,6 +219,19 @@ namespace VvlToDll
 			{
 				if(dnMethodRef == null) continue;
 				MethodReference mr = new MethodReference(dnMethodRef._name, ImportVvlTypeRef(dnMethodRef._retType, true), ImportVvlTypeRef(dnMethodRef._declaringType));
+
+				if (!dnMethodRef.isStatic)
+				{
+					mr.CallingConvention = MethodCallingConvention.ThisCall;
+					mr.HasThis = true;
+				}
+				else
+				{
+					mr.CallingConvention = MethodCallingConvention.Default;
+					mr.HasThis = false;
+					mr.ExplicitThis = false;
+				}
+
 				for(int i = dnMethodRef.isStatic ? 0 : 1; i < dnMethodRef._parameters._count; i++)
 				{
 					mr.Parameters.Add(new ParameterDefinition(ImportVvlTypeRef(dnMethodRef._parameters[i])));
@@ -202,8 +247,13 @@ namespace VvlToDll
 				MethodDefinition md = new MethodDefinition(dnMethodDef._name, MethodAttributes.Public, ImportVvlTypeRef(dnMethodDef._retType, true));
 				
 				if(dnMethodDef.isConstructor) md.Attributes |= MethodAttributes.SpecialName | MethodAttributes.RTSpecialName | MethodAttributes.HideBySig;
-				if(dnMethodDef.isStatic)      md.Attributes |= MethodAttributes.Static;
 				if(dnMethodDef.isAbstract)    md.Attributes |= MethodAttributes.Abstract;
+				if(dnMethodDef.isStatic)
+				{
+					md.HasThis = false;
+					md.ExplicitThis = false;
+					md.Attributes |= MethodAttributes.Static | MethodAttributes.HideBySig;
+				}
 				//if((dnMethodDef._flags & (uint)DotNetMethodSignature.FlagTypes.RuntimeImplMethod) != 0) md.Attributes |= MethodAttributes.;
 				//if((dnMethodDef._flags & (uint)DotNetMethodSignature.FlagTypes.NoSpecializationCopyMethod) != 0) md.Attributes |= MethodAttributes.;
 
@@ -571,7 +621,7 @@ namespace VvlToDll
 				case 0xA2: return OpCodes.Stelem_Ref;
 				case 0xA3: return OpCodes.Ldelem_Any;
 				case 0xA4: return OpCodes.Stelem_Any;
-				case 0xA5: return OpCodes.Unbox;								//unbox is ffectively a nop
+				case 0xA5: return OpCodes.Unbox_Any; //unbox.any is effectively a nop, but it skips over the inline arg so do this to be safe
 				case 0xB3: return OpCodes.Nop;//throw GetRemovedOpCodeException("conv.ovf.i1");
 				case 0xB4: return OpCodes.Nop;//throw GetRemovedOpCodeException("conv.ovf.u1");
 				case 0xB5: return OpCodes.Nop;//throw GetRemovedOpCodeException("conv.ovf.i2");
@@ -689,7 +739,22 @@ namespace VvlToDll
 					break;
 				case OperandType.InlineTok:
 				case OperandType.InlineType:
-					inst._operand = ImportVvlTypeRef(_library._referencedTypes[ilStream.ReadInt32()]);
+					uint tokenIndex = ilStream.ReadUInt32();
+					if ((tokenIndex & 0x80000000) != 0)
+					{
+						int genericIndex = unchecked((int)(tokenIndex & 0x7FFFFFFF));
+
+						for (int g = method.GenericParameters.Count; g <= genericIndex; g++)
+						{
+							method.GenericParameters.Add(new GenericParameter($"TemplateParam{g}", method));
+						}
+
+						inst._operand = method.GenericParameters[genericIndex];
+					}
+					else
+					{
+						inst._operand = ImportVvlTypeRef(_library._referencedTypes[unchecked((int)tokenIndex)]);
+					}
 					break;
 				case OperandType.InlineVar:
 					inst._operand = method.Body.Variables[ilStream.ReadUInt16()];

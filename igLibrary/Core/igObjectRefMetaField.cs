@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Reflection;
 
 namespace igLibrary.Core
@@ -123,19 +132,22 @@ namespace igLibrary.Core
 					if(obj is igHandle hnd) item = hnd.GetObjectAlias<igObject>();
 					else throw new InvalidOperationException("Item type is not valid");
 				}
-				item.GetDependencies(platform, dir, out igStringRefList? itemBuildDeps, out igStringRefList? itemFileDeps);
-				if(itemBuildDeps != null)
+				if(item != null)
 				{
-					for(int j = 0; j < itemBuildDeps._count; j++)
+					item.GetDependencies(platform, dir, out igStringRefList? itemBuildDeps, out igStringRefList? itemFileDeps);
+					if(itemBuildDeps != null)
 					{
-						buildDeps.Append(itemBuildDeps[i]);
+						for(int j = 0; j < itemBuildDeps._count; j++)
+						{
+							buildDeps.Append(itemBuildDeps[i]);
+						}
 					}
-				}
-				if(itemFileDeps != null)
-				{
-					for(int j = 0; j < itemFileDeps._count; j++)
+					if(itemFileDeps != null)
 					{
-						fileDeps.Append(itemFileDeps[i]);
+						for(int j = 0; j < itemFileDeps._count; j++)
+						{
+							fileDeps.Append(itemFileDeps[i]);
+						}
 					}
 				}
 			}

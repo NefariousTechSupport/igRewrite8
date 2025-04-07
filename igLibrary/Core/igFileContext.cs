@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using Microsoft.VisualBasic.FileIO;
 
 namespace igLibrary.Core
@@ -193,6 +202,36 @@ namespace igLibrary.Core
 		{
 			list = new igStringRefList();
 			CreateWorkItem(null, igFileWorkItem.WorkType.kTypeFileList, list, 0, 0, 0, dir, blockingType, priority, null, null);
+		}
+		public bool Exists(string path)
+		{
+			igFilePath fp = new igFilePath();
+			fp.Set(path);
+
+			if (File.Exists(fp.getNativePath()))
+			{
+				return true;
+			}
+
+			uint hash = igHash.Hash(fp._path.ToString());
+			for(int i = 0; i < _devices.Count; i++)
+			{
+				if(_devices[i] is igArchive iga)
+				{
+					if(iga.HasFile(hash))
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+
+		public void Unlink(string path)
+		{
+			CreateWorkItem(null, igFileWorkItem.WorkType.kTypeUnlink, null, 0, 0, 0, path, igBlockingType.kMayBlock, igFileWorkItem.Priority.kPriorityNormal, null, null);
 		}
 	}
 }

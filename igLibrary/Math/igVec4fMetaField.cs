@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using igLibrary.Core;
 
 namespace igLibrary.Math
@@ -41,6 +50,30 @@ namespace igLibrary.Math
 			data._z = sh.ReadSingle();
 			data._w = sh.ReadSingle();
 			_default = data;
+		}
+
+
+		/// <summary>
+		/// Sets the target variable based on the string representation of the input
+		/// </summary>
+		/// <param name="target">The output field</param>
+		/// <param name="input">The input field</param>
+		/// <returns>boolean indicating whether the input was read successfully</returns>
+		public override bool SetMemoryFromString(ref object? target, string input)
+		{
+			string[] floats = input.Split(',');
+			if (floats.Length != 4) return false;
+
+			igVec4f tempTarget;
+
+			if (!float.TryParse(floats[0], out tempTarget._x)) return false;
+			if (!float.TryParse(floats[1], out tempTarget._y)) return false;
+			if (!float.TryParse(floats[2], out tempTarget._z)) return false;
+			if (!float.TryParse(floats[3], out tempTarget._w)) return false;
+
+			target = tempTarget;
+
+			return true;
 		}
 	}
 }

@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
@@ -36,7 +45,7 @@ namespace igLibrary.CodeGen
 
 		private void ParseType(GeneratorExecutionContext context, INamedTypeSymbol type)
 		{
-			if(!IsAssignableTo(type, "igMetaField") || type.Name == "igMetaField")
+			if(!IsAssignableTo(type, "igMetaField") || type.IsAbstract)
 			{
 				return;
 			}
@@ -83,6 +92,10 @@ namespace {type.ContainingNamespace.ToDisplayString()}
 		public override Type GetOutputType()
 		{{
 			return base.GetOutputType().MakeArrayType();
+		}}
+		public override object? GetDefault(igMemoryPool pool)
+		{{
+			return Array.CreateInstance(base.GetOutputType(), _num);
 		}}
 	}}
 }}

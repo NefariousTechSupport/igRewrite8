@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -240,7 +249,7 @@ namespace igLibrary.Core
 			if(_parent == null) return;
 			//_parent.InheritFields();
 			_parent._children.Add(this);
-			_metaFields.AddRange(_parent._metaFields);
+			_metaFields.InsertRange(0, _parent._metaFields);
 		}
 		public void AppendDynamicField(igMetaField field)
 		{
@@ -349,22 +358,6 @@ namespace igLibrary.Core
 			obj.internalMeta = this;
 			if(setFields) obj.ResetFields(this);
 			return obj;
-		}
-		public void CorrectObjectMeta(igObject obj)
-		{
-			FieldInfo? fi = _vTablePointer.GetField("_meta");
-			if(fi != null)
-			{
-				fi.SetValue(obj, this);
-			}
-		}
-		internal void ApplyFixup(int index, igMetaField field)
-		{
-			_metaFields.Insert(index, field);
-			for(int i = 0; i < _children.Count; i++)
-			{
-				_children[i].ApplyFixup(index, field);
-			}
 		}
 
 

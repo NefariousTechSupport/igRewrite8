@@ -1,10 +1,16 @@
+/*
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using ImGuiNET;
-using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using OpenTK.Windowing.Common.Input;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
@@ -73,7 +79,14 @@ namespace igCauldron3
 				io.NativePtr->IniFilename = (byte*)newname;
 			}
 
-			ImGui.LoadIniSettingsFromDisk(CauldronConfig.ImGuiConfigFilePath);
+			if (File.Exists(CauldronConfig.ImGuiConfigFilePath))
+			{
+				ImGui.LoadIniSettingsFromDisk(CauldronConfig.ImGuiConfigFilePath);
+			}
+			else
+			{
+				ImGui.LoadIniSettingsFromDisk("defaultimgui.ini");
+			}
 
 			io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 			io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
@@ -497,6 +510,8 @@ void main()
 
 			GL.DeleteTexture(_fontTexture);
 			GL.DeleteProgram(_shader);
+
+			ImGui.SaveIniSettingsToDisk(CauldronConfig.ImGuiConfigFilePath);
 		}
 
 		public static void LabelObject(ObjectLabelIdentifier objLabelIdent, int glObject, string name)

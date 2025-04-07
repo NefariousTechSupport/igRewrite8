@@ -1,9 +1,21 @@
+/*
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using System.Reflection;
 using igLibrary.Core;
 using ImGuiNET;
 
 namespace igCauldron3
 {
+	/// <summary>
+	/// UI Frame for managing and editing the currently open <c>igObjectDirectory</c>s
+	/// </summary>
 	public class DirectoryManagerFrame : Frame
 	{
 		public static DirectoryManagerFrame _instance { get; private set; }
@@ -13,6 +25,12 @@ namespace igCauldron3
 		private int _dirIndex = 0;
 		public igObjectDirectory CurrentDir => _dirs[_dirIndex];
 
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="wnd">The window to parent the frame to</param>
+		/// <exception cref="InvalidOperationException">This class is effectively a singleton, only one can exist at once</exception>
 		public DirectoryManagerFrame(Window wnd) : base(wnd)
 		{
 			if(_instance != null) throw new InvalidOperationException("DirectoryManagerFrame already created!");
@@ -31,11 +49,37 @@ namespace igCauldron3
 				}
 			}
 		}
+
+
+		/// <summary>
+		/// Add a directory to the list of uh open directories
+		/// </summary>
+		/// <param name="dir">The directory</param>
 		public void AddDirectory(igObjectDirectory dir)
 		{
-			_dirIndex = _dirs._count;
-			_dirs.Append(dir);
+			int index = -1;
+			for (int i = 0; i < _dirs._count; i++)
+			{
+				if (_dirs[i] == dir)
+				{
+					index = i;
+					break;
+				}
+			}
+
+			if (index < 0)
+			{
+				index = _dirs._count;
+				_dirs.Append(dir);
+			}
+
+			_dirIndex = index;
 		}
+
+
+		/// <summary>
+		/// Renders the ui
+		/// </summary>
 		public override void Render()
 		{
 			ImGui.Begin("Directory Manager", ImGuiWindowFlags.HorizontalScrollbar);
@@ -45,8 +89,7 @@ namespace igCauldron3
 				{
 					bool tabOpen = true;
 					ImGui.PushID(i);
-					//bool tabSelected = ImGui.BeginTabItem(_dirs[i]._name._string, ref tabOpen, );
-					bool tabSelected = ImGui.BeginTabItem(_dirs[i]._name._string);
+					bool tabSelected = ImGui.BeginTabItem(_dirs[i]._name._string, ref tabOpen);
 					ImGui.PopID();
 					if(tabSelected)
 					{
@@ -66,6 +109,12 @@ namespace igCauldron3
 			ImGui.End();
 			base.Render();
 		}
+
+
+		/// <summary>
+		/// Renders ui for a specific directory
+		/// </summary>
+		/// <param name="dir">the directory</param>
 		private void RenderDirectory(igObjectDirectory dir)
 		{
 			if(ImGui.TreeNode("Objects"))
@@ -93,6 +142,13 @@ namespace igCauldron3
 				ImGui.TreePop();
 			}
 		}
+
+
+		/// <summary>
+		/// Renders ui for a specific <c>igObject</c>
+		/// </summary>
+		/// <param name="id">The id to represent the object with in the ui</param>
+		/// <param name="obj">The object</param>
 		public void RenderObject(string id, igObject? obj)
 		{
 			if(obj == null)
@@ -128,6 +184,14 @@ namespace igCauldron3
 				ImGui.TreePop();
 			}
 		}
+
+
+		/// <summary>
+		/// Method to render the fields of an object
+		/// </summary>
+		/// <param name="id">The id to use when rendering the fields</param>
+		/// <param name="obj">The object</param>
+		/// <param name="meta">The type of the object</param>
 		private void RenderObjectFields(string id, igObject obj, igMetaObject meta)
 		{
 			for(int i = 0; i < meta._metaFields.Count; i++)

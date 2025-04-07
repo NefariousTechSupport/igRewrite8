@@ -1,34 +1,42 @@
+<!--
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+-->
+
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <ProjectReference Include="..\igLibrary\igLibrary.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\igLibrary\igLibrary.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Mono.Cecil" Version="0.11.5" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Mono.Cecil" Version="0.11.5" />
+	</ItemGroup>
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
 
-  <!--==================-->
-  <!-- Post Build Tasks -->
-  <!--==================-->
+	<!--==================-->
+	<!-- Post Build Tasks -->
+	<!--==================-->
 
-  <ItemGroup>
-    <ArkFiles Include="../Resources/ArkCore/*.ark"/>
-  </ItemGroup>
+	<ItemGroup>
+		<ArkFiles Include="../Resources/ArkCore/**"/>
+	</ItemGroup>
 
-  <Target Name="Debug|Release" AfterTargets="AfterBuild">
-    <Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/ArkCore" SkipUnchangedFiles="true"/>
-  </Target>
-  <Target Name="Debug|Release" AfterTargets="Publish">
-    <Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/publish/ArkCore" SkipUnchangedFiles="true"/>
-  </Target>
+	<Target Name="Debug|Release" AfterTargets="AfterBuild">
+		<Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/ArkCore/%(RecursiveDir)" SkipUnchangedFiles="true"/>
+	</Target>
+	<Target Name="Debug|Release" AfterTargets="Publish">
+		<Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/publish/ArkCore/%(RecursiveDir)" SkipUnchangedFiles="true"/>
+	</Target>
 </Project>

@@ -1,3 +1,12 @@
+/*
+	Copyright (c) 2022-2025, The igCauldron Contributors.
+	igCauldron and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 using ImGuiNET;
 using igLibrary.Core;
 using igLibrary;
@@ -6,6 +15,9 @@ using System.Diagnostics;
 
 namespace igCauldron3
 {
+	/// <summary>
+	/// Intitial configuration UI frame
+	/// </summary>
 	public class ConfigFrame : Frame
 	{
 		public (IG_CORE_PLATFORM, string)[] _platformNames = new (IG_CORE_PLATFORM, string)[]
@@ -29,10 +41,47 @@ namespace igCauldron3
 			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_XENON, "Xbox 360"),
 			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_DURANGO, "Xbox One")
 		};
+
+		public (igArkCore.EGame, string)[] _gameNames = new (igArkCore.EGame, string)[]
+		{
+			(igArkCore.EGame.EV_SkylandersSuperchargers, "Skylanders Superchargers 1.6.X"),
+			(igArkCore.EGame.EV_SkylandersImaginators,   "Skylanders Imaginators 1.1.X")
+		};
+
+
+		/// <summary>
+		/// Constructor for config frame
+		/// </summary>
+		/// <param name="wnd">The window to parent it to</param>
 		public ConfigFrame(Window wnd) : base(wnd)
 		{
 			CauldronConfig.ReadConfig();
 		}
+
+
+		/// <summary>
+		/// Lookup the name of a game based on the enum
+		/// </summary>
+		/// <param name="game">The game to grab the string for</param>
+		/// <returns>The name for the game</returns>
+		private string GetGameName(igArkCore.EGame game)
+		{
+			for(int i = 0; i < _gameNames.Length; i++)
+			{
+				if(_gameNames[i].Item1 == game)
+				{
+					return _gameNames[i].Item2;
+				}
+			}
+			return "Select a Game";
+		}
+
+
+		/// <summary>
+		/// Lookup the name of a platform based on the enum
+		/// </summary>
+		/// <param name="platform">The platform to grab the string for</param>
+		/// <returns>The name for the platform</returns>
 		private string GetPlatformName(IG_CORE_PLATFORM platform)
 		{
 			for(int i = 0; i < _platformNames.Length; i++)
@@ -44,6 +93,14 @@ namespace igCauldron3
 			}
 			return "Select a Platform";
 		}
+
+
+		/// <summary>
+		/// Renders the ui
+		/// </summary>
+		/// <exception cref="DirectoryNotFoundException">Thrown if the game directory is missing</exception>
+		/// <exception cref="FileNotFoundException">Thrown if the update file is missing</exception>
+		/// <exception cref="ArgumentException">If the platform specified is invalid</exception>
 		public override void Render()
 		{
 			ImGui.Begin("Configuration");
@@ -58,12 +115,35 @@ namespace igCauldron3
 					RenderTextField("Game Path", "gp", ref game._path);
 					RenderTextField("Update Path", "up", ref game._updatePath);
 
+					ImGui.Text("Game");
+					ImGui.SameLine();
+					ImGui.PushID("game");
+					bool gameComboing = ImGui.BeginCombo(string.Empty, GetGameName(game._game));
+					ImGui.PopID();
+					if(gameComboing)
+					{
+						for(int p = 0; p < _gameNames.Length; p++)
+						{
+							ImGui.PushID(p);
+							if(ImGui.Selectable(_gameNames[p].Item2, game._game == _gameNames[p].Item1))
+							{
+								game._game = _gameNames[p].Item1;
+							}
+							if(game._game == _gameNames[p].Item1)
+							{
+								ImGui.SetItemDefaultFocus();
+							}
+							ImGui.PopID();
+						}
+						ImGui.EndCombo();
+					}
+
 					ImGui.Text("Platform");
 					ImGui.SameLine();
 					ImGui.PushID("platform");
-					bool comboing = ImGui.BeginCombo(string.Empty, GetPlatformName(game._platform));
+					bool platformComboing = ImGui.BeginCombo(string.Empty, GetPlatformName(game._platform));
 					ImGui.PopID();
-					if(comboing)
+					if(platformComboing)
 					{
 						for(int p = 0; p < _platformNames.Length; p++)
 						{
@@ -78,6 +158,7 @@ namespace igCauldron3
 							}
 							ImGui.PopID();
 						}
+						ImGui.EndCombo();
 					}
 
 					bool full = ImGui.Button("Load Game");
@@ -100,30 +181,12 @@ namespace igCauldron3
 						{
 							igFileContext.Singleton.InitializeUpdate(game._updatePath);
 						}
+
 						igRegistry.GetRegistry()._platform = game._platform;
 						igRegistry.GetRegistry()._gfxPlatform = igGfx.GetGfxPlatformFromCore(game._platform);
-						igArkCore.ReadFromFile(igArkCore.EGame.EV_SkylandersSuperchargers);
-						IG_CORE_PLATFORM platform = igRegistry.GetRegistry()._platform;
 
-						igFileContext.Singleton.LoadArchive("app:/archives/loosefiles.pak");
-
-						if(full)
-						{
-							CPrecacheManager._Instance.PrecachePackage($"generated/shaders/shaders_{igAlchemyCore.GetPlatformString(platform)}", EMemoryPoolID.MP_DEFAULT);
-	
-							CPrecacheManager._Instance.PrecachePackage($"generated/packageXmls/permanent_{igAlchemyCore.GetPlatformString(platform)}", EMemoryPoolID.MP_DEFAULT);
-							CPrecacheManager._Instance.PrecachePackage("generated/packageXmls/essentialui", EMemoryPoolID.MP_DEFAULT);
-							CPrecacheManager._Instance.PrecachePackage("generated/UI/legal", EMemoryPoolID.MP_DEFAULT);
-							CPrecacheManager._Instance.PrecachePackage("generated/packageXmls/gamestartup", EMemoryPoolID.MP_DEFAULT);
-							CPrecacheManager._Instance.PrecachePackage("generated/packageXmls/permanentdeveloper", EMemoryPoolID.MP_DEFAULT);
-							CPrecacheManager._Instance.PrecachePackage("generated/SoundBankData", EMemoryPoolID.MP_DEFAULT);
-	
-							CPrecacheManager._Instance.PrecachePackage("generated/packageXmls/permanent", EMemoryPoolID.MP_DEFAULT);
-							CPrecacheManager._Instance.PrecachePackage("generated/maps/zoneinfos", EMemoryPoolID.MP_DEFAULT);
-							CPrecacheManager._Instance.PrecachePackage("generated/packageXmls/permanent_2015", EMemoryPoolID.MP_DEFAULT);
-							CPrecacheManager._Instance.PrecachePackage("generated/UI/Domains/JuiceDomain_Mobile", EMemoryPoolID.MP_DEFAULT);
-							CPrecacheManager._Instance.PrecachePackage("generated/UI/Domains/JuiceDomain_FrontEnd", EMemoryPoolID.MP_DEFAULT);
-						}
+						igArkCore.ReadFromXmlFile(game._game);
+						CPrecacheFileLoader.LoadInitialPackages(game._game, debug);
 
 						_wnd._frames.Remove(this);
 						_wnd._frames.Add(new DirectoryManagerFrame(_wnd));
@@ -150,6 +213,14 @@ namespace igCauldron3
 
 			ImGui.End();
 		}
+
+
+		/// <summary>
+		/// Render one of the text fields
+		/// </summary>
+		/// <param name="label">The text to show</param>
+		/// <param name="id">The id to use</param>
+		/// <param name="val">The string value for the user to edit</param>
 		private void RenderTextField(string label, string id, ref string val)
 		{
 			ImGui.Text(label);

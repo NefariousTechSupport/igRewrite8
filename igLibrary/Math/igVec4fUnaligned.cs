@@ -1,7 +1,26 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
 namespace igLibrary.Math
 {
 	public struct igVec4fUnaligned
 	{
+		public igVec4fUnaligned Zero => new igVec4fUnaligned(0, 0, 0, 0);
+		public igVec4fUnaligned One => new igVec4fUnaligned(1, 1, 1, 1);
+		public igVec4fUnaligned UnitX => new igVec4fUnaligned(1, 0, 0, 0);
+		public igVec4fUnaligned UnitY => new igVec4fUnaligned(0, 1, 0, 0);
+		public igVec4fUnaligned UnitZ => new igVec4fUnaligned(0, 0, 1, 0);
+		public igVec4fUnaligned UnitW => new igVec4fUnaligned(0, 0, 0, 1);
+
+		public float SqrMagnitude => _x * _x + _y * _y + _z * _z + _w * _w;
+		public float Magnitude => MathF.Sqrt(SqrMagnitude);
+
 		public float _x;
 		public float _y;
 		public float _z;
@@ -21,5 +40,7 @@ namespace igLibrary.Math
 		{
 			return new igVec4fUnaligned(vec.X, vec.Y, vec.Z, vec.W);
 		}
+		public static igVec4fUnaligned operator+(igVec4fUnaligned a, igVec4fUnaligned b) => new igVec4fUnaligned(a._x + b._x, a._y + b._y, a._z + b._z, a._w + b._w);
+		public static igVec4fUnaligned operator-(igVec4fUnaligned a, igVec4fUnaligned b) => new igVec4fUnaligned(a._x - b._x, a._y - b._y, a._z - b._z, a._w - b._w);
 	}
 }
