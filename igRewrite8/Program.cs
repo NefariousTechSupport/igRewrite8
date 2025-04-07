@@ -6,6 +6,9 @@
 	Please see the LICENSE file for more details.
 */
 
+//#define SAVE_TO_UPDATE_PAK
+//#define MODEL_IMPORTS
+#define ACTOR_IMPORTS
 
 using igLibrary.Core;
 using igLibrary;
@@ -41,6 +44,7 @@ namespace igRewrite8
 			igRegistry.GetRegistry()._platform = IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS3;
 			igRegistry.GetRegistry()._gfxPlatform = igLibrary.Gfx.IG_GFX_PLATFORM.IG_GFX_PLATFORM_PS3;
 
+#if MODEL_IMPORTS
 			AssimpContext ctx = new AssimpContext();
 			Scene scene = ctx.ImportFile("C:/Users/neffy/Documents/MikuSupercharger.obj", PostProcessSteps.Triangulate | PostProcessSteps.GenerateSmoothNormals | PostProcessSteps.CalculateTangentSpace);
 
@@ -61,7 +65,9 @@ namespace igRewrite8
 			FileStream dst = File.Create("modeltest.igz");
 			dir.WriteFile(dst, IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS3);
 			dst.Seek(0, SeekOrigin.Begin);
+#endif // MODEL_IMPORTS
 
+#if SAVE_TO_UPDATE_PAK
 			igFilePath fp = new igFilePath();
 			fp.Set(dir._path);
 			igArchive arc = igFileContext.Singleton._archiveManager._patchArchives[0];
@@ -70,8 +76,11 @@ namespace igRewrite8
 			dst.Close();
 			if(arc._path[1] == ':') arc.Save(arc._path);
 			else arc.Save($"{igFileContext.Singleton._root}/archives/{Path.GetFileName(arc._path)}");
+#endif // SAVE_TO_UPDATE_PAK
 
+#if MODEL_IMPORTS
 			dst.Close();
+#endif // MODEL_IMPORTS
 
 			return;
 		}
