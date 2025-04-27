@@ -7,10 +7,17 @@
 */
 
 
+using System.Runtime.InteropServices;
+using igLibrary.PS3Edge;
+
 namespace igLibrary.Gfx
 {
 	public class igPS3EdgeGeometrySegment : igObject
 	{
+		public byte SpuVertexes0Stride => _spuInputStreamDescs0[1];
+		public byte SpuVertexes1Stride => _spuInputStreamDescs1[1];
+		public byte RsxVertexesStride  => _rsxOnlyStreamDesc[1];
+
 		public igMemory<byte> _spuConfigInfo;
 		public igMemory<byte> _indexes;
 		public ushort[] _indexesSizes;
@@ -37,6 +44,56 @@ namespace igLibrary.Gfx
 		public igMemory<byte> _blendShapeData;
 		public igVector<ulong> _blendShapes;
 		public int _speedTreeType;
+
+		public unsafe void SetStreamDesc(EPS3StreamDesc streamDesc, EdgeGeomAttributeBlock[] attributes)
+		{
+			byte kStreamDescSize = (byte)Marshal.SizeOf<EdgeGeomVertexStreamDescription>();
+			byte kAttributeSize  = (byte)Marshal.SizeOf<EdgeGeomAttributeBlock>();
+
+			// Set up stream desc
+			EdgeGeomVertexStreamDescription desc = new EdgeGeomVertexStreamDescription();
+			desc.numAttributes = (byte)attributes.Length;
+			desc.numBlocks     = (byte)attributes.Length;
+
+			// Determine stride
+			for (int i = 0; i < attributes.Length; i++)
+			{
+				desc.stride = (byte)System.Math.Max(desc.stride, attributes[i].offset + attributes[i].size);
+			}
+
+			// Select destination
+			ref igMemory<byte> streamDescMemory = ref _spuInputStreamDescs0;
+			switch (streamDesc)
+			{
+				case EPS3StreamDesc.Spu0:
+					streamDescMemory = ref _spuInputStreamDescs0;
+					break;
+				case EPS3StreamDesc.Spu1:
+					streamDescMemory = ref _spuInputStreamDescs1;
+					break;
+				case EPS3StreamDesc.RsxOnly:
+					streamDescMemory = ref _rsxOnlyStreamDesc;
+					break;
+			}
+
+			streamDescMemory.Alloc(kStreamDescSize + desc.stride * desc.numAttributes);
+
+			// Copy data to destination, it's all single byte fields so no need to
+			// endian swap
+			Marshal.Copy(new IntPtr(&desc), streamDescMemory.Buffer, 0, kStreamDescSize);
+
+			fixed (EdgeGeomAttributeBlock* attributePtr = attributes)
+			{
+				Marshal.Copy(new IntPtr(attributePtr), streamDescMemory.Buffer, kStreamDescSize, kAttributeSize * attributes.Length);
+			}
+		}
 	}
 	public class igPS3EdgeGeometrySegmentList : igTObjectList<igPS3EdgeGeometrySegment>{}
+
+	public enum EPS3StreamDesc
+	{
+		Spu0,
+		Spu1,
+		RsxOnly
+	}
 }

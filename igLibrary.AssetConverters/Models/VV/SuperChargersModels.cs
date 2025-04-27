@@ -359,9 +359,230 @@ namespace igLibrary.AssetConversion.Models
 			drawCall._graphicsVertexBuffer._formatResource = 0;
 		}
 
-			return drawCall;
 		private unsafe void CreatePS3Buffers(Mesh mesh, igModelDrawCallData drawCall, bool isActor)
 		{
+			Debug.Assert(mesh.VertexCount <= 0xFFFF);
+
+			bool hasBones = mesh.HasBones && isActor;
+			igPS3EdgeGeometry geometry = igMetaObject.ConstructInstance<igPS3EdgeGeometry>(igMemoryContext.Geometry);
+			geometry._isMorphed        = false;
+			geometry._isSkinned        = hasBones;
+			geometry._isSpeedTree      = false;
+			geometry._isVertexAnimated = false;
+			geometry._hasVertexColor   = true;
+
+			igPS3EdgeGeometrySegment segment = igMetaObject.ConstructInstance<igPS3EdgeGeometrySegment>(igMemoryContext.Geometry);
+			EdgeGeomSpuConfigInfo spuConfigInfo = new EdgeGeomSpuConfigInfo();
+
+			// Setup indices
+			uint[] indexBuffer = mesh.GetUnsignedIndices().ToArray();
+			EdgeGeomVertexConversion.PackIndexBuffer(indexBuffer, ref spuConfigInfo, out byte[] compressedIndices);
+
+			segment._indexes = new igMemory<byte>(igMemoryContext.VertexEdge, compressedIndices);
+			segment._indexesSizes[0] = (ushort)compressedIndices.Length;
+
+			// Setup vertex stream descs
+			EdgeGeomAttributeBlock[] spuVertexesAttrs0 = new EdgeGeomAttributeBlock[1];
+			EdgeGeomAttributeBlock[] spuVertexesAttrs1 = new EdgeGeomAttributeBlock[2];
+			EdgeGeomAttributeBlock[] rsxVertexesAttrs  = new EdgeGeomAttributeBlock[2];
+
+			spuVertexesAttrs0[0] = new EdgeGeomAttributeBlock()
+			{
+				offset                 = 0x00,
+				format                 = EDGE_GEOM_ATTRIBUTE_FORMAT.I16N,
+				componentCount         = 4,
+				edgeAttributeId        = EDGE_GEOM_ATTRIBUTE_ID.POSITION,
+				size                   = sizeof(short) * 4,
+				vertexProgramSlotIndex = igVertexFormatPS3.GetVPSlotIndex(IG_VERTEX_USAGE.IG_VERTEX_USAGE_POSITION, 0),
+				fixedBlockOffset       = 0,
+				padding                = 0
+			};
+
+			spuVertexesAttrs1[0] = new EdgeGeomAttributeBlock()
+			{
+				offset                 = 0x00,
+				format                 = EDGE_GEOM_ATTRIBUTE_FORMAT.X11Y11Z10N,
+				componentCount         = 1,
+				edgeAttributeId        = EDGE_GEOM_ATTRIBUTE_ID.NORMAL,
+				size                   = sizeof(uint),
+				vertexProgramSlotIndex = igVertexFormatPS3.GetVPSlotIndex(IG_VERTEX_USAGE.IG_VERTEX_USAGE_NORMAL, 0),
+				fixedBlockOffset       = 0,
+				padding                = 0
+			};
+			spuVertexesAttrs1[1] = new EdgeGeomAttributeBlock()
+			{
+				offset                 = 0x06,
+				format                 = EDGE_GEOM_ATTRIBUTE_FORMAT.X11Y11Z10N,
+				componentCount         = 1,
+				edgeAttributeId        = EDGE_GEOM_ATTRIBUTE_ID.TANGENT,
+				size                   = sizeof(uint),
+				vertexProgramSlotIndex = igVertexFormatPS3.GetVPSlotIndex(IG_VERTEX_USAGE.IG_VERTEX_USAGE_TANGENT, 0),
+				fixedBlockOffset       = 0,
+				padding                = 0
+			};
+
+			rsxVertexesAttrs[0] = new EdgeGeomAttributeBlock()
+			{
+				offset                 = 0x00,
+				format                 = EDGE_GEOM_ATTRIBUTE_FORMAT.F16,
+				componentCount         = 2,
+				edgeAttributeId        = EDGE_GEOM_ATTRIBUTE_ID.UV0,
+				size                   = 2 * 2, // sizeof(Half) is 2
+				vertexProgramSlotIndex = igVertexFormatPS3.GetVPSlotIndex(IG_VERTEX_USAGE.IG_VERTEX_USAGE_TEXCOORD, 0),
+				fixedBlockOffset       = 0,
+				padding                = 0
+			};
+			rsxVertexesAttrs[1] = new EdgeGeomAttributeBlock()
+			{
+				offset                 = 0x04,
+				format                 = EDGE_GEOM_ATTRIBUTE_FORMAT.U8N,
+				componentCount         = 4,
+				edgeAttributeId        = EDGE_GEOM_ATTRIBUTE_ID.COLOR,
+				size                   = sizeof(byte) * 4,
+				vertexProgramSlotIndex = igVertexFormatPS3.GetVPSlotIndex(IG_VERTEX_USAGE.IG_VERTEX_USAGE_COLOR, 0),
+				fixedBlockOffset       = 0,
+				padding                = 0
+			};
+
+			segment.SetStreamDesc(EPS3StreamDesc.Spu0,    spuVertexesAttrs0);
+			segment.SetStreamDesc(EPS3StreamDesc.Spu1,    spuVertexesAttrs1);
+			segment.SetStreamDesc(EPS3StreamDesc.RsxOnly, rsxVertexesAttrs);
+
+			// Buffer vertices
+			ref igMemory<byte> spuVertexes0 = ref segment._spuVertexes0;
+			ref igMemory<byte> spuVertexes1 = ref segment._spuVertexes1;
+			ref igMemory<byte> rsxVertexes  = ref segment._rsxOnlyVertexes;
+
+			spuVertexes0.Alloc(segment.SpuVertexes0Stride * mesh.VertexCount);
+			spuVertexes1.Alloc(segment.SpuVertexes1Stride * mesh.VertexCount);
+			rsxVertexes.Alloc( segment.RsxVertexesStride  * mesh.VertexCount);
+
+			Debug.Assert(spuVertexes0.Length <= ushort.MaxValue);
+			Debug.Assert(spuVertexes1.Length <= ushort.MaxValue);
+			Debug.Assert(rsxVertexes.Length  <= ushort.MaxValue);
+
+			segment._spuVertexesSizes[0] = (ushort)spuVertexes0.Length;
+			segment._spuVertexesSizes[1] = (ushort)spuVertexes1.Length;
+			segment._rsxOnlyVertexesSize = (ushort)rsxVertexes.Length;
+
+			for (int i = 0; i < mesh.VertexCount; i++)
+			{
+				short shortWork;
+
+				Vector3 shortNormalised = mesh.Vertices[i];
+				float inverseMagnitude = short.MaxValue / MathF.Max(shortNormalised.Length(), 1);
+				shortNormalised *= inverseMagnitude;
+
+				Debug.Assert(inverseMagnitude >= 1 && inverseMagnitude <= short.MaxValue);
+
+				shortWork = (short)shortNormalised.X;
+				Marshal.Copy(new IntPtr(&shortWork), spuVertexes0.Buffer, i * segment.SpuVertexes0Stride + 0x00, sizeof(short));
+				shortWork = (short)shortNormalised.Y;
+				Marshal.Copy(new IntPtr(&shortWork), spuVertexes0.Buffer, i * segment.SpuVertexes0Stride + 0x02, sizeof(short));
+				shortWork = (short)shortNormalised.Z;
+				Marshal.Copy(new IntPtr(&shortWork), spuVertexes0.Buffer, i * segment.SpuVertexes0Stride + 0x04, sizeof(short));
+				shortWork = (short)inverseMagnitude;
+				Marshal.Copy(new IntPtr(&shortWork), spuVertexes0.Buffer, i * segment.SpuVertexes0Stride + 0x06, sizeof(short));
+
+				uint intWork = ((uint)(mesh.Normals[i].X * 0x7FF) << 21)
+				             | ((uint)(mesh.Normals[i].Y * 0x7FF) << 10)
+				             | ((uint)(mesh.Normals[i].Z * 0x3FF));
+				Marshal.Copy(new IntPtr(&intWork), spuVertexes1.Buffer, i * segment.SpuVertexes1Stride + 0x00, sizeof(uint));
+
+				if (mesh.HasTangentBasis)
+				{
+					intWork = ((uint)(mesh.Tangents[i].X * 0x7FF) << 21)
+					        | ((uint)(mesh.Tangents[i].Y * 0x7FF) << 10)
+					        | ((uint)(mesh.Tangents[i].Z * 0x3FF));
+					Marshal.Copy(new IntPtr(&intWork), spuVertexes1.Buffer, i * segment.SpuVertexes1Stride + 0x04, sizeof(uint));
+				}
+
+				Half halfWork = (Half)mesh.TextureCoordinateChannels[0][i].X;
+				Marshal.Copy(new IntPtr(&halfWork), rsxVertexes.Buffer, i * segment.RsxVertexesStride + 0x00, 2);
+				halfWork = (Half)(1 - mesh.TextureCoordinateChannels[0][i].Y);
+				Marshal.Copy(new IntPtr(&halfWork), rsxVertexes.Buffer, i * segment.RsxVertexesStride + 0x02, 2);
+
+				if (mesh.HasVertexColors(0))
+				{
+					rsxVertexes.Buffer[i * segment.RsxVertexesStride + 0x04] = (byte)(255 * mesh.VertexColorChannels[0][i].X);
+					rsxVertexes.Buffer[i * segment.RsxVertexesStride + 0x05] = (byte)(255 * mesh.VertexColorChannels[0][i].Y);
+					rsxVertexes.Buffer[i * segment.RsxVertexesStride + 0x06] = (byte)(255 * mesh.VertexColorChannels[0][i].Z);
+					rsxVertexes.Buffer[i * segment.RsxVertexesStride + 0x07] = (byte)(255 * mesh.VertexColorChannels[0][i].W);
+				}
+				else
+				{
+					rsxVertexes.Buffer[i * segment.RsxVertexesStride + 0x04] = 0xFF;
+					rsxVertexes.Buffer[i * segment.RsxVertexesStride + 0x05] = 0xFF;
+					rsxVertexes.Buffer[i * segment.RsxVertexesStride + 0x06] = 0xFF;
+					rsxVertexes.Buffer[i * segment.RsxVertexesStride + 0x07] = 0xFF;
+				}
+
+				if (BitConverter.IsLittleEndian)
+				{
+					Array.Reverse(spuVertexes0.Buffer, i * segment.SpuVertexes0Stride + 0x00, sizeof(short));
+					Array.Reverse(spuVertexes0.Buffer, i * segment.SpuVertexes0Stride + 0x02, sizeof(short));
+					Array.Reverse(spuVertexes0.Buffer, i * segment.SpuVertexes0Stride + 0x04, sizeof(short));
+					Array.Reverse(spuVertexes0.Buffer, i * segment.SpuVertexes0Stride + 0x06, sizeof(short));
+
+					Array.Reverse(spuVertexes1.Buffer, i * segment.SpuVertexes1Stride + 0x00, sizeof(uint));
+					Array.Reverse(spuVertexes1.Buffer, i * segment.SpuVertexes1Stride + 0x04, sizeof(uint));
+
+					Array.Reverse(rsxVertexes.Buffer,  i * segment.RsxVertexesStride  + 0x00, 2);
+					Array.Reverse(rsxVertexes.Buffer,  i * segment.RsxVertexesStride  + 0x02, 2);
+				}
+			}
+
+			// Buffer blend data
+			if (hasBones)
+			{
+				segment._skinMatricesByteOffsets[0] = 0;
+				segment._skinMatricesByteOffsets[1] = 0;
+				segment._skinMatricesSizes[0] = (ushort)(mesh.BoneCount * 0x30);
+				segment._skinMatricesSizes[1] = 0;
+
+				ref igMemory<byte> skinBuffer = ref segment._skinIndexesAndWeights;
+				skinBuffer.Alloc(mesh.VertexCount * 8);
+				Debug.Assert((ushort)skinBuffer.Length < ushort.MaxValue);
+				segment._skinIndexesAndWeightsSizes[0] = (ushort)skinBuffer.Length;
+
+				byte[] influenceCounts = new byte[mesh.VertexCount];
+
+				for (int b = 0; b < mesh.BoneCount; b++)
+				{
+					for (int v = 0; v < mesh.Bones[b].VertexWeightCount; v++)
+					{
+						VertexWeight weight = mesh.Bones[b].VertexWeights[v];
+
+						ref byte influenceCount = ref influenceCounts[weight.VertexID];
+
+						if (influenceCount < 4)
+						{
+							skinBuffer[weight.VertexID * 8 + influenceCount * 2 + 0x00] = (byte)(255 * weight.Weight);
+							skinBuffer[weight.VertexID * 8 + influenceCount * 2 + 0x01] = (byte)b;
+							influenceCount++;
+						}
+					}
+				}
+			}
+
+			segment._ioBufferSize = 0xC000;
+			segment._scratchSize  = segment._spuVertexesSizes[0] / 2u;
+
+			spuConfigInfo.flagsAndUniformTableCount      = 0x83;
+			spuConfigInfo.commandBufferHoldSize          = 0x13;
+			spuConfigInfo.inputVertexFormatId            = byte.MaxValue;
+			spuConfigInfo.secondaryInputVertexFormatId   = byte.MaxValue;
+			spuConfigInfo.outputVertexFormatId           = 0x01;
+			spuConfigInfo.indexesFlavorAndSkinningFlavor = (byte)(0x30 | (byte)(hasBones ? EDGE_GEOM_SKIN.NO_SCALING : EDGE_GEOM_SKIN.NONE));
+			spuConfigInfo.skinningMatrixFormat           = 0x00;
+			spuConfigInfo.numVertexes                    = (ushort)mesh.VertexCount;
+			spuConfigInfo.indexesOffset                  = uint.MaxValue;
+
+			segment._spuConfigInfo = new igMemory<byte>(igMemoryContext.VertexEdge, spuConfigInfo.GetBytes());
+
+			geometry.Append(segment);
+
+			drawCall._platformData = geometry;
 		}
 
 		private igVertexElement AllocateElement(IG_VERTEX_USAGE usage, IG_VERTEX_TYPE type, bool shouldUse, ref byte offset, ref int index, byte count = 0)
