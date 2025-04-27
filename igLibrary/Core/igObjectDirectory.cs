@@ -97,6 +97,77 @@ namespace igLibrary.Core
 				if(name._hash != 0) throw new ArgumentException("Name is not null even though namelist is!");
 			}
 		}
+
+
+		/// <summary>
+		/// Gets the first root object of the specified type, else null
+		/// </summary>
+		/// <typeparam name="T">The type in question</typeparam>
+		/// <returns>The first igObject of that type, else null</returns>
+		public T? GetObjectOfType<T>() where T : igObject => (T?)GetObjectOfType(typeof(T));
+
+
+		/// <summary>
+		/// Gets the first root object of the specified metaobject, else null
+		/// </summary>
+		/// <param name="metaObject">The type in question</param>
+		/// <returns>The first igObject of that type, else null</returns>
+		public igObject? GetObjectOfType(igMetaObject metaObject) => GetObjectOfType(metaObject._vTablePointer!);
+
+
+		/// <summary>
+		/// Gets the first root object of the specified type, else null
+		/// </summary>
+		/// <param name="type">The type in question</param>
+		/// <returns>The first igObject of that type, else null</returns>
+		public igObject? GetObjectOfType(Type type)
+		{
+			for(int o = 0; o < _objectList._count; o++)
+			{
+				if(_objectList[o].GetType().IsAssignableTo(type))
+				{
+					return _objectList[o];
+				}
+			}
+			return null;
+		}
+
+
+		/// <summary>
+		/// Gets all the root objects of the specified type
+		/// </summary>
+		/// <typeparam name="T">The type in question</typeparam>
+		/// <returns>an <c>igObjectList</c> containing the root objects</returns>
+		public igObjectList GetObjectsOfType<T>() where T : igObject => GetObjectsOfType(typeof(T));
+
+
+		/// <summary>
+		/// Gets all the root objects of the specified metaobject
+		/// </summary>
+		/// <param name="metaObject">The metaobject in question</typeparam>
+		/// <returns>an <c>igObjectList</c> containing the root objects</returns>
+		public igObjectList GetObjectsOfType(igMetaObject metaObject) => GetObjectsOfType(metaObject._vTablePointer!);
+
+
+		/// <summary>
+		/// Gets all the root object of the specified type
+		/// </summary>
+		/// <param name="type">The type in question</param>
+		/// <returns>an <c>igObjectList</c> containing the root objects</returns>
+		public igObjectList GetObjectsOfType(Type type)
+		{
+			igObjectList objects = new igObjectList();
+
+			for(int o = 0; o < _objectList._count; o++)
+			{
+				if(_objectList[o].GetType().IsAssignableTo(type))
+				{
+					objects.Append(_objectList[o]);
+				}
+			}
+
+			return objects;
+		}
 		public static igObjectDirectory? LoadDependancyDefault(string path, igName name, igBlockingType idk)
 		{
 			return igObjectStreamManager.Singleton.Load(path, name);
@@ -120,10 +191,6 @@ namespace igLibrary.Core
 					return FileType.kInvalid;
 					//throw new InvalidOperationException($"Invalid filetype {path._fileExtension}");
 			}
-		}
-		public void BuildIGZ(string path)
-		{
-			
 		}
 	}
 	public class igObjectDirectoryList : igTObjectList<igObjectDirectory> {}
