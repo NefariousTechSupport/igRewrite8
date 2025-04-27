@@ -6,9 +6,9 @@
 	Please see the LICENSE file for more details.
 */
 
-//#define SAVE_TO_UPDATE_PAK
-//#define MODEL_IMPORTS
-#define ACTOR_IMPORTS
+#define SAVE_TO_UPDATE_PAK
+#define MODEL_IMPORTS
+//#define ACTOR_IMPORTS
 
 using igLibrary.Core;
 using igLibrary;
@@ -21,6 +21,8 @@ using igLibrary.AssetConversion.Models;
 using igLibrary.Render;
 
 using Assimp;
+using Assimp.Configs;
+using System.Diagnostics;
 
 namespace igRewrite8
 {
@@ -67,6 +69,30 @@ namespace igRewrite8
 			dst.Seek(0, SeekOrigin.Begin);
 #endif // MODEL_IMPORTS
 
+#if ACTOR_IMPORTS
+			AssimpContext ctx = new AssimpContext();
+			ctx.SetConfig(new ColladaUseColladaNamesConfig(true));
+			Scene scene = ctx.ImportFile("C:/Users/neffy/Documents/GenshinImpact_Layla/Avatar_Girl_Sword_Layla_noMorphs.dae");
+
+			SuperChargersModel sscmodel = new SuperChargersModel();
+			CGraphicsSkinInfo skinInfo = sscmodel.ImportActor(scene);
+
+			igMetaObject materialHandleTableInfoMeta = igArkCore.GetObjectMeta("CMaterialHandleTableInfo")!;
+			igObject materialHandleTableInfo = materialHandleTableInfoMeta.ConstructInstance(igMemoryContext.Default);
+			igStringInsensitiveStringHashTable hashTable = igMetaObject.ConstructInstance<igStringInsensitiveStringHashTable>();
+			materialHandleTableInfoMeta.GetFieldByName("_handleTable")!._fieldHandle!.SetValue(materialHandleTableInfo, hashTable);
+
+			igObjectDirectory dir = new igObjectDirectory("actors/layla.igz");
+			dir._useNameList = true;
+			dir._nameList = igMetaObject.ConstructInstance<igNameList>();
+			dir._type = igObjectDirectory.FileType.kIGZ;
+			dir.AddObject(skinInfo, default, new igName("CGraphicsSkinInfo"));
+			dir.AddObject(materialHandleTableInfo, default, new igName("CMaterialHandleTableInfo"));
+			FileStream dst = File.Create("actortest.igz");
+			dir.WriteFile(dst, IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS3);
+			dst.Seek(0, SeekOrigin.Begin);
+#endif // ACTOR_IMPORTS
+
 #if SAVE_TO_UPDATE_PAK
 			igFilePath fp = new igFilePath();
 			fp.Set(dir._path);
@@ -78,7 +104,7 @@ namespace igRewrite8
 			else arc.Save($"{igFileContext.Singleton._root}/archives/{Path.GetFileName(arc._path)}");
 #endif // SAVE_TO_UPDATE_PAK
 
-#if MODEL_IMPORTS
+#if MODEL_IMPORTS || ACTOR_IMPORTS
 			dst.Close();
 #endif // MODEL_IMPORTS
 
