@@ -7,6 +7,8 @@
 */
 
 
+using System.Numerics;
+
 namespace igLibrary.Math
 {
 	public struct igMatrix44f
@@ -55,6 +57,28 @@ namespace igLibrary.Math
 			_m42 = mat[13];
 			_m43 = mat[14];
 			_m44 = mat[15];
+		}
+		public static implicit operator igMatrix44f(Matrix4x4 mat)
+		{
+			return new igMatrix44f
+			{
+				_m11 = mat.M11,
+				_m12 = mat.M12,
+				_m13 = mat.M13,
+				_m14 = mat.M14,
+				_m21 = mat.M21,
+				_m22 = mat.M22,
+				_m23 = mat.M23,
+				_m24 = mat.M24,
+				_m31 = mat.M31,
+				_m32 = mat.M32,
+				_m33 = mat.M33,
+				_m34 = mat.M34,
+				_m41 = mat.M41,
+				_m42 = mat.M42,
+				_m43 = mat.M43,
+				_m44 = mat.M44
+			};
 		}
 	}
 }
