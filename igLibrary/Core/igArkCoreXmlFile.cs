@@ -932,7 +932,7 @@ namespace igLibrary.Core
 			if (attribute != null)
 			{
 				string value = attribute.Value!;
-				NumberStyles numberStyles = Localisation.kENNumberStyles;
+				NumberStyles numberStyles = NumberStyles.None;
 				if (value.Length > 2 && value[0] == '0' && value[1] == 'x')
 				{
 					numberStyles |= NumberStyles.HexNumber;

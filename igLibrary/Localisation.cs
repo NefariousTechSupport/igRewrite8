@@ -9,7 +9,7 @@ namespace igLibrary
 	internal static class Localisation
 	{
 		// These exist to fix #102, otherwise people in other countries may get weird bugs
-		public const NumberStyles kENNumberStyles = NumberStyles.AllowDecimalPoint; 
+		public const NumberStyles kENNumberStyles = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign; 
 		public static readonly CultureInfo kENCultureInfo = CultureInfo.CreateSpecificCulture("en");
 	}
 }
