@@ -182,7 +182,7 @@ namespace igLibrary.DotNet
 			}
 #pragma warning restore CS8605, CS8625
 		}
-		public override uint GetAlignment(IG_CORE_PLATFORM platform) => igAlchemyCore.GetPointerSize(platform);
+		public override uint GetAlignment(IG_CORE_PLATFORM platform) => 0x08;
 		public override uint GetSize(IG_CORE_PLATFORM platform) => igAlchemyCore.isPlatform64Bit(platform) ? 0x20u : 0x18u;
 		public override Type GetOutputType() => typeof(DotNetData);
 	}
