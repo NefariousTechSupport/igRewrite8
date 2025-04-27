@@ -47,7 +47,7 @@ namespace igLibrary.Gfx
 					attrib->format = GetFormat((IG_VERTEX_TYPE)elements[i]._type);
 					attrib->unk04 = 0;
 					attrib->unk05 = 0;
-					attrib->usageIndex = GetUsageIndex(elements[i]);
+					attrib->usageIndex = GetVPSlotIndex((IG_VERTEX_USAGE)elements[i]._usage, elements[i]._usageIndex);
 					attrib->offset = (byte)elements[i]._offset;
 				}
 			}
@@ -142,26 +142,27 @@ namespace igLibrary.Gfx
 
 
 		/// <summary>
-		/// The usage index for the model
+		/// The vertex program slot index (or usage index) for a vertex usage
 		/// </summary>
 		/// <param name="element"></param>
 		/// <returns></returns>
 		/// <exception cref="NotImplementedException"></exception>
-		private static byte GetUsageIndex(igVertexElement element)
+		public static byte GetVPSlotIndex(IG_VERTEX_USAGE usage, int usageIndex)
 		{
 			// I believe this varies per game but am not sure
 			switch(igArkCore.Game)
 			{
 				case igArkCore.EGame.EV_SkylandersSuperchargers:
-					switch ((IG_VERTEX_USAGE)element._usage)
+					switch (usage)
 					{
 						case IG_VERTEX_USAGE.IG_VERTEX_USAGE_UNUSED_0:     return 0x00;
 						case IG_VERTEX_USAGE.IG_VERTEX_USAGE_POSITION:     return 0x00;
 						case IG_VERTEX_USAGE.IG_VERTEX_USAGE_NORMAL:       return 0x02;
 						case IG_VERTEX_USAGE.IG_VERTEX_USAGE_COLOR:        return 0x03;
-						case IG_VERTEX_USAGE.IG_VERTEX_USAGE_TEXCOORD:     return (byte)(0x08 + element._usageIndex);
+						case IG_VERTEX_USAGE.IG_VERTEX_USAGE_TEXCOORD:     return (byte)(0x08 + usageIndex);
 						case IG_VERTEX_USAGE.IG_VERTEX_USAGE_TANGENT:      return 0x0E;
-						default: throw new NotImplementedException($"Vertex usage {element._usage} not implemented for PS3 model imports");
+
+						default: throw new NotImplementedException($"Vertex usage {usage} not implemented for PS3 model imports");
 					}
 				default:
 					throw new NotImplementedException("Current game doesn't support model imports on PS3");
