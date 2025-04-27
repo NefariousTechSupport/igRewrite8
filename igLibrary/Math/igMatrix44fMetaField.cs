@@ -114,22 +114,22 @@ namespace igLibrary.Math
 
 			igMatrix44f tempTarget;
 
-			if (!float.TryParse(floats[0], out tempTarget._m11)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m12)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m13)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m14)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m21)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m22)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m23)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m24)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m31)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m32)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m33)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m34)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m41)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m42)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m43)) return false;
-			if (!float.TryParse(floats[0], out tempTarget._m44)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m11)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m12)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m13)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m14)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m21)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m22)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m23)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m24)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m31)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m32)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m33)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m34)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m41)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m42)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m43)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._m44)) return false;
 
 			target = tempTarget;
 

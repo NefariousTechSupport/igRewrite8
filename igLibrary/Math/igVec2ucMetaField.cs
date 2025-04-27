@@ -58,8 +58,8 @@ namespace igLibrary.Math
 
 			igVec2uc tempTarget;
 
-			if (!byte.TryParse(bytes[0], out tempTarget._x)) return false;
-			if (!byte.TryParse(bytes[1], out tempTarget._y)) return false;
+			if (!byte.TryParse(bytes[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._x)) return false;
+			if (!byte.TryParse(bytes[1], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._y)) return false;
 
 			target = tempTarget;
 

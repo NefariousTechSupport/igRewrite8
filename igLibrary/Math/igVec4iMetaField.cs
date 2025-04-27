@@ -66,10 +66,10 @@ namespace igLibrary.Math
 
 			igVec4i tempTarget;
 
-			if (!int.TryParse(ints[0], out tempTarget._x)) return false;
-			if (!int.TryParse(ints[1], out tempTarget._y)) return false;
-			if (!int.TryParse(ints[2], out tempTarget._z)) return false;
-			if (!int.TryParse(ints[3], out tempTarget._w)) return false;
+			if (!int.TryParse(ints[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._x)) return false;
+			if (!int.TryParse(ints[1], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._y)) return false;
+			if (!int.TryParse(ints[2], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._z)) return false;
+			if (!int.TryParse(ints[3], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._w)) return false;
 
 			target = tempTarget;
 
