@@ -15,6 +15,7 @@ namespace igLibrary.Core
 	{
 		public IG_CORE_PLATFORM _platform;
 		public IG_GFX_PLATFORM _gfxPlatform;
+		public EngineType _engineType;
 		private static igRegistry _instance;
 		[Obsolete("This exists for the reflection system, do not use.")] public string _rootElementName;
 		[Obsolete("This exists for the reflection system, do not use.")] public object? _document;          //igXmlDocument

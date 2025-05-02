@@ -9,6 +9,10 @@
 
 namespace igLibrary.Core
 {
+	/// <summary>
+	/// Represents a group of igObjects under a shared namespace
+	/// Can be loaded from an IGX/IGB/IGZ file
+	/// </summary>
 	public class igObjectDirectory : igObject
 	{
 		public string _path;
@@ -35,6 +39,10 @@ namespace igLibrary.Core
 		public static Func<string, igName, igBlockingType, igObjectDirectory?> _loadDependencyFunction = igObjectDirectory.LoadDependancyDefault;
 		[Obsolete("This exists for the reflection system, do not use.")] public static object? _assertObjectLifetimesCallback;
 
+
+		/// <summary>
+		/// Enum representing the different filetypes
+		/// </summary>
 		public enum FileType : uint
 		{
 			kAuto,
@@ -47,22 +55,51 @@ namespace igLibrary.Core
 
 		public FileType _type;
 
+
+		/// <summary>
+		/// Default constructor
+		/// </summary>
 		public igObjectDirectory(){}
+
+
+		/// <summary>
+		/// Constructor, does not load
+		/// </summary>
+		/// <param name="path">The path to load from</param>
+		/// <param name="nameSpace">The namespace to associate this igObjectDirectory with</param>
 		public igObjectDirectory(string path, igName nameSpace)
 		{
 			_path = path;
 			_name = nameSpace;
 		}
+
+
+		/// <summary>
+		/// Constructor, does not load
+		/// </summary>
+		/// <param name="path">The path to load from, namespace is the filename without extension of the path</param>
 		public igObjectDirectory(string path)
 		{
 			_path = path;
 			_name = new igName(Path.GetFileNameWithoutExtension(path));
 		}
+
+
+		/// <summary>
+		/// Loads the <c>igObjectDirectory</c> from a file
+		/// </summary>
 		public void ReadFile()
 		{
 			igObjectLoader loader = igObjectLoader.FindLoader(_path);
 			loader.ReadFile(this, _path, igBlockingType.kMayBlock);
 		}
+
+
+		/// <summary>
+		/// Writes the <c>igObjectDirectory</c> to a stream
+		/// </summary>
+		/// <param name="dst">The destination stream</param>
+		/// <param name="platform">The platform to write with, defaults to the platform this <c>igObjectDirectory</c> was loaded with</param>
 		public void WriteFile(Stream dst, IG_CORE_PLATFORM platform = IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEFAULT)
 		{
 			_objectList.internalMemoryPool = igMemoryContext.Default;
@@ -80,12 +117,28 @@ namespace igLibrary.Core
 				}
 			}
 		}
+
+
+		/// <summary>
+		/// Writes the <c>igObjectDirectory</c> to a file
+		/// </summary>
+		/// <param name="path">The destination file</param>
+		/// <param name="platform">The platform to write with, defaults to the platform this <c>igObjectDirectory</c> was loaded with</param>
 		public void WriteFile(string path, IG_CORE_PLATFORM platform = IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEFAULT)
 		{
 			FileStream fs = File.Create(path);
 			WriteFile(path, platform);
 			fs.Close();
 		}
+
+
+		/// <summary>
+		/// Add a new root object to the file
+		/// </summary>
+		/// <param name="obj">The object</param>
+		/// <param name="ns">The namespace to associate it with, keep this the same as the <c>igObjectDirectory</c></param>
+		/// <param name="name">The name of the object, must be null if this <c>igObjectDirectory</c> isn't using a name list</param>
+		/// <exception cref="ArgumentException">Thrown if passing a non-null name if this <c>igObjectDirectory</c> doesn't use a name list</exception>
 		public void AddObject(igObject obj, igName ns, igName name)
 		{
 			_objectList.Append(obj);
@@ -98,6 +151,77 @@ namespace igLibrary.Core
 			{
 				if(name._hash != 0) throw new ArgumentException("Name is not null even though namelist is!");
 			}
+		}
+
+
+		/// <summary>
+		/// Gets the first root object of the specified type, else null
+		/// </summary>
+		/// <typeparam name="T">The type in question</typeparam>
+		/// <returns>The first igObject of that type, else null</returns>
+		public T? GetObjectOfType<T>() where T : igObject => (T?)GetObjectOfType(typeof(T));
+
+
+		/// <summary>
+		/// Gets the first root object of the specified metaobject, else null
+		/// </summary>
+		/// <param name="metaObject">The type in question</param>
+		/// <returns>The first igObject of that type, else null</returns>
+		public igObject? GetObjectOfType(igMetaObject metaObject) => GetObjectOfType(metaObject._vTablePointer!);
+
+
+		/// <summary>
+		/// Gets the first root object of the specified type, else null
+		/// </summary>
+		/// <param name="type">The type in question</param>
+		/// <returns>The first igObject of that type, else null</returns>
+		public igObject? GetObjectOfType(Type type)
+		{
+			for(int o = 0; o < _objectList._count; o++)
+			{
+				if(_objectList[o].GetType().IsAssignableTo(type))
+				{
+					return _objectList[o];
+				}
+			}
+			return null;
+		}
+
+
+		/// <summary>
+		/// Gets all the root objects of the specified type
+		/// </summary>
+		/// <typeparam name="T">The type in question</typeparam>
+		/// <returns>an <c>igObjectList</c> containing the root objects</returns>
+		public igObjectList GetObjectsOfType<T>() where T : igObject => GetObjectsOfType(typeof(T));
+
+
+		/// <summary>
+		/// Gets all the root objects of the specified metaobject
+		/// </summary>
+		/// <param name="metaObject">The metaobject in question</typeparam>
+		/// <returns>an <c>igObjectList</c> containing the root objects</returns>
+		public igObjectList GetObjectsOfType(igMetaObject metaObject) => GetObjectsOfType(metaObject._vTablePointer!);
+
+
+		/// <summary>
+		/// Gets all the root object of the specified type
+		/// </summary>
+		/// <param name="type">The type in question</param>
+		/// <returns>an <c>igObjectList</c> containing the root objects</returns>
+		public igObjectList GetObjectsOfType(Type type)
+		{
+			igObjectList objects = new igObjectList();
+
+			for(int o = 0; o < _objectList._count; o++)
+			{
+				if(_objectList[o].GetType().IsAssignableTo(type))
+				{
+					objects.Append(_objectList[o]);
+				}
+			}
+
+			return objects;
 		}
 		public static igObjectDirectory? LoadDependancyDefault(string path, igName name, igBlockingType idk)
 		{
@@ -122,10 +246,6 @@ namespace igLibrary.Core
 					return FileType.kInvalid;
 					//throw new InvalidOperationException($"Invalid filetype {path._fileExtension}");
 			}
-		}
-		public void BuildIGZ(string path)
-		{
-			
 		}
 	}
 	public class igObjectDirectoryList : igTObjectList<igObjectDirectory> {}

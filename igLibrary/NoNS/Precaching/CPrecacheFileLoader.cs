@@ -22,6 +22,7 @@ namespace igLibrary
 			LoosePak,
 			FullPackage,
 			LoosePackage,
+			EngineType,
 			Noop
 		};
 
@@ -49,6 +50,7 @@ namespace igLibrary
 		{
 			{ "loose_pak_lab",                   new(LoaderTask.LoosePak,                  LoaderTask.LoosePak                  ) },
 			{ "full_package_lab",                new(LoaderTask.FullPackage,               LoaderTask.Noop                      ) },
+			{ "engine_type",                     new(LoaderTask.EngineType,                LoaderTask.EngineType                ) },
 		};
 
 		private static readonly Dictionary<string, Func<string>> _envLookup = new Dictionary<string, Func<string>>()
@@ -57,17 +59,17 @@ namespace igLibrary
 		};
 
 
-		public static void LoadInitialPackages(igArkCore.EGame game, bool loose)
+		public static void LoadInitScript(igArkCore.EGame game, bool loose)
 		{
-			LoadInitialPackages($"{igArkCoreFile.ArkCoreFolder}/{game}/packages", loose);
+			LoadInitScript($"{igArkCoreFile.ArkCoreFolder}/{game}/initscript", loose);
 		}
 
 
 		/// <summary>
-		/// Loads all packages from a given file
+		/// Initialises a game based on the init script
 		/// </summary>
 		/// <param name="filePath">The filepath to load from</param>
-		public static void LoadInitialPackages(string filePath, bool loose)
+		public static void LoadInitScript(string filePath, bool loose)
 		{
 			StreamReader precacheFile = File.OpenText(filePath);
 
@@ -193,6 +195,17 @@ namespace igLibrary
 					break;
 				case LoaderTask.LoosePackage:
 					igFileContext.Singleton.LoadArchive($"app:/archives/{Path.GetFileName(line)}.pak");
+					break;
+				case LoaderTask.EngineType:
+					if (igRegistry.GetRegistry()._engineType != EngineType.None)
+					{
+						Logging.Warn("Engine type mentioned several times, this is bad");
+					}
+					if (!Enum.TryParse(line, out igRegistry.GetRegistry()._engineType))
+					{
+						Logging.Error("Engine type is invalid, this is bad, terminating");
+						throw new Exception("Engine type is invalid, this is bad, terminating");
+					}
 					break;
 				case LoaderTask.Noop:
 					break;

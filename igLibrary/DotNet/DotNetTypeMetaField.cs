@@ -39,7 +39,7 @@ namespace igLibrary.DotNet
 			igObjectRefMetaField.GetMetaField().WriteIGZField(saver, section, data._baseMeta);
 			igIntMetaField._MetaField.WriteIGZField(saver, section, data._flags);
 		}
-		public override uint GetAlignment(IG_CORE_PLATFORM platform) => 8;
+		public override uint GetAlignment(IG_CORE_PLATFORM platform) => igAlchemyCore.GetPointerSize(platform);
 		public override uint GetSize(IG_CORE_PLATFORM platform) => igAlchemyCore.GetPointerSize(platform) * 2;
 		public override Type GetOutputType() => typeof(DotNetType);
 

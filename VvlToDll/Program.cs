@@ -109,7 +109,7 @@ VvlToDll -gp <base game folder> -up <update.pak> -od <output directory> -p <plat
 			igFileContext.Singleton.InitializeUpdate(updatePath);
 			Logging.Mode = Logging.LoggingMode.Console;
 
-			CPrecacheFileLoader.LoadInitialPackages(game, false);
+			CPrecacheFileLoader.LoadInitScript(game, false);
 
 			for(int i = 0; i < packages.Count; i++)
 			{

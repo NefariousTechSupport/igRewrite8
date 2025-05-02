@@ -58,8 +58,8 @@ namespace igLibrary.Math
 
 			igVec2f tempTarget;
 
-			if (!float.TryParse(floats[0], out tempTarget._x)) return false;
-			if (!float.TryParse(floats[1], out tempTarget._y)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._x)) return false;
+			if (!float.TryParse(floats[1], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._y)) return false;
 
 			target = tempTarget;
 

@@ -186,7 +186,7 @@ namespace igCauldron3
 						igRegistry.GetRegistry()._gfxPlatform = igGfx.GetGfxPlatformFromCore(game._platform);
 
 						igArkCore.ReadFromXmlFile(game._game);
-						CPrecacheFileLoader.LoadInitialPackages(game._game, debug);
+						CPrecacheFileLoader.LoadInitScript(game._game, debug);
 
 						_wnd._frames.Remove(this);
 						_wnd._frames.Add(new DirectoryManagerFrame(_wnd));

@@ -62,9 +62,9 @@ namespace igLibrary.Math
 
 			igVec3d tempTarget;
 
-			if (!double.TryParse(doubles[0], out tempTarget._x)) return false;
-			if (!double.TryParse(doubles[1], out tempTarget._y)) return false;
-			if (!double.TryParse(doubles[2], out tempTarget._z)) return false;
+			if (!double.TryParse(doubles[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._x)) return false;
+			if (!double.TryParse(doubles[1], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._y)) return false;
+			if (!double.TryParse(doubles[2], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._z)) return false;
 
 			target = tempTarget;
 

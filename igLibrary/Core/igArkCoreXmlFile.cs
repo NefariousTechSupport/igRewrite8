@@ -7,6 +7,7 @@
 */
 
 
+using System.Globalization;
 using System.Reflection;
 using System.Xml;
 using igLibrary.DotNet;
@@ -272,7 +273,7 @@ namespace igLibrary.Core
 
 					metaEnum._names.Add(memberName.Value!);
 
-					if (!int.TryParse(memberValue.Value, out int value))
+					if (!int.TryParse(memberValue.Value, Localisation.kENNumberStyles, Localisation.kENCultureInfo, out int value))
 					{
 						return new ArkCoreXmlError("The \"value\" attribute of a \"value\" node must be a signed integer");
 					}
@@ -837,7 +838,7 @@ namespace igLibrary.Core
 				{
 					return new ArkCoreXmlError("Invalid metafield reference attribute, must start with the letter 'f'");
 				}
-				if (!uint.TryParse(metaFieldAttribute.Value.Substring(1), out uint childIndex))
+				if (!uint.TryParse(metaFieldAttribute.Value.Substring(1), Localisation.kENNumberStyles, Localisation.kENCultureInfo, out uint childIndex))
 				{
 					return new ArkCoreXmlError("Invalid metafield reference attribute, must be formatted as \"f%u\"");
 				}
@@ -931,14 +932,14 @@ namespace igLibrary.Core
 			if (attribute != null)
 			{
 				string value = attribute.Value!;
-				System.Globalization.NumberStyles numberStyles = System.Globalization.NumberStyles.None;
+				NumberStyles numberStyles = NumberStyles.None;
 				if (value.Length > 2 && value[0] == '0' && value[1] == 'x')
 				{
-					numberStyles |= System.Globalization.NumberStyles.HexNumber;
+					numberStyles |= NumberStyles.HexNumber;
 					value = value.Substring(2);
 				}
 
-				if (!uint.TryParse(value, numberStyles, null, out output))
+				if (!uint.TryParse(value, numberStyles, Localisation.kENCultureInfo, out output))
 				{
 					return new ArkCoreXmlError("Failed to parse attribute of name {0}", name);
 				}

@@ -35,7 +35,7 @@ namespace igLibrary.Core
 		/// <returns>boolean indicating whether the input was read successfully</returns>
 		public override bool SetMemoryFromString(ref object? target, string input)
 		{
-			if (!uint.TryParse(input, out uint buffer))
+			if (!uint.TryParse(input, Localisation.kENNumberStyles, Localisation.kENCultureInfo, out uint buffer))
 			{
 				return false;
 			}

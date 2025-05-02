@@ -66,10 +66,10 @@ namespace igLibrary.Math
 
 			igVec4fUnaligned tempTarget;
 
-			if (!float.TryParse(floats[0], out tempTarget._x)) return false;
-			if (!float.TryParse(floats[1], out tempTarget._y)) return false;
-			if (!float.TryParse(floats[2], out tempTarget._z)) return false;
-			if (!float.TryParse(floats[3], out tempTarget._w)) return false;
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._x)) return false;
+			if (!float.TryParse(floats[1], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._y)) return false;
+			if (!float.TryParse(floats[2], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._z)) return false;
+			if (!float.TryParse(floats[3], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._w)) return false;
 
 			target = tempTarget;
 
