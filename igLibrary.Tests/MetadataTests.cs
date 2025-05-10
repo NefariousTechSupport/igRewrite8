@@ -10,6 +10,7 @@
 namespace igLibrary.Tests;
 
 using igLibrary.Core;
+using igLibrary.Vfx;
 
 public class MetadataTest
 {
@@ -113,4 +114,43 @@ public class MetadataTest
 
 		igArkCore.Reset();
 	}
+
+
+
+	/// <summary>
+	/// Ensure that the metadata for igVfxModulationHelper has been corrected
+	/// The one from the metadata dump is actually incorrect, screw you vv
+	/// </summary>
+	private void VfxModulationHelperChecks(igArkCore.EGame game)
+	{
+		igArkCore.ReadFromXmlFile(game);
+
+		igCompoundMetaFieldInfo? modulationHelperMeta = igArkCore.GetCompoundFieldInfo(nameof(igVfxModulationHelperMetaField));
+		Assert.NotNull(modulationHelperMeta);
+
+		igMetaField? noiseDataField = modulationHelperMeta.GetFieldByName("_noiseData");
+		igMetaField? rngField       = modulationHelperMeta.GetFieldByName("_rng");
+
+		Assert.NotNull(noiseDataField);
+		Assert.NotNull(rngField);
+
+		Assert.IsType<igStaticMetaField>(noiseDataField);
+		Assert.IsType<igStaticMetaField>(rngField);
+	}
+
+
+
+	/// <summary>
+	/// Ensure that the metadata for igVfxModulationHelper has been corrected
+	/// </summary>
+	[Fact]
+	public void SuperChargersVfxModulationHelper() => VfxModulationHelperChecks(igArkCore.EGame.EV_SkylandersSuperchargers);
+
+
+
+	/// <summary>
+	/// Ensure that the metadata for igVfxModulationHelper has been corrected
+	/// </summary>
+	[Fact]
+	public void ImaginatorsVfxModulationHelper()   => VfxModulationHelperChecks(igArkCore.EGame.EV_SkylandersImaginators);
 }

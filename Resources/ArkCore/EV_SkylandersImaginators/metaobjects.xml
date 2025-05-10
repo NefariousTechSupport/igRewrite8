@@ -17118,8 +17118,12 @@
 			<metafield type="igBitFieldMetaField" offset="0x0013" name="_randomPhase" implicitAlignment="false" requiredAlignment="0" shift="0x07" bits="0x01" storageField="_flags" assignmentField="f0">
 				<metafield type="igBoolMetaField" offset="0x0000"/>
 			</metafield>
-			<metafield type="igFloatArrayMetaField" offset="0x0000" name="_noiseData" implicitAlignment="false" requiredAlignment="4" num="256"/>
-			<metafield type="igRandomMetaField" offset="0x0000" name="_rng" implicitAlignment="false" requiredAlignment="4"/>
+			<metafield type="igStaticMetaField" offset="0x0000" name="_noiseData" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
+				<metafield type="igFloatArrayMetaField" offset="0x0000" implicitAlignment="false" requiredAlignment="4" num="256"/>
+			</metafield>
+			<metafield type="igStaticMetaField" offset="0x0000" name="_rng" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
+				<metafield type="igRandomMetaField" offset="0x0000" implicitAlignment="false" requiredAlignment="4"/>
+			</metafield>
 		</compoundfields>
 	</metaobject>
 	<metaobject type="igDotNetMetaObject" refname="CNetworkPhysicsSystemReplicaComponentData" basetype="CEntityComponentData">

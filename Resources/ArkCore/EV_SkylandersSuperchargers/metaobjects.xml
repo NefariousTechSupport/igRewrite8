@@ -15518,8 +15518,12 @@
 			<metafield type="igUnsignedShortMetaField" offset="0x0010" name="_modulationCyclesInt" implicitAlignment="false" requiredAlignment="2" default="8"/>
 			<metafield type="igBoolMetaField" offset="0x0012" name="_hasModulation" implicitAlignment="false" requiredAlignment="1"/>
 			<metafield type="igUnsignedCharMetaField" offset="0x0013" name="_flags" implicitAlignment="false" requiredAlignment="1"/>
-			<metafield type="igFloatArrayMetaField" offset="0x0000" name="_noiseData" implicitAlignment="false" requiredAlignment="4" num="256"/>
-			<metafield type="igRandomMetaField" offset="0x0000" name="_rng" implicitAlignment="false" requiredAlignment="4"/>
+			<metafield type="igStaticMetaField" offset="0x0000" name="_noiseData" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
+				<metafield type="igFloatArrayMetaField" offset="0x0000" implicitAlignment="false" requiredAlignment="4" num="256"/>
+			</metafield>
+			<metafield type="igStaticMetaField" offset="0x0000" name="_rng" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
+				<metafield type="igRandomMetaField" offset="0x0000" implicitAlignment="false" requiredAlignment="4"/>
+			</metafield>
 			<metafield type="igBitFieldMetaField" offset="0x0013" name="_modulationType" implicitAlignment="false" requiredAlignment="0" shift="0x00" bits="0x04" storageField="_flags" assignmentField="f0">
 				<metafield type="igEnumMetaField" offset="0x0000" implicitAlignment="false" requiredAlignment="4" metaenum="ModulationType"/>
 			</metafield>
