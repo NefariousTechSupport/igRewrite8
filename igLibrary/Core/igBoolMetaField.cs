@@ -11,6 +11,7 @@ namespace igLibrary.Core
 {
 	public class igBoolMetaField : igMetaField
 	{
+		public static igBoolMetaField _MetaField { get; private set; } = new igBoolMetaField();
 		public override object? ReadIGZField(igIGZLoader loader) => loader._stream.ReadBoolean();
 		public override void WriteIGZField(igIGZSaver saver, igIGZSaver.SaverSection section, object? value) => section._sh.WriteByte((byte)((bool)value ? 1u : 0u));
 		public override uint GetAlignment(IG_CORE_PLATFORM platform) => 1;

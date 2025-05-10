@@ -73,6 +73,8 @@ namespace igCauldron3
 			_renderFuncLookup.Add(typeof(igRawRefMetaField), RenderField_RawRef);
 			_renderFuncLookup.Add(typeof(igStructMetaField), RenderField_Struct);
 			_renderFuncLookup.Add(typeof(igVfxRangedCurveMetaField), RenderField_RangedCurve);
+			_renderFuncLookup.Add(typeof(igVfxRgbCurveMetaField), RenderField_RgbCurve);
+			_renderFuncLookup.Add(typeof(igVfxModulationHelperMetaField), RenderField_ModulationHelper);
 		}
 
 
@@ -501,6 +503,9 @@ namespace igCauldron3
 				List<igMetaField> fieldList = compound._compoundFieldInfo._fieldList;
 				for(int i = 0; i < fieldList.Count; i++)
 				{
+					if (fieldList[i] is igStaticMetaField) continue;
+					if (fieldList[i] is igPropertyFieldMetaField) continue;
+
 					FieldInfo fi = fieldList[i]._fieldHandle!;
 					object? fieldValue = fi.GetValue(raw);
 					RenderField(id, fieldList[i]._fieldName!, fieldValue, fieldList[i], (newValue) => {
@@ -673,6 +678,242 @@ namespace igCauldron3
 				if (changed)
 				{
 					cb.Invoke(rangedCurve);
+				}
+
+				ImGui.TreePop();
+			}
+		}
+
+		public static void RenderField_RgbCurve(string id, object? raw, igMetaField field, FieldSetCallback cb)
+		{
+			if (ImGui.TreeNode(id, "VfxRgbCurve"))
+			{
+				bool changed = false;
+				igVfxRgbCurve curve = (igVfxRgbCurve)raw!;
+
+				RenderField(nameof(curve._enableInterpolation), nameof(curve._enableInterpolation), curve._enableInterpolation, igBoolMetaField._MetaField, (newValue) =>
+				{
+					curve._enableInterpolation = (bool)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._enableRandomness), nameof(curve._enableRandomness), curve._enableRandomness, igBoolMetaField._MetaField, (newValue) =>
+				{
+					curve._enableRandomness = (bool)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._modulationHelper), nameof(curve._modulationHelper), curve._modulationHelper, igVfxModulationHelperMetaField._MetaField, (newValue) =>
+				{
+					curve._modulationHelper = (igVfxModulationHelper)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c00), nameof(curve._c00), curve._c00, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c00 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c01), nameof(curve._c01), curve._c01, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c01 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c01), nameof(curve._c01), curve._c01, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c01 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c02), nameof(curve._c02), curve._c02, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c02 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c01), nameof(curve._c01), curve._c01, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c01 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c02), nameof(curve._c02), curve._c02, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c02 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c03), nameof(curve._c03), curve._c03, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c03 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c04), nameof(curve._c04), curve._c04, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c04 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c05), nameof(curve._c05), curve._c05, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c05 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c06), nameof(curve._c06), curve._c06, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c06 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c07), nameof(curve._c07), curve._c07, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c07 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c08), nameof(curve._c08), curve._c08, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c08 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c09), nameof(curve._c09), curve._c09, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c09 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c10), nameof(curve._c10), curve._c10, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c10 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c11), nameof(curve._c11), curve._c11, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c11 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c12), nameof(curve._c12), curve._c12, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c12 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c13), nameof(curve._c13), curve._c13, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c13 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._c14), nameof(curve._c14), curve._c14, igVec4fMetaField._MetaField, (newValue) =>
+				{
+					curve._c14 = (igVec4f)newValue!;
+					changed = true;
+				});
+
+				if (changed)
+				{
+					cb.Invoke(curve);
+				}
+
+				ImGui.TreePop();
+			}
+		}
+
+		static igBitFieldMetaField? modulationTypeField = null;
+		static igBitFieldMetaField? distributionField = null;
+		static igBitFieldMetaField? mixTypeField = null;
+		public static void RenderField_ModulationHelper(string id, object? raw, igMetaField field, FieldSetCallback cb)
+		{
+			if (modulationTypeField == null
+			 || distributionField == null
+			 || mixTypeField == null)
+			{
+				igCompoundMetaFieldInfo? fieldInfo = igVfxModulationHelperMetaField._MetaField._compoundFieldInfo;
+				if (fieldInfo == null)
+				{
+					ImGui.Text("Missing metadata for \"igVfxModulationHelperMetaField\", log a bug for this");
+					return;
+				}
+
+				modulationTypeField = fieldInfo.GetFieldByName(nameof(igVfxModulationHelper._modulationType)) as igBitFieldMetaField;
+				distributionField   = fieldInfo.GetFieldByName(nameof(igVfxModulationHelper._distribution))   as igBitFieldMetaField;
+				mixTypeField        = fieldInfo.GetFieldByName(nameof(igVfxModulationHelper._mixType))        as igBitFieldMetaField;
+
+				if (modulationTypeField == null
+				 || distributionField == null
+				 || mixTypeField == null)
+				{
+					ImGui.Text("Invalid metadata for \"igVfxModulationHelperMetaField\", log a bug for this");
+					return;
+				}
+			}
+
+			if (ImGui.TreeNode(id, "ModulationHelper"))
+			{
+				bool changed = false;
+				igVfxModulationHelper curve = (igVfxModulationHelper)raw!;
+
+				RenderField(nameof(curve._mixAmount), nameof(curve._mixAmount), curve._mixAmount, igFloatMetaField._MetaField, (newValue) =>
+				{
+					curve._mixAmount = (float)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._phaseOffset), nameof(curve._phaseOffset), curve._phaseOffset, igFloatMetaField._MetaField, (newValue) =>
+				{
+					curve._phaseOffset = (float)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._distributionArgument), nameof(curve._distributionArgument), curve._distributionArgument, igFloatMetaField._MetaField, (newValue) =>
+				{
+					curve._distributionArgument = (float)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._modulationCycles), nameof(curve._modulationCycles), curve._modulationCycles, igFloatMetaField._MetaField, (newValue) =>
+				{
+					curve._modulationCycles = Math.Clamp((float)newValue!, ushort.MinValue, ushort.MaxValue);
+					// Round to nearest, do not floor
+					curve._modulationCyclesInt = (ushort)(curve._modulationCycles + 0.5f);
+					changed = true;
+				});
+
+				RenderField(nameof(curve._modulationType), nameof(curve._modulationType), curve._modulationType, modulationTypeField, (newValue) =>
+				{
+					curve._modulationType = (igVfxModulationHelper.ModulationType)newValue!;
+					curve._hasModulation = curve._modulationType != igVfxModulationHelper.ModulationType.kModulationNone;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._distribution), nameof(curve._distribution), curve._distribution, distributionField, (newValue) =>
+				{
+					curve._distribution = (igVfxModulationHelper.Distribution)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._mixType), nameof(curve._mixType), curve._mixType, mixTypeField, (newValue) =>
+				{
+					curve._mixType = (igVfxModulationHelper.ModulationMix)newValue!;
+					changed = true;
+				});
+
+				RenderField(nameof(curve._randomPhase), nameof(curve._randomPhase), curve._randomPhase, igBoolMetaField._MetaField, (newValue) =>
+				{
+					curve._randomPhase = (bool)newValue!;
+					changed = true;
+				});
+
+				if (changed)
+				{
+					cb.Invoke(curve);
 				}
 
 				ImGui.TreePop();
