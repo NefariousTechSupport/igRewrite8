@@ -790,7 +790,7 @@ namespace igLibrary.Gfx
 		}
 
 
-		public static unsafe void Convert_r5g5b5a1_to_r8g8b8a8(igImageLevel source, igImageLevel target)
+        public static unsafe void Convert_r5g5b5a1_to_r8g8b8a8(igImageLevel source, igImageLevel target)
 		{
 			bool sourceEndian = false;
 			if(source._targetMeta is igPlatformMetaImage platSource) sourceEndian = IsPlatformLittleEndian(platSource._platform);

@@ -190,6 +190,30 @@ namespace igLibrary.Gfx
 			if(!_isCanonical) return _canonical.MakePlatformFormat(platform);
 			return igMetaImageInfo.FindFormat(_name + "_" + igGfx.GetPlatformString(platform));
 		}
+
+
+		/// <summary>
+		/// Whether the metaimage derives from a provided metaimage
+		/// </summary>
+		/// <param name="canonical">The metaimage type to compare against</param>
+		/// <returns>Whether the metaimage derives from the provided metaimage</returns>
+		public bool IsOfType(igMetaImage? canonical)
+		{
+			return this == canonical ||
+			       (canonical != null && !_isCanonical && _canonical.IsOfType(canonical));
+		}
+
+
+		/// <summary>
+		/// Whether the metaimage is a swizzled wiiu texture
+		/// </summary>
+		/// <returns>Whether the metaimage is a swizzled wiiu texture</returns>
+		public bool IsCafeSwizzled()
+		{
+			return this is igPlatformMetaImage platformFormat
+			       && platformFormat._isTile
+			       && platformFormat._platform == IG_GFX_PLATFORM.IG_GFX_PLATFORM_CAFE;
+		}
 	}
 	public class igMetaImageList : igTObjectList<igMetaImage>{}
 }
