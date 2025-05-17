@@ -23,7 +23,7 @@ namespace igCauldron3
 		private static List<InspectorDrawOverride> _overrides = null!;
 		public igObjectDirectoryList _dirs = new igObjectDirectoryList();
 		private int _dirIndex = 0;
-		public igObjectDirectory CurrentDir => _dirs[_dirIndex];
+		public igObjectDirectory? CurrentDir => _dirIndex < _dirs._count ? _dirs[_dirIndex] : null;
 
 
 		/// <summary>
@@ -132,7 +132,7 @@ namespace igCauldron3
 				if(ImGui.Button("+"))
 				{
 					igObjectDirectory capturedDir = dir;
-					_wnd._frames.Add(new CreateObjectFrame(_wnd, CurrentDir, igArkCore.GetObjectMeta("igObject")!, (obj, name) => {
+					_wnd._frames.Add(new CreateObjectFrame(_wnd, CurrentDir!, igArkCore.GetObjectMeta("igObject")!, (obj, name) => {
 						if(obj != null)
 						{
 							capturedDir.AddObject(obj, default(igName), name);

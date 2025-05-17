@@ -428,7 +428,7 @@ namespace igCauldron3
 			{
 				if(ImGui.Selectable("Change Reference"))
 				{
-					Window._instance._frames.Add(new ObjectPickerFrame(Window._instance, DirectoryManagerFrame._instance.CurrentDir, ((igObjectRefMetaField)field)._metaObject, (handle) => cb.Invoke(handle)));
+					Window._instance._frames.Add(new ObjectPickerFrame(Window._instance, DirectoryManagerFrame._instance.CurrentDir!, ((igObjectRefMetaField)field)._metaObject, (handle) => cb.Invoke(handle)));
 				}
 				ImGui.EndPopup();
 			}
@@ -440,7 +440,7 @@ namespace igCauldron3
 				ImGui.PopID();
 				if(create)
 				{
-					igObjectDirectory capturedDir = DirectoryManagerFrame._instance.CurrentDir;
+					igObjectDirectory capturedDir = DirectoryManagerFrame._instance.CurrentDir!;
 					Window._instance._frames.Add(new CreateObjectFrame(Window._instance, capturedDir, ((igObjectRefMetaField)field)._metaObject, (obj) => cb.Invoke(obj)));
 				}
 			}
