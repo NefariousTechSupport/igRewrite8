@@ -27,15 +27,9 @@ namespace igLibrary.Vfx
 				data._keyframes[i]._data2 = loader._stream.ReadSByte();
 				loader._stream.Seek(2, SeekOrigin.Current);
 			}
-			data._field_0x3C = loader._stream.ReadSingle();
-			data._field_0x40 = loader._stream.ReadSingle();
-			data._field_0x44 = loader._stream.ReadSingle();
-			data._field_0x48 = loader._stream.ReadSingle();
-			data._field_0x4C = loader._stream.ReadUInt16();
-			data._field_0x4E = loader._stream.ReadByte();
-			data._flags = loader._stream.ReadByte();
-			data._field_0x50 = loader._stream.ReadUInt16();
-			data._field_0x52 = loader._stream.ReadUInt16();
+			data._modulationHelper = (igVfxModulationHelper)igVfxModulationHelperMetaField._MetaField.ReadIGZField(loader)!;
+			data._field_0x50       = loader._stream.ReadUInt16();
+			data._field_0x52       = loader._stream.ReadUInt16();
 			return data;
 		}
 		public override void WriteIGZField(igIGZSaver saver, igIGZSaver.SaverSection section, object? value)
@@ -52,13 +46,9 @@ namespace igLibrary.Vfx
 				section._sh.WriteSByte(data._keyframes[i]._data2);
 				section._sh.Seek(2, SeekOrigin.Current);
 			}
-			section._sh.WriteSingle(data._field_0x3C);
-			section._sh.WriteSingle(data._field_0x40);
-			section._sh.WriteSingle(data._field_0x44);
-			section._sh.WriteSingle(data._field_0x48);
-			section._sh.WriteUInt16(data._field_0x4C);
-			section._sh.WriteByte(data._field_0x4E);
-			section._sh.WriteByte(data._flags);
+
+			igVfxModulationHelperMetaField._MetaField.WriteIGZField(saver, section, data._modulationHelper);
+
 			section._sh.WriteUInt16(data._field_0x50);
 			section._sh.WriteUInt16(data._field_0x52);
 

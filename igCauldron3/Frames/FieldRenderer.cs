@@ -611,55 +611,12 @@ namespace igCauldron3
 					});
 				}
 
-				ImGui.Text(nameof(igVfxRangedCurve._field_0x3C));
-				ImGui.SameLine();
-				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x3C), rangedCurve._field_0x3C, ElementType.kElementTypeR4, (newValue) =>
+				RenderField(nameof(rangedCurve._modulationHelper), nameof(rangedCurve._modulationHelper), rangedCurve._modulationHelper, igVfxModulationHelperMetaField._MetaField, (newValue) =>
 				{
-					rangedCurve._field_0x3C = (float)newValue!;
+					rangedCurve._modulationHelper = (igVfxModulationHelper)newValue!;
 					changed = true;
 				});
-				ImGui.Text(nameof(igVfxRangedCurve._field_0x40));
-				ImGui.SameLine();
-				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x40), rangedCurve._field_0x40, ElementType.kElementTypeR4, (newValue) =>
-				{
-					rangedCurve._field_0x40 = (float)newValue!;
-					changed = true;
-				});
-				ImGui.Text(nameof(igVfxRangedCurve._field_0x44));
-				ImGui.SameLine();
-				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x44), rangedCurve._field_0x44, ElementType.kElementTypeR4, (newValue) =>
-				{
-					rangedCurve._field_0x44 = (float)newValue!;
-					changed = true;
-				});
-				ImGui.Text(nameof(igVfxRangedCurve._field_0x48));
-				ImGui.SameLine();
-				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x48), rangedCurve._field_0x48, ElementType.kElementTypeR4, (newValue) =>
-				{
-					rangedCurve._field_0x48 = (float)newValue!;
-					changed = true;
-				});
-				ImGui.Text(nameof(igVfxRangedCurve._field_0x4C));
-				ImGui.SameLine();
-				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x4C), rangedCurve._field_0x4C, ElementType.kElementTypeU2, (newValue) =>
-				{
-					rangedCurve._field_0x4C = (ushort)newValue!;
-					changed = true;
-				});
-				ImGui.Text(nameof(igVfxRangedCurve._field_0x4E));
-				ImGui.SameLine();
-				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x4E), rangedCurve._field_0x4E, ElementType.kElementTypeU1, (newValue) =>
-				{
-					rangedCurve._field_0x4E = (byte)newValue!;
-					changed = true;
-				});
-				ImGui.Text(nameof(igVfxRangedCurve._flags));
-				ImGui.SameLine();
-				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._flags), rangedCurve._flags, ElementType.kElementTypeU1, (newValue) =>
-				{
-					rangedCurve._flags = (byte)newValue!;
-					changed = true;
-				});
+
 				ImGui.Text(nameof(igVfxRangedCurve._field_0x50));
 				ImGui.SameLine();
 				RenderField_PrimitiveNumber(nameof(igVfxRangedCurve._field_0x50), rangedCurve._field_0x50, ElementType.kElementTypeU2, (newValue) =>
