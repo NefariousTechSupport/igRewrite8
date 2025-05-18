@@ -281,6 +281,7 @@ namespace igLibrary.Core
 		/// <summary>
 		/// Reads metadata from an igArkCoreFile.
 		/// </summary>
+		[Obsolete("Use ReadFromXmlFile instead")]
 		public static void ReadFromFile(EGame game)
 		{
 			System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
