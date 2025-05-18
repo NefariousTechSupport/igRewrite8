@@ -43001,7 +43001,7 @@
 			<metafield type="igEnumMetaField" offset="0x0018" name="_comparisonFunc" implicitAlignment="false" requiredAlignment="4" metaenum="igComparisonFunction"/>
 			<metafield type="igBoolMetaField" offset="0x001C" name="_comparisonSampler" implicitAlignment="false" requiredAlignment="1"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x0020" name="_hash" persistent="false" implicitAlignment="false" requiredAlignment="4"/>
-			<metafield type="igBoolMetaField" offset="0x0024" name="_hashDirty" persistent="false" implicitAlignment="false" requiredAlignment="1"/>
+			<metafield type="igBoolMetaField" offset="0x0024" name="_hashDirty" persistent="false" implicitAlignment="false" requiredAlignment="1" default="true"/>
 		</compoundfields>
 	</metaobject>
 	<metaobject type="igDotNetMetaObject" refname="CProjectileDeathEffectComponent" basetype="CEntityComponent">
