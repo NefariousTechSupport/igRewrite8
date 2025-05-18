@@ -7,8 +7,10 @@
 */
 
 
+using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
+using igLibrary.DotNet;
 
 namespace igLibrary.Core
 {
@@ -335,6 +337,24 @@ namespace igLibrary.Core
 				Align(ref currentOffset, alignment);
 				_sizes.Add(platform, currentOffset);
 			}
+
+#if DEBUG // Ensure metaobject stuff matches up
+			if (igRegistry.GetRegistry()._platform == IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS3
+			 && platform == IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS3
+			 && this is not igDotNetDynamicMetaObject
+			 && this is not igDotNetTypeSpecMetaObject)
+			{
+				if (igArkCore.Game == igArkCore.EGame.EV_SkylandersSuperchargers
+				 || igArkCore.Game == igArkCore.EGame.EV_SkylandersImaginators)
+				{
+					for (uint i = 0; i < metaFieldsByOffset.Length; i++)
+					{
+						if (metaFieldsByOffset[i]._offsets.TryGetValue(IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS3, out ushort fieldOffset))
+							Debug.Assert(metaFieldsByOffset[i]._offset == fieldOffset);
+					}
+				}
+			}
+#endif // DEBUG
 		}
 		private void Align(ref ushort offset, uint alignment)
 		{
