@@ -78,7 +78,7 @@ namespace igLibrary.Core
 			if(name._ns._hash != 0)
 			{
 				section._runtimeFields._namedExternals.Add(section._sh.Tell64());
-				section._sh.WriteUInt32((uint)saver.GetOrAddHandle((new igHandle(name), false)) | (_refCounted ? 0x80000000 : 0));
+				section._sh.WriteUInt32((uint)saver.GetOrAddHandle((igObjectHandleManager.Singleton.LookupHandle(name), false)) | (_refCounted ? 0x80000000 : 0));
 				serializedOffset = 0;
 				return;
 			}

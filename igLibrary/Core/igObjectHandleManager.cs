@@ -20,8 +20,9 @@ namespace igLibrary.Core
 		//public igName _runtimeHandleName;
 		//public uint _runtimeHandleId;
 		//public igHandlesPool _handlePool;
-		public List<uint> _handleTable = new List<uint>();		//technically igNamespaceHashHandleTable
+		public List<uint> _handleList = new List<uint>();		//technically igNamespaceHashHandleTable
 		public Dictionary<igObject, igHandle> _objectToHandleTable = new Dictionary<igObject, igHandle>();
+		public Dictionary<ulong, igHandle> _handleTable = new Dictionary<ulong, igHandle>();
 		//public igHandleRedirectPool _handleRedirectPool;
 
 		public void AddSystemNamespace(string name)
@@ -41,6 +42,33 @@ namespace igLibrary.Core
 			return _systemNamespaces.Contains(hnd._namespace._string);
 		}
 
+		private ulong GetHandleKey(igName ns, igName name) => (((ulong)ns._hash) << 32) | name._hash;
+
+		public igHandle LookupHandle(igHandleName handleName) => LookupHandle(handleName._ns, handleName._name);
+		public igHandle LookupHandle(igName ns, igName name)
+		{
+			if (!_handleTable.TryGetValue(GetHandleKey(ns, name), out igHandle? handle))
+			{
+				handle = new igHandle();
+				handle._namespace = ns;
+				handle._alias = name;
+				_handleTable.Add(GetHandleKey(ns, name), handle);
+			}
+
+			// Attempt to set up the strings properly
+			if (ns._string != null && handle._namespace._string == null)
+			{
+				handle._namespace._string = ns._string;
+			}
+
+			if (name._string != null && handle._alias._string == null)
+			{
+				handle._alias._string = name._string;
+			}
+
+			return handle;
+		}
+
 		public igHandle GetHandle(igObject obj) => GetHandleInternal(obj);
 		public igHandle GetHandleInternal(igObject obj)
 		{
@@ -52,15 +80,12 @@ namespace igLibrary.Core
 		public void AddDirectory(igObjectDirectory dir)
 		{
 			if(!dir._useNameList) return;
-			if(_handleTable.Contains(dir._name._hash)) return;
-			_handleTable.Add(dir._name._hash);
+			if(_handleList.Contains(dir._name._hash)) return;
+			_handleList.Add(dir._name._hash);
 
-			for(int i = 0; i < dir._objectList._count; i++)
+			for (int i = 0; i < dir._objectList._count; i++)
 			{
-				igHandle hnd = new igHandle();
-				hnd._object = dir._objectList[i];
-				hnd._namespace = dir._name;
-				hnd._alias = dir._nameList[i];
+				igHandle hnd = LookupHandle(dir._name, dir._nameList![i]);
 
 				_objectToHandleTable.Add(dir._objectList[i], hnd);
 			}
@@ -72,6 +97,7 @@ namespace igLibrary.Core
 			hnd._namespace = dir._name;
 			hnd._alias = name;
 			_objectToHandleTable.Add(obj, hnd);
+			_handleTable.Add(GetHandleKey(hnd._namespace, hnd._alias), hnd);
 		}
 		public void AddObject(igObjectDirectory dir, igObject obj, uint hash) => AddObject(dir, obj, new igName(hash));
 		public void AddObject(igObjectDirectory dir, igObject obj, string name) => AddObject(dir, obj, new igName(name));

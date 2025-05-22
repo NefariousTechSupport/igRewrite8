@@ -207,7 +207,7 @@ namespace igLibrary.Core
 								Logging.Warn("igIGZ EXID load: Failed to find object {0} in {1}, referenced in {2}", depName._name._hash.ToString("X08"), list[0]._name._string, _dir._path);
 							}
 							finish:
-								_externalList.Add(new igHandle(depName));
+								_externalList.Add(igObjectHandleManager.Singleton.LookupHandle(depName));
 						}
 						break;
 					case 0x4D4E5845:							//EXNM
@@ -239,7 +239,7 @@ namespace igLibrary.Core
 
 							if((nsStrIndex & 0x80000000) != 0)
 							{
-								igHandle hnd = new igHandle(depHandleName);
+								igHandle hnd = igObjectHandleManager.Singleton.LookupHandle(depHandleName);
 								_namedHandleList.Add(hnd);
 							}
 							else
@@ -247,7 +247,7 @@ namespace igLibrary.Core
 								igObject? reference = igExternalReferenceSystem.Singleton._globalSet.ResolveReference(depHandleName, null);
 								if(reference == null)
 								{
-									igHandle hnd = new igHandle(depHandleName);
+									igHandle hnd = igObjectHandleManager.Singleton.LookupHandle(depHandleName);
 									reference = hnd.GetObjectAlias<igObject>();
 								}
 								_namedExternalList.Append(reference);
