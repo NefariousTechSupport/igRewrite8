@@ -226,6 +226,7 @@ namespace igCauldron3
 				ftpParams.Username = string.Empty;
 				ftpParams.Password = string.Empty;
 				ftpParams.Port     = 1;
+				ftpParams.Root     = string.Empty;
 			}
 
 			int port = ftpParams.Port!.Value;
