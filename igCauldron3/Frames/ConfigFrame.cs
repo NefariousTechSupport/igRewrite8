@@ -20,35 +20,6 @@ namespace igCauldron3
 	/// </summary>
 	public class ConfigFrame : Frame
 	{
-		public (IG_CORE_PLATFORM, string)[] _platformNames = new (IG_CORE_PLATFORM, string)[]
-		{
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_ANDROID, "Android 32-bit"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_ASPEN, "iOS 32-bit"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_ASPEN64, "iOS 64-bit"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_LINUX, "Linux"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_LGTV, "LG Smart TV"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_OSX, "Mac OS 32-bit"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_MARMALADE, "Marmalade"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_NGP, "PSVita"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS3, "PS3"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS4, "PS4"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_RASPI, "Raspberry Pi"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_WII, "Wii"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_CAFE, "Wii U"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_WIN32, "Windows 32-bit"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_WIN64, "Windows 64-bit"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_WP8, "Windows Phone"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_XENON, "Xbox 360"),
-			(IG_CORE_PLATFORM.IG_CORE_PLATFORM_DURANGO, "Xbox One")
-		};
-
-		public (igArkCore.EGame, string)[] _gameNames = new (igArkCore.EGame, string)[]
-		{
-			(igArkCore.EGame.EV_SkylandersSuperchargers, "Skylanders Superchargers 1.6.X"),
-			(igArkCore.EGame.EV_SkylandersImaginators,   "Skylanders Imaginators 1.1.X")
-		};
-
-
 		/// <summary>
 		/// Constructor for config frame
 		/// </summary>
@@ -56,42 +27,6 @@ namespace igCauldron3
 		public ConfigFrame(Window wnd) : base(wnd)
 		{
 			CauldronConfig.ReadConfig();
-		}
-
-
-		/// <summary>
-		/// Lookup the name of a game based on the enum
-		/// </summary>
-		/// <param name="game">The game to grab the string for</param>
-		/// <returns>The name for the game</returns>
-		private string GetGameName(igArkCore.EGame game)
-		{
-			for(int i = 0; i < _gameNames.Length; i++)
-			{
-				if(_gameNames[i].Item1 == game)
-				{
-					return _gameNames[i].Item2;
-				}
-			}
-			return "Select a Game";
-		}
-
-
-		/// <summary>
-		/// Lookup the name of a platform based on the enum
-		/// </summary>
-		/// <param name="platform">The platform to grab the string for</param>
-		/// <returns>The name for the platform</returns>
-		private string GetPlatformName(IG_CORE_PLATFORM platform)
-		{
-			for(int i = 0; i < _platformNames.Length; i++)
-			{
-				if(_platformNames[i].Item1 == platform)
-				{
-					return _platformNames[i].Item2;
-				}
-			}
-			return "Select a Platform";
 		}
 
 
@@ -112,54 +47,11 @@ namespace igCauldron3
 				CauldronConfig.GameConfig game = config._games[i];
 				if(ImGui.TreeNode(i.ToString("X08"), $"Game {i}: {game._path}"))
 				{
-					RenderTextField("Game Path", "gp", ref game._path);
-					RenderTextField("Update Path", "up", ref game._updatePath);
+					UIUtil.RenderTextField("Game Path", "gp", ref game._path);
+					UIUtil.RenderTextField("Update Path", "up", ref game._updatePath);
 
-					ImGui.Text("Game");
-					ImGui.SameLine();
-					ImGui.PushID("game");
-					bool gameComboing = ImGui.BeginCombo(string.Empty, GetGameName(game._game));
-					ImGui.PopID();
-					if(gameComboing)
-					{
-						for(int p = 0; p < _gameNames.Length; p++)
-						{
-							ImGui.PushID(p);
-							if(ImGui.Selectable(_gameNames[p].Item2, game._game == _gameNames[p].Item1))
-							{
-								game._game = _gameNames[p].Item1;
-							}
-							if(game._game == _gameNames[p].Item1)
-							{
-								ImGui.SetItemDefaultFocus();
-							}
-							ImGui.PopID();
-						}
-						ImGui.EndCombo();
-					}
-
-					ImGui.Text("Platform");
-					ImGui.SameLine();
-					ImGui.PushID("platform");
-					bool platformComboing = ImGui.BeginCombo(string.Empty, GetPlatformName(game._platform));
-					ImGui.PopID();
-					if(platformComboing)
-					{
-						for(int p = 0; p < _platformNames.Length; p++)
-						{
-							ImGui.PushID(p);
-							if(ImGui.Selectable(_platformNames[p].Item2, game._platform == _platformNames[p].Item1))
-							{
-								game._platform = _platformNames[p].Item1;
-							}
-							if(game._platform == _platformNames[p].Item1)
-							{
-								ImGui.SetItemDefaultFocus();
-							}
-							ImGui.PopID();
-						}
-						ImGui.EndCombo();
-					}
+					UIUtil.EnumComboBox("Game",     UIUtil.sGameNames,     ref game._game);
+					UIUtil.EnumComboBox("Platform", UIUtil.sPlatformNames, ref game._platform);
 
 					bool full = ImGui.Button("Load Game");
 					ImGui.SameLine();
@@ -212,22 +104,6 @@ namespace igCauldron3
 			}
 
 			ImGui.End();
-		}
-
-
-		/// <summary>
-		/// Render one of the text fields
-		/// </summary>
-		/// <param name="label">The text to show</param>
-		/// <param name="id">The id to use</param>
-		/// <param name="val">The string value for the user to edit</param>
-		private void RenderTextField(string label, string id, ref string val)
-		{
-			ImGui.Text(label);
-			ImGui.SameLine();
-			ImGui.PushID(id);
-			ImGui.InputText(string.Empty, ref val, 512);
-			ImGui.PopID();
 		}
 	}
 }

@@ -7,6 +7,7 @@
 */
 
 
+using igLibrary.Core;
 using YamlDotNet.Serialization;
 
 namespace Potion
@@ -15,9 +16,16 @@ namespace Potion
 	{
 		// General
 		[YamlMember(ApplyNamingConventions = false, Alias = "connection")]
-		public string? ConnectionType;
+		public EConnectionType ConnectionType = EConnectionType.kNone;
+		[YamlMember(ApplyNamingConventions = false, Alias = "platform")]
+		public IG_CORE_PLATFORM Platform;
+		[YamlMember(ApplyNamingConventions = false, Alias = "ftp")]
 		public FtpYaml? Ftp;
+		[YamlMember(ApplyNamingConventions = false, Alias = "file")]
+		public FileYaml? File;
+		[YamlMember(ApplyNamingConventions = false, Alias = "ps3")]
 		public Ps3Yaml? Ps3;
+
 
 
 		/// <summary>
@@ -32,8 +40,23 @@ namespace Potion
 			[YamlMember(ApplyNamingConventions = false, Alias = "password")]
 			public string? Password;
 			[YamlMember(ApplyNamingConventions = false, Alias = "port")]
-			public int?    Port;
+			public int? Port;
+			[YamlMember(ApplyNamingConventions = false, Alias = "root")]
+			public string? Root;
 		}
+
+
+
+		/// <summary>
+		/// FTP Parameters
+		/// </summary>
+		public struct FileYaml
+		{
+			[YamlMember(ApplyNamingConventions = false, Alias = "root")]
+			public string? Root;
+		}
+
+
 
 		/// <summary>
 		/// PS3 Parameters
@@ -43,5 +66,28 @@ namespace Potion
 			[YamlMember(ApplyNamingConventions = false, Alias = "titleid")]
 			public string? TitleId;
 		}
+	}
+
+
+
+	/// <summary>
+	/// Connection Types
+	/// </summary>
+	public enum EConnectionType
+	{
+		/// <summary>
+		/// Uninitialised
+		/// </summary>
+		kNone,
+
+		/// <summary>
+		/// Local file system, useful for stuff like sdcards or emulators
+		/// </summary>
+		kFile,
+
+		/// <summary>
+		/// FTP, useful for consoles without things like SD cards
+		/// </summary>
+		kFtp
 	}
 }
