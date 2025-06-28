@@ -5,6 +5,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="FluentFTP" Version="52.1.0" />
 	  <PackageReference Include="YamlDotNet" Version="16.3.0" />
 	</ItemGroup>
 
