@@ -10,9 +10,8 @@
 using ImGuiNET;
 using igLibrary.Core;
 using Potion;
-using YamlDotNet.RepresentationModel;
-using YamlDotNet.Serialization;
 using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 
 namespace igCauldron3
 {
@@ -66,6 +65,8 @@ namespace igCauldron3
 		/// <returns>Whether the installations file was properly read</returns>
 		private bool Read()
 		{
+			bool success = false;
+
 			if (!File.Exists(CauldronConfig.InstallationsPath))
 			{
 				// Consider this a success
@@ -74,17 +75,23 @@ namespace igCauldron3
 
 			try
 			{
-				string input = File.ReadAllText(CauldronConfig.InstallationsPath);
+				FileStream fs = File.OpenRead(CauldronConfig.InstallationsPath);
 
-				Deserializer yamlDeserializer = new Deserializer();
-				mInstallations = yamlDeserializer.Deserialize<List<InstallationParams>>(input);
+				XmlSerializer xmlDeserializer = new XmlSerializer(typeof(List<InstallationParams>));
+				List<InstallationParams>? parameters = xmlDeserializer.Deserialize(fs) as List<InstallationParams>;
+
+				if (parameters != null)
+				{
+					mInstallations = parameters;
+
+					success = true;
+				}
 			}
 			catch (Exception)
 			{
-				return false;
 			}
 
-			return true;
+			return success;
 		}
 
 
@@ -198,14 +205,14 @@ namespace igCauldron3
 		/// <param name="valid">Whether or not the configuration is valid</param>
 		private void RenderFileConfig(InstallationParams parameters, ref bool valid)
 		{
-			InstallationParams.FileYaml fileParams;
+			InstallationParams.FileXml fileParams;
 			if (parameters.File.HasValue)
 			{
 				fileParams = parameters.File.Value;
 			}
 			else
 			{
-				fileParams = new InstallationParams.FileYaml();
+				fileParams = new InstallationParams.FileXml();
 				fileParams.Root = string.Empty;
 			}
 
@@ -236,14 +243,14 @@ namespace igCauldron3
 		/// <param name="valid">Whether or not the configuration is valid</param>
 		private void RenderFtpConfig(InstallationParams parameters, ref bool valid)
 		{
-			InstallationParams.FtpYaml ftpParams;
+			InstallationParams.FtpXml ftpParams;
 			if (parameters.Ftp.HasValue)
 			{
 				ftpParams = parameters.Ftp.Value;
 			}
 			else
 			{
-				ftpParams          = new InstallationParams.FtpYaml();
+				ftpParams          = new InstallationParams.FtpXml();
 				ftpParams.Host     = string.Empty;
 				ftpParams.Username = string.Empty;
 				ftpParams.Password = string.Empty;
@@ -285,14 +292,14 @@ namespace igCauldron3
 		/// <param name="valid">Whether or not the configuration is valid</param>
 		private void RenderPS3Config(InstallationParams parameters, ref bool valid)
 		{
-			InstallationParams.Ps3Yaml ps3Params;
+			InstallationParams.Ps3Xml ps3Params;
 			if (parameters.Ps3.HasValue)
 			{
 				ps3Params = parameters.Ps3.Value;
 			}
 			else
 			{
-				ps3Params = new InstallationParams.Ps3Yaml();
+				ps3Params = new InstallationParams.Ps3Xml();
 				ps3Params.TitleId = string.Empty;
 			}
 

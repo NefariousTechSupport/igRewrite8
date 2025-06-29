@@ -9,33 +9,42 @@
 
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 using igLibrary.Core;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 
 namespace Potion
 {
 	public class ModManifest
 	{
-		private struct ModManifestYaml
+		/// <summary>
+		/// Xml data for a mod manifest, do not reference this class
+		/// </summary>
+		[XmlType(TypeName = "mod_manifest")]
+		public class ModManifestXml
 		{
-			[YamlMember(ApplyNamingConventions = false)]
 			public ulong               manifest_version;
-			[YamlMember(ApplyNamingConventions = false)]
 			public string              identifier;
-			[YamlMember(ApplyNamingConventions = false)]
 			public ulong               mod_version;
-			[YamlMember(ApplyNamingConventions = false)]
 			public string              name;
-			[YamlMember(ApplyNamingConventions = false)]
 			public string              author;
-			[YamlMember(ApplyNamingConventions = false)]
 			public string              description;
-			[YamlMember(ApplyNamingConventions = false)]
 			public igArkCore.EGame     game;
-			[YamlMember(ApplyNamingConventions = false)]
 			public IG_CORE_PLATFORM    platform;
+
+
+
+			public ModManifestXml()
+			{
+				manifest_version = kCurrentManifestVersion;
+				identifier       = string.Empty;
+				mod_version      = 0;
+				name             = string.Empty;
+				author           = string.Empty;
+				description      = string.Empty;
+				game             = igArkCore.EGame.EV_None;
+				platform         = IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEFAULT;
+			}
 		}
 
 
@@ -118,34 +127,32 @@ namespace Potion
 			bool validMod = IsValidIdentifier(folder.Name);
 			validMod &= folder.Attributes.HasFlag(FileAttributes.Directory);
 
-			bool? exists = await connection.Exists($"{folder.Name}/manifest.yaml");
+			bool? exists = await connection.Exists($"{folder.Name}/manifest.xml");
 
 			validMod &= exists.HasValue && exists.Value;
 
-			Stream? data = await connection.Pull($"{folder.Name}/manifest.yaml");
-
-			if (validMod && data != null)
+			if (validMod)
 			{
-				byte[] buffer = new byte[data.Length];
-				await data.ReadAsync(buffer);
+				Stream? data = await connection.Pull($"{folder.Name}/manifest.xml");
 
-				string manifestString = Encoding.UTF8.GetString(buffer);
+				if (data != null)
+				{
+					XmlSerializer xmlDeserializer = new XmlSerializer(typeof(ModManifestXml));
+					ModManifestXml? manifestXml = xmlDeserializer.Deserialize(data) as ModManifestXml;
 
-				DeserializerBuilder builder = new DeserializerBuilder();
-				builder.WithNamingConvention(NullNamingConvention.Instance);
-				IDeserializer deserializer = builder.Build();
-
-				ModManifestYaml manifestYaml = deserializer.Deserialize<ModManifestYaml>(manifestString);
-
-				manifest                  = new ModManifest();
-				manifest.mManifestVersion = manifestYaml.manifest_version;
-				manifest.mIdentifier      = manifestYaml.identifier;
-				manifest.mModVersion      = manifestYaml.mod_version;
-				manifest.mName            = manifestYaml.name;
-				manifest.mAuthor          = manifestYaml.author;
-				manifest.mDesc            = manifestYaml.description;
-				manifest.mGame            = manifestYaml.game;
-				manifest.mPlatform        = manifestYaml.platform;
+					if (manifestXml != null)
+					{
+						manifest                  = new ModManifest();
+						manifest.mManifestVersion = manifestXml.manifest_version;
+						manifest.mIdentifier      = manifestXml.identifier;
+						manifest.mModVersion      = manifestXml.mod_version;
+						manifest.mName            = manifestXml.name;
+						manifest.mAuthor          = manifestXml.author;
+						manifest.mDesc            = manifestXml.description;
+						manifest.mGame            = manifestXml.game;
+						manifest.mPlatform        = manifestXml.platform;
+					}
+				}
 			}
 
 			return manifest;

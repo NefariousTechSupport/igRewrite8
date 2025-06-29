@@ -7,41 +7,41 @@
 */
 
 
+using System.Xml.Serialization;
 using igLibrary.Core;
-using YamlDotNet.Serialization;
 
 namespace Potion
 {
 	public sealed class InstallationParams
 	{
 		// General
-		[YamlMember(ApplyNamingConventions = false, Alias = "connection")]
+		[XmlElement("connection")]
 		public EConnectionType ConnectionType = EConnectionType.kNone;
-		[YamlMember(ApplyNamingConventions = false, Alias = "platform")]
+		[XmlElement("platform")]
 		public IG_CORE_PLATFORM Platform;
-		[YamlMember(ApplyNamingConventions = false, Alias = "ftp")]
-		public FtpYaml? Ftp;
-		[YamlMember(ApplyNamingConventions = false, Alias = "file")]
-		public FileYaml? File;
-		[YamlMember(ApplyNamingConventions = false, Alias = "ps3")]
-		public Ps3Yaml? Ps3;
+		[XmlElement("ftp")]
+		public FtpXml? Ftp;
+		[XmlElement("file")]
+		public FileXml? File;
+		[XmlElement("ps3")]
+		public Ps3Xml? Ps3;
 
 
 
 		/// <summary>
 		/// FTP Parameters
 		/// </summary>
-		public struct FtpYaml
+		public struct FtpXml
 		{
-			[YamlMember(ApplyNamingConventions = false, Alias = "host")]
+			[XmlElement("host")]
 			public string? Host;
-			[YamlMember(ApplyNamingConventions = false, Alias = "username")]
+			[XmlElement("username")]
 			public string? Username;
-			[YamlMember(ApplyNamingConventions = false, Alias = "password")]
+			[XmlElement("password")]
 			public string? Password;
-			[YamlMember(ApplyNamingConventions = false, Alias = "port")]
+			[XmlElement("port")]
 			public int? Port;
-			[YamlMember(ApplyNamingConventions = false, Alias = "root")]
+			[XmlElement("root")]
 			public string? Root;
 		}
 
@@ -50,9 +50,9 @@ namespace Potion
 		/// <summary>
 		/// FTP Parameters
 		/// </summary>
-		public struct FileYaml
+		public struct FileXml
 		{
-			[YamlMember(ApplyNamingConventions = false, Alias = "root")]
+			[XmlElement("root")]
 			public string? Root;
 		}
 
@@ -61,9 +61,9 @@ namespace Potion
 		/// <summary>
 		/// PS3 Parameters
 		/// </summary>
-		public struct Ps3Yaml
+		public struct Ps3Xml
 		{
-			[YamlMember(ApplyNamingConventions = false, Alias = "titleid")]
+			[XmlElement("titleid")]
 			public string? TitleId;
 		}
 	}

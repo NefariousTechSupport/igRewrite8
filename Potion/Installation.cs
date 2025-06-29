@@ -8,9 +8,8 @@
 
 
 using System.Text;
-using igLibrary.Core;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
+using System.Text.Unicode;
+using System.Xml.Serialization;
 
 namespace Potion
 {
@@ -20,33 +19,46 @@ namespace Potion
 	public sealed class Installation
 	{
 		/// <summary>
-		/// The yaml data for an "installation manifest"
+		/// The xml data for an "installation manifest", do not reference this class
 		/// </summary>
-		private struct InstallationYaml
+		[XmlType(TypeName = "installation")]
+		public class InstallationXml
 		{
-			[YamlMember(ApplyNamingConventions = false)]
 			public ulong               version;
-			[YamlMember(ApplyNamingConventions = false)]
-			public List<EntryYaml>     entries;
+			public List<EntryXml>      entries;
+
+
+
+			public InstallationXml()
+			{
+				version = kCurrentVersion;
+				entries = new List<EntryXml>();
+			}
 		}
 
 
 
 		/// <summary>
-		/// The yaml data for an installed mod
+		/// The xml data for an installed mod, do not reference this class
 		/// </summary>
-		private struct EntryYaml
+		public class EntryXml
 		{
-			[YamlMember(ApplyNamingConventions = false)]
 			public string              identifier;
-			[YamlMember(ApplyNamingConventions = false)]
 			public bool                enabled;
+
+
+
+			public EntryXml()
+			{
+				identifier = string.Empty;
+				enabled    = false;
+			}
 		}
 
 
 
 		/// <summary>
-		/// The yaml data for an installed mod
+		/// The xml data for an installed mod
 		/// </summary>
 		private class InstalledMod
 		{
@@ -144,7 +156,7 @@ namespace Potion
 
 				if (success)
 				{
-					bool? existingInstall = await mConnection.Exists("mod_list.yaml");
+					bool? existingInstall = await mConnection.Exists("mod_list.xml");
 
 					success &= existingInstall.HasValue;
 
@@ -191,14 +203,14 @@ namespace Potion
 					}
 				}
 
-				string yaml = GetYaml();
+				string xml = GetXml();
 				string tempFile = Path.GetTempFileName();
 
 				FileStream fs = File.Create(tempFile);
-				await fs.WriteAsync(Encoding.UTF8.GetBytes(yaml));
+				await fs.WriteAsync(Encoding.UTF8.GetBytes(xml));
 				fs.Seek(0, SeekOrigin.Begin);
 
-				success &= await mConnection.Push(fs, "mod_list.yaml");
+				success &= await mConnection.Push(fs, "mod_list.xml");
 
 			}
 
@@ -214,28 +226,29 @@ namespace Potion
 
 
 		/// <summary>
-		/// Serializes the installation into a yaml file
+		/// Serializes the installation into a xml file
 		/// </summary>
 		/// <returns>The serialized string</returns>
-		public string GetYaml()
+		public string GetXml()
 		{
-			InstallationYaml yaml = new InstallationYaml();
-			yaml.version = kCurrentVersion;
-			yaml.entries = new List<EntryYaml>();
+			InstallationXml xml = new InstallationXml();
+			xml.version = kCurrentVersion;
+			xml.entries = new List<EntryXml>();
 
 			for (int i = 0; i < mMods.Count; i++)
 			{
-				EntryYaml entry = new EntryYaml();
+				EntryXml entry = new EntryXml();
 
 				entry.enabled = mMods[i].mEnabled;
 				entry.identifier = mMods[i].mManifest.Identifier;
 			}
 
-			SerializerBuilder builder = new SerializerBuilder();
-			builder.WithNamingConvention(NullNamingConvention.Instance);
-			ISerializer serializer = builder.Build();
+			Utf8Writer writer = new Utf8Writer();
 
-			return serializer.Serialize(yaml, typeof(InstallationYaml));
+			XmlSerializer xmlSerializer = new XmlSerializer(typeof(InstallationXml));
+			xmlSerializer.Serialize(writer, xml);
+
+			return writer.ToString();
 		}
 	}
 }

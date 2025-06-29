@@ -29,7 +29,7 @@ namespace igCauldron3
 		}
 		private static string GameConfigFilePath => Path.Combine(ConfigFolder, "gameconfig.json");
 		public static string ImGuiConfigFilePath => Path.Combine(ConfigFolder, "imgui.ini");
-		public static string InstallationsPath   => Path.Combine(ConfigFolder, "installations.yaml");
+		public static string InstallationsPath   => Path.Combine(ConfigFolder, "installations.xml");
 		public static CauldronConfig _config { get; private set; }
 		private const int CurrentVersion = 2;
 
