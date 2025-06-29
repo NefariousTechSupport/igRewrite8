@@ -7,9 +7,11 @@
 */
 
 
+using System.Text;
 using System.Text.RegularExpressions;
 using igLibrary.Core;
 using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 
 namespace Potion
@@ -87,22 +89,94 @@ namespace Potion
 
 
 		/// <summary>
+		/// private ModManifest constructor
+		/// </summary>
+		private ModManifest()
+		{
+			mManifestVersion = kCurrentManifestVersion;
+			mIdentifier      = string.Empty;
+			mModVersion      = 0;
+			mName            = string.Empty;
+			mAuthor          = string.Empty;
+			mDesc            = string.Empty;
+			mGame            = igArkCore.EGame.EV_None;
+			mPlatform        = IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEFAULT;
+		}
+
+
+
+		/// <summary>
+		/// Attempts to read a mod manifest
+		/// </summary>
+		/// <param name="connection">The file connection</param>
+		/// <param name="folder">The folder to read from</param>
+		/// <returns>The manifest, null if the manifest is invalid</returns>
+		public static async Task<ModManifest?> Read(Connection connection, FileProps folder)
+		{
+			ModManifest? manifest = null;
+
+			bool validMod = IsValidIdentifier(folder.Name);
+			validMod &= folder.Attributes.HasFlag(FileAttributes.Directory);
+
+			bool? exists = await connection.Exists($"{folder.Name}/manifest.yaml");
+
+			validMod &= exists.HasValue && exists.Value;
+
+			Stream? data = await connection.Pull($"{folder.Name}/manifest.yaml");
+
+			if (validMod && data != null)
+			{
+				byte[] buffer = new byte[data.Length];
+				await data.ReadAsync(buffer);
+
+				string manifestString = Encoding.UTF8.GetString(buffer);
+
+				DeserializerBuilder builder = new DeserializerBuilder();
+				builder.WithNamingConvention(NullNamingConvention.Instance);
+				IDeserializer deserializer = builder.Build();
+
+				ModManifestYaml manifestYaml = deserializer.Deserialize<ModManifestYaml>(manifestString);
+
+				manifest                  = new ModManifest();
+				manifest.mManifestVersion = manifestYaml.manifest_version;
+				manifest.mIdentifier      = manifestYaml.identifier;
+				manifest.mModVersion      = manifestYaml.mod_version;
+				manifest.mName            = manifestYaml.name;
+				manifest.mAuthor          = manifestYaml.author;
+				manifest.mDesc            = manifestYaml.description;
+				manifest.mGame            = manifestYaml.game;
+				manifest.mPlatform        = manifestYaml.platform;
+			}
+
+			return manifest;
+		}
+
+
+
+		public static bool IsValidIdentifier(string identifier)
+		{
+			const string kIdentifierRegex = @"^[0-9a-z\-\+_]+\.[0-9a-z\-\+_]+\.[0-9a-z\-\+_]+$";
+
+			return Regex.IsMatch(identifier, kIdentifierRegex);
+		}
+
+
+
+		/// <summary>
 		/// Set identifier, requires the format is correct
 		/// </summary>
 		/// <param name="identifier">The new identifier to use</param>
 		/// <returns>Whether or not the identifier was set</returns>
 		public bool TrySetIdentifier(string identifier)
 		{
-			const string kIdentifierRegex = @"^[0-9a-z\-\+_]+\.[0-9a-z\-\+_]+\.[0-9a-z\-\+_]+$";
+			bool valid = IsValidIdentifier(identifier);
 
-			bool success = Regex.IsMatch(identifier, kIdentifierRegex);
-
-			if (success)
+			if (valid)
 			{
 				mIdentifier = identifier;
 			}
 
-			return success;
+			return valid;
 		}
 	}
 }

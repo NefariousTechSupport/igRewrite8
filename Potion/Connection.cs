@@ -42,6 +42,31 @@ namespace Potion
 
 
 		/// <summary>
+		/// Checks whether the remote file exists
+		/// </summary>
+		/// <param name="path">The file path to pull</param>
+		/// <returns>Whether the remote file exists, or null if the request failed</returns>
+		public virtual Task<bool?> Exists(string path)
+		{
+			throw new NotImplementedException($"Method {GetType().Name}.Exists is not implemented");
+		}
+
+
+
+		/// <summary>
+		/// Grabs a list of files in the provided directory
+		/// </summary>
+		/// <param name="path">The file path to list</param>
+		/// <returns>A list of filenames, or null if the request failed</returns>
+		public virtual Task<List<FileProps>?> ListDirectory(string path)
+		{
+			throw new NotImplementedException($"Method {GetType().Name}.ListDirectory is not implemented");
+		}
+
+
+
+
+		/// <summary>
 		/// Pulls a file from the (possibly) remote source
 		/// </summary>
 		/// <param name="path">The file path to pull</param>

@@ -24,12 +24,14 @@ namespace igCauldron3
 		enum UIState
 		{
 			Picker,
-			Creator
+			Creator,
+			Manager,
 		}
 
 		UIState                        mState;
 		List<InstallationParams>       mInstallations;
 		InstallationParams?            mWipInstallation;
+		Installation?                  mInstall;
 		bool                           mSuccessfulRead;
 
 
@@ -109,7 +111,7 @@ namespace igCauldron3
 
 			ImGui.End();
 		}
-
+#region Installation Picker
 		private void RenderPicker()
 		{
 			for (int i = 0; i < mInstallations.Count; i++)
@@ -119,6 +121,13 @@ namespace igCauldron3
 					InstallationParams parameters = mInstallations[i];
 
 					ImGui.Text($"Connection Type: {parameters.ConnectionType.ToString()}");
+					ImGui.Text($"Platform: {parameters.Platform.ToString()}");
+
+					if (ImGui.Button("Open"))
+					{
+						mInstall = new Installation(parameters);
+						mInstall.Open().Wait();
+					}
 				}
 			}
 
@@ -128,6 +137,8 @@ namespace igCauldron3
 			}
 		}
 
+#endregion // Installation Picker
+#region Installation Creator
 		private void RenderCreator()
 		{
 			if (mWipInstallation == null)
@@ -198,7 +209,18 @@ namespace igCauldron3
 				fileParams.Root = string.Empty;
 			}
 
-			UIUtil.RenderTextField("Mod loader root folder", "file.root", ref fileParams.Root!);
+			string preview;
+			switch (parameters.Platform)
+			{
+				case IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS3:
+					preview = "<rpcs3 folder>/dev_hdd0/game/<titleid>/mods";
+					break;
+				default:
+					preview = string.Empty;
+					break;
+			}
+
+			UIUtil.RenderTextField("Mod loader root folder", "file.root", ref fileParams.Root!, preview);
 
 			valid &= Path.IsPathFullyQualified(fileParams.Root) || Path.IsPathRooted(fileParams.Root);
 
@@ -281,5 +303,12 @@ namespace igCauldron3
 
 			parameters.Ps3 = ps3Params;
 		}
+#endregion // Installation Creator
+#region Mod Manager
+		public void RenderModManager()
+		{
+			
+		}
+#endregion // Mod Manager
 	}
 }

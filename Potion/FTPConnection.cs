@@ -116,6 +116,30 @@ namespace Potion
 
 
 		/// <summary>
+		/// Checks whether the remote file exists
+		/// </summary>
+		/// <param name="path">The file path to check</param>
+		/// <returns>Whether the remote file exists, or null if the request failed</returns>
+		public override async Task<bool?> Exists(string path)
+		{
+			bool connected = mClient.IsConnected;
+			if (!connected)
+			{
+				connected = await Connect();
+			}
+
+			bool exists = false;
+
+			if (connected)
+			{
+				exists = await mClient.FileExists(path);
+			}
+
+			return exists;
+		}
+
+
+		/// <summary>
 		/// Pushes a file to the remote source, overwriting any existing
 		/// file there
 		/// </summary>
@@ -134,11 +158,19 @@ namespace Potion
 
 			if (connected)
 			{
-				string tempPath = Path.GetTempFileName();
-				FileStream tempData = File.Open(tempPath, FileMode.OpenOrCreate, FileAccess.Write);
-				data.Seek(0, SeekOrigin.Begin);
-				data.CopyTo(tempData);
-				tempData.Close();
+				string tempPath;
+				if (data is FileStream fs)
+				{
+					tempPath = fs.Name;
+				}
+				else
+				{
+					tempPath = Path.GetTempFileName();
+					FileStream tempData = File.Open(tempPath, FileMode.OpenOrCreate, FileAccess.Write);
+					data.Seek(0, SeekOrigin.Begin);
+					data.CopyTo(tempData);
+					tempData.Close();
+				}
 
 				FtpStatus status = await mClient.UploadFile(tempPath, path, FtpRemoteExists.Overwrite, true, FtpVerify.Retry);
 
