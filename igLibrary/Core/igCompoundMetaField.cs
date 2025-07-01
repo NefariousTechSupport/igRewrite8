@@ -224,9 +224,16 @@ namespace igLibrary.Core
 			{
 				if(metaFieldsByOffset[i] is igStaticMetaField) continue;
 				if(metaFieldsByOffset[i] is igPropertyFieldMetaField) continue;
-				if(metaFieldsByOffset[i] is igBitFieldMetaField) continue;
 				if(!metaFieldsByOffset[i].IsApplicableForPlatform(platform)) continue;
 				if(metaFieldsByOffset[i]._offsets.ContainsKey(platform)) continue;
+				if(metaFieldsByOffset[i] is igBitFieldMetaField bfMf)
+				{
+					if(!bfMf._offsets.ContainsKey(platform))
+					{
+						bfMf._offsets.Add(platform, bfMf._storageMetaField._offsets[platform]);
+					}
+					continue;
+				}
 
 				Align(ref currentOffset, metaFieldsByOffset[i].GetAlignment(platform));
 

@@ -135,6 +135,14 @@ namespace igLibrary.Core
 
 
 
+		/// <summary>
+		/// Currently loaded game
+		/// </summary>
+		private static EGame _game = EGame.EV_None;
+		public static EGame Game => _game;
+
+
+
 
 		/// <summary>
 		/// Currently loaded metaenums
@@ -291,6 +299,7 @@ namespace igLibrary.Core
 		/// <summary>
 		/// Reads metadata from an igArkCoreFile.
 		/// </summary>
+		[Obsolete("Use ReadFromXmlFile instead")]
 		public static void ReadFromFile(EGame game)
 		{
 			_game = game;
@@ -315,6 +324,7 @@ namespace igLibrary.Core
 		/// <param name="game">The game to load the metadata for</param>
 		public static void ReadFromXmlFile(EGame game)
 		{
+			_game = game;
 			System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
 
 			stopwatch.Start();

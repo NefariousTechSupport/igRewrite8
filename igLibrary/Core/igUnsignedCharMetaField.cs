@@ -11,6 +11,7 @@ namespace igLibrary.Core
 {
 	public class igUnsignedCharMetaField : igMetaField
 	{
+		public static igUnsignedCharMetaField _MetaField { get; private set; } = new igUnsignedCharMetaField();
 		public override object? ReadIGZField(igIGZLoader loader) => loader._stream.ReadByte();
 		public override void WriteIGZField(igIGZSaver saver, igIGZSaver.SaverSection section, object? value) => section._sh.WriteByte((byte)value);
 		public override uint GetAlignment(IG_CORE_PLATFORM platform) => 1;

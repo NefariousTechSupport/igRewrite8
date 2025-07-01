@@ -315,11 +315,19 @@ namespace igLibrary
 		public override float ReadSingle() => ReadSingle(_endianness);
 		public float ReadSingle(Endianness endianness) => BitConverter.ToSingle(ReadForEndianness(sizeof(float), endianness), 0);
 		public void WriteSingle(float data) => WriteSingle(data, _endianness);
-		public void WriteSingle(float data, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(data), endianness);
+		public void WriteSingle(float data, Endianness endianness)
+		{
+			BitConverter.TryWriteBytes(_integerBuffer, data);
+			WriteForEndianness(sizeof(float), endianness);
+		}
 		public override double ReadDouble() => ReadDouble(_endianness);
 		public double ReadDouble(Endianness endianness) => BitConverter.ToSingle(ReadForEndianness(sizeof(float), endianness), 0);
 		public void WriteDouble(double data) => WriteDouble(data, _endianness);
-		public void WriteDouble(double data, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(data), endianness);
+		public void WriteDouble(double data, Endianness endianness)
+		{
+			BitConverter.TryWriteBytes(_integerBuffer, data);
+			WriteForEndianness(sizeof(double), endianness);
+		}
 		public override Half ReadHalf() => ReadHalf(_endianness);
 		public Half ReadHalf(Endianness endianness) => BitConverter.ToHalf(ReadForEndianness(2, endianness), 0);
 
@@ -414,17 +422,41 @@ namespace igLibrary
 			return BitConverter.ToUInt64(ReadForEndianness(sizeof(ulong), endianness), 0);
 		}
 		public void WriteUInt16(ushort data) => WriteUInt16(data, _endianness);
-		public void WriteUInt16(ushort data, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(data), endianness);
+		public void WriteUInt16(ushort data, Endianness endianness)
+		{
+			BitConverter.TryWriteBytes(_integerBuffer, data);
+			WriteForEndianness(sizeof(ushort), endianness);
+		}
 		public void WriteInt16(short data) => WriteInt16(data, _endianness);
-		public void WriteInt16(short data, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(data), endianness);
+		public void WriteInt16(short data, Endianness endianness)
+		{
+			BitConverter.TryWriteBytes(_integerBuffer, data);
+			WriteForEndianness(sizeof(short), endianness);
+		}
 		public void WriteUInt32(uint data) => WriteUInt32(data, _endianness);
-		public void WriteUInt32(uint data, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(data), endianness);
+		public void WriteUInt32(uint data, Endianness endianness)
+		{
+			BitConverter.TryWriteBytes(_integerBuffer, data);
+			WriteForEndianness(sizeof(uint), endianness);
+		}
 		public void WriteInt32(int data) => WriteInt32(data, _endianness);
-		public void WriteInt32(int data, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(data), endianness);
+		public void WriteInt32(int data, Endianness endianness)
+		{
+			BitConverter.TryWriteBytes(_integerBuffer, data);
+			WriteForEndianness(sizeof(int), endianness);
+		}
 		public void WriteUInt64(ulong data) => WriteUInt64(data, _endianness);
-		public void WriteUInt64(ulong data, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(data), endianness);
+		public void WriteUInt64(ulong data, Endianness endianness)
+		{
+			BitConverter.TryWriteBytes(_integerBuffer, data);
+			WriteForEndianness(sizeof(ulong), endianness);
+		}
 		public void WriteInt64(long data) => WriteInt64(data, _endianness);
-		public void WriteInt64(long data, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(data), endianness);
+		public void WriteInt64(long data, Endianness endianness)
+		{
+			BitConverter.TryWriteBytes(_integerBuffer, data);
+			WriteForEndianness(sizeof(long), endianness);
+		}
 
 		private byte[] ReadForEndianness(int bytesToRead, Endianness endianness)
 		{
@@ -454,25 +486,25 @@ namespace igLibrary
 			return _integerBuffer;
 		}
 		
-		private void WriteForEndianness(byte[] bytes, Endianness endianness)
+		private void WriteForEndianness(byte bytesToWrite, Endianness endianness)
 		{
 			switch (endianness)
 			{
 				case Endianness.Little:
 					if (!BitConverter.IsLittleEndian)
 					{
-						Array.Reverse(bytes);
+						Array.Reverse(_integerBuffer, 0, bytesToWrite);
 					}
 					break;
 
 				case Endianness.Big:
 					if (BitConverter.IsLittleEndian)
 					{
-						Array.Reverse(bytes);
+						Array.Reverse(_integerBuffer, 0, bytesToWrite);
 					}
 					break;
 			}
-			BaseStream.Write(bytes);
+			BaseStream.Write(_integerBuffer, 0, bytesToWrite);
 		}
 	}
 }

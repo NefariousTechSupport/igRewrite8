@@ -41,7 +41,12 @@ namespace igCauldron3
 		public unsafe override void Draw2(DirectoryManagerFrame dirFrame, string id, igObject obj, igMetaObject meta)
 		{
 			igImage2 image = (igImage2)obj;
-			
+
+			if (image._format.IsCafeSwizzled())
+			{
+				ImGui.TextColored(Styles._errorTxt, "Wii U Texture Support is experimental! Log any bugs you find please!");
+			}
+
 			if(image._texHandle == -1)
 			{
 				if(image._format == null)

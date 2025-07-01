@@ -29,6 +29,7 @@ namespace igCauldron3
 		/// </summary>
 		public override void Render()
 		{
+			igObjectDirectory? currentDirectory = DirectoryManagerFrame._instance.CurrentDir;
 			if(ImGui.BeginMainMenuBar())
 			{
 				if(ImGui.BeginMenu("File"))
@@ -37,34 +38,89 @@ namespace igCauldron3
 					{
 						_wnd._frames.Add(new DirectoryOpenerFrame(_wnd));
 					}
-					else if(ImGui.MenuItem("Save"))
+					if(ImGui.BeginMenu("Save", currentDirectory != null))
 					{
-						MemoryStream ms = new MemoryStream();
-						igObjectDirectory target = DirectoryManagerFrame._instance.CurrentDir;
-						target.WriteFile(ms, igRegistry.GetRegistry()._platform);
-						ms.Seek(0, SeekOrigin.Begin);
-#if DEBUG
-						FileStream fs = File.Create("test.igz");
-						ms.CopyTo(fs);
-						fs.Close();
-						ms.Seek(0, SeekOrigin.Begin);
-#endif
-						igFilePath fp = new igFilePath();
-						fp.Set(target._path);
-						igArchive arc = igFileContext.Singleton._archiveManager._patchArchives._count > 0 ? igFileContext.Singleton._archiveManager._patchArchives[0] : (igArchive)target._fd._device;
-						arc.GetAddFile(fp._path);
-						arc.Compress(fp._path, ms);
-						ms.Close();
-						if(arc._path[1] == ':') arc.Save(arc._path);
-						else arc.Save($"{igFileContext.Singleton._root}/archives/{Path.GetFileName(arc._path)}");
+						igObjectDirectory target = currentDirectory!;
+						igStorageDevice device = target._fd._device;
+						igArchive? archive = device as igArchive;
+						string displayName;
+						bool isPatchArchive = false;
+
+						if (archive != null)
+						{
+							displayName = Path.GetFileName(archive._path);
+
+							// Dumb long line
+							if (igFileContext.Singleton._archiveManager._patchArchives.Contains(archive))
+							{
+								isPatchArchive = true;
+							}
+						}
+						else
+						{
+							displayName = device.GetType().Name;
+						}
+
+
+						// tracks user's selection
+						// 0: nothing selected
+						// 1: selected base game pack
+						// 2: selected update.pak
+						byte state = 0;
+						if (ImGui.MenuItem(string.Format("To {0}", displayName)))
+						{
+							state = 1;
+						}
+						if (!isPatchArchive && ImGui.MenuItem(string.Format("To update.pak")))
+						{
+							state = 2;
+							archive = igFileContext.Singleton._archiveManager._patchArchives[0];
+						}
+
+						if (state != 0 && archive != null)
+						{
+							// Write to memory
+							MemoryStream ms = new MemoryStream();
+							target.WriteFile(ms, igRegistry.GetRegistry()._platform);
+							ms.Seek(0, SeekOrigin.Begin);
+
+#if DEBUG // Save to a local file for testing
+							FileStream fs = File.Create("test.igz");
+							ms.CopyTo(fs);
+							fs.Close();
+							ms.Seek(0, SeekOrigin.Begin);
+#endif // DEBUG
+
+							// Output to the archive
+							igFilePath fp = new igFilePath();
+							fp.Set(target._path);
+							archive.GetAddFile(fp._path);
+							archive.Compress(fp._path, ms);
+							ms.Close();
+
+							// Write out the archive
+							if(archive._path[1] == ':')
+							{
+								archive.Save(archive._path);
+							}
+							else
+							{
+								archive.Save($"{igFileContext.Singleton._root}/archives/{Path.GetFileName(archive._path)}");
+							}
+
+							// This is bad but will be fixed when the vfs is refactored
+							target._fd._device = archive;
+						}
+
+						ImGui.EndMenu();
 					}
-					else if(ImGui.MenuItem("New IGZ"))
+					if(ImGui.MenuItem("New IGZ"))
 					{
 						_wnd._frames.Add(new DirectoryCreatorFrame(_wnd));
 					}
-					else if(ImGui.MenuItem("Duplicate"))
+					if(ImGui.MenuItem("Duplicate", currentDirectory != null))
 					{
-						_wnd._frames.Add(new DirectoryDuplicatorFrame(_wnd, DirectoryManagerFrame._instance.CurrentDir));
+						_wnd._frames.Add(new DirectoryDuplicatorFrame(_wnd, currentDirectory!));
 					}
 					ImGui.EndMenu();
 				}

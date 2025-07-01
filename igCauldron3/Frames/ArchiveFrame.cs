@@ -21,6 +21,7 @@ namespace igCauldron3
 		private bool _isChoosingArchive = false;
 		private string[]? _allowedArchivePaths = null;
 		private string[]? _allowedArchiveNames = null;
+		private string searchQuery = "";
 
 		private List<igArchive> _looseArchives = new List<igArchive>();
 		private Dictionary<string, igArchive.FileInfo[]> _sortedFileHeaders = new Dictionary<string, igArchive.FileInfo[]>();
@@ -70,6 +71,7 @@ namespace igCauldron3
 				{
 					RenderPackage(packages[i]);
 				}
+				searchQuery = "";
 			}
 			else
 			{
@@ -82,34 +84,39 @@ namespace igCauldron3
 				{
 					_isChoosingArchive = false;
 				}
-				for(int i = 0; i < _allowedArchiveNames.Length; i++)
+				ImGui.SameLine();
+				ImGui.InputText(string.Empty, ref searchQuery, 0x100);
+				for (int i = 0; i < _allowedArchiveNames.Length; i++)
 				{
-					ImGui.PushID(_allowedArchivePaths[i]);
-					bool full = ImGui.Button("Full");
-					ImGui.SameLine();
-					bool loose = ImGui.Button("Loose");
-					ImGui.PopID();
-					ImGui.SameLine();
-					ImGui.Text(_allowedArchiveNames[i]);
-
-					if(full)
+					if (_allowedArchivePaths[i].ToLower().Contains(searchQuery.ToLower()))
 					{
-						_isChoosingArchive = false;
+						ImGui.PushID(_allowedArchivePaths[i]);
+						bool full = ImGui.Button("Full");
+						ImGui.SameLine();
+						bool loose = ImGui.Button("Loose");
+						ImGui.PopID();
+						ImGui.SameLine();
+						ImGui.Text(_allowedArchiveNames[i]);
 
-						igArchive loaded = igFileContext.Singleton.LoadArchive(_allowedArchivePaths[i]);
-						for(int j = 0; j < loaded._files.Count; j++)
+						if (full)
 						{
-							if(loaded._files[j]._logicalName.EndsWith("_pkg.igz"))
+							_isChoosingArchive = false;
+
+							igArchive loaded = igFileContext.Singleton.LoadArchive(_allowedArchivePaths[i]);
+							for (int j = 0; j < loaded._files.Count; j++)
 							{
-								CPrecacheManager._Instance.PrecachePackage(loaded._files[j]._logicalName, EMemoryPoolID.MP_DEFAULT);
+								if (loaded._files[j]._logicalName.EndsWith("_pkg.igz"))
+								{
+									CPrecacheManager._Instance.PrecachePackage(loaded._files[j]._logicalName, EMemoryPoolID.MP_DEFAULT);
+								}
 							}
 						}
-					}
-					else if(loose)
-					{
-						_isChoosingArchive = false;
+						else if (loose)
+						{
+							_isChoosingArchive = false;
 
-						_looseArchives.Add(igFileContext.Singleton.LoadArchive(_allowedArchivePaths[i]));
+							_looseArchives.Add(igFileContext.Singleton.LoadArchive(_allowedArchivePaths[i]));
+						}
 					}
 				}
 			}

@@ -81,19 +81,19 @@ namespace igLibrary.Core
 			if(_data == null) return Enumerable.Empty<T>().GetEnumerator();
 			else return ((IEnumerable<T>)this._data).GetEnumerator();
 		}
-		igMemoryPool IigMemory.GetMemoryPool() => _memoryPool;
-		void IigMemory.SetMemoryPool(igMemoryPool pool) => _memoryPool = pool;
-		Array IigMemory.GetData() => _data;
-		uint IigMemory.GetCount() => (uint)Length;
-		void IigMemory.SetData(Array data)
+		public igMemoryPool GetMemoryPool() => _memoryPool;
+		public void SetMemoryPool(igMemoryPool pool) => _memoryPool = pool;
+		public Array GetData() => _data;
+		public uint GetCount() => (uint)Length;
+		public void SetData(Array data)
 		{
 			if(data.GetType().GetElementType().IsAssignableTo(typeof(T)))
 			{
 				_data = data.Cast<T>().ToArray();
 			}
 		}
-		object? IigMemory.GetItem(int i) => this[i];
-		void IigMemory.SetItem(int i, object? obj) => this[i] = (T)obj;
+		public object? GetItem(int i) => this[i];
+		public void SetItem(int i, object? obj) => this[i] = (T)obj;
 		public void Alloc(int itemCount)
 		{
 			_data = new T[itemCount];
@@ -164,20 +164,20 @@ namespace igLibrary.Core
 	public interface IigMemory
 	{
 		public int Length { get; }
-		igMemoryPool GetMemoryPool();
-		void SetMemoryPool(igMemoryPool pool);
-		Array GetData();
-		uint GetCount();
-		void SetData(Array data);
-		object? GetItem(int i);
-		void SetItem(int i, object? obj);
-		ulong GetFlags(igMemoryRefMetaField ioField, IG_CORE_PLATFORM platform);
-		ulong GetFlags(igMemoryRefHandleMetaField ioField, IG_CORE_PLATFORM platform);
-		uint GetPlatformAlignment(igMemoryRefMetaField ioField, IG_CORE_PLATFORM platform);
-		uint GetPlatformAlignment(igMemoryRefHandleMetaField ioField, IG_CORE_PLATFORM platform);
-		void SetFlags(ulong flags, igMemoryRefMetaField ioField, IG_CORE_PLATFORM platform);
-		void SetFlags(ulong flags, igMemoryRefHandleMetaField ioField, IG_CORE_PLATFORM platform);
-		void Alloc(int itemCount);
-		void Realloc(int itemCount);
+		public igMemoryPool GetMemoryPool();
+		public void SetMemoryPool(igMemoryPool pool);
+		public Array GetData();
+		public uint GetCount();
+		public void SetData(Array data);
+		public object? GetItem(int i);
+		public void SetItem(int i, object? obj);
+		public ulong GetFlags(igMemoryRefMetaField ioField, IG_CORE_PLATFORM platform);
+		public ulong GetFlags(igMemoryRefHandleMetaField ioField, IG_CORE_PLATFORM platform);
+		public uint GetPlatformAlignment(igMemoryRefMetaField ioField, IG_CORE_PLATFORM platform);
+		public uint GetPlatformAlignment(igMemoryRefHandleMetaField ioField, IG_CORE_PLATFORM platform);
+		public void SetFlags(ulong flags, igMemoryRefMetaField ioField, IG_CORE_PLATFORM platform);
+		public void SetFlags(ulong flags, igMemoryRefHandleMetaField ioField, IG_CORE_PLATFORM platform);
+		public void Alloc(int itemCount);
+		public void Realloc(int itemCount);
 	}
 }
