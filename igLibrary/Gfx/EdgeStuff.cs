@@ -362,6 +362,7 @@ namespace igLibrary.PS3Edge
 			}
 
 			spuConfigInfo.numIndexes = (ushort)indexBuffer.Length;
+			Debug.Assert(compressed.Length <= ushort.MaxValue);
 		}
 	}
 }
