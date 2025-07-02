@@ -128,14 +128,6 @@ namespace igLibrary.Core
 
 
 		/// <summary>
-		/// The currently loaded game
-		/// </summary>
-		public static EGame Game => _game;
-
-
-
-
-		/// <summary>
 		/// Currently loaded game
 		/// </summary>
 		private static EGame _game = EGame.EV_None;
@@ -223,12 +215,6 @@ namespace igLibrary.Core
 		/// Types to generate dynamic classes for
 		/// </summary>
 		public static List<igBaseMeta> _pendingTypes = new List<igBaseMeta>();
-
-
-		/// <summary>
-		/// The currently loade game
-		/// </summary>
-		private static EGame _game;
 
 
 
