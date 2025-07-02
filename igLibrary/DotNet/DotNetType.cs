@@ -28,6 +28,7 @@ namespace igLibrary.DotNet
 			get => (_flags & (uint)Flags.kIsArray) != 0;
 			set => _flags = (_flags & ~(uint)Flags.kIsArray) | (value ? 0u : 1u);
 		}
+		[igEnum]
 		public enum Flags : uint
 		{
 			kIsSimple = 0x40000000,

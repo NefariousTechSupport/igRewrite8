@@ -478,7 +478,7 @@ namespace igLibrary.Core
 
 			if(_enumCache == null)
 			{
-				Type[] types = assemblies.SelectMany(x => x.GetTypes()).Where(x => x.IsEnum && x.Namespace != null && x.Namespace.StartsWith("ig")).ToArray();
+				Type[] types = assemblies.SelectMany(x => x.GetTypes()).Where(x => x.IsEnum && x.GetCustomAttribute<igEnum>() != null).ToArray();
 				_enumCache = new Dictionary<string, Type>();
 				for(uint i = 0; i < types.Length; i++)
 				{

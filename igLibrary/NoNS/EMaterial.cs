@@ -9,6 +9,7 @@
 
 namespace igLibrary
 {
+	[igEnum]
 	public enum EMaterial
 	{
 		eMAT_Default = 0,

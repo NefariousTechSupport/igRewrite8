@@ -144,4 +144,10 @@ namespace igLibrary.Core
 			_inArkCore = true;
 		}
 	}
+
+	/// <summary>
+	/// Add this attribute for the enum to be picked up by the reflection system
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Enum, AllowMultiple = false, Inherited = false)]
+	public class igEnum : Attribute{}
 }

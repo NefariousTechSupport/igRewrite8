@@ -9,6 +9,7 @@
 
 namespace igLibrary
 {
+	[igEnum]
 	public enum ETeamFilterLayers
 	{
 		eTFL_None = 0,

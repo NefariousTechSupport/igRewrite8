@@ -22,6 +22,7 @@ namespace igLibrary.DotNet
 		public bool isRuntimeImpl => (_flags & (uint)FlagTypes.RuntimeImplMethod) != 0;
 		public bool IsNoSpecializationCopy => (_flags & (uint)FlagTypes.NoSpecializationCopyMethod) != 0;
 
+		[igEnum]
 		public enum FlagTypes
 		{
 			StaticMethod = 0x04,

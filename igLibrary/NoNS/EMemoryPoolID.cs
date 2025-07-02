@@ -9,6 +9,7 @@
 
 namespace igLibrary
 {
+	[igEnum]
 	public enum EMemoryPoolID
 	{
 		MP_INVALID = 0,

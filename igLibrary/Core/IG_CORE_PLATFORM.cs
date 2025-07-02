@@ -13,6 +13,7 @@ namespace igLibrary.Core
 	/// The platform enum, DO NOT RELY ON THE INTEGER VALUES OF THESE, since those change between games,
 	/// Rely instead on igMetaEnum
 	/// </summary>
+	[igEnum]
 	public enum IG_CORE_PLATFORM
 	{
 		IG_CORE_PLATFORM_DEFAULT,

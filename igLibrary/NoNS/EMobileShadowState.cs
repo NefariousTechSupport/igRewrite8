@@ -9,6 +9,7 @@
 
 namespace igLibrary
 {
+	[igEnum]
 	public enum EMobileShadowState
 	{
 		eMSS_LetGameDecide = 0,

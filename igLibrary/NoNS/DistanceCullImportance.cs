@@ -9,6 +9,7 @@
 
 namespace igLibrary
 {
+	[igEnum]
 	public enum DistanceCullImportance
 	{
 		kVeryLow = 0,

@@ -9,6 +9,7 @@
 
 namespace igLibrary.Gfx
 {
+	[igEnum]
 	public enum IG_GFX_PLATFORM
 	{
 		IG_GFX_PLATFORM_DEFAULT,

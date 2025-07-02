@@ -9,6 +9,7 @@
 
 namespace igLibrary
 {
+	[igEnum]
 	public enum LoadContext
 	{
 		kContextNone = -1,

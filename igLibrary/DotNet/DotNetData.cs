@@ -16,6 +16,7 @@ namespace igLibrary.DotNet
 		public DataRepresentation _representation;
 		public uint _maybeRepresentation;
 
+		[igEnum]
 		public enum DataRepresentation
 		{
 			Normal = 0,

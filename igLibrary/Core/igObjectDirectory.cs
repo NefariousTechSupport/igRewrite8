@@ -43,6 +43,7 @@ namespace igLibrary.Core
 		/// <summary>
 		/// Enum representing the different filetypes
 		/// </summary>
+		[igEnum]
 		public enum FileType : uint
 		{
 			kAuto,

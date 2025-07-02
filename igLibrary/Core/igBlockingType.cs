@@ -9,6 +9,7 @@
 
 namespace igLibrary.Core
 {
+	[igEnum]
 	public enum igBlockingType
 	{
 		kNonBlocking = 0,

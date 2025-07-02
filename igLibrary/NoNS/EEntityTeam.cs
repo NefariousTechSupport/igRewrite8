@@ -9,6 +9,7 @@
 
 namespace igLibrary
 {
+	[igEnum]
 	public enum EEntityTeam
 	{
 		eET_None = 0,

@@ -9,6 +9,7 @@
 
 namespace igLibrary.Utils
 {
+	[igEnum]
 	public enum IG_UTILS_PLAY_MODE : int
 	{
 		IG_UTILS_PLAY_MODE_REPEAT = 0,

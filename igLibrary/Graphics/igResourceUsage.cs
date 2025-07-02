@@ -9,6 +9,7 @@
 
 namespace igLibrary.Graphics
 {
+	[igEnum]
 	public enum igResourceUsage
 	{
 		kUsageDefault = 0,

@@ -9,6 +9,7 @@
 
 namespace igLibrary.Gfx
 {
+	[igEnum]
 	public enum IG_GFX_DRAW : int
 	{
 		IG_GFX_DRAW_POINTS = 0,

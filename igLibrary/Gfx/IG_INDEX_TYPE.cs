@@ -9,6 +9,7 @@
 
 namespace igLibrary.Gfx
 {
+	[igEnum]
 	public enum IG_INDEX_TYPE : int
 	{
 		IG_INDEX_TYPE_INT8 = 1,

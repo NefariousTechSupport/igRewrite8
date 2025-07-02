@@ -9,6 +9,7 @@
 
 namespace igLibrary
 {
+	[igEnum]
 	public enum EAllowedHitReactDirections
 	{
 		eAHRD_NoReaction = 0,

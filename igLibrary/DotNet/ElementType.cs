@@ -9,6 +9,7 @@
 
 namespace igLibrary.DotNet
 {
+	[igEnum]
 	public enum ElementType
 	{
 		kElementTypeEnd = 0,

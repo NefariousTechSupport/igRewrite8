@@ -9,6 +9,7 @@
 
 namespace igLibrary
 {
+	[igEnum]
 	public enum ECharacterCollisionPriority
 	{
 		eCCP_NonGameplayCritical = 0,

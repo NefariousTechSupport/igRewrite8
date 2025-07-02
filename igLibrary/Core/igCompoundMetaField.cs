@@ -283,5 +283,11 @@ namespace igLibrary.Core
 		public void ResetFields(object dat) => ResetFields(dat, _fieldList);
 	}
 
+
+
+	/// <summary>
+	/// Add this attribute to a struct for it to be picked up by the reflection system
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
 	public class igStruct : Attribute{}
 }

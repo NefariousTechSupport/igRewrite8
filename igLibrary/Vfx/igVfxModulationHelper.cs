@@ -3,6 +3,7 @@ namespace igLibrary.Vfx
 	[igStruct]
 	public struct igVfxModulationHelper
 	{
+		[igEnum]
 		public enum Distribution : int
 		{
 			kDistributionLinear = 0,
@@ -11,7 +12,7 @@ namespace igLibrary.Vfx
 		}
 
 
-
+		[igEnum]
 		public enum ModulationMix : int
 		{
 			kMixRange = 0,
@@ -19,7 +20,7 @@ namespace igLibrary.Vfx
 		}
 
 
-
+		[igEnum]
 		public enum ModulationType : int
 		{
 			kModulationNone = 0,

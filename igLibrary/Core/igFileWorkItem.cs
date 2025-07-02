@@ -11,6 +11,7 @@ namespace igLibrary.Core
 {
 	public class igFileWorkItem : igObject
 	{
+		[igEnum]
 		public enum WorkType
 		{
 			kTypeInvalid = 0,
@@ -30,12 +31,14 @@ namespace igLibrary.Core
 			kTypeFormat = 14,
 			kTypeCommit = 15,
 		}
+		[igEnum]
 		public enum Priority
 		{
 			kPriorityLow = 0,
 			kPriorityNormal = 1,
 			kPriorityHigh = 2,
 		}
+		[igEnum]
 		public enum Status
 		{
 			kStatusInactive,
