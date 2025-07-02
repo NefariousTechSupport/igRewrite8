@@ -48,7 +48,7 @@ namespace igRewrite8
 
 #if MODEL_IMPORTS
 			AssimpContext ctx = new AssimpContext();
-			Scene scene = ctx.ImportFile("C:/Users/neffy/Documents/MikuSupercharger.obj", PostProcessSteps.Triangulate | PostProcessSteps.GenerateSmoothNormals | PostProcessSteps.CalculateTangentSpace);
+			Scene scene = ctx.ImportFile("C:/Users/neffy/Documents/MikuSupercharger.obj", PostProcessSteps.Triangulate | PostProcessSteps.GenerateSmoothNormals | PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateBoundingBoxes);
 
 			SuperChargersModel sscmodel = new SuperChargersModel();
 			igModelInfo modelInfo = sscmodel.ImportModel(scene);

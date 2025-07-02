@@ -49,8 +49,8 @@ namespace igLibrary.AssetConversion.Models
 		{
 			igModelData modelData = igMetaObject.ConstructInstance<igModelData>();
 			modelData._name = null;
-			modelData._min = new igVec4f( 1,  1,  1, 0);
-			modelData._max = new igVec4f(-1, -1, -1, 1);
+			modelData._min = default;
+			modelData._max = default;
 			modelData._transforms = new igVector<igAnimatedTransform>();
 			modelData._transformHierarchy = new igVector<int>();
 			modelData._drawCalls = new igVector<igModelDrawCallData>();
@@ -62,6 +62,14 @@ namespace igLibrary.AssetConversion.Models
 			{
 				modelData._drawCalls.Append(ImportMesh(model.Meshes[i], false, null, null));
 				modelData._drawCallTransformIndices.Append(0);
+
+				BoundingBox meshBoundingBox = model.Meshes[i].BoundingBox;
+				modelData._min._x = MathF.Min(modelData._min._x, meshBoundingBox.Min.X);
+				modelData._min._y = MathF.Min(modelData._min._y, meshBoundingBox.Min.Y);
+				modelData._min._z = MathF.Min(modelData._min._z, meshBoundingBox.Min.Z);
+				modelData._max._x = MathF.Max(modelData._max._x, meshBoundingBox.Max.X);
+				modelData._max._y = MathF.Max(modelData._max._y, meshBoundingBox.Max.Y);
+				modelData._max._z = MathF.Max(modelData._max._z, meshBoundingBox.Max.Z);
 			}
 
 			igModelInfo modelInfo = igMetaObject.ConstructInstance<igModelInfo>();
@@ -77,8 +85,8 @@ namespace igLibrary.AssetConversion.Models
 		{
 			igModelData modelData = igMetaObject.ConstructInstance<igModelData>();
 			modelData._name = null;
-			modelData._min = new igVec4f( 1,  1,  1, 0);
-			modelData._max = new igVec4f(-1, -1, -1, 1);
+			modelData._min = default;
+			modelData._max = default;
 			modelData._transforms = new igVector<igAnimatedTransform>();
 			modelData._transformHierarchy = new igVector<int>();
 			modelData._drawCalls = new igVector<igModelDrawCallData>();
@@ -104,6 +112,14 @@ namespace igLibrary.AssetConversion.Models
 					Bone bone = model.Meshes[i].Bones[b];
 					boneLookup.TryAdd(bone.Name, bone);
 				}
+
+				BoundingBox meshBoundingBox = model.Meshes[i].BoundingBox;
+				modelData._min._x = MathF.Min(modelData._min._x, meshBoundingBox.Min.X);
+				modelData._min._y = MathF.Min(modelData._min._y, meshBoundingBox.Min.Y);
+				modelData._min._z = MathF.Min(modelData._min._z, meshBoundingBox.Min.Z);
+				modelData._max._x = MathF.Max(modelData._max._x, meshBoundingBox.Max.X);
+				modelData._max._y = MathF.Max(modelData._max._y, meshBoundingBox.Max.Y);
+				modelData._max._z = MathF.Max(modelData._max._z, meshBoundingBox.Max.Z);
 			}
 
 			igSkeleton2 skeleton = igMetaObject.ConstructInstance<igSkeleton2>();
