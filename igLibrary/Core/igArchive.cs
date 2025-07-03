@@ -746,7 +746,7 @@ namespace igLibrary.Core
 		/// </summary>
 		private void CalculateHashSearchProperties()
 		{
-			_archiveHeader._hashSearchDivider = uint.MaxValue / _archiveHeader._numFiles;
+			_archiveHeader._hashSearchDivider = uint.MaxValue / System.Math.Max(_archiveHeader._numFiles, 1);
 
 			int TopMatchIndex = 0;
 			for (int i = 0x0; i < _files.Count; i++)
@@ -781,7 +781,7 @@ namespace igLibrary.Core
 		/// <returns>The index of the file info</returns>
 		private static int HashSearch(List<FileInfo> fileInfos, uint numFiles, uint hashSearchDivider, uint hashSearchSlop, uint fileId)
 		{
-			uint fileIdDivided = fileId / hashSearchDivider;
+			uint fileIdDivided = fileId / System.Math.Max(hashSearchDivider, 1);
 			uint searchAt = 0;
 			if (hashSearchSlop < fileIdDivided)
 				searchAt = (fileIdDivided - hashSearchSlop);
