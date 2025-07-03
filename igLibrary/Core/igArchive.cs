@@ -325,9 +325,9 @@ namespace igLibrary.Core
 			_archiveHeader._numSmallFileBlocks = (uint)smallBlockTable.Count;
 			_archiveHeader._numMediumFileBlocks = (uint)mediumBlockTable.Count;
 			_archiveHeader._numLargeFileBlocks = (uint)largeBlockTable.Count;
-			_archiveHeader._tocSize = _archiveHeader._numFiles * (0x04u + GetFileInfoSize()) + _archiveHeader._numSmallFileBlocks + (_archiveHeader._numMediumFileBlocks << 1) + (_archiveHeader._numLargeFileBlocks << 2);
+			_archiveHeader._tocSize = (uint)_files.Count * (0x04u + GetFileInfoSize()) + _archiveHeader._numSmallFileBlocks + (_archiveHeader._numMediumFileBlocks << 1) + (_archiveHeader._numLargeFileBlocks << 2);
 
-			uint fileHeaderOffset = GetHeaderSize() + (_archiveHeader._numFiles << 2);
+			uint fileHeaderOffset = GetHeaderSize() + ((uint)_files.Count << 2);
 			sh.Seek(_archiveHeader._tocSize + GetHeaderSize());
 			sh.Align(4);
 			sh.WriteUInt32(0xFFFFFFFF);
