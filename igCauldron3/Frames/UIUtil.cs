@@ -141,6 +141,23 @@ namespace igCauldron3
 
 
 		/// <summary>
+		/// Render a checkbox input field
+		/// </summary>
+		/// <param name="label">The text to show</param>
+		/// <param name="id">The id to use</param>
+		/// <param name="val">The boolean value for the user to edit</param>
+		public static void RenderBoolField(string label, string id, ref bool val)
+		{
+			ImGui.Text(label);
+			ImGui.SameLine();
+			ImGui.PushID(id);
+			ImGui.Checkbox(string.Empty, ref val);
+			ImGui.PopID();
+		}
+
+
+
+		/// <summary>
 		/// Render a number input field
 		/// </summary>
 		/// <param name="label">The text to show</param>
