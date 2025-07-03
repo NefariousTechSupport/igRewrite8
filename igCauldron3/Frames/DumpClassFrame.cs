@@ -164,6 +164,7 @@ namespace igCauldron3
 			StringBuilder output = new StringBuilder();
 			      output.Append("namespace igLibrary\n");
 			      output.Append("{\n");
+			      output.Append("\t[igEnum]\n");
 			output.AppendFormat("\tpublic enum {0} : int\n", metaenum._name);
 			      output.Append("\t{\n");
 			for(int i = 0; i < metaenum._names.Count; i++)
