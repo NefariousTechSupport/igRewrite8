@@ -60,7 +60,7 @@ namespace Potion
 		/// <summary>
 		/// The xml data for an installed mod
 		/// </summary>
-		private class InstalledMod
+		public class InstalledMod
 		{
 			public ModManifest         mManifest;
 			public bool                mEnabled;
@@ -101,6 +101,16 @@ namespace Potion
 		public InstallationParams Params
 		{
 			get => mParams;
+		}
+
+
+
+		/// <summary>
+		/// Installed mods
+		/// </summary>
+		public List<InstalledMod> Mods
+		{
+			get => mMods;
 		}
 
 

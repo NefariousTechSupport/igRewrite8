@@ -49,10 +49,12 @@ namespace igCauldron3
 						if (archive != null)
 						{
 							displayName = Path.GetFileName(archive._path);
+							igArchiveList patchArchives = igFileContext.Singleton._archiveManager._patchArchives;
 
 							// Dumb long line
-							if (igFileContext.Singleton._archiveManager._patchArchives.Contains(archive))
+							if (patchArchives.Contains(archive))
 							{
+								archive = patchArchives[0];
 								isPatchArchive = true;
 							}
 						}

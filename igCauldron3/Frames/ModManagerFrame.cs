@@ -22,17 +22,31 @@ namespace igCauldron3
 	{
 		enum UIState
 		{
-			Picker,
-			Creator,
-			Manager,
+			InstallPicker,
+			InstallCreator,
+			ModManager,
+			ModCreator,
 		}
 
 		UIState                        mState;
 		List<InstallationParams>       mInstallations;
 		InstallationParams?            mWipInstallation;
 		Installation?                  mInstall;
+		WipModManifest?                mWipMod;
+		ConfigFrame?                   mGamePicker;
 		bool                           mSuccessfulRead;
 
+
+
+		private class WipModManifest
+		{
+			public string              mIdentifier = string.Empty;
+			public string              mName = string.Empty;
+			public string              mAuthor = string.Empty;
+			public string              mDesc = string.Empty;
+			public igArkCore.EGame     mGame;
+			public IG_CORE_PLATFORM    mPlatform;
+		}
 
 
 		public static readonly (EConnectionType, string)[] sConnectionNames = new (EConnectionType, string)[]
@@ -50,9 +64,12 @@ namespace igCauldron3
 		/// <param name="wnd">The window this frame belongs to</param>
 		public ModManagerFrame(Window wnd) : base(wnd)
 		{
-			mState           = UIState.Picker;
+			mState           = UIState.InstallPicker;
 			mInstallations   = new List<InstallationParams>();
 			mWipInstallation = null;
+			mInstall         = null;
+			mWipMod          = null;
+			mGamePicker      = null;
 
 			mSuccessfulRead  = Read();
 		}
@@ -98,6 +115,29 @@ namespace igCauldron3
 
 		public override void Render()
 		{
+			// If the user is picking a game then disable the mod manger
+			// if they cancel then we show ourselves
+			if (mGamePicker != null)
+			{
+				bool closePicker = mGamePicker.UserCancelled || mGamePicker.UserMadeUpTheirMind;
+
+				if (mGamePicker.UserMadeUpTheirMind)
+				{
+					_wnd._frames.Remove(this);
+				}
+
+				if (closePicker)
+				{
+					mGamePicker.Close();
+					mGamePicker = null;
+				}
+				else
+				{
+					mGamePicker.Render();
+					return;
+				}
+			}
+
 			ImGui.Begin("Mod Manager", ImGuiWindowFlags.HorizontalScrollbar);
 
 			if (!mSuccessfulRead)
@@ -107,12 +147,20 @@ namespace igCauldron3
 
 			switch (mState)
 			{
-				case UIState.Picker:
+				case UIState.InstallPicker:
 					RenderPicker();
 					break;
 
-				case UIState.Creator:
+				case UIState.InstallCreator:
 					RenderCreator();
+					break;
+
+				case UIState.ModManager:
+					RenderModManager();
+					break;
+
+				case UIState.ModCreator:
+					RenderModCreator();
 					break;
 			}
 
@@ -134,13 +182,14 @@ namespace igCauldron3
 					{
 						mInstall = new Installation(parameters);
 						mInstall.Open().Wait();
+						mState = UIState.ModManager;
 					}
 				}
 			}
 
 			if (ImGui.Button("+"))
 			{
-				mState = UIState.Creator;
+				mState = UIState.InstallCreator;
 			}
 		}
 
@@ -191,7 +240,7 @@ namespace igCauldron3
 			{
 				mInstallations.Add(mWipInstallation);
 				mWipInstallation = null;
-				mState = UIState.Picker;
+				mState = UIState.InstallPicker;
 			}
 			ImGui.EndDisabled();
 		}
@@ -314,7 +363,87 @@ namespace igCauldron3
 #region Mod Manager
 		public void RenderModManager()
 		{
-			
+			if (mInstall == null)
+			{
+				mState = UIState.InstallPicker;
+				return;
+			}
+
+			List<Installation.InstalledMod> mods = mInstall.Mods;
+			for (int m = 0; m < mods.Count; m++)
+			{
+				ModManifest manifest = mods[m].mManifest;
+				if (ImGui.TreeNode($"{manifest.Name}##{manifest.Identifier}${manifest.ModVersion}"))
+				{
+					ImGui.Text($"Author: {manifest.Author}");
+					ImGui.Text($"Version: v{manifest.ModVersion}");
+					ImGui.Text($"Identifier: {manifest.Identifier}");
+					ImGui.Text($"Description: {manifest.Desc}");
+
+					UIUtil.RenderBoolField("Enabled", "Enabled", ref mods[m].mEnabled);
+
+					if (mInstall.Connection is FileConnection && ImGui.Button("Edit"))
+					{
+						mGamePicker = new ConfigFrame(_wnd, manifest, mInstall);
+					}
+
+					ImGui.TreePop();
+				}
+			}
+
+			if (ImGui.Button("Create"))
+			{
+				mState = UIState.ModCreator;
+			}
+		}
+#endregion // Mod Manager
+#region Mod Creator
+		public void RenderModCreator()
+		{
+			if (mInstall == null)
+			{
+				mState = UIState.InstallPicker;
+				return;
+			}
+
+			if (mWipMod == null)
+			{
+				mWipMod = new WipModManifest();
+			}
+
+			UIUtil.RenderTextField("Unique ID",    "Unique ID",    ref mWipMod.mIdentifier, "com.<author>.<name>");
+			UIUtil.RenderTextField("Display Name", "Display Name", ref mWipMod.mName);
+			UIUtil.RenderTextField("Author",       "Author",       ref mWipMod.mAuthor, "<your name here>");
+			UIUtil.RenderTextField("Description",  "Description",  ref mWipMod.mDesc);
+
+			UIUtil.EnumComboBox("Game",     UIUtil.sGameNames,     ref mWipMod.mGame);
+			UIUtil.EnumComboBox("Platform", UIUtil.sPlatformNames, ref mWipMod.mPlatform);
+
+			bool valid = ModManifest.IsValidIdentifier(mWipMod.mIdentifier)
+			          && mWipMod.mGame     != igArkCore.EGame.EV_None
+			          && mWipMod.mPlatform != IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEFAULT;
+
+			ImGui.BeginDisabled(!valid);
+			bool createPressed = ImGui.Button("Create");
+			ImGui.EndDisabled();
+
+			if (valid && createPressed)
+			{
+				ModManifest manifest = new ModManifest(mWipMod.mGame, mWipMod.mPlatform);
+				manifest.TrySetIdentifier(mWipMod.mIdentifier);
+				manifest.Name   = mWipMod.mName;
+				manifest.Author = mWipMod.mAuthor;
+				manifest.Desc   = mWipMod.mDesc;
+
+				// Defaulted this to true but we may wanna add a checkbox for it in case
+				// people want to specify it
+				Installation.InstalledMod installedMod = new Installation.InstalledMod(manifest, true);
+
+				mInstall.Mods.Add(installedMod);
+
+				mWipMod = null;
+				mState = UIState.ModManager;
+			}
 		}
 #endregion // Mod Manager
 	}

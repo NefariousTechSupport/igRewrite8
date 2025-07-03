@@ -7,7 +7,6 @@
 */
 
 
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using igLibrary.Core;
@@ -184,6 +183,52 @@ namespace Potion
 			}
 
 			return valid;
+		}
+
+
+
+		/// <summary>
+		/// Tries to load the mod
+		/// </summary>
+		public bool Load(Installation installation)
+		{
+			bool success = false;
+
+			FileConnection? connection = installation.Connection as FileConnection;
+
+			if (connection != null)
+			{
+				// TODO: don't hardcode a switch statement for this
+				switch (mGame)
+				{
+					case igArkCore.EGame.EV_SkylandersSuperchargers:
+					case igArkCore.EGame.EV_SkylandersImaginators:
+						string? modPath = connection.GetFullPath($"{mIdentifier}/modification.pak");
+						string? modDir = Path.GetDirectoryName(modPath);
+
+						if (modPath != null && modDir != null)
+						{
+							Directory.CreateDirectory(modDir);
+
+							if (!File.Exists(modPath))
+							{
+								// Make a dummy archive
+								igArchive archive = new igArchive();
+								archive._archiveHeader._version = 0x0B;
+								archive._archiveHeader._sectorSize = 0x100;
+								// Case insensitive
+								archive._archiveHeader._flags = 0b01;
+								archive.Save(modPath);
+							}
+
+							igFileContext.Singleton.InitializeUpdate(modPath);
+							success = true;
+						}
+						break;
+				}
+			}
+
+			return success;
 		}
 	}
 }
