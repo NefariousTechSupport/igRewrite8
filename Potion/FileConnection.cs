@@ -28,6 +28,26 @@ namespace Potion
 
 
 		/// <summary>
+		/// Get the full file path for a given relative path
+		/// </summary>
+		/// <param name="path">The relative path</param>
+		/// <returns>The full path, or null if no root is specified</returns>
+		public string? GetFullPath(string path)
+		{
+			string? root = Params!.File!.Value.Root;
+			string? fullPath = null;
+
+			if (root != null)
+			{
+				fullPath = Path.Combine(root, path);
+			}
+
+			return fullPath;
+		}
+
+
+
+		/// <summary>
 		/// Initialises a connection
 		/// </summary>
 		/// <returns>Whether the connection succeeded</returns>
@@ -71,12 +91,12 @@ namespace Potion
 		/// <returns>Whether the remote file exists, or null if the request failed</returns>
 		public override async Task<bool?> Exists(string path)
 		{
-			string? root = Params!.File!.Value.Root;
+			string? fullPath = GetFullPath(path);
 			bool? exists = false;
 
-			if (root != null)
+			if (fullPath != null)
 			{
-				exists = File.Exists(Path.Combine(root, path));
+				exists = File.Exists(fullPath);
 			}
 
 			// No async work to do here
@@ -94,12 +114,12 @@ namespace Potion
 		/// <returns>A list of filenames, or null if the request failed</returns>
 		public override async Task<List<FileProps>?> ListDirectory(string path)
 		{
-			string? root = Params!.File!.Value.Root;
+			string? fullPath = GetFullPath(path);
 			List<FileProps>? files = null;
 
-			if (root != null)
+			if (fullPath != null)
 			{
-				DirectoryInfo directoryInfo = new DirectoryInfo(Path.Combine(root, path));
+				DirectoryInfo directoryInfo = new DirectoryInfo(fullPath);
 
 				FileInfo[] dnFiles = directoryInfo.GetFiles();
 
@@ -128,12 +148,12 @@ namespace Potion
 		/// <returns>Whether the task succeeded</returns>
 		public override async Task<bool> Push(Stream data, string path)
 		{
-			string? root = Params!.File!.Value.Root;
+			string? fullPath = GetFullPath(path);
 			bool success = false;
 
-			if (root != null)
+			if (fullPath != null)
 			{
-				FileStream output = File.Open(Path.Combine(root, path), FileMode.OpenOrCreate, FileAccess.Write);
+				FileStream output = File.Open(fullPath, FileMode.OpenOrCreate, FileAccess.Write);
 
 				data.Seek(0, SeekOrigin.Begin);
 				await data.CopyToAsync(output);
