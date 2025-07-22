@@ -11,6 +11,8 @@ using System.Runtime.Serialization;
 using System.Text;
 using igLibrary;
 using igLibrary.Core;
+using igLibrary.Math;
+using igLibrary.Tfb;
 using ImGuiNET;
 
 namespace igCauldron3
@@ -58,30 +60,9 @@ namespace igCauldron3
             var x = Directory.GetFiles(DumpsDirPath);
             string fileName = string.Format("Dump_{0}.txt", x.Length);
             FileStream fs = File.Create(Path.Combine(DumpsDirPath, fileName));
-            List<igMetaObject> fileContents = igArkCore.MetaObjects.ToList();
-            for (int i = 0; i < fileContents.Count() - 1; i++)
-            {
-                string cont = null;
-                if (fileContents[i]._parent == null)
-                {
-                    cont = "PARENT_NULL";
-                }
-                else if (fileContents[i]._metaFields != null && fileContents[i]._metaFields.Count > 0)
-                {
-                    cont = string.Format("ORIGINAL : NEW === {0} : {1}", fileContents[i]._name, fileContents[i]._metaFields);
-                    for (int k = 0; k < fileContents[i]._metaFields.Count; k++)
-                    {
-                        cont += $"\n ::: [metafield #{k}] {fileContents[i]._metaFields[k]._fieldName} --> {fileContents[i]._metaFields[k]._offset}";
-                    }
-                }
-                else
-                {
-                    cont = "METAFIELDS_NULL";
-                }
-                fs.Write(Encoding.UTF8.GetBytes(cont));
-                fs.WriteByte(0x0A);
-            }
+            List<tfbBindings> fileContents = igArkCore.tfbBindings.ToList();
+            fs.Write(Encoding.UTF8.GetBytes(fileContents.ToString()));
             fs.Close();
         }
-	}
+    }
 }

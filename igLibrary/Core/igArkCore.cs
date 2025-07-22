@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System;
 using System.Collections.ObjectModel;
+using igLibrary.Tfb;
 
 namespace igLibrary.Core
 {
@@ -99,7 +100,7 @@ namespace igLibrary.Core
 		/// </summary>
 		public const string dynamicCompoundFieldNS = "igLibrary.Gen.CompoundField";
 
-
+		public const string dynamicTFBBindings = "igLibrary.Gen.TFBBindings";
 
 
 
@@ -127,7 +128,7 @@ namespace igLibrary.Core
 		public static IEnumerable<igMetaFieldPlatformInfo> MetaFieldPlatformInfos => _metaFieldPlatformInfos.Values;
 
 
-
+		public static IEnumerable<tfbBindings> tfbBindings => _tfbBindings.Values;
 
 
 
@@ -154,7 +155,10 @@ namespace igLibrary.Core
 		/// </summary>
 		private static Dictionary<string, igMetaFieldPlatformInfo> _metaFieldPlatformInfos = new Dictionary<string, igMetaFieldPlatformInfo>();
 
-
+	    /// <summary>
+		/// Currently loaded tfbBindings 
+		/// </summary>
+		private static Dictionary<string, tfbBindings> _tfbBindings = new Dictionary<string, tfbBindings>();
 
 
 
@@ -331,12 +335,18 @@ namespace igLibrary.Core
 			List<igMetaEnum> metaEnums = loader.MetaEnums;
 			List<igMetaFieldPlatformInfo> platformInfos = loader.MetaFieldPlatformInfos;
 			List<igCompoundMetaFieldInfo> compounds = loader.Compounds;
+			List<tfbBindings> bindings = loader.TfbBindings;
+
+			if (bindings == null)
+			{
+				Logging.Info("Empty tfb bindings in loader");
+			}
 
 			foreach (igMetaObject metaObject in metaObjects)
-			{
-				_metaObjects.Add(metaObject._name!, metaObject);
-				metaObject.PostUndump();
-			}
+				{
+					_metaObjects.Add(metaObject._name!, metaObject);
+					metaObject.PostUndump();
+				}
 			foreach (igMetaEnum metaEnum in metaEnums)
 			{
 				_metaEnums.Add(metaEnum._name!, metaEnum);
@@ -349,6 +359,10 @@ namespace igLibrary.Core
 			{
 				_compoundFieldInfos.Add(compound._name!, compound);
 				compound.PostUndump();
+			}
+			foreach (tfbBindings binding in bindings)
+			{
+				_tfbBindings.Add(binding._name!, binding);
 			}
 
 			stopwatch.Stop();

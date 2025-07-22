@@ -75,6 +75,7 @@ namespace igLibrary.Core
 		public List<igMetaEnum> MetaEnums => _metaenumLookup.Values.ToList();
 		public List<igMetaFieldPlatformInfo> MetaFieldPlatformInfos => _metafieldLookup.Values.ToList();
 		public List<igCompoundMetaFieldInfo> Compounds => _compoundLookup.Values.ToList();
+		public List<tfbBindings> TfbBindings => _tfbbindingslookup.Values.ToList();
 
 		private igMetaObject? _scriptObjectMeta = null;
 
@@ -132,11 +133,11 @@ namespace igLibrary.Core
 				return error;
 			}
 
-			error = LoadTFBBindings(tfbbindingsPath);
+			/*error = LoadTFBBindings(tfbbindingsPath);
 			if (error != null)
 			{
 				return error;
-			}
+			}*/
 
 			return error;
 		}
@@ -374,18 +375,30 @@ namespace igLibrary.Core
 			{
 				return ParseTFBBindings(node);
 			} */
-			 if (node.Name != "metaobject")
+			 if (node.Name != "metaobject" && node.Name != "tfbBindings" && node.Name != "binding")
 			{
 				return new ArkCoreXmlError("All root elements must be named \"metaobject\".");
 			}
 
 			XmlNode? typeAttribute = node.Attributes!.GetNamedItem("type");
-			if (typeAttribute == null)
+			if (node.Name.Contains("inding"))
 			{
-				return new ArkCoreXmlError("metaobject is missing \"type\" attribute");
+				goto TypeAttrContinueForBinding;
 			}
-
-			XmlNode? refnameAttribute = node.Attributes!.GetNamedItem("refname");
+			else if (typeAttribute == null)
+				{
+					return new ArkCoreXmlError("metaobject is missing \"type\" attribute");
+				}
+		TypeAttrContinueForBinding:
+			XmlNode? refnameAttribute = null; 
+			if (node.Name.Contains("inding"))
+			{
+				refnameAttribute = node.Attributes!.GetNamedItem("name");
+			}
+			else
+			{
+				refnameAttribute = node.Attributes!.GetNamedItem("refname");
+			}
 			if (refnameAttribute == null)
 			{
 				return new ArkCoreXmlError("metaobject is missing \"refname\" attribute");
@@ -433,6 +446,16 @@ namespace igLibrary.Core
 				{
 					return new ArkCoreXmlError("name attr for tfb is null");
 				}
+				string tfbClassName = String.Format("tfb{0}", nameAttribute.Value!);
+				Logging.Info("{0}", tfbClassName);
+				Type? tfbBindingType = igArkCore.GetObjectDotNetType(tfbClassName);
+				if (tfbBindingType == null)
+				{
+					return new ArkCoreXmlError("binding type {0} from dotnet is null", nameAttribute.Value!);
+				}
+				tfbBindings tfbBinding = (tfbBindings)Activator.CreateInstance(tfbBindingType);
+				tfbBinding._name = nameAttribute.Value;
+				_tfbbindingslookup.Add(tfbBinding._name!, tfbBinding);
 				Logging.Info("Logged {0} as a tfbBindings tag", nameAttribute.Value);
 			}
 			else if (node.Name == "binding")// manage variable-similar binding tag
