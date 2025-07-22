@@ -550,6 +550,8 @@ namespace igCauldron3
 		public static void RenderField_RawRef(string id, object? raw, igMetaField field, FieldSetCallback cb)
 		{
 			ImGui.Text("Editing \"igRawRefMetaField\" is not allowed");
+			ImGui.SameLine();
+			ImGui.Text($"{field._properties._copyMethod}");
 		}
 		public static void RenderField_Struct(string id, object? raw, igMetaField field, FieldSetCallback cb)
 		{

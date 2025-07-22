@@ -92,10 +92,10 @@ namespace igLibrary.Core
 			/// <returns>The block type</returns>
 			public EBlockType GetBlockType(uint sectorSize)
 			{
-				if(_blocks == null) return EBlockType.kNone;
-				if(0x7F * sectorSize < _length)
+				if (_blocks == null) return EBlockType.kNone;
+				if (0x7F * sectorSize < _length)
 				{
-					if(0x7FFF * sectorSize < _length)
+					if (0x7FFF * sectorSize < _length)
 					{
 						return EBlockType.kLarge;
 					}
@@ -169,14 +169,14 @@ namespace igLibrary.Core
 			StreamHelper sh = new StreamHelper(_fileDescriptor._handle);
 			sh.Seek(0);
 			_archiveHeader._magicNumber = sh.ReadUInt32();
-			if(_archiveHeader._magicNumber == 0x4947411A)
+			if (_archiveHeader._magicNumber == 0x4947411A)
 			{
 				sh._endianness = sh._endianness == StreamHelper.Endianness.Little ? StreamHelper.Endianness.Big : StreamHelper.Endianness.Little;
 			}
-			else if(_archiveHeader._magicNumber != 0x1A414749) throw new InvalidDataException($"{filePath} is not a valid igArchive.");
-			if((sh._endianness == StreamHelper.Endianness.Little && !BitConverter.IsLittleEndian) || (sh._endianness == StreamHelper.Endianness.Big && BitConverter.IsLittleEndian)) _needsEndianSwap = true;
+			else if (_archiveHeader._magicNumber != 0x1A414749) throw new InvalidDataException($"{filePath} is not a valid igArchive.");
+			if ((sh._endianness == StreamHelper.Endianness.Little && !BitConverter.IsLittleEndian) || (sh._endianness == StreamHelper.Endianness.Big && BitConverter.IsLittleEndian)) _needsEndianSwap = true;
 			_archiveHeader._version = sh.ReadUInt32();
-			switch(_archiveHeader._version)
+			switch (_archiveHeader._version)
 			{
 				case 0x0B:
 					_archiveHeader._tocSize = sh.ReadUInt32();
@@ -195,37 +195,37 @@ namespace igLibrary.Core
 					throw new NotImplementedException($"Version {_archiveHeader._version} is not implemented");
 			}
 			_files.Capacity = (int)_archiveHeader._numFiles;
-			for(int i = 0; i < _archiveHeader._numFiles; i++)
+			for (int i = 0; i < _archiveHeader._numFiles; i++)
 			{
 				FileInfo fileInfo = new FileInfo();
 				fileInfo._hash = sh.ReadUInt32();
 				_files.Add(fileInfo);
 			}
-			for(int i = 0; i < _archiveHeader._numFiles; i++)
+			for (int i = 0; i < _archiveHeader._numFiles; i++)
 			{
 				//technically the offset is 5 bytes and the ordinal is 3
-				ulong temp = sh.ReadUInt64();	//????
+				ulong temp = sh.ReadUInt64();   //????
 				_files[i]._ordinal = (uint)(temp >> 40);
 				_files[i]._offset = (uint)(temp & 0xFFFFFFFF);
 				_files[i]._length = sh.ReadUInt32();
 				_files[i]._blockIndex = sh.ReadUInt32();
 			}
-			for(int i = 0; i < _archiveHeader._numFiles; i++)
+			for (int i = 0; i < _archiveHeader._numFiles; i++)
 			{
 				sh.Seek(_archiveHeader._nameTableOffset + (uint)i * 0x04);
 				sh.Seek(_archiveHeader._nameTableOffset + sh.ReadUInt32());
 				string name1 = sh.ReadString();
 
 				string? name2 = null;
-				if(_archiveHeader._version >= 0x0A)
+				if (_archiveHeader._version >= 0x0A)
 				{
 					name2 = sh.ReadString();
 				}
-				if(_archiveHeader._version >= 0x08)
+				if (_archiveHeader._version >= 0x08)
 				{
 					_files[i]._modificationTime = sh.ReadUInt32();
 				}
-				if(_archiveHeader._version >= 0x0B)
+				if (_archiveHeader._version >= 0x0B)
 				{
 					_files[i]._name = name1;
 					_files[i]._logicalName = name2;
@@ -234,7 +234,7 @@ namespace igLibrary.Core
 				{
 					_files[i]._logicalName = name1;
 					_files[i]._name = name2;
-				}			
+				}
 			}
 			uint blockInfoStart = GetHeaderSize() + _archiveHeader._numFiles * (0x04u + GetFileInfoSize());
 			sh.Seek(blockInfoStart);
@@ -242,10 +242,10 @@ namespace igLibrary.Core
 			ushort[] mediumBlockTable = sh.ReadStructArray<ushort>(_archiveHeader._numMediumFileBlocks);
 			byte[] smallBlockTable = sh.ReadStructArray<byte>(_archiveHeader._numSmallFileBlocks);
 
-			for(int i = 0; i < _files.Count; i++)
+			for (int i = 0; i < _files.Count; i++)
 			{
 				sh.Seek(_files[i]._offset);
-				if(_files[i]._blockIndex == 0xFFFFFFFF)
+				if (_files[i]._blockIndex == 0xFFFFFFFF)
 				{
 					_files[i]._compressedData = sh.ReadBytes(_files[i]._length);
 					continue;
@@ -253,14 +253,14 @@ namespace igLibrary.Core
 				uint numSectors = 0;
 				uint numBlocks = (_files[i]._length + 0x7FFF) >> 0xF;
 				uint[] fixedBlocks = new uint[numBlocks];
-				for(uint j = 0; j < numBlocks; j++)
+				for (uint j = 0; j < numBlocks; j++)
 				{
 					uint blockIndex = (_files[i]._blockIndex & 0x0FFFFFFF) + j;
 					bool isCompressed;
 					uint block;
-					if(0x7F * _archiveHeader._sectorSize < _files[i]._length)
+					if (0x7F * _archiveHeader._sectorSize < _files[i]._length)
 					{
-						if(0x7FFF * _archiveHeader._sectorSize < _files[i]._length)
+						if (0x7FFF * _archiveHeader._sectorSize < _files[i]._length)
 						{
 							block = largeBlockTable[blockIndex];
 							isCompressed = (block >> 0x1F) == 1;
@@ -319,7 +319,7 @@ namespace igLibrary.Core
 			FillBlockBuffers(out List<byte> smallBlockTable, out List<ushort> mediumBlockTable, out List<uint> largeBlockTable);
 
 			sh.Seek(GetHeaderSize());
-			for(int i = 0; i < _files.Count; i++) sh.WriteUInt32(_files[i]._hash);
+			for (int i = 0; i < _files.Count; i++) sh.WriteUInt32(_files[i]._hash);
 
 			_archiveHeader._numSmallFileBlocks = (uint)smallBlockTable.Count;
 			_archiveHeader._numMediumFileBlocks = (uint)mediumBlockTable.Count;
@@ -339,17 +339,17 @@ namespace igLibrary.Core
 			uint currentOffset = sh.Tell();
 
 			IOrderedEnumerable<FileInfo> orderedFiles = _files.OrderBy(x => x._ordinal);
-			for(int i = 0; i < _files.Count; i++)
+			for (int i = 0; i < _files.Count; i++)
 			{
 				orderedFiles.ElementAt(i)._offset = currentOffset = sh.Tell();
 				sh.Seek(currentOffset);
 				sh.BaseStream.Write(orderedFiles.ElementAt(i)._compressedData);
 				sh.Align(_archiveHeader._sectorSize);
 			}
-			
+
 			currentOffset = sh.Tell();
 
-			for(int i = 0; i < _files.Count; i++)
+			for (int i = 0; i < _files.Count; i++)
 			{
 				sh.Seek(fileHeaderOffset + i * GetFileInfoSize());
 				sh.WriteUInt64(((ulong)_files[i]._ordinal << 40) | _files[i]._offset);
@@ -359,17 +359,17 @@ namespace igLibrary.Core
 
 			_archiveHeader._nameTableOffset = currentOffset;
 			currentOffset += (uint)_files.Count * 0x4u;
-			for(int i = 0; i < _files.Count; i++)
+			for (int i = 0; i < _files.Count; i++)
 			{
 				sh.Seek(_archiveHeader._nameTableOffset + (uint)i * 4u);
 				sh.WriteUInt32(currentOffset - (uint)_archiveHeader._nameTableOffset);
 				sh.Seek(currentOffset);
 
-				if(_archiveHeader._version <= 0x08)
+				if (_archiveHeader._version <= 0x08)
 				{
 					sh.WriteString(_files[i]._name);
 				}
-				else if(_archiveHeader._version == 0x0A)
+				else if (_archiveHeader._version == 0x0A)
 				{
 					sh.WriteString(_files[i]._logicalName);
 					sh.WriteString(_files[i]._name);
@@ -380,7 +380,7 @@ namespace igLibrary.Core
 					sh.WriteString(_files[i]._logicalName);
 				}
 
-				if(_archiveHeader._version >= 0x08)
+				if (_archiveHeader._version >= 0x08)
 				{
 					sh.WriteUInt32(_files[i]._modificationTime);
 				}
@@ -392,12 +392,12 @@ namespace igLibrary.Core
 			CalculateHashSearchProperties();
 
 			sh.Seek(GetHeaderSize() + (GetFileInfoSize() + 0x04u) * _archiveHeader._numFiles);
-			for(int i = 0; i < largeBlockTable.Count; i++)  sh.WriteUInt32(largeBlockTable[i]);
-			for(int i = 0; i < mediumBlockTable.Count; i++) sh.WriteUInt16(mediumBlockTable[i]);
-			for(int i = 0; i < smallBlockTable.Count; i++)  sh.WriteByte(smallBlockTable[i]);
+			for (int i = 0; i < largeBlockTable.Count; i++) sh.WriteUInt32(largeBlockTable[i]);
+			for (int i = 0; i < mediumBlockTable.Count; i++) sh.WriteUInt16(mediumBlockTable[i]);
+			for (int i = 0; i < smallBlockTable.Count; i++) sh.WriteByte(smallBlockTable[i]);
 
 			sh.Seek(0x08);
-			switch(_archiveHeader._version)
+			switch (_archiveHeader._version)
 			{
 				case 0x0B:
 					sh.WriteUInt32(_archiveHeader._tocSize);
@@ -425,9 +425,9 @@ namespace igLibrary.Core
 		/// </summary>
 		private void UpdateFileHashes()
 		{
-			for(int i = 0; i < _files.Count; i++)
+			for (int i = 0; i < _files.Count; i++)
 			{
-				if(_files[i]._logicalName == null) return;
+				if (_files[i]._logicalName == null) return;
 
 				_files[i]._hash = HashFilePath(_files[i]._logicalName);
 			}
@@ -443,12 +443,12 @@ namespace igLibrary.Core
 		private uint HashFilePath(string filepath)
 		{
 			string pathToHash = filepath;
-			if((_archiveHeader._flags & 1u) != 0)
+			if ((_archiveHeader._flags & 1u) != 0)
 			{
 				pathToHash = pathToHash.Replace('\\', '/');
 				pathToHash = pathToHash.ToLower();
 			}
-			if((_archiveHeader._flags & 2u) != 0) pathToHash = Path.GetFileName(pathToHash);
+			if ((_archiveHeader._flags & 2u) != 0) pathToHash = Path.GetFileName(pathToHash);
 			pathToHash = pathToHash.TrimStart('/', '\\');
 			return igHash.Hash(pathToHash);
 		}
@@ -466,19 +466,19 @@ namespace igLibrary.Core
 			smallBlockTable = new List<byte>();
 			mediumBlockTable = new List<ushort>();
 			largeBlockTable = new List<uint>();
-			for(int i = 0; i < files.Count(); i++)
+			for (int i = 0; i < files.Count(); i++)
 			{
 				EBlockType blockType = files.ElementAt(i).GetBlockType(_archiveHeader._sectorSize);
 				FileInfo file = files.ElementAt(i);
 				file._blockIndex = file._blockIndex & 0xF0000000;
 				uint numSectors;
-				switch(blockType)
+				switch (blockType)
 				{
 #pragma warning disable CS8602
 					case EBlockType.kSmall:
 						file._blockIndex |= (uint)smallBlockTable.Count;
 						smallBlockTable.Capacity += file._blocks.Length + 1;
-						for(int j = 0; j < file._blocks.Length; j++)
+						for (int j = 0; j < file._blocks.Length; j++)
 						{
 							smallBlockTable.Add((byte)((file._blocks[j] >> 24) | (file._blocks[j] & 0x7F)));
 						}
@@ -487,7 +487,7 @@ namespace igLibrary.Core
 					case EBlockType.kMedium:
 						file._blockIndex |= (uint)mediumBlockTable.Count;
 						mediumBlockTable.Capacity += file._blocks.Length + 1;
-						for(int j = 0; j < file._blocks.Length; j++)
+						for (int j = 0; j < file._blocks.Length; j++)
 						{
 							mediumBlockTable.Add((ushort)((file._blocks[j] >> 16) | (file._blocks[j] & 0x7FFF)));
 						}
@@ -496,7 +496,7 @@ namespace igLibrary.Core
 					case EBlockType.kLarge:
 						file._blockIndex |= (uint)largeBlockTable.Count;
 						largeBlockTable.Capacity += file._blocks.Length + 1;
-						for(int j = 0; j < file._blocks.Length; j++)
+						for (int j = 0; j < file._blocks.Length; j++)
 						{
 							largeBlockTable.Add(file._blocks[j]);
 						}
@@ -518,7 +518,7 @@ namespace igLibrary.Core
 		/// <exception cref="NotSupportedException"></exception>
 		private byte GetFileInfoSize()
 		{
-			switch(_archiveHeader._version)
+			switch (_archiveHeader._version)
 			{
 				case 0x0B: return 0x10;
 				default: throw new NotSupportedException($"IGA version {_archiveHeader._version} is unsupported");
@@ -533,7 +533,7 @@ namespace igLibrary.Core
 		/// <exception cref="NotSupportedException"></exception>
 		private byte GetHeaderSize()
 		{
-			switch(_archiveHeader._version)
+			switch (_archiveHeader._version)
 			{
 				case 0x0B: return 0x38;
 				default: throw new NotSupportedException($"IGA version {_archiveHeader._version} is unsupported");
@@ -564,7 +564,7 @@ namespace igLibrary.Core
 		/// <param name="dst">the destination stream</param>
 		public void Decompress(FileInfo fileInfo, Stream dst)
 		{
-			if(fileInfo._blockIndex == 0xFFFFFFFF)
+			if (fileInfo._blockIndex == 0xFFFFFFFF)
 			{
 				dst.Write(fileInfo._compressedData);
 				dst.Flush();
@@ -573,16 +573,16 @@ namespace igLibrary.Core
 			}
 			CompressionType type = (CompressionType)(fileInfo._blockIndex >> 28);
 			byte[]? lzmaProps = null;
-			if(type == CompressionType.kLzma)
+			if (type == CompressionType.kLzma)
 			{
 				lzmaProps = new byte[5];
 			}
-			for(int i = 0; i < fileInfo._blocks.Length; i++)
+			for (int i = 0; i < fileInfo._blocks.Length; i++)
 			{
 				uint decompressedSize = (fileInfo._length < (i + 1) * 0x8000) ? fileInfo._length & 0x7FFF : 0x8000;
 				bool shouldDecompress = (fileInfo._blocks[i] & 0x80000000u) != 0;
 				uint offset = (fileInfo._blocks[i] & 0x7FFFFFFF) * _archiveHeader._sectorSize;
-				if((fileInfo._blocks[i] & 0x80000000u) == 0)
+				if ((fileInfo._blocks[i] & 0x80000000u) == 0)
 				{
 					dst.Write(fileInfo._compressedData, (int)offset, (int)decompressedSize);
 					continue;
@@ -592,7 +592,7 @@ namespace igLibrary.Core
 				offset += 2;
 
 				MemoryStream tempMs;
-				switch(type)
+				switch (type)
 				{
 					case CompressionType.kZlib:
 						tempMs = new MemoryStream(fileInfo._compressedData, (int)offset, (int)compressedSize);
@@ -655,7 +655,7 @@ namespace igLibrary.Core
 			fileInfo._blocks = null;
 
 			//Add in setting the modification time for the funny
-			if(fileInfo._blockIndex == 0xFFFFFFFF)
+			if (fileInfo._blockIndex == 0xFFFFFFFF)
 			{
 				fileInfo._compressedData = new byte[src.Length];
 				src.Read(fileInfo._compressedData);
@@ -664,16 +664,16 @@ namespace igLibrary.Core
 			fileInfo._blocks = new uint[(src.Length + 0x7FFF) >> 0xF];
 			CompressionType type = (CompressionType)(fileInfo._blockIndex >> 28);
 			MemoryStream dst = new MemoryStream();
-			for(uint processedBytes = 0, blockI = 0; processedBytes < src.Length; processedBytes += 0x8000, blockI++)
+			for (uint processedBytes = 0, blockI = 0; processedBytes < src.Length; processedBytes += 0x8000, blockI++)
 			{
 				uint decompressedSize = (uint)src.Length - processedBytes;
-				if(decompressedSize > 0x8000) decompressedSize = 0x8000;
+				if (decompressedSize > 0x8000) decompressedSize = 0x8000;
 				ushort compressedSize;
 				MemoryStream tempMs = new MemoryStream();
 				src.Seek(processedBytes, SeekOrigin.Begin);
 				dst.Position = StreamHelper.Align((uint)dst.Position, _archiveHeader._sectorSize);
 				fileInfo._blocks[blockI] = 0x80000000u | ((uint)dst.Position / _archiveHeader._sectorSize);
-				switch(type)
+				switch (type)
 				{
 					case CompressionType.kLzma:
 						SevenZip.Compression.LZMA.Encoder enc = new SevenZip.Compression.LZMA.Encoder();
@@ -710,7 +710,7 @@ namespace igLibrary.Core
 			//check if the file already exists, return it if so
 			uint hash = HashFilePath(filePath);
 			int index = HashSearch(_files, _archiveHeader._numFiles, _archiveHeader._hashSearchDivider, _archiveHeader._hashSearchSlop, hash);
-			if(index >= 0) return _files[index];
+			if (index >= 0) return _files[index];
 
 			//if not, generate a new one
 			FileInfo file = new FileInfo();
@@ -722,9 +722,9 @@ namespace igLibrary.Core
 
 			//figure out where to insert the new one
 			int indexToInsertTo = (int)_archiveHeader._numFiles;
-			for(int i = 0; i < _archiveHeader._numFiles; i++)
+			for (int i = 0; i < _archiveHeader._numFiles; i++)
 			{
-				if(_files[i]._hash > hash)
+				if (_files[i]._hash > hash)
 				{
 					indexToInsertTo = i;
 					break;
@@ -836,7 +836,7 @@ namespace igLibrary.Core
 		public bool Delete(string path)
 		{
 			int fileId = HashSearch(_files, (uint)_files.Count, _archiveHeader._hashSearchDivider, _archiveHeader._hashSearchSlop, HashFilePath(path));
-			if(fileId == -1)
+			if (fileId == -1)
 			{
 				return false;
 			}
@@ -853,7 +853,7 @@ namespace igLibrary.Core
 		/// <param name="workItem">The work item</param>
 		public override void Exists(igFileWorkItem workItem)
 		{
-			if(HasFile(workItem._path))
+			if (HasFile(workItem._path))
 			{
 				workItem.SetStatus(igFileWorkItem.Status.kStatusComplete);
 			}
@@ -872,13 +872,13 @@ namespace igLibrary.Core
 		{
 			if (igRegistry.GetRegistry()._engineType == EngineType.TfbTool)
 			{
-				string fileName = workItem._path[(workItem._path.LastIndexOf('/') + 1)..];
-				string archivePath = workItem._path[..workItem._path.LastIndexOf('/')];
-				if (archivePath == _path)
+				if (igArkCore._game == igArkCore.EGame.EV_SkylandersTrapTeam)
 				{
+					string STTfileName = workItem._path[(workItem._path.LastIndexOf('/') + 1)..];
+
 					foreach (var fileInfo in _files)
 					{
-						if (fileInfo._name.Equals(fileName))
+						if (fileInfo._name.Equals(STTfileName))
 						{
 							workItem._file._path = workItem._path;
 							workItem._file._size = fileInfo._length;
@@ -891,12 +891,34 @@ namespace igLibrary.Core
 						}
 					}
 				}
+				else
+				{
+					string fileName = workItem._path[(workItem._path.LastIndexOf('/') + 1)..];
+					string archivePath = workItem._path[..workItem._path.LastIndexOf('/')];
+					if (archivePath == _path)
+					{
+						foreach (var fileInfo in _files)
+						{
+							if (fileInfo._name.Equals(fileName))
+							{
+								workItem._file._path = workItem._path;
+								workItem._file._size = fileInfo._length;
+								workItem._file._position = 0;
+								workItem._file._handle = new MemoryStream((int)workItem._file._size);
+								workItem._file._device = this;
+								Decompress(fileInfo, (MemoryStream)workItem._file._handle);
+								workItem.SetStatus(igFileWorkItem.Status.kStatusComplete);
+								return;
+							}
+						}
+					}
+				}
 			}
 
 			if (igRegistry.GetRegistry()._engineType == EngineType.AlchemyLaboratory)
 			{
 				int fileId = HashSearch(_files, (uint)_files.Count, _archiveHeader._hashSearchDivider, _archiveHeader._hashSearchSlop, HashFilePath(workItem._path));
-				if(fileId == -1)
+				if (fileId == -1)
 				{
 					workItem.SetStatus(igFileWorkItem.Status.kStatusInvalidPath);
 					return;
@@ -980,7 +1002,7 @@ namespace igLibrary.Core
 		{
 			igStringRefList nameList = (igStringRefList)workItem._buffer;
 			nameList.SetCapacity(_files.Count);
-			for(int i = 0; i < _files.Count; i++)
+			for (int i = 0; i < _files.Count; i++)
 			{
 				nameList.Append(_files[i]._logicalName);
 			}
@@ -1048,5 +1070,5 @@ namespace igLibrary.Core
 			workItem.SetStatus(igFileWorkItem.Status.kStatusUnsupported);
 		}
 	}
-	public class igArchiveList : igTObjectList<igArchive> {}
+	public class igArchiveList : igTObjectList<igArchive> { }
 }

@@ -41,10 +41,7 @@ namespace igLibrary.Core
 				{
 					if (field.FieldType != data)
 					{
-						if (metaFields[i]._fieldName == "_LHS")
-						{
-						//Logging.Info("{0} :: {1}", metaFields[i]._fieldName, metaFields[i]._offset);
-						}
+						Logging.Info("{0} ::: {1}", field.Name, data);
 					}
 					field.SetValue(this, data);
 				}
