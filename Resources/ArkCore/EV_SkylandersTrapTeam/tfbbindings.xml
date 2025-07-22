@@ -1,0 +1,786 @@
+<tfbWrapper>
+    <tfbBindings name="Sequence">
+        <binding type="FloatMeasurement" name="time remaining" />
+        <binding type="FloatMeasurement" name="percent remaining" />
+        <binding type="EnumMeasurement" name="playback mode" />
+        <binding type="FloatMeasurement" name="playback rate" />
+        <binding type="EnumMeasurement" name="looping" />
+        <binding type="EnumMeasurement" name="allow restart" />
+        <binding type="EnumMeasurement" name="condition" />
+        <binding type="FloatMeasurement" name="raw duration" />
+    </tfbBindings>
+    <tfbBindings name="ClonedSequence">
+        <binding type="SetVariant" name="clones" />
+        <binding type="ReferenceVariant" name="parent" />
+        <binding type="ReferenceVariant" name="activator" />
+    </tfbBindings>
+    <tfbBindings name="VectorMeasurement">
+        <binding type="FloatMeasurement" name="length" />
+        <binding type="FloatMeasurement" name="heading" />
+        <binding type="FloatMeasurement" name="pitch" />
+        <binding type="FloatMeasurement" name="vertical difference" />
+        <binding type="FloatMeasurement" name="horizontal length" />
+    </tfbBindings>
+    <tfbBindings name="PositionMeasurement">
+        <binding type="PairedFloatMeasurement" name="distance" />
+        <binding type="PairedFloatMeasurement" name="heading" />
+        <binding type="PairedFloatMeasurement" name="pitch" />
+        <binding type="PairedFloatMeasurement" name="vertical offset" />
+        <binding type="PairedFloatMeasurement" name="horizontal distance" />
+        <binding type="PairedEnumMeasurement" name="collision" />
+        <binding type="PairedFloatMeasurement" name="separation" />
+    </tfbBindings>
+    <tfbBindings name="MatrixMeasurement">
+        <binding type="OrientationMeasurement" name="-orientation" />
+    </tfbBindings>
+    <tfbBindings name="AbstractAttachNode">
+        <binding type="ReferenceVariant" name="root" />
+        <binding type="ReferenceVariant" name="look-at target" />
+    </tfbBindings>
+    <tfbBindings name="GeneratorInfo">
+        <binding type="ReferenceVariant" name="-generation" />
+        <binding type="ReferenceVariant" name="-movement" />
+        <binding type="ReferenceVariant" name="-appearance" />
+        <binding type="SetVariant" name="affectors" />
+        <binding type="ReferenceVariant" name="lightning" />
+        <binding type="ReferenceVariant" name="ribbon" />
+        <binding type="ReferenceVariant" name="vfx" />
+        <binding type="FloatMeasurement" name="bloom intensity" />
+        <binding type="FloatMeasurement" name="start delay" />
+        <binding type="IntMeasurement" name="sort overlay layer" />
+        <binding type="EnumMeasurement" name="mute" />
+    </tfbBindings>
+    <tfbBindings name="SegmentGenerator">
+        <binding type="EnumMeasurement" name="taper" />
+        <binding type="FloatMeasurement" name="uv scroll" />
+        <binding type="FloatMeasurement" name="uv scale" />
+        <binding type="FloatMeasurement" name="segment width" />
+        <binding type="IntMeasurement" name="segment count" />
+        <binding type="ColorMeasurement" name="tint color" />
+    </tfbBindings>
+    <tfbBindings name="LightningFields">
+        <binding type="ReferenceVariant" name="target" />
+        <binding type="FloatMeasurement" name="chaos" />
+        <binding type="EnumMeasurement" name="constrained" />
+        <binding type="EnumMeasurement" name="freeze animation" />
+    </tfbBindings>
+    <tfbBindings name="GestureMeasurement">
+        <binding type="EnumMeasurement" name="pressure state" />
+        <binding type="FloatMeasurement" name="pressure value" />
+    </tfbBindings>
+    <tfbBindings name="RigidBodyPhysics">
+    </tfbBindings>
+    <tfbBindings name="AnimationInfo">
+        <binding type="ReferenceVariant" name="ambient" />
+        <binding type="ReferenceVariant" name="walk" />
+        <binding type="ReferenceVariant" name="run" />
+        <binding type="ReferenceVariant" name="jump" />
+        <binding type="SetVariant" name="animation palette" />
+        <binding type="IntMeasurement" name="material slot" />
+        <binding type="IntMeasurement" name="glow intensity" />
+    </tfbBindings>
+    <tfbBindings name="SpritePositionMeasurement">
+        <binding type="PairedFloatMeasurement" name="screen distance" />
+        <binding type="PairedFloatMeasurement" name="heading" />
+        <binding type="PairedFloatMeasurement" name="X offset" />
+        <binding type="PairedFloatMeasurement" name="Y offset" />
+        <binding type="PairedFloatMeasurement" name="priority offset" />
+    </tfbBindings>
+    <tfbBindings name="SpriteMatrixMeasurement">
+        <binding type="OrientationMeasurement" name="-orientation" />
+        <binding type="ReferenceVariant" name="attach node" />
+        <binding type="SetVariant" name="attached objects" />
+        <binding type="IntMeasurement" name="ID" />
+        <binding type="MatrixMeasurement" name="origin" />
+        <binding type="SetVariant" name="clones" />
+        <binding type="ReferenceVariant" name="parent" />
+        <binding type="ReferenceVariant" name="activator" />
+    </tfbBindings>
+    <tfbBindings name="OnlineEventReporter">
+        <binding type="ScriptSetReference" name="player 1 top data" />
+        <binding type="ScriptSetReference" name="player 1 bottom data" />
+        <binding type="ScriptSetReference" name="player 2 top data" />
+        <binding type="ScriptSetReference" name="player 2 bottom data" />
+        <binding type="ScriptSetReference" name="player 1 global data" />
+        <binding type="ScriptSetReference" name="player 2 global data" />
+        <binding type="ScriptSetReference" name="trap data" />
+        <binding type="ScriptSetReference" name="trap global data" />
+        <binding type="ScriptSetReference" name="item data" />
+        <binding type="PositionMeasurement" name="player 1 position" />
+        <binding type="PositionMeasurement" name="player 2 position" />
+        <binding type="PositionMeasurement" name="respawn location" />
+        <binding type="PositionMeasurement" name="respawn trigger position" />
+        <binding type="IntMeasurement" name="player 1 health" />
+        <binding type="IntMeasurement" name="player 2 health" />
+        <binding type="EnumMeasurement" name="ally assignment" />
+        <binding type="IntMeasurement" name="game mode" />
+        <binding type="ReferenceVariant" name="game level" />
+        <binding type="ReferenceVariant" name="game area" />
+        <binding type="IntMeasurement" name="game area elemental affinity" />
+        <binding type="IntMeasurement" name="game initial difficulty" />
+        <binding type="IntMeasurement" name="game dynamic difficulty" />
+        <binding type="IntMeasurement" name="trap door 1 activated?" />
+        <binding type="IntMeasurement" name="trap door 2 activated?" />
+        <binding type="FloatMeasurement" name="game damage multiplier" />
+        <binding type="FloatMeasurement" name="game HP multiplier" />
+        <binding type="IntMeasurement" name="language" />
+        <binding type="PositionMeasurement" name="tower position" />
+        <binding type="IntMeasurement" name="event code" />
+        <binding type="EnumMeasurement" name="event save state" />
+    </tfbBindings>
+    <tfbBindings name="ScriptController">
+        <binding type="IntMeasurement" name="Active Controllers" />
+        <binding type="ReferenceVariant" name="controller 1" />
+        <binding type="ReferenceVariant" name="controller 2" />
+        <binding type="ReferenceVariant" name="controller 3" />
+        <binding type="ReferenceVariant" name="controller 4" />
+        <binding type="ReferenceVariant" name="dialog controller" />
+        <binding type="tfbPS3Controller" name="inactive controller" />
+        <binding type="FloatMeasurement" name="joystick X dead zone" />
+        <binding type="FloatMeasurement" name="joystick Y dead zone" />
+        <binding type="FloatMeasurement" name="analog button dead zone" />
+        <binding type="EnumMeasurement" name="rumble disabled" />
+        <binding type="FloatMeasurement" name="last input time" />
+        <binding type="EnumMeasurement" name="display console menu" />
+        <binding type="IntMeasurement" name="display no home icon" />
+        <binding type="IntMeasurement" name="erreula error" />
+        <binding type="EnumMeasurement" name="erreula error button selected" />
+        <binding type="EnumMeasurement" name="erreula error result type" />
+        <binding type="EnumMeasurement" name="disable home menu" />
+        <binding type="IntMeasurement" name="erreula error result code" />
+        <binding type="EnumMeasurement" name="allow multiple BLE gamepads" />
+        <binding type="tfbPS3Controller" name="physical controller 1" />
+        <binding type="tfbPS3Controller" name="physical controller 2" />
+        <binding type="tfbPS3Controller" name="physical controller 3" />
+        <binding type="tfbPS3Controller" name="physical controller 4" />
+    </tfbBindings>
+    <tfbBindings name="ColorMeasurement">
+        <binding type="IntMeasurement" name="alpha" />
+        <binding type="IntMeasurement" name="red" />
+        <binding type="IntMeasurement" name="green" />
+        <binding type="IntMeasurement" name="blue" />
+    </tfbBindings>
+    <tfbBindings name="ScriptColorInfo">
+    </tfbBindings>
+    <tfbBindings name="AbstractPlacement">
+        <binding type="ReferenceVariant" name="attach node" />
+        <binding type="SetVariant" name="attached objects" />
+        <binding type="IntMeasurement" name="ID" />
+        <binding type="MatrixMeasurement" name="origin" />
+        <binding type="SetVariant" name="clones" />
+        <binding type="ReferenceVariant" name="parent" />
+        <binding type="ReferenceVariant" name="activator" />
+        <binding type="ReferenceVariant" name="ground" />
+    </tfbBindings>
+    <tfbBindings name="RedOctanePeripheralScriptObject">
+        <binding type="EnumMeasurement" name="connection state" />
+        <binding type="SetVariant" name="playing sounds" />
+        <binding type="IntMeasurement" name="firmware version" />
+        <binding type="SetVariant" name="tag set" />
+        <binding type="ColorMeasurement" name="LED color" />
+        <binding type="SetVariant" name="all LED colors" />
+        <binding type="EnumMeasurement" name="antenna enable" />
+        <binding type="EnumMeasurement" name="battery status" />
+        <binding type="FloatMeasurement" name="battery remaining" />
+        <binding type="IntMeasurement" name="size of region 1" />
+        <binding type="IntMeasurement" name="size of region 2" />
+        <binding type="IntMeasurement" name="size of magic moment data" />
+        <binding type="IntMeasurement" name="size of remaining data" />
+        <binding type="IntMeasurement" name="command delay time" />
+        <binding type="EnumMeasurement" name="delay after commands" />
+        <binding type="EnumMeasurement" name="auto read tag level" />
+        <binding type="EnumMeasurement" name="save type" />
+        <binding type="IntMeasurement" name="save offset" />
+        <binding type="IntMeasurement" name="connected count" />
+        <binding type="IntMeasurement" name="checksum length" />
+        <binding type="IntMeasurement" name="checksum" />
+        <binding type="EnumMeasurement" name="debug mode" />
+        <binding type="EnumMeasurement" name="audio enabled" />
+        <binding type="EnumMeasurement" name="audio LED modulation" />
+        <binding type="IntMeasurement" name="audio modulation level" />
+        <binding type="EnumMeasurement" name="auto color cycle" />
+        <binding type="IntMeasurement" name="color slide time" />
+        <binding type="ScriptSetReference" name="update code set" />
+        <binding type="ScriptSetReference" name="trading card code set" />
+    </tfbBindings>
+    <tfbBindings name="CutsceneInfo">
+        <binding type="SetVariant" name="active cutscene streams" />
+    </tfbBindings>
+    <tfbBindings name="StringInfo">
+        <binding type="StringConverter" name="String Converter" />
+    </tfbBindings>
+    <tfbBindings name="NameExtractor">
+        <binding type="ReferenceVariant" name="Object to name" />
+        <binding type="IntMeasurement" name="Name checksum" />
+        <binding type="IntMeasurement" name="Instantiation size" />
+        <binding type="IntMeasurement" name="type count" />
+        <binding type="ReferenceVariant" name="Name string" />
+    </tfbBindings>
+    <tfbBindings name="OpTopLevelBehavior">
+        <binding type="ScriptReference" name="my" />
+        <binding type="ReferenceVariant" name="behavior" />
+    </tfbBindings>
+    <tfbBindings name="SoundInfo">
+        <binding type="FloatMeasurement" name="effects master volume" />
+        <binding type="FloatMeasurement" name="effects master rate" />
+        <binding type="SetVariant" name="active sound effects" />
+        <binding type="SetVariant" name="active movies" />
+        <binding type="FloatMeasurement" name="streams master volume" />
+        <binding type="FloatMeasurement" name="streams master rate" />
+        <binding type="SetVariant" name="active sound streams" />
+        <binding type="SetVariant" name="active controller rumbles" />
+        <binding type="SetVariant" name="category templates" />
+        <binding type="EnumMeasurement" name="music disabled" />
+        <binding type="FloatMeasurement" name="music master volume" />
+        <binding type="EnumMeasurement" name="reverb setting 1" />
+        <binding type="EnumMeasurement" name="reverb setting 2" />
+        <binding type="FloatMeasurement" name="reverb amount 1" />
+        <binding type="FloatMeasurement" name="reverb amount 2" />
+        <binding type="FloatMeasurement" name="music volume 1" />
+        <binding type="FloatMeasurement" name="music volume 2" />
+        <binding type="FloatMeasurement" name="music volume 3" />
+        <binding type="EnumMeasurement" name="pan listener mode" />
+        <binding type="EnumMeasurement" name="volume listener mode" />
+        <binding type="IntMeasurement" name="diagnostic level" />
+    </tfbBindings>
+    <tfbBindings name="VizBoxInfo">
+    </tfbBindings>
+    <tfbBindings name="PS4Controller">
+        <binding type="EnumMeasurement" name="controller connection type" />
+    </tfbBindings>
+    <tfbBindings name="GeneratorMovementFields">
+        <binding type="EnumMeasurement" name="spawn volume type" />
+        <binding type="FloatMeasurement" name="spawn volume width" />
+        <binding type="FloatMeasurement" name="spawn volume length" />
+        <binding type="FloatMeasurement" name="spawn volume height" />
+        <binding type="EnumMeasurement" name="spawn volume distribution" />
+        <binding type="EnumMeasurement" name="initial speed direction" />
+        <binding type="FloatMeasurement" name="initial speed" />
+        <binding type="FloatMeasurement" name="initial speed randomness" />
+        <binding type="FloatMeasurement" name="initial direction spread" />
+        <binding type="FloatMeasurement" name="start accel" />
+        <binding type="FloatMeasurement" name="start accel randomness" />
+        <binding type="VectorMeasurement" name="start accel direction" />
+        <binding type="FloatMeasurement" name="start accel direction spread" />
+        <binding type="FloatMeasurement" name="mid accel" />
+        <binding type="FloatMeasurement" name="mid accel randomness" />
+        <binding type="VectorMeasurement" name="mid accel direction" />
+        <binding type="FloatMeasurement" name="mid accel direction spread" />
+        <binding type="FloatMeasurement" name="end accel" />
+        <binding type="FloatMeasurement" name="end accel randomness" />
+        <binding type="VectorMeasurement" name="end accel direction" />
+        <binding type="FloatMeasurement" name="end accel direction spread" />
+        <binding type="FloatMeasurement" name="start drag" />
+        <binding type="FloatMeasurement" name="mid drag" />
+        <binding type="FloatMeasurement" name="end drag" />
+        <binding type="FloatMeasurement" name="start gravity" />
+        <binding type="FloatMeasurement" name="mid gravity" />
+        <binding type="FloatMeasurement" name="end gravity" />
+        <binding type="EnumMeasurement" name="inherits translation" />
+    </tfbBindings>
+    <tfbBindings name="GeneratorAppearanceFields">
+        <binding type="ColorMeasurement" name="start color" />
+        <binding type="ColorMeasurement" name="start color randomness" />
+        <binding type="ColorMeasurement" name="mid color" />
+        <binding type="ColorMeasurement" name="mid color randomness" />
+        <binding type="ColorMeasurement" name="end color" />
+        <binding type="ColorMeasurement" name="end color randomness" />
+        <binding type="ScaleMeasurement" name="start size" />
+        <binding type="ScaleMeasurement" name="start size randomness" />
+        <binding type="ScaleMeasurement" name="mid size" />
+        <binding type="ScaleMeasurement" name="mid size randomness" />
+        <binding type="ScaleMeasurement" name="end size" />
+        <binding type="ScaleMeasurement" name="end size randomness" />
+        <binding type="FloatMeasurement" name="initial rotation angle" />
+        <binding type="FloatMeasurement" name="initial rotation angle randomness" />
+        <binding type="FloatMeasurement" name="start rotation speed" />
+        <binding type="FloatMeasurement" name="start rotation speed randomness" />
+        <binding type="FloatMeasurement" name="mid rotation speed" />
+        <binding type="FloatMeasurement" name="mid rotation speed randomness" />
+        <binding type="FloatMeasurement" name="end rotation speed" />
+        <binding type="FloatMeasurement" name="end rotation speed randomness" />
+        <binding type="EnumMeasurement" name="view alignment" />
+        <binding type="FloatMeasurement" name="bloom intensity" />
+    </tfbBindings>
+    <tfbBindings name="ScriptStructure">
+    </tfbBindings>
+    <tfbBindings name="AnimationClip">
+        <binding type="FloatMeasurement" name="blend Percent" />
+        <binding type="EnumMeasurement" name="is layered" />
+        <binding type="EnumMeasurement" name="type" />
+    </tfbBindings>
+    <tfbBindings name="WiiController">
+        <binding type="ScreenMeasurement" name="pointer" />
+        <binding type="FloatMeasurement" name="pointer tilt" />
+        <binding type="FloatMeasurement" name="pointer roll" />
+        <binding type="FloatMeasurement" name="pointer X acceleration" />
+        <binding type="FloatMeasurement" name="pointer Y acceleration" />
+        <binding type="FloatMeasurement" name="pointer Z acceleration" />
+        <binding type="FloatMeasurement" name="nunchuk tilt" />
+        <binding type="FloatMeasurement" name="nunchuk roll" />
+        <binding type="FloatMeasurement" name="nunchuk X acceleration" />
+        <binding type="FloatMeasurement" name="nunchuk Y acceleration" />
+        <binding type="FloatMeasurement" name="nunchuk Z acceleration" />
+        <binding type="FloatMeasurement" name="pointer distance" />
+        <binding type="EnumMeasurement" name="pointer enabled" />
+        <binding type="ButtonMeasurement" name="button 1" />
+        <binding type="ButtonMeasurement" name="button 2" />
+        <binding type="ButtonMeasurement" name="home button" />
+        <binding type="EnumMeasurement" name="controller type" />
+        <binding type="EnumMeasurement" name="save state" />
+    </tfbBindings>
+    <tfbBindings name="sequenceEvent">
+        <binding type="IntMeasurement" name="event number" />
+        <binding type="FloatMeasurement" name="event time" />
+        <binding type="FloatMeasurement" name="event length" />
+    </tfbBindings>
+    <tfbBindings name="RibbonFields">
+        <binding type="FloatMeasurement" name="segment granularity" />
+        <binding type="ColorMeasurement" name="end color" />
+    </tfbBindings>
+    <tfbBindings name="Placement">
+        <binding type="FloatMeasurement" name="activation range" />
+        <binding type="FloatMeasurement" name="deactivation buffer" />
+        <binding type="ScaleMeasurement" name="scale" />
+        <binding type="ColorMeasurement" name="tint" />
+        <binding type="EnumMeasurement" name="shadow cast" />
+        <binding type="EnumMeasurement" name="shadow receive" />
+        <binding type="EnumMeasurement" name="near/far alpha fade" />
+        <binding type="EnumMeasurement" name="script suspended" />
+        <binding type="EnumMeasurement" name="fog enabled" />
+        <binding type="EnumMeasurement" name="bring to front" />
+    </tfbBindings>
+    <tfbBindings name="LightInfo">
+        <binding type="ReferenceVariant" name="directional light 1" />
+        <binding type="ReferenceVariant" name="directional light 2" />
+        <binding type="ReferenceVariant" name="directional light 3" />
+        <binding type="ReferenceVariant" name="caustic light" />
+        <binding type="ReferenceVariant" name="sprite light 1" />
+        <binding type="ReferenceVariant" name="sprite light 2" />
+        <binding type="ReferenceVariant" name="sprite light 3" />
+        <binding type="SetVariant" name="active lights" />
+        <binding type="SetVariant" name="inactive lights" />
+        <binding type="SetVariant" name="removed lights" />
+    </tfbBindings>
+    <tfbBindings name="ViewportInfo">
+        <binding type="ReferenceVariant" name="default" />
+        <binding type="ReferenceVariant" name="alternate viewport" />
+        <binding type="FloatMeasurement" name="frame logic load" />
+        <binding type="FloatMeasurement" name="frame script load" />
+        <binding type="FloatMeasurement" name="screen filter percentage" />
+        <binding type="FloatMeasurement" name="screen filter intensity" />
+        <binding type="EnumMeasurement" name="3D scene refresh" />
+    </tfbBindings>
+    <tfbBindings name="ButtonMeasurement">
+        <binding type="EnumMeasurement" name="pressure state" />
+        <binding type="FloatMeasurement" name="pressure value" />
+    </tfbBindings>
+    <tfbBindings name="ContactInfo">
+        <binding type="IntMeasurement" name="type" />
+        <binding type="VectorMeasurement" name="normal" />
+        <binding type="FloatMeasurement" name="magnitude" />
+        <binding type="EnumMeasurement" name="is trigger" />
+    </tfbBindings>
+    <tfbBindings name="StandardController">
+        <binding type="ButtonMeasurement" name="L1 button" />
+        <binding type="ButtonMeasurement" name="R1 button" />
+        <binding type="ButtonMeasurement" name="L2 button" />
+        <binding type="ButtonMeasurement" name="R2 button" />
+    </tfbBindings>
+    <tfbBindings name="SetVariant">
+        <binding type="IntMeasurement" name="count" />
+        <binding type="ReferenceVariant" name="first" />
+        <binding type="ReferenceVariant" name="last" />
+        <binding type="ReferenceVariant" name="random" />
+        <binding type="ReferenceVariant" name="next" />
+        <binding type="EnumMeasurement" name="choose next randomly" />
+        <binding type="EnumMeasurement" name="allow random next repeats" />
+    </tfbBindings>
+    <tfbBindings name="ViewportTitleSafeInfo">
+        <binding type="IntMeasurement" name="left margin" />
+        <binding type="IntMeasurement" name="right margin" />
+        <binding type="IntMeasurement" name="upper margin" />
+        <binding type="IntMeasurement" name="lower margin" />
+    </tfbBindings>
+    <tfbBindings name="TextColorConverter">
+        <binding type="ScriptSetReference" name="color set" />
+        <binding type="ReferenceVariant" name="text sprite" />
+    </tfbBindings>
+    <tfbBindings name="ScreenMeasurement">
+        <binding type="FloatMeasurement" name="X" />
+        <binding type="FloatMeasurement" name="Y" />
+    </tfbBindings>
+    <tfbBindings name="ParticleInfo">
+        <binding type="SetVariant" name="active particles" />
+        <binding type="SetVariant" name="inactive particles" />
+        <binding type="SetVariant" name="removed particles" />
+    </tfbBindings>
+    <tfbBindings name="SpriteInfo">
+        <binding type="SetVariant" name="active" />
+        <binding type="SetVariant" name="removed" />
+        <binding type="TextColorConverter" name="Text Color Converter" />
+        <binding type="ReferenceVariant" name="Virtual - left analog base sprite" />
+        <binding type="ReferenceVariant" name="Virtual - left analog center sprite" />
+        <binding type="ReferenceVariant" name="Virtual - button A sprite" />
+        <binding type="ReferenceVariant" name="Virtual - button B sprite" />
+        <binding type="ReferenceVariant" name="Virtual - button X sprite" />
+        <binding type="ReferenceVariant" name="Virtual - button Y sprite" />
+        <binding type="ReferenceVariant" name="Virtual - button context sprite" />
+        <binding type="ReferenceVariant" name="Virtual - button switch sprite" />
+        <binding type="ReferenceVariant" name="Virtual - button start sprite" />
+        <binding type="ReferenceVariant" name="Virtual - button select sprite" />
+        <binding type="EnumMeasurement" name="Virtual - ignore virtual controller" />
+        <binding type="EnumMeasurement" name="Virtual - virtual controller visible" />
+        <binding type="EnumMeasurement" name="Virtual - display context button" />
+        <binding type="EnumMeasurement" name="Virtual - display switch button" />
+    </tfbBindings>
+    <tfbBindings name="ViewportFogEffectInfo">
+        <binding type="EnumMeasurement" name="Fog type" />
+        <binding type="FloatMeasurement" name="fog start" />
+        <binding type="FloatMeasurement" name="fog range" />
+        <binding type="FloatMeasurement" name="fog min" />
+        <binding type="FloatMeasurement" name="fog max" />
+        <binding type="ColorMeasurement" name="fog color" />
+        <binding type="FloatMeasurement" name="fog of Sky dome" />
+        <binding type="FloatMeasurement" name="fog of yon ignore" />
+        <binding type="ColorMeasurement" name="fog color of sky dome" />
+        <binding type="ColorMeasurement" name="fog color of yon ignore" />
+        <binding type="EnumMeasurement" name="turn on caustic effect" />
+        <binding type="FloatMeasurement" name="caustic scale" />
+        <binding type="FloatMeasurement" name="caustic skin scale" />
+        <binding type="ColorMeasurement" name="caustic color" />
+        <binding type="FloatMeasurement" name="caustic speed" />
+        <binding type="FloatMeasurement" name="caustic movement X" />
+        <binding type="FloatMeasurement" name="caustic movement Y" />
+    </tfbBindings>
+    <tfbBindings name="ViewportShadowsControlInfo">
+        <binding type="FloatMeasurement" name="facing" />
+        <binding type="FloatMeasurement" name="tilt" />
+        <binding type="FloatMeasurement" name="field of view" />
+        <binding type="FloatMeasurement" name="focus distance from game camera" />
+        <binding type="FloatMeasurement" name="intensity" />
+    </tfbBindings>
+    <tfbBindings name="ControllerGestures">
+        <binding type="GestureMeasurement" name="action snap" />
+        <binding type="GestureMeasurement" name="action shake" />
+        <binding type="GestureMeasurement" name="action flip" />
+        <binding type="GestureMeasurement" name="action 1 / snap" />
+        <binding type="GestureMeasurement" name="action 1 / flip" />
+        <binding type="GestureMeasurement" name="action 2 / shake" />
+        <binding type="GestureMeasurement" name="action 3 / snap" />
+        <binding type="GestureMeasurement" name="action2 / shake / snap" />
+        <binding type="GestureMeasurement" name="action3 / shake / snap" />
+        <binding type="GestureMeasurement" name="action power meter" />
+        <binding type="GestureMeasurement" name="pseudo right stick" />
+        <binding type="GestureMeasurement" name="main stick / pointer" />
+        <binding type="GestureMeasurement" name="action nunchuk snap" />
+        <binding type="GestureMeasurement" name="action nunchuk flip" />
+        <binding type="GestureMeasurement" name="action nunchuk shake" />
+    </tfbBindings>
+    <tfbBindings name="ViewportBloomEffectInfo">
+        <binding type="FloatMeasurement" name="level" />
+        <binding type="FloatMeasurement" name="radius" />
+        <binding type="FloatMeasurement" name="sky level" />
+    </tfbBindings>
+    <tfbBindings name="ScaleMeasurement">
+        <binding type="FloatMeasurement" name="X" />
+        <binding type="FloatMeasurement" name="Y" />
+        <binding type="FloatMeasurement" name="Z" />
+        <binding type="FloatMeasurement" name="uniform" />
+    </tfbBindings>
+    <tfbBindings name="MoodBoxInfo">
+        <binding type="SetVariant" name="boxes" />
+        <binding type="SetVariant" name="contributing boxes (debug)" />
+        <binding type="tfbScriptObject" name="*default" />
+        <binding type="tfbScriptObject" name="*master" />
+        <binding type="EnumMeasurement" name="point of interest update mode" />
+        <binding type="PositionMeasurement" name="point of interest" />
+        <binding type="ReferenceVariant" name="critical box" />
+    </tfbBindings>
+    <tfbBindings name="ViewportFadeEffectInfo">
+        <binding type="FloatMeasurement" name="level" />
+        <binding type="ColorMeasurement" name="fade color" />
+    </tfbBindings>
+    <tfbBindings name="OnlineScriptObject">
+        <binding type="EnumMeasurement" name="connection state" />
+        <binding type="ScriptSetReference" name="leaderboard save index" />
+        <binding type="EnumMeasurement" name="leaderboard save state" />
+        <binding type="IntMeasurement" name="leaderboard save id" />
+        <binding type="IntMeasurement" name="config parameter" />
+        <binding type="IntMeasurement" name="config parameter value" />
+        <binding type="IntMeasurement" name="config parameter state" />
+        <binding type="IntMeasurement" name="online id high" />
+        <binding type="IntMeasurement" name="online id low" />
+        <binding type="ReferenceVariant" name="event reporter" />
+        <binding type="EnumMeasurement" name="game event player" />
+        <binding type="EnumMeasurement" name="game event index" />
+        <binding type="IntMeasurement" name="game event value" />
+        <binding type="EnumMeasurement" name="online status" />
+        <binding type="EnumMeasurement" name="MOTD - request download message" />
+        <binding type="ReferenceVariant" name="MOTD - message" />
+        <binding type="ReferenceVariant" name="MOTD - campaign id" />
+        <binding type="EnumMeasurement" name="MOTD - is available" />
+        <binding type="IntMeasurement" name="MOTD - message id low" />
+        <binding type="IntMeasurement" name="MOTD - message id high" />
+        <binding type="ReferenceVariant" name="Primary User Display Name" />
+        <binding type="EnumMeasurement" name="Primary User Type" />
+    </tfbBindings>
+    <tfbBindings name="VFXGenerator">
+        <binding type="ReferenceVariant" name="Vfx target" />
+        <binding type="IntMeasurement" name="currently alive" />
+        <binding type="FloatMeasurement" name="lifespan" />
+        <binding type="FloatMeasurement" name="longest life" />
+    </tfbBindings>
+    <tfbBindings name="ViewConverter">
+        <binding type="PositionMeasurement" name="world position" />
+        <binding type="ScreenMeasurement" name="screen location" />
+        <binding type="EnumMeasurement" name="lock type" />
+    </tfbBindings>
+    <tfbBindings name="RayContact">
+        <binding type="RayEndPoint" name="start" />
+        <binding type="RayEndPoint" name="end" />
+        <binding type="EnumMeasurement" name="has contact" />
+    </tfbBindings>
+    <tfbBindings name="Slider">
+        <binding type="EnumMeasurement" name="ignores time scales" />
+    </tfbBindings>
+    <tfbBindings name="DirectionalLightInfo">
+        <binding type="OrientationMeasurement" name="-orientation" />
+        <binding type="ColorMeasurement" name="diffuse color" />
+        <binding type="ColorMeasurement" name="ambient color" />
+        <binding type="ColorMeasurement" name="specular color" />
+        <binding type="FloatMeasurement" name="multiplier" />
+        <binding type="FloatMeasurement" name="ambient diffuse multiplier" />
+        <binding type="FloatMeasurement" name="ambient specular multiplier" />
+    </tfbBindings>
+    <tfbBindings name="ActorPhysics">
+        <binding type="FloatMeasurement" name="ground max speed" />
+        <binding type="FloatMeasurement" name="ground acceleration" />
+        <binding type="FloatMeasurement" name="ground deceleration" />
+        <binding type="FloatMeasurement" name="ground turn rate" />
+        <binding type="FloatMeasurement" name="air max speed" />
+        <binding type="FloatMeasurement" name="air acceleration" />
+        <binding type="FloatMeasurement" name="air deceleration" />
+        <binding type="FloatMeasurement" name="air turn rate" />
+        <binding type="FloatMeasurement" name="gravity max speed" />
+        <binding type="FloatMeasurement" name="gravity acceleration" />
+        <binding type="FloatMeasurement" name="jump max speed" />
+        <binding type="FloatMeasurement" name="jump acceleration" />
+        <binding type="FloatMeasurement" name="jump initial speed" />
+        <binding type="EnumMeasurement" name="move type" />
+        <binding type="EnumMeasurement" name="tilts with ground" />
+        <binding type="FloatMeasurement" name="time scale" />
+    </tfbBindings>
+    <tfbBindings name="RedOctanePeripheralSystemObject">
+    </tfbBindings>
+    <tfbBindings name="ValueInfo">
+    </tfbBindings>
+    <tfbBindings name="System">
+        <binding type="FloatMeasurement" name="Script Timer" />
+        <binding type="FloatMeasurement" name="Frame Rate Scale" />
+        <binding type="IntMeasurement" name="Cast to Integer" />
+        <binding type="FloatMeasurement" name="Normalized Angle" />
+        <binding type="PositionMeasurement" name="Absolute Zero" />
+        <binding type="FloatMeasurement" name="Game Time Scale" />
+        <binding type="ReferenceVariant" name="Load Level" />
+        <binding type="IntMeasurement" name="Load Level Variation" />
+        <binding type="IntMeasurement" name="Game Achievement" />
+        <binding type="ReferenceVariant" name="Browser Open URL" />
+        <binding type="ReferenceVariant" name="Ray Cast" />
+        <binding type="EnumMeasurement" name="Hardware Platform" />
+        <binding type="ReferenceVariant" name="Device Name" />
+        <binding type="EnumMeasurement" name="Installation State" />
+        <binding type="IntMeasurement" name="Installation Percent" />
+        <binding type="ReferenceVariant" name="Level to Install" />
+        <binding type="EnumMeasurement" name="Installation Speed" />
+        <binding type="EnumMeasurement" name="Pause State" />
+        <binding type="EnumMeasurement" name="Save State" />
+        <binding type="ReferenceVariant" name="Save Name" />
+        <binding type="ScriptSetReference" name="Save Data" />
+        <binding type="IntMeasurement" name="Save Space Available" />
+        <binding type="IntMeasurement" name="Save Files Available" />
+        <binding type="EnumMeasurement" name="Dvd State" />
+        <binding type="EnumMeasurement" name="Game Language" />
+        <binding type="EnumMeasurement" name="Console Language" />
+        <binding type="EnumMeasurement" name="Locale" />
+        <binding type="EnumMeasurement" name="Device Locale" />
+        <binding type="DateTime" name="Date and time" />
+        <binding type="EnumMeasurement" name="Render Disabled" />
+        <binding type="EnumMeasurement" name="Precompile Effects" />
+        <binding type="EnumMeasurement" name="Game Configuration" />
+        <binding type="EnumMeasurement" name="Console Default Difficulty" />
+        <binding type="EnumMeasurement" name="Console YAxis Inversion" />
+        <binding type="IntMeasurement" name="Script Ticks" />
+        <binding type="EnumMeasurement" name="Dump Memory" />
+        <binding type="IntMeasurement" name="Fps" />
+        <binding type="EnumMeasurement" name="Dump Statistics" />
+        <binding type="EnumMeasurement" name="Gather Performance Statistics" />
+        <binding type="IntMeasurement" name="Start Profile" />
+        <binding type="IntMeasurement" name="Stop Profile" />
+        <binding type="ReferenceVariant" name="Stress Test Command" />
+        <binding type="EnumMeasurement" name="CPU/GPU Boundness" />
+        <binding type="IntMeasurement" name="Perf Output Delay" />
+        <binding type="ReferenceVariant" name="Take Screenshot" />
+        <binding type="IntMeasurement" name="Video Recorder Buffer Length" />
+        <binding type="IntMeasurement" name="Save Recorded Video" />
+        <binding type="EnumMeasurement" name="Enable Video Recording" />
+        <binding type="EnumMeasurement" name="Show Help" />
+        <binding type="EnumMeasurement" name="BLE - Default portal favorite" />
+        <binding type="EnumMeasurement" name="BLE - Clear portal favorite" />
+        <binding type="EnumMeasurement" name="BLE - Default gamepad favorite" />
+        <binding type="EnumMeasurement" name="BLE - Clear gamepad favorite" />
+        <binding type="EnumMeasurement" name="Can Pause Suspended" />
+        <binding type="EnumMeasurement" name="Save Slot" />
+        <binding type="NameExtractor" name="Object Namer" />
+        <binding type="ReferenceVariant" name="Portal" />
+        <binding type="ReferenceVariant" name="Portal Set" />
+        <binding type="VfxManager" name="VFXManager" />
+        <binding type="tfbOnlineScriptObject" name="Online" />
+    </tfbBindings>
+    <tfbBindings name="CollisionInfo">
+        <binding type="SetVariant" name="contacts with me" />
+        <binding type="SetVariant" name="environment contacts" />
+        <binding type="SetVariant" name="object collisions" />
+        <binding type="FloatMeasurement" name="width" />
+        <binding type="FloatMeasurement" name="length" />
+        <binding type="FloatMeasurement" name="height" />
+        <binding type="FloatMeasurement" name="local X offset" />
+        <binding type="FloatMeasurement" name="local Y offset" />
+        <binding type="FloatMeasurement" name="local Z offset" />
+        <binding type="FloatMeasurement" name="weight" />
+        <binding type="FloatMeasurement" name="rebound" />
+        <binding type="EnumMeasurement" name="interacts with actors" />
+        <binding type="EnumMeasurement" name="interacts with level mesh" />
+        <binding type="EnumMeasurement" name="acts as actor surface" />
+        <binding type="EnumMeasurement" name="acts as physics object" />
+        <binding type="EnumMeasurement" name="shape" />
+    </tfbBindings>
+    <tfbBindings name="ViewportBlackAndWhiteEffectInfo">
+        <binding type="FloatMeasurement" name="level" />
+    </tfbBindings>
+    <tfbBindings name="ViewportFilterEffectInfo">
+        <binding type="FloatMeasurement" name="non-sprite percentage" />
+        <binding type="FloatMeasurement" name="non-sprite intensity" />
+    </tfbBindings>
+    <tfbBindings name="VehiclePhysics">
+        <binding type="FloatMeasurement" name="engine max RPM" />
+        <binding type="FloatMeasurement" name="engine max torque" />
+        <binding type="FloatMeasurement" name="vehicle top speed" />
+        <binding type="FloatMeasurement" name="vehicle top reverse speed" />
+        <binding type="FloatMeasurement" name="max steer angle" />
+        <binding type="FloatMeasurement" name="steer sensitivity" />
+        <binding type="FloatMeasurement" name="suspension length" />
+        <binding type="FloatMeasurement" name="rear suspension length" />
+        <binding type="FloatMeasurement" name="suspension strength" />
+        <binding type="FloatMeasurement" name="tire friction" />
+        <binding type="FloatMeasurement" name="rear tire friction" />
+        <binding type="FloatMeasurement" name="chassis friction" />
+        <binding type="FloatMeasurement" name="chassis restitution" />
+        <binding type="FloatMeasurement" name="front tire compression damper" />
+        <binding type="FloatMeasurement" name="rear tire compression damper" />
+        <binding type="FloatMeasurement" name="front tire relaxation damper" />
+        <binding type="FloatMeasurement" name="rear tire relaxation damper" />
+        <binding type="FloatMeasurement" name="anti-flip strength" />
+        <binding type="FloatMeasurement" name="center of mass X-offset" />
+        <binding type="FloatMeasurement" name="center of mass Y-offset" />
+    </tfbBindings>
+    <tfbBindings name="AbstractScriptGroup">
+        <binding type="tfbScriptObject" name="null" />
+        <binding type="tfbScriptObject" name="its" />
+    </tfbBindings>
+    <tfbBindings name="ViewportDepthOfFieldEffectInfo">
+        <binding type="EnumMeasurement" name="enabled" />
+        <binding type="FloatMeasurement" name="level" />
+        <binding type="FloatMeasurement" name="focus distance" />
+        <binding type="FloatMeasurement" name="focus drop at near length" />
+        <binding type="FloatMeasurement" name="focus drop at far length" />
+        <binding type="FloatMeasurement" name="focus width" />
+        <binding type="EnumMeasurement" name="Focus Mapper mode" />
+        <binding type="EnumMeasurement" name="near enabled" />
+        <binding type="FloatMeasurement" name="near focus distance" />
+        <binding type="FloatMeasurement" name="near focus width" />
+    </tfbBindings>
+    <tfbBindings name="DateTime">
+        <binding type="IntMeasurement" name="year" />
+        <binding type="IntMeasurement" name="month" />
+        <binding type="IntMeasurement" name="day" />
+        <binding type="IntMeasurement" name="hour" />
+        <binding type="IntMeasurement" name="minute" />
+        <binding type="IntMeasurement" name="second" />
+    </tfbBindings>
+    <tfbBindings name="VfxManager">
+        <binding type="IntMeasurement" name="vfx report pool" />
+        <binding type="IntMeasurement" name="vfx report usage" />
+        <binding type="IntMeasurement" name="vfx debug draws" />
+    </tfbBindings>
+    <tfbBindings name="ActorInfo">
+        <binding type="SetVariant" name="players" />
+        <binding type="SetVariant" name="NPCs" />
+        <binding type="SetVariant" name="inactive" />
+        <binding type="SetVariant" name="removed" />
+        <binding type="EnumMeasurement" name="footstep sound enabled" />
+        <binding type="EnumMeasurement" name="draw behind enabled" />
+        <binding type="EnumMeasurement" name="ignore player presence" />
+    </tfbBindings>
+    <tfbBindings name="ViewportBlurEffectInfo">
+        <binding type="FloatMeasurement" name="level" />
+    </tfbBindings>
+    <tfbBindings name="StringConverter">
+        <binding type="ScriptSetReference" name="value set" />
+        <binding type="ReferenceVariant" name="text" />
+        <binding type="EnumMeasurement" name="'@' representation" />
+        <binding type="IntMeasurement" name="integer digits" />
+        <binding type="IntMeasurement" name="decimal digits" />
+        <binding type="EnumMeasurement" name="use comma" />
+    </tfbBindings>
+    <tfbBindings name="ScriptScreenInfo">
+    </tfbBindings>
+    <tfbBindings name="OrientationMeasurement">
+        <binding type="FloatMeasurement" name="facing" />
+        <binding type="FloatMeasurement" name="tilt" />
+        <binding type="FloatMeasurement" name="roll" />
+        <binding type="FloatMeasurement" name="relative facing" />
+        <binding type="FloatMeasurement" name="relative tilt" />
+        <binding type="FloatMeasurement" name="relative roll" />
+    </tfbBindings>
+    <tfbBindings name="GestureStickMeasurement">
+        <binding type="FloatMeasurement" name="X" />
+        <binding type="FloatMeasurement" name="Y" />
+        <binding type="FloatMeasurement" name="heading" />
+        <binding type="FloatMeasurement" name="magnitude" />
+        <binding type="EnumMeasurement" name="connection" />
+    </tfbBindings>
+    <tfbBindings name="pathConnection">
+        <binding type="EnumMeasurement" name="traverse hint" />
+        <binding type="ReferenceVariant" name="next" />
+    </tfbBindings>
+    <tfbBindings name="JoystickMeasurement">
+        <binding type="FloatMeasurement" name="X" />
+        <binding type="FloatMeasurement" name="Y" />
+        <binding type="FloatMeasurement" name="heading" />
+        <binding type="FloatMeasurement" name="magnitude" />
+        <binding type="EnumMeasurement" name="connection" />
+    </tfbBindings>
+    <tfbBindings name="GeneratorGenerationFields">
+        <binding type="FloatMeasurement" name="spawn rate" />
+        <binding type="IntMeasurement" name="max alive" />
+        <binding type="IntMeasurement" name="currently alive" />
+        <binding type="FloatMeasurement" name="lifespan" />
+        <binding type="FloatMeasurement" name="lifespan randomness" />
+        <binding type="FloatMeasurement" name="max distance" />
+        <binding type="FloatMeasurement" name="midpoint percent" />
+    </tfbBindings>
+    <tfbBindings name="PlacementReference">
+        <binding type="MatrixMeasurement" name="remembered" />
+    </tfbBindings>
+    <tfbBindings name="RedOctaneTagScriptObject">
+        <binding type="EnumMeasurement" name="presence" />
+        <binding type="EnumMeasurement" name="tag class" />
+        <binding type="EnumMeasurement" name="save state" />
+    </tfbBindings>
+    <tfbBindings name="ActorWaypoint">
+        <binding type="IntMeasurement" name="radius" />
+        <binding type="pathConnection" name="forward" />
+        <binding type="pathConnection" name="backward" />
+    </tfbBindings>
+</tfbWrapper>
