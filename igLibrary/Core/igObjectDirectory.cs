@@ -88,6 +88,7 @@ namespace igLibrary.Core
 		}
 		public void AddObject(igObject obj, igName ns, igName name)
 		{
+			//Logging.Info("RenDir");
 			_objectList.Append(obj);
 			if(_useNameList)
 			{
@@ -125,7 +126,7 @@ namespace igLibrary.Core
 		}
 		public void BuildIGZ(string path)
 		{
-			
+			//TODO: IS THIS SUPPOSED TO BE EMPTY?
 		}
 	}
 	public class igObjectDirectoryList : igTObjectList<igObjectDirectory> {}

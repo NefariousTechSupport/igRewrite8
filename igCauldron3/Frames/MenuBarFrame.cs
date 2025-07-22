@@ -92,6 +92,14 @@ namespace igCauldron3
 					}
 					ImGui.EndMenu();
 				}
+				if (ImGui.BeginMenu("STTTools"))
+				{
+					if (ImGui.MenuItem("Dump Current Level.BLD"))
+					{
+						_wnd._frames.Add(new STTDumpFrame(_wnd, "Dump STT", "Dump"));
+					}
+					ImGui.EndMenu();
+				}
 				ImGui.EndMainMenuBar();
 			}
 		}

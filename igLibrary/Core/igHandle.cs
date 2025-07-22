@@ -62,16 +62,17 @@ namespace igLibrary.Core
 			if(_object != null) return (T)_object;
 
 			Dictionary<uint, igObjectDirectoryList> dirLists = igObjectStreamManager.Singleton._directoriesByName;
-			if(dirLists.ContainsKey(_namespace._hash))
+			if (dirLists == null) {throw new Exception("dirlists null");}
+			if (dirLists.ContainsKey(_namespace._hash))
 			{
 				igObjectDirectoryList dirs = dirLists[_namespace._hash];
-				for(int d = 0; d < dirs._count; d++)
+				for (int d = 0; d < dirs._count; d++)
 				{
 					igObjectDirectory dir = dirs[d];
-					if(dir._useNameList == false) return null;
-					for(int i = 0; i < dir._nameList._count; i++)
+					if (dir._useNameList == false) return null;
+					for (int i = 0; i < dir._nameList._count; i++)
 					{
-						if(dir._nameList[i]._hash == _alias._hash)
+						if (dir._nameList[i]._hash == _alias._hash)
 						{
 							_object = dir._objectList[i] as T;
 							return (T)_object;
@@ -82,7 +83,9 @@ namespace igLibrary.Core
 
 			if (_namespace._string == null)
 			{
-				Logging.Warn("failed to load igHandle {0}.{1}", _namespace._hash, _alias._hash);
+				//Logging.Warn("failed to load igHandle {0}.{1}", _namespace._hash, _alias._hash);
+				Logging.Warn("failed to load igHandle --> {0}", _namespace._string);
+				//throw new Exception("failed to load igHandle");
 			}
 			else
 			{

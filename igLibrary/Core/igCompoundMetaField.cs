@@ -194,7 +194,7 @@ namespace igLibrary.Core
 					_fieldList[i]._fieldHandle = _vTablePointer.GetField(_fieldList[i]._fieldName!, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Instance);
 				}
 
-				Logging.Info("Finalized!");
+				Logging.Info("Finalized! using igCompound");
 
 				_finishedFinalization = true;
 			}

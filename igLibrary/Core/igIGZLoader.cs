@@ -66,7 +66,7 @@ namespace igLibrary.Core
 			igMetaEnum platformEnum = igArkCore.GetMetaEnum("IG_CORE_PLATFORM");
 			_platform = (IG_CORE_PLATFORM)platformEnum.GetEnumFromValue(_stream.ReadInt32());	//_platform
 			uint numFixups = _stream.ReadUInt32();
-
+			
 			ParseSections();
 			ProcessFixupSections(dir, numFixups);
 			ReadObjects();
@@ -183,7 +183,8 @@ namespace igLibrary.Core
 							igObject? obj = null;
 							if(!igObjectStreamManager.Singleton._directoriesByName.TryGetValue(depName._ns._hash, out igObjectDirectoryList? list))
 							{
-								Logging.Warn("igIGZ EXID load: Failed to find namespace {0}, referenced in {1}", depName._ns._hash.ToString("X08"), _dir._path);
+								//bane of my existence
+								Logging.Warn("igIGZ EXID load: Failed to find namespace {0}, referenced in {1}", depName._ns, _dir._path);
 								goto finish;
 							}
 							for(int d = 0; d < list._count; d++)
@@ -204,7 +205,7 @@ namespace igLibrary.Core
 							}
 							if(obj == null)
 							{
-								Logging.Warn("igIGZ EXID load: Failed to find object {0} in {1}, referenced in {2}", depName._name._hash.ToString("X08"), list[0]._name._string, _dir._path);
+								Logging.Warn("igIGZ EXID load: Failed to find object {0} in {1}, referenced in {2} (obj == nul)", depName._name._hash.ToString("X08"), list[0]._name._string, _dir._path);
 							}
 							finish:
 								_externalList.Add(new igHandle(depName));

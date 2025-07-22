@@ -8,6 +8,7 @@
 
 
 using System.Reflection;
+using igLibrary;
 using igLibrary.Core;
 using ImGuiNET;
 
@@ -55,8 +56,9 @@ namespace igCauldron3
 		/// Add a directory to the list of uh open directories
 		/// </summary>
 		/// <param name="dir">The directory</param>
-		public void AddDirectory(igObjectDirectory dir)
+		public void AddDirectory(igObjectDirectory dir) // this function is called when the blue buttons on the left screen are opened, usually either level.bld or LANGUAGE packs
 		{
+			//Logging.Info("RenDir"); 
 			int index = -1;
 			for (int i = 0; i < _dirs._count; i++)
 			{
@@ -93,6 +95,7 @@ namespace igCauldron3
 					ImGui.PopID();
 					if(tabSelected)
 					{
+						//Logging.Info("RenderDirectoryTabSelected");
 						_dirIndex = i;
 						ImGui.BeginChild("$directoryview$", default(System.Numerics.Vector2), false, ImGuiWindowFlags.HorizontalScrollbar);
 						RenderDirectory(_dirs[i]);
@@ -119,11 +122,12 @@ namespace igCauldron3
 		{
 			if(ImGui.TreeNode("Objects"))
 			{
-				for(int i = 0; i < dir._objectList._count; i++)
+				//Logging.Info("RenDir");
+				for (int i = 0; i < dir._objectList._count; i++)
 				{
 					string name;
-					if(dir._useNameList) name = dir._nameList![i]._string;
-					else                        name = $"Object {i}";
+					if (dir._useNameList) name = dir._nameList![i]._string;
+					else name = $"Object {i}";
 
 					ImGui.Text(name);
 					ImGui.SameLine();
@@ -172,6 +176,7 @@ namespace igCauldron3
 			igMetaObject meta = obj.GetMeta();
 			if(ImGui.TreeNode(id, meta._name))
 			{
+				//Logging.Info("TestingLogger");
 				int overrideIndex = _overrides.FindIndex(x => meta._vTablePointer!.IsAssignableTo(x._t));
 				if(overrideIndex < 0)
 				{

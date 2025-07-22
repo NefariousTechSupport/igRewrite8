@@ -10,6 +10,7 @@
 using System.Reflection;
 using System.Xml;
 using igLibrary.DotNet;
+using igLibrary.Tfb;
 
 namespace igLibrary.Core
 {
@@ -57,6 +58,8 @@ namespace igLibrary.Core
 		private XmlNode _metaenumRoot;
 		private XmlDocument _metafieldDocument;
 		private XmlNode _metafieldRoot;
+		private XmlDocument _tfbbindingsDocument;
+		private XmlNode _tfbbindingsRoot;
 
 
 		// Lookup tables for looking up types by name
@@ -64,6 +67,7 @@ namespace igLibrary.Core
 		private Dictionary<string, igMetaEnum> _metaenumLookup;
 		private Dictionary<string, igMetaFieldPlatformInfo> _metafieldLookup;
 		private Dictionary<string, igCompoundMetaFieldInfo> _compoundLookup;
+		private Dictionary<string, tfbBindings> _tfbbindingslookup;
 
 
 		// read only properties for loaded ark data
@@ -82,7 +86,9 @@ namespace igLibrary.Core
 			_metaobjectDocument = new XmlDocument();
 			_metaenumDocument = new XmlDocument();
 			_metafieldDocument = new XmlDocument();
+			_tfbbindingsDocument = new XmlDocument();
 			_metaobjectLookup = new Dictionary<string, igMetaObject>();
+			_tfbbindingslookup = new Dictionary<string, tfbBindings>();
 			_metaenumLookup = new Dictionary<string, igMetaEnum>();
 			_metafieldLookup = new Dictionary<string, igMetaFieldPlatformInfo>();
 			_compoundLookup = new Dictionary<string, igCompoundMetaFieldInfo>();
@@ -96,7 +102,7 @@ namespace igLibrary.Core
 		/// <param name="metaobjectPath">The metaobjects xml file</param>
 		/// <param name="metaenumPath">The metaenums xml file</param>
 		/// <returns>null on success, and an ArkCoreXmlError containing a message on error</returns>
-		public ArkCoreXmlError? Load(string metaobjectPath, string metaenumPath, string metafieldPath)
+		public ArkCoreXmlError? Load(string metaobjectPath, string metaenumPath, string metafieldPath, string tfbbindingsPath)
 		{
 			ArkCoreXmlError? error = null;
 
@@ -126,10 +132,41 @@ namespace igLibrary.Core
 				return error;
 			}
 
+			error = LoadTFBBindings(tfbbindingsPath);
+			if (error != null)
+			{
+				return error;
+			}
+
 			return error;
 		}
 
+		private ArkCoreXmlError? LoadTFBBindings(string filePath)
+		{
+			_tfbbindingsDocument.Load(filePath);
+			Logging.Info(filePath);
+			if (_tfbbindingsDocument.FirstChild != _tfbbindingsDocument.LastChild)
+			{
+				return new ArkCoreXmlError("\"{0}\" must have exactly one root node!", filePath);
+			}
+			_tfbbindingsRoot = _tfbbindingsDocument.FirstChild!;
+			if (_tfbbindingsRoot.Name != "tfbWrapper")
+			{
+				return new ArkCoreXmlError("\"{0}\" must have exactly one root node named \"tfbWrapper\"!", filePath);
+			}
+			ArkCoreXmlError? error = null;
 
+			for (XmlNode? node = _tfbbindingsRoot.FirstChild; node != null; node = node.NextSibling)
+			{
+				error = ParseTFBBindings(node);
+				if (error != null)
+				{
+					break;
+				}
+			}
+
+			return error;
+		}
 		/// <summary>
 		/// Loads the metafields.xml file
 		/// </summary>
@@ -248,7 +285,7 @@ namespace igLibrary.Core
 				}
 
 				metaEnum._name = refnameAttr.Value;
-				metaEnum._names.Capacity  = node.ChildNodes.Count;
+				metaEnum._names.Capacity = node.ChildNodes.Count;
 				metaEnum._values.Capacity = metaEnum._names.Capacity;
 				_metaenumLookup.Add(metaEnum._name!, metaEnum);
 
@@ -311,7 +348,7 @@ namespace igLibrary.Core
 
 			ArkCoreXmlError? error = null;
 
-			for(XmlNode? node = _metaobjectRoot.FirstChild; node != null; node = node.NextSibling)
+			for (XmlNode? node = _metaobjectRoot.FirstChild; node != null; node = node.NextSibling)
 			{
 				error = ParseMetaObjectNodePass1(node);
 				if (error != null)
@@ -332,7 +369,12 @@ namespace igLibrary.Core
 		/// <returns>null on success, and an ArkCoreXmlError containing a message on error</returns>
 		private ArkCoreXmlError? ParseMetaObjectNodePass1(XmlNode node)
 		{
-			if (node.Name != "metaobject")
+			
+			/* if (node.Name.Contains("inding")) // added inding containment to stop any binding or tfbBindings tags flagging an erro
+			{
+				return ParseTFBBindings(node);
+			} */
+			 if (node.Name != "metaobject")
 			{
 				return new ArkCoreXmlError("All root elements must be named \"metaobject\".");
 			}
@@ -381,6 +423,45 @@ namespace igLibrary.Core
 			return null;
 		}
 
+		private ArkCoreXmlError? ParseTFBBindings(XmlNode node)
+		{
+
+			if (node.Name == "tfbBindings") // manage tfbBinding tag
+			{
+				XmlNode? nameAttribute = node.Attributes!.GetNamedItem("name");
+				if (nameAttribute == null)
+				{
+					return new ArkCoreXmlError("name attr for tfb is null");
+				}
+				Logging.Info("Logged {0} as a tfbBindings tag", nameAttribute.Value);
+			}
+			else if (node.Name == "binding")// manage variable-similar binding tag
+			{
+				XmlNode? typeAttribute = node.Attributes!.GetNamedItem("type");
+				if (typeAttribute == null)
+				{
+					return new ArkCoreXmlError("type attr for tfb is null");
+				}
+				XmlNode? nameAttribute = node.Attributes!.GetNamedItem("name");
+				if (nameAttribute == null)
+				{
+					return new ArkCoreXmlError("name attr for tfb is null");
+				}
+				Type? tfbBindingType = igArkCore.GetObjectDotNetType(typeAttribute.Value!);
+				if (tfbBindingType == null)
+				{
+					return new ArkCoreXmlError("binding type from dotnet is null");
+				}
+				tfbBindings tfbBinding = (tfbBindings)Activator.CreateInstance(tfbBindingType);
+				tfbBinding._name = nameAttribute.Value;
+				_tfbbindingslookup.Add(tfbBinding._name!, tfbBinding);
+			}
+			else
+			{
+				return new ArkCoreXmlError($"not a binding or a tfbBinding tag {node.OuterXml}");
+			}
+			return null;
+		}
 
 		/// <summary>
 		/// Pass 2 for metaobjects.
@@ -393,7 +474,7 @@ namespace igLibrary.Core
 
 			_metaobjectLookup.TryGetValue("ScriptObjectList", out _scriptObjectMeta);
 
-			for(XmlNode? metaobjectNode = _metaobjectRoot.FirstChild; metaobjectNode != null; metaobjectNode = metaobjectNode.NextSibling)
+			for (XmlNode? metaobjectNode = _metaobjectRoot.FirstChild; metaobjectNode != null; metaobjectNode = metaobjectNode.NextSibling)
 			{
 				error = ParseMetaObjectNodePass2(metaobjectNode, _metaobjectLookup[metaobjectNode.Attributes!.GetNamedItem("refname")!.Value!]);
 				if (error != null)
@@ -428,7 +509,7 @@ namespace igLibrary.Core
 						metaobject._metaFields[0] = metaobject._metaFields[0].CreateFieldCopy();
 						metaobject._metaFields[1] = metaobject._metaFields[1].CreateFieldCopy();
 					}
-					else if(metaobject._parent._name == "igHashTable")
+					else if (metaobject._parent._name == "igHashTable")
 					{
 						metaobject._metaFields[2] = metaobject._metaFields[2].CreateFieldCopy();
 						metaobject._metaFields[3] = metaobject._metaFields[3].CreateFieldCopy();
@@ -510,8 +591,8 @@ namespace igLibrary.Core
 					if (error != null) return null;
 				}
 				else if (childNode.Name == "dotnetfields"
-				      && metaobject is igDotNetMetaObject dnmo // This only applies to igDotNetMetaObject
-				      && childNode.FirstChild != null)         // If there are no children then do nothing
+					  && metaobject is igDotNetMetaObject dnmo // This only applies to igDotNetMetaObject
+					  && childNode.FirstChild != null)         // If there are no children then do nothing
 				{
 					igStringRefList cppFields = new igStringRefList();
 					igStringRefList dnFields = new igStringRefList();
@@ -524,7 +605,7 @@ namespace igLibrary.Core
 						}
 
 						XmlNode? cppNameAttr = dnFieldNode.Attributes!.GetNamedItem("cppName");
-						XmlNode? dnNameAttr  = dnFieldNode.Attributes!.GetNamedItem("dnName");
+						XmlNode? dnNameAttr = dnFieldNode.Attributes!.GetNamedItem("dnName");
 
 						if (cppNameAttr == null || dnNameAttr == null)
 						{
@@ -607,8 +688,8 @@ namespace igLibrary.Core
 				{
 					metafieldType = typeof(igCompoundMetaField);
 				}
-				else if(typeAttr.Value!.EndsWith("ArrayMetaField")
-				     && _compoundLookup.TryGetValue(typeAttr.Value!.Replace("ArrayMetaField", "MetaField"), out compoundInfo))
+				else if (typeAttr.Value!.EndsWith("ArrayMetaField")
+					 && _compoundLookup.TryGetValue(typeAttr.Value!.Replace("ArrayMetaField", "MetaField"), out compoundInfo))
 				{
 					metafieldType = typeof(igCompoundArrayMetaField);
 				}
@@ -629,12 +710,12 @@ namespace igLibrary.Core
 			metafield = (igMetaField)Activator.CreateInstance(metafieldType)!;
 			metafield._parentMeta = parentMeta;
 			if (metafield._parentMeta?._name == "ScriptSetList")
-			;
-			if(metafield is igPlaceHolderMetaField placeHolder)
+				;
+			if (metafield is igPlaceHolderMetaField placeHolder)
 			{
 				placeHolder._platformInfo = _metafieldLookup[typeAttr.Value!];
 			}
-			else if(metafield is igCompoundMetaField compoundField)
+			else if (metafield is igCompoundMetaField compoundField)
 			{
 				if (compoundInfo == null)
 				{
@@ -653,40 +734,40 @@ namespace igLibrary.Core
 			ParseMetaFieldPropertyString(node, "name", out metafield._fieldName, null);
 
 			ArkCoreXmlError? error = null;
-			error = ParseMetaFieldPropertyUShort(node, "offset",           out metafield._offset, 0);
+			error = ParseMetaFieldPropertyUShort(node, "offset", out metafield._offset, 0);
 			if (error != null) return error;
-			error = ParseMetaFieldPropertyEnum(node, "copyMethod",         out metafield._properties._copyMethod);
+			error = ParseMetaFieldPropertyEnum(node, "copyMethod", out metafield._properties._copyMethod);
 			if (error != null) return error;
-			error = ParseMetaFieldPropertyEnum(node, "resetMethod",        out metafield._properties._resetMethod);
+			error = ParseMetaFieldPropertyEnum(node, "resetMethod", out metafield._properties._resetMethod);
 			if (error != null) return error;
-			error = ParseMetaFieldPropertyEnum(node, "isAlikeMethod",      out metafield._properties._isAlikeCompareMethod);
+			error = ParseMetaFieldPropertyEnum(node, "isAlikeMethod", out metafield._properties._isAlikeCompareMethod);
 			if (error != null) return error;
-			error = ParseMetaFieldPropertyEnum(node, "itemsCopyMethod",    out metafield._properties._itemsCopyMethod);
+			error = ParseMetaFieldPropertyEnum(node, "itemsCopyMethod", out metafield._properties._itemsCopyMethod);
 			if (error != null) return error;
-			error = ParseMetaFieldPropertyEnum(node, "keysCopyMethod",     out metafield._properties._keysCopyMethod);
+			error = ParseMetaFieldPropertyEnum(node, "keysCopyMethod", out metafield._properties._keysCopyMethod);
 			if (error != null) return error;
-			error = ParseMetaFieldPropertyBool(node, "persistent",         out metafield._properties._persistent,        true);
+			error = ParseMetaFieldPropertyBool(node, "persistent", out metafield._properties._persistent, true);
 			if (error != null) return error;
-			error = ParseMetaFieldPropertyBool(node, "hasInvariance",      out metafield._properties._hasInvariance,     false);
+			error = ParseMetaFieldPropertyBool(node, "hasInvariance", out metafield._properties._hasInvariance, false);
 			if (error != null) return error;
-			error = ParseMetaFieldPropertyBool(node, "hasPoolName",        out metafield._properties._hasPoolName,       false);
+			error = ParseMetaFieldPropertyBool(node, "hasPoolName", out metafield._properties._hasPoolName, false);
 			if (error != null) return error;
-			error = ParseMetaFieldPropertyBool(node, "mutable",            out metafield._properties._mutable,           false);
+			error = ParseMetaFieldPropertyBool(node, "mutable", out metafield._properties._mutable, false);
 			if (error != null) return error;
-			error = ParseMetaFieldPropertyBool(node, "implicitAlignment",  out metafield._properties._implicitAlignment, true);
+			error = ParseMetaFieldPropertyBool(node, "implicitAlignment", out metafield._properties._implicitAlignment, true);
 			if (error != null) return error;
-			error = ParseMetaFieldPropertyByte(node, "requiredAlignment",  out metafield._properties._requiredAlignment, 0x00);
+			error = ParseMetaFieldPropertyByte(node, "requiredAlignment", out metafield._properties._requiredAlignment, 0x00);
 			if (error != null) return error;
 
 			if (metafield is igRefMetaField refMetaField)
 			{
-				error = ParseMetaFieldPropertyBool(node, "construct",   out refMetaField._construct,   true);
+				error = ParseMetaFieldPropertyBool(node, "construct", out refMetaField._construct, true);
 				if (error != null) return error;
-				error = ParseMetaFieldPropertyBool(node, "destruct",    out refMetaField._destruct,    false);
+				error = ParseMetaFieldPropertyBool(node, "destruct", out refMetaField._destruct, false);
 				if (error != null) return error;
 				error = ParseMetaFieldPropertyBool(node, "reconstruct", out refMetaField._reconstruct, false);
 				if (error != null) return error;
-				error = ParseMetaFieldPropertyBool(node, "refCounted",  out refMetaField._refCounted,  true);
+				error = ParseMetaFieldPropertyBool(node, "refCounted", out refMetaField._refCounted, true);
 				if (error != null) return error;
 			}
 
@@ -709,7 +790,7 @@ namespace igLibrary.Core
 						return new ArkCoreXmlError("{0} metafield node is referencing a nonexistent metaobject {1}", metafield.GetType().Name, metaobjectNode.Value!);
 					}
 				}
-				     if (metafield is igHandleMetaField    handleMetaField)    handleMetaField._metaObject    = referencedMetaObject;
+				if (metafield is igHandleMetaField handleMetaField) handleMetaField._metaObject = referencedMetaObject;
 				else if (metafield is igObjectRefMetaField objectRefMetaField) objectRefMetaField._metaObject = referencedMetaObject;
 			}
 
@@ -718,8 +799,8 @@ namespace igLibrary.Core
 				// needs to have a value assigned
 				ref igMetaField? memType = ref metafield;
 
-				     if (metafield is igMemoryRefHandleMetaField memoryRefMetaField)       memType = ref memoryRefMetaField._memType!;
-				else if (metafield is igMemoryRefMetaField       memoryRefHandleMetaField) memType = ref memoryRefHandleMetaField._memType!;
+				if (metafield is igMemoryRefHandleMetaField memoryRefMetaField) memType = ref memoryRefMetaField._memType!;
+				else if (metafield is igMemoryRefMetaField memoryRefHandleMetaField) memType = ref memoryRefHandleMetaField._memType!;
 
 				ParseMetaFieldPropertyMetaField(node, "memType", out memType);
 			}

@@ -8,6 +8,7 @@
 
 
 using System.Runtime.Serialization;
+using igLibrary;
 using igLibrary.Core;
 using ImGuiNET;
 
@@ -34,7 +35,7 @@ namespace igCauldron3
 			{
 				igObjectDirectory directory = igObjectStreamManager.Singleton.Load(_path)!;
 				DirectoryManagerFrame._instance.AddDirectory(directory);
-
+				Logging.Info("openDir");
 				Close();
 			}
 			catch(KeyNotFoundException)

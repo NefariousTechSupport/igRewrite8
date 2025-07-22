@@ -50,6 +50,7 @@ namespace igLibrary.Core
 
 		public override object? ReadIGZField(igIGZLoader loader)
 		{
+			//MARK: Wanring for placeholder readigz
 			Logging.Warn("Using placeholder implementation of ReadIGZField of field type {0}, this is bad", GetType().Name);
 			return loader._stream.ReadBytes(GetSize(loader._platform));
 		}

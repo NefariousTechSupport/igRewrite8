@@ -393,7 +393,7 @@ void main()
 					
 					GL.BufferData(BufferTarget.ArrayBuffer, newSize, IntPtr.Zero, BufferUsageHint.DynamicDraw);
 					_vertexBufferSize = newSize;
-
+					//Logging.Info(cmd_list.ToString());
 					Logging.Info("Resized dear imgui vertex buffer to new size {0}", _vertexBufferSize);
 				}
 

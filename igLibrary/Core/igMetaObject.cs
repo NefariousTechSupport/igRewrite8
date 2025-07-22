@@ -121,7 +121,11 @@ namespace igLibrary.Core
 		}
 		public override void CreateType2()
 		{
-			if(_vTablePointer is not TypeBuilder tb) return;
+			if (_vTablePointer is not TypeBuilder tb)
+			{
+				Logging.Warn("vtablepointer is not tb");
+				return;
+			}
 			
 			// FIXME: remove this pls
 			if (!_parent!._finishedFinalization)

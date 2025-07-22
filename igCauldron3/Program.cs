@@ -44,7 +44,7 @@ namespace igCauldron3
 			Window wnd = new Window(
 				new GameWindowSettings()
 				{
-					IsMultiThreaded = false,
+					//IsMultiThreaded = false,
 					RenderFrequency = 60,
 					UpdateFrequency = 60,
 				},

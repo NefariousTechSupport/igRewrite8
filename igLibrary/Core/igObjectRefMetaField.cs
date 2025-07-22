@@ -47,7 +47,9 @@ namespace igLibrary.Core
 				var loaderNamedExternal = loader._namedExternalList[(int)(raw & 0x7FFFFFFF)];
 				if (loaderNamedExternal == null)
 				{
-					throw new Exception("e");
+					//MARK: Log Loader Null, This exception crashes the program when level.bld is loaded from global.bld in STT
+					Logging.Warn("loader null");
+					//throw new Exception(loader.ToString());
 				}
 				return loaderNamedExternal;
 			}
@@ -78,7 +80,7 @@ namespace igLibrary.Core
 					// 		return null;
 					// 	}
 					// }
-					Logging.Info("Hash missed. Alias: {1}", handle._alias._hash);
+					//Logging.Info("Hash missed. Alias: {0}", handle._alias._hash);
 					return null;
 
 				}

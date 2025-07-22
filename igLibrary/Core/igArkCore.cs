@@ -320,7 +320,8 @@ namespace igLibrary.Core
 			igArkCoreXmlFile loader = new igArkCoreXmlFile();
 			igArkCoreXmlFile.ArkCoreXmlError? error = loader.Load($"{igArkCoreFile.ArkCoreFolder}/{game}/metaobjects.xml",
 			                                                      $"{igArkCoreFile.ArkCoreFolder}/{game}/metaenums.xml",
-			                                                      $"{igArkCoreFile.ArkCoreFolder}/{game}/metafields.xml");
+			                                                      $"{igArkCoreFile.ArkCoreFolder}/{game}/metafields.xml",
+																  $"{igArkCoreFile.ArkCoreFolder}/{game}/tfbbindings.xml");
 			if (error != null)
 			{
 				throw new Exception(error.Message);
