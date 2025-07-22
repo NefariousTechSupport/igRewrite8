@@ -84,7 +84,7 @@ namespace igLibrary.Core
 			if (_namespace._string == null)
 			{
 				//Logging.Warn("failed to load igHandle {0}.{1}", _namespace._hash, _alias._hash);
-				Logging.Warn("failed to load igHandle --> {0}", _namespace._string);
+				//Logging.Warn("failed to load igHandle --> {0}", _namespace._string);
 				//throw new Exception("failed to load igHandle");
 			}
 			else

@@ -8,6 +8,7 @@
 
 
 using System.Reflection;
+using igLibrary;
 using igLibrary.Core;
 using igLibrary.DotNet;
 using igLibrary.Math;
@@ -495,6 +496,7 @@ namespace igCauldron3
 		}
 		public static void RenderField_Compound(string id, object? raw, igMetaField field, FieldSetCallback cb)
 		{
+			Logging.Info("{0} :: {1} :: {2} :: {3}", id, raw, field._fieldName, cb);
 			igCompoundMetaField compound = (igCompoundMetaField)field;
 			if(ImGui.TreeNode(id, compound._compoundFieldInfo._name))
 			{
