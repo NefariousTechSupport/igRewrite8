@@ -20,7 +20,7 @@ namespace igLibrary.Core
 			_loaders.TryAdd(loader.GetLoaderType(), loader);
 			uint testFileMemorySize = loader.GetTestFileMemorySize();
 			RegisterLoader(loader, extension);
-			if(testFileMemorySize > _testFileMaxSize)
+			if (testFileMemorySize > _testFileMaxSize)
 			{
 				_testFileMaxSize = testFileMemorySize;
 			}
@@ -31,10 +31,12 @@ namespace igLibrary.Core
 		}
 		public static igObjectLoader FindLoader(string filePath)
 		{
+			string ContentPath = File.ReadAllText("GameFolder.txt");
 			igFilePath path = new igFilePath();
-			path.Set(filePath);
+			path.Set(Path.Combine(ContentPath, filePath));
 			_loaders.TryGetValue(path._extension, out igObjectLoader? loader);
-			if(loader == null) throw new KeyNotFoundException($"Loader for {filePath} files missing.");
+			if (loader == null) throw new KeyNotFoundException($"Loader for {filePath} files missing.");
+			Logging.Info("loaded {0}", _loaders[path._extension]);
 			return loader;
 		}
 		//Technically these are called GetExtension, GetType, and GetName. GetType is defined in System.Object so I've added Loader in all of the names

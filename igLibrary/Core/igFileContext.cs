@@ -138,8 +138,9 @@ namespace igLibrary.Core
 
 		public igFileDescriptor Open(string path)
 		{
+			string ContentPath = File.ReadAllText("GameFolder.txt");
 			igFilePath fp = new igFilePath();
-			fp.Set(path);
+			fp.Set(Path.Combine(ContentPath, path));
 			int fdIndex = _fileDescriptorPool.FindIndex(x => x._path == fp._path.ToString());
 
 			if(fdIndex >= 0) return _fileDescriptorPool[fdIndex];
@@ -179,7 +180,8 @@ namespace igLibrary.Core
 			igFileDescriptor fd = new igFileDescriptor();
 			_fileDescriptorPool.Add(fd);
 			igFilePath fp = new igFilePath();
-			fp.Set(path);
+			string ContentPath = File.ReadAllText("GameFolder.txt");
+			fp.Set(Path.Combine(ContentPath, path));
 			fd._path = fp._path;
 			return fd;
 		}

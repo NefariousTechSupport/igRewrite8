@@ -17,7 +17,7 @@ namespace igLibrary.Core
 		public void AddObjectDirectory(igObjectDirectory dir, string filePath)
 		{
 			igObjectDirectoryList? list = null;
-			if(!_directoriesByName.TryGetValue(dir._name._hash, out list))
+			if (!_directoriesByName.TryGetValue(dir._name._hash, out list))
 			{
 				list = new igObjectDirectoryList();
 				_directoriesByName.Add(dir._name._hash, list);
@@ -27,7 +27,7 @@ namespace igLibrary.Core
 		}
 		public igObjectDirectory? Load(string path)
 		{
-			return Load(path, new igName(Path.GetFileNameWithoutExtension(path)));
+			return Load(path, new igName(path));
 		}
 		public igObjectDirectory? Load(string path, igName nameSpace)
 		{
@@ -48,15 +48,16 @@ namespace igLibrary.Core
 			{
 				result = "was not previously loaded.";
 				objDir = new igObjectDirectory(filePath, nameSpace);
-				objDir._name = new igName($"NPL_{filePath}");
+				objDir._name = new igName($"{filePath}");
 				AddObjectDirectory(objDir, filePath);
 				objDir.ReadFile();
 				igObjectHandleManager.Singleton.AddDirectory(objDir);
 			}
-
-			Logging.Info("igObjectStreamManager was asked to load {0}... {1}", filePath, result);
+			Logging.Info("Loaded in file at path {0} with count {1}", path, objDir._objectList);
+			//Logging.Info("igObjectStreamManager was asked to load {0}... {1}", filePath, result);
 
 			return objDir;
 		}
+
 	}
 }

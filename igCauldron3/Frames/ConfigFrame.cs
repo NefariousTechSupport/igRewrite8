@@ -12,6 +12,7 @@ using igLibrary.Core;
 using igLibrary;
 using igLibrary.Gfx;
 using System.Diagnostics;
+using System.Text;
 
 namespace igCauldron3
 {
@@ -166,11 +167,11 @@ namespace igCauldron3
 					ImGui.SameLine();
 					bool debug = ImGui.Button("Debug Game");
 
-					if(full || debug)
+					if (full || debug)
 					{
-						if(!Directory.Exists(game._path)) throw new DirectoryNotFoundException("Game folder does not exist");
-						if(!string.IsNullOrWhiteSpace(game._updatePath) && !File.Exists(game._updatePath)) throw new FileNotFoundException("Update file does not exist");
-						if(game._platform == IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEFAULT || game._platform == IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEPRECATED || game._platform == IG_CORE_PLATFORM.IG_CORE_PLATFORM_MAX) throw new ArgumentException("Invalid platform");
+						if (!Directory.Exists(game._path)) throw new DirectoryNotFoundException("Game folder does not exist");
+						if (!string.IsNullOrWhiteSpace(game._updatePath) && !File.Exists(game._updatePath)) throw new FileNotFoundException("Update file does not exist");
+						if (game._platform == IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEFAULT || game._platform == IG_CORE_PLATFORM.IG_CORE_PLATFORM_DEPRECATED || game._platform == IG_CORE_PLATFORM.IG_CORE_PLATFORM_MAX) throw new ArgumentException("Invalid platform");
 
 						Stopwatch timer = new Stopwatch();
 						timer.Start();
@@ -178,7 +179,7 @@ namespace igCauldron3
 						CauldronConfig.WriteConfig();
 
 						igFileContext.Singleton.Initialize(game._path);
-						if(!string.IsNullOrWhiteSpace(game._updatePath))
+						if (!string.IsNullOrWhiteSpace(game._updatePath))
 						{
 							igFileContext.Singleton.InitializeUpdate(game._updatePath);
 						}
@@ -196,6 +197,7 @@ namespace igCauldron3
 
 						timer.Stop();
 						Logging.Info("Loaded game in {0}", timer.Elapsed.TotalSeconds);
+						WriteFolderToFile(game);
 					}
 					ImGui.SameLine();
 					if(ImGui.Button("Remove Game"))
@@ -215,6 +217,13 @@ namespace igCauldron3
 			ImGui.End();
 		}
 
+
+		public void WriteFolderToFile(CauldronConfig.GameConfig config)
+		{
+			FileStream fs = File.OpenWrite("GameFolder.txt");
+			fs.Write(Encoding.UTF8.GetBytes($"{config._path}"));
+			fs.Close();
+		}
 
 		/// <summary>
 		/// Render one of the text fields
