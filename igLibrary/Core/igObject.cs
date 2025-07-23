@@ -41,7 +41,7 @@ namespace igLibrary.Core
 				{
 					if (field.FieldType != data)
 					{
-						Logging.Info("{0} ::: {1}", field.Name, data);
+						//Logging.Info("{0} IS CURRENTLY {1}", field.Name, data);
 					}
 					field.SetValue(this, data);
 				}
