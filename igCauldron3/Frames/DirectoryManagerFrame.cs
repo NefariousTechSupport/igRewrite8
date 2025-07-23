@@ -120,7 +120,7 @@ namespace igCauldron3
 		/// <param name="dir">the directory</param>
 		private void RenderDirectory(igObjectDirectory dir)
 		{
-			if(ImGui.TreeNode("Objects"))
+			if(ImGui.TreeNode($"Objects_{dir._path}"))
 			{
 				//Logging.Info("RenDir");
 				for (int i = 0; i < dir._objectList._count; i++)

@@ -32,20 +32,23 @@ namespace igLibrary.Core
 		public igObjectDirectory? Load(string path, igName nameSpace)
 		{
 			string filePath = igFilePath.GetNativePath(path);
+			//Logging.Warn("{0}", filePath);
 			uint filePathHash = igHash.HashI(filePath);
 
 			igObjectDirectory objDir;
 			string result;
 
-			if(_directoriesByPath.ContainsKey(filePathHash))
+			if (_directoriesByPath.ContainsKey(filePathHash))
 			{
 				result = "was previously loaded.";
 				objDir = _directoriesByPath[filePathHash];
+				objDir._name = new igName($"{objDir._name}_{objDir._path}_WPL");
 			}
 			else
 			{
 				result = "was not previously loaded.";
 				objDir = new igObjectDirectory(filePath, nameSpace);
+				objDir._name = new igName($"NPL_{filePath}");
 				AddObjectDirectory(objDir, filePath);
 				objDir.ReadFile();
 				igObjectHandleManager.Singleton.AddDirectory(objDir);
