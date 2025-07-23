@@ -39,9 +39,12 @@ namespace igLibrary.Core
 				FieldInfo? field = metaFields[i]._fieldHandle;
 				if (field != null)
 				{
-					if (field.FieldType != data)
+					if (field.Name == "_attachedObjects")
 					{
-						//Logging.Info("{0} IS CURRENTLY {1}", field.Name, data);
+						if (loader._dir._path.Contains("output"))
+						{
+							
+						}
 					}
 					field.SetValue(this, data);
 				}
