@@ -43,7 +43,7 @@ namespace igLibrary.Core
 					{
 						if (loader._dir._path.Contains("output"))
 						{
-							
+							//Logging.Info("in Output");
 						}
 					}
 					field.SetValue(this, data);

@@ -9,6 +9,7 @@
 
 using ImGuiNET;
 using igLibrary.Core;
+using igLibrary;
 
 namespace igCauldron3
 {
@@ -59,6 +60,7 @@ namespace igCauldron3
 						igFilePath fp = new igFilePath();
 						fp.Set(target._path);
 						igArchive arc = igFileContext.Singleton._archiveManager._patchArchives._count > 0 ? igFileContext.Singleton._archiveManager._patchArchives[0] : (igArchive)target._fd._device;
+						Logging.Info(fp._path);
 						arc.GetAddFile(fp._path);
 						arc.Compress(fp._path, ms);
 						ms.Close();

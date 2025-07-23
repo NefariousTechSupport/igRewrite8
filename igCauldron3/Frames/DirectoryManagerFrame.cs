@@ -91,7 +91,7 @@ namespace igCauldron3
 				{
 					bool tabOpen = true;
 					ImGui.PushID(i);
-					bool tabSelected = ImGui.BeginTabItem(_dirs[i]._name._string, ref tabOpen);
+					bool tabSelected = ImGui.BeginTabItem(_dirs[i]._name._string+$"{_dirs[i]._path}", ref tabOpen);
 					ImGui.PopID();
 					if(tabSelected)
 					{

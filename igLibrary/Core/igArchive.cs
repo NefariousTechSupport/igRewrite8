@@ -711,7 +711,7 @@ namespace igLibrary.Core
 			uint hash = HashFilePath(filePath);
 			int index = HashSearch(_files, _archiveHeader._numFiles, _archiveHeader._hashSearchDivider, _archiveHeader._hashSearchSlop, hash);
 			if (index >= 0) return _files[index];
-
+			
 			//if not, generate a new one
 			FileInfo file = new FileInfo();
 			file._hash = hash;
@@ -875,7 +875,7 @@ namespace igLibrary.Core
 				if (igArkCore._game == igArkCore.EGame.EV_SkylandersTrapTeam)
 				{
 					string STTfileName = workItem._path[(workItem._path.LastIndexOf('/') + 1)..];
-
+					//Logging.Info(_path);
 					foreach (var fileInfo in _files)
 					{
 						if (fileInfo._name.Equals(STTfileName))
