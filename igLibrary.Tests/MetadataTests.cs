@@ -45,6 +45,17 @@ public class MetadataTest
 
 
 	/// <summary>
+	/// Load trap team and check igNamedObject
+	/// </summary>
+	[Fact]
+	public void LoadingTrapTeam()
+	{
+		LoadingAGame(igArkCore.EGame.EV_SkylandersTrapTeam, IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS3);
+	}
+
+
+
+	/// <summary>
 	/// Load superchargers and check igNamedObject
 	/// </summary>
 	[Fact]
@@ -112,5 +123,46 @@ public class MetadataTest
 		Assert.Equal("igMaterial", classImageMetaobject._name);
 
 		igArkCore.Reset();
+	}
+
+
+
+	/// <summary>
+	/// Double check dotnettype stuff for trap team
+	/// </summary>
+	[Fact]
+	public void TrapTeamMetadataOverrides()
+	{
+		igArkCore.ReadFromXmlFile(igArkCore.EGame.EV_SkylandersTrapTeam);
+
+		// AbstractPlacement
+
+		{
+			igMetaObject? abstractPlacementMeta = igArkCore.GetObjectMeta("AbstractPlacement");
+			Assert.NotNull(abstractPlacementMeta);
+
+			igMetaField? attachedObjectsField = abstractPlacementMeta.GetFieldByName("_attachedObjects");
+			Assert.NotNull(attachedObjectsField);
+			Assert.IsType<igObjectRefMetaField>(attachedObjectsField);
+
+			igObjectRefMetaField attachedObjectsRefField = (igObjectRefMetaField)attachedObjectsField;
+			Assert.NotNull(attachedObjectsRefField._dotnetType);
+			Assert.True(attachedObjectsRefField._dotnetType == typeof(IigObjectList));
+		}
+
+		// tfbSpriteInfo
+
+		{
+			igMetaObject? tfbSpriteInfoMeta = igArkCore.GetObjectMeta("tfbSpriteInfo");
+			Assert.NotNull(tfbSpriteInfoMeta);
+
+			igMetaField? attachedObjectsField = tfbSpriteInfoMeta.GetFieldByName("_attachedObjects");
+			Assert.NotNull(attachedObjectsField);
+			Assert.IsType<igObjectRefMetaField>(attachedObjectsField);
+
+			igObjectRefMetaField attachedObjectsRefField = (igObjectRefMetaField)attachedObjectsField;
+			Assert.NotNull(attachedObjectsRefField._dotnetType);
+			Assert.True(attachedObjectsRefField._dotnetType == typeof(IigObjectList));
+		}
 	}
 }

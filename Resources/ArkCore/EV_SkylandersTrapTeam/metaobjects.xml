@@ -3649,7 +3649,7 @@
 			<metafield type="igIntMetaField" offset="0x0068" name="_moveIndex" copyMethod="none" persistent="false"/>
 			<metafield type="igObjectRefMetaField" offset="0x006C" name="_attachNode" copyMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="AbstractAttachNode"/>
 			<metafield type="igObjectRefMetaField" offset="0x0070" name="_attachNodeOwner" copyMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="AbstractPlacement"/>
-			<metafield type="igObjectRefMetaField" offset="0x0074" name="_attachedObjects" copyMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igObjectList"/>
+			<metafield type="igObjectRefMetaField" offset="0x0074" name="_attachedObjects" copyMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igObjectList" dotnettype="igLibrary.Core.IigObjectList"/>
 			<metafield type="tfbEulerTransformMetaField" offset="0x0078" name="_attachXform" copyMethod="none" persistent="false"/>
 			<metafield type="igObjectRefMetaField" offset="0x0090" name="_soundList" copyMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="SoundList"/>
 			<metafield type="igObjectRefMetaField" offset="0x0094" name="_animationList" copyMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="AnimationStack"/>
@@ -9878,7 +9878,7 @@
 	<metaobject type="igMetaObject" refname="tfbSpriteInfo" basetype="AbstractPlacement">
 		<overriddenmetafields>
 			<metafield type="igObjectRefMetaField" offset="0x0070" name="_attachNodeOwner" copyMethod="none" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="AbstractPlacement"/>
-			<metafield type="igObjectRefMetaField" offset="0x0074" name="_attachedObjects" copyMethod="none" persistent="false" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="igObjectList"/>
+			<metafield type="igObjectRefMetaField" offset="0x0074" name="_attachedObjects" copyMethod="none" persistent="false" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="igObjectList" dotnettype="igLibrary.Core.IigObjectList"/>
 		</overriddenmetafields>
 		<metafields>
 			<metafield type="igStaticMetaField" offset="0x0000" name="_interface" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
