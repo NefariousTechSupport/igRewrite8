@@ -17,6 +17,7 @@ namespace igLibrary.Core
 		public static igObjectRefMetaField GetMetaField() => _MetaField;
 
 		public igMetaObject _metaObject;
+		public Type? _dotnetType;
 
 		public override void DumpArkData(igArkCoreFile saver, StreamHelper sh)
 		{
@@ -197,8 +198,12 @@ namespace igLibrary.Core
 		}
 		public override Type GetOutputType()
 		{
-			if(_metaObject._vTablePointer == null) _metaObject.GatherDependancies();
-			return _metaObject._vTablePointer!;
+			if (_metaObject._vTablePointer == null)
+			{
+				_metaObject.GatherDependancies();
+			}
+
+			return _dotnetType ?? _metaObject._vTablePointer!;
 		}
 		public override object? GetDefault(igMemoryPool pool)
 		{

@@ -813,8 +813,28 @@ namespace igLibrary.Core
 						return new ArkCoreXmlError("{0} metafield node is referencing a nonexistent metaobject {1}", metafield.GetType().Name, metaobjectNode.Value!);
 					}
 				}
-				if (metafield is igHandleMetaField handleMetaField) handleMetaField._metaObject = referencedMetaObject;
-				else if (metafield is igObjectRefMetaField objectRefMetaField) objectRefMetaField._metaObject = referencedMetaObject;
+
+				XmlNode? dotnettypeNode = node.Attributes.GetNamedItem("dotnettype");
+				Type? dotnetType = null;
+				if (dotnettypeNode != null)
+				{
+					dotnetType = Type.GetType(dotnettypeNode.Value!);
+					if (dotnetType == null)
+					{
+						return new ArkCoreXmlError("{0} metafield node is referencing a nonexistent dotnet type {1}", metafield.GetType().Name, dotnettypeNode.Value!);
+					}
+				}
+
+				if (metafield is igHandleMetaField handleMetaField)
+				{
+					handleMetaField._metaObject = referencedMetaObject;
+				}
+				else if (metafield is igObjectRefMetaField objectRefMetaField)
+				{
+					objectRefMetaField._metaObject = referencedMetaObject;
+					objectRefMetaField._dotnetType = dotnetType;
+				}
+
 			}
 
 			if (metafield is igMemoryRefMetaField || metafield is igMemoryRefHandleMetaField)
