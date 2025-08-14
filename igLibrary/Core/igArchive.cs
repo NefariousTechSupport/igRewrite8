@@ -651,10 +651,6 @@ namespace igLibrary.Core
 			src.Seek(0, SeekOrigin.Begin);
 			fileInfo._length = (uint)src.Length;
 
-			//Temp, for testing
-			fileInfo._blockIndex = 0xFFFFFFFF;
-			fileInfo._blocks = null;
-
 			//Add in setting the modification time for the funny
 			if(fileInfo._blockIndex == 0xFFFFFFFF)
 			{
@@ -669,9 +665,15 @@ namespace igLibrary.Core
 			{
 				uint decompressedSize = (uint)src.Length - processedBytes;
 				if(decompressedSize > 0x8000) decompressedSize = 0x8000;
-				ushort compressedSize;
-				MemoryStream tempMs = new MemoryStream();
+
 				src.Seek(processedBytes, SeekOrigin.Begin);
+				byte[] decompressedData = new byte[decompressedSize];
+				src.Read(decompressedData);
+
+				ushort compressedSize;
+				MemoryStream decompressedMs = new MemoryStream(decompressedData);
+				MemoryStream compressToMs = new MemoryStream();
+
 				dst.Position = StreamHelper.Align((uint)dst.Position, _archiveHeader._sectorSize);
 				fileInfo._blocks[blockI] = 0x80000000u | ((uint)dst.Position / _archiveHeader._sectorSize);
 				switch(type)
@@ -679,19 +681,21 @@ namespace igLibrary.Core
 					case CompressionType.kLzma:
 						SevenZip.Compression.LZMA.Encoder enc = new SevenZip.Compression.LZMA.Encoder();
 						enc.SetCoderProperties(propIDs, properties);
-						enc.WriteCoderProperties(tempMs);
-						enc.Code(src, tempMs, decompressedSize, -1, null);
-						compressedSize = (ushort)(tempMs.Length - 5);
+						enc.WriteCoderProperties(compressToMs);
+						// LMZA-SDK is dumb and does not actually use the inSize and outSize parameters,
+						// so instead the decompressedMs is of the proper input size
+						enc.Code(decompressedMs, compressToMs, decompressedSize, -1, null);
+						compressedSize = (ushort)(compressToMs.Length - 5);
 						break;
 					default:
 						throw new NotImplementedException($"Compression for type {type} is not supported");
 				}
 				dst.WriteByte((byte)(compressedSize & 0xFF));
 				dst.WriteByte((byte)(compressedSize >> 8));
-				tempMs.Flush();
-				tempMs.Seek(0, SeekOrigin.Begin);
-				tempMs.WriteTo(dst);
-				tempMs.Close();
+				compressToMs.Flush();
+				compressToMs.Seek(0, SeekOrigin.Begin);
+				compressToMs.WriteTo(dst);
+				compressToMs.Close();
 			}
 			//The memory stream buffer has extra zeroes at the end
 			fileInfo._compressedData = new byte[dst.Length];
