@@ -227,6 +227,14 @@ namespace igLibrary.Core
 				}
 				if (_archiveHeader._version >= 0x0B)
 				{
+					// If there's only one name then assume it's the logical one
+					// This isn't fully accurate but it's fine.
+					if (name2!.Length == 0)
+					{
+						name2 = name1;
+						name1 = string.Empty;
+					}
+
 					_files[i]._name = name1;
 					_files[i]._logicalName = name2;
 				}
