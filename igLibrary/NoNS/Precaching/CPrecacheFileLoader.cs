@@ -8,6 +8,7 @@
 
 
 using System.Text;
+using igLibrary.Tfb.Game;
 
 namespace igLibrary
 {
@@ -22,6 +23,7 @@ namespace igLibrary
 			LoosePak,
 			FullPackage,
 			LoosePackage,
+			LoadBldTfb,
 			EngineType,
 			Noop
 		};
@@ -50,6 +52,7 @@ namespace igLibrary
 		{
 			{ "loose_pak_lab",                   new(LoaderTask.LoosePak,                  LoaderTask.LoosePak                  ) },
 			{ "full_package_lab",                new(LoaderTask.FullPackage,               LoaderTask.Noop                      ) },
+			{ "load_bld_tfb",                    new(LoaderTask.LoadBldTfb,                LoaderTask.Noop                      ) },
 			{ "engine_type",                     new(LoaderTask.EngineType,                LoaderTask.EngineType                ) },
 		};
 
@@ -195,6 +198,9 @@ namespace igLibrary
 					break;
 				case LoaderTask.LoosePackage:
 					igFileContext.Singleton.LoadArchive($"app:/archives/{Path.GetFileName(line)}.pak");
+					break;
+				case LoaderTask.LoadBldTfb:
+					StreamContext.Singleton.Load(line);
 					break;
 				case LoaderTask.EngineType:
 					if (igRegistry.GetRegistry()._engineType != EngineType.None)
