@@ -10,6 +10,7 @@
 using ImGuiNET;
 using igLibrary.Core;
 using igLibrary;
+using igLibrary.Tfb.Game;
 
 namespace igCauldron3
 {
@@ -325,22 +326,30 @@ namespace igCauldron3
 			}
 			if(ImGui.TreeNode(archive._path))
 			{
+				bool tfbBld = Path.GetExtension(archive._path) == ".bld";
+
 				for(int i = 0; i < fileHeaders.Length; i++)
 				{
-					string laboratoryName = fileHeaders.ElementAt(i)._logicalName;
-					string tfbToolName = fileHeaders.ElementAt(i)._name;
-					if(laboratoryName.EndsWith(".igz") || laboratoryName.EndsWith(".lng"))
+					string logicalName = fileHeaders[i]._logicalName;
+					string extension   = Path.GetExtension(logicalName);
+					
+					if (extension == ".igz"
+					 || extension == ".lng"
+					 || tfbBld)
 					{
-						if(ImGui.Button(laboratoryName))
+						if(ImGui.Button(logicalName))
 						{
-							DirectoryManagerFrame._instance.AddDirectory(igObjectStreamManager.Singleton.Load(fileHeaders.ElementAt(i)._logicalName)!);
-						}
-					}
-					if (tfbToolName.EndsWith(".bld") || tfbToolName.EndsWith(".igz") || tfbToolName.EndsWith(".pak"))
-					{
-						if(ImGui.Button(tfbToolName))
-						{
-							DirectoryManagerFrame._instance.AddDirectory(igObjectStreamManager.Singleton.Load(archive._path + "/" + fileHeaders.ElementAt(i)._name)!);
+							igObjectDirectory? directory = null;
+							if (tfbBld && igRegistry.GetRegistry()._engineType == EngineType.TfbTool)
+							{
+								directory = StreamContext.Singleton.Load(archive._path);
+							}
+							else
+							{
+								directory = igObjectStreamManager.Singleton.Load(logicalName)!;
+							}
+
+							DirectoryManagerFrame._instance.AddDirectory(directory);
 						}
 					}
 
