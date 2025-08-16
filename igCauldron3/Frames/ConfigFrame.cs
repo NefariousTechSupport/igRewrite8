@@ -197,7 +197,6 @@ namespace igCauldron3
 
 						timer.Stop();
 						Logging.Info("Loaded game in {0}", timer.Elapsed.TotalSeconds);
-						WriteFolderToFile(game);
 					}
 					ImGui.SameLine();
 					if(ImGui.Button("Remove Game"))
@@ -218,12 +217,6 @@ namespace igCauldron3
 		}
 
 
-		public void WriteFolderToFile(CauldronConfig.GameConfig config)
-		{
-			FileStream fs = File.OpenWrite("GameFolder.txt");
-			fs.Write(Encoding.UTF8.GetBytes($"{config._path}"));
-			fs.Close();
-		}
 
 		/// <summary>
 		/// Render one of the text fields
