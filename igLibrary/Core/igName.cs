@@ -36,5 +36,9 @@ namespace igLibrary.Core
 				_hash = igHash.HashI(newString);
 			}
 		}
-	}
+        public override string ToString()
+        {
+			return _string ?? _hash.ToString("x");
+        }
+    }
 }
