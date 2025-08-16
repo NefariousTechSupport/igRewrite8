@@ -174,7 +174,8 @@ namespace igCauldron3
 			}
 
 			igMetaObject meta = obj.GetMeta();
-			if(ImGui.TreeNode(id, meta._name))
+			string displayName = obj is igNamedObject namedObj ? $" ({namedObj._name})" : string.Empty;
+			if(ImGui.TreeNode(id, meta._name + displayName))
 			{
 				//Logging.Info("TestingLogger");
 				int overrideIndex = _overrides.FindIndex(x => meta._vTablePointer!.IsAssignableTo(x._t));
