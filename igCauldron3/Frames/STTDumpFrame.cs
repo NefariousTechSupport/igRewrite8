@@ -59,10 +59,10 @@ namespace igCauldron3
             Directory.CreateDirectory(DumpsDirPath);
             var x = Directory.GetFiles(DumpsDirPath);
             string fileName = string.Format("Dump_{0}.txt", x.Length);
-            FileStream fs = File.Create(Path.Combine(DumpsDirPath, fileName));
+            /*FileStream fs = File.Create(Path.Combine(DumpsDirPath, fileName));
             List<tfbBindings> fileContents = igArkCore.tfbBindings.ToList();
             fs.Write(Encoding.UTF8.GetBytes(fileContents.ToString()));
-            fs.Close();
+            fs.Close();*/
         }
     }
 }
