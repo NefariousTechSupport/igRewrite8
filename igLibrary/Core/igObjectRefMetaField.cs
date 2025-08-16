@@ -45,47 +45,12 @@ namespace igLibrary.Core
 			bool isNamedExternal = loader._runtimeFields._namedExternals.BinarySearch(baseOffset) >= 0;
 			if(isNamedExternal)
 			{
-				var loaderNamedExternal = loader._namedExternalList[(int)(raw & 0x7FFFFFFF)];
-				if (loaderNamedExternal == null)
-				{
-					//MARK: Log Loader Null, This exception crashes the program when level.bld is loaded from global.bld in STT
-					Logging.Warn("loader null");
-					//throw new Exception(loader.ToString());
-				}
-				return loaderNamedExternal;
+				return loader._namedExternalList[(int)(raw & 0x7FFFFFFF)];
 			}
 			bool isExid = loader._runtimeFields._externals.BinarySearch(baseOffset) >= 0;
 			if(isExid)
 			{
-				var handle = loader._externalList[(int)(raw & 0x7FFFFFFF)];
-				var readIgzField = handle.GetObjectAlias<igObject>();
-				if (readIgzField == null)
-				{
-					// var lines = File.ReadAllLines("E:/Projects/CauldronMods/CauldronTFB/Resources/test.txt");
-					// foreach (var line in lines)
-					// {
-					// 	var hash = igHash.HashI(line);
-					// 	if (hash == handle._namespace._hash)
-					// 	{
-					// 		foreach (var line2 in lines)
-					// 		{
-					// 			var aliasHash = igHash.HashI(line2);
-					// 			if (aliasHash == handle._alias._hash)
-					// 			{
-					// 				Logging.Info("Hash missed. Namespace: {0}, Alias: {1}", line, line2);
-					// 				return null;
-					// 			}
-					// 		}
-					// 		
-					// 		Logging.Info("Hash missed. Namespace: {0}, Alias: {1}", line, handle._alias._hash);
-					// 		return null;
-					// 	}
-					// }
-					//Logging.Info("Hash missed. Alias: {0}", handle._alias._hash);
-					return null;
-
-				}
-				return readIgzField;
+				return loader._externalList[(int)(raw & 0x7FFFFFFF)].GetObjectAlias<igObject>();
 			}
 			if (raw != 0)
 				throw new InvalidDataException("Failed to read igObjectRefMetaField properly");
