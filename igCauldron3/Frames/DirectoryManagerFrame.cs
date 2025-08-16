@@ -91,7 +91,7 @@ namespace igCauldron3
 				{
 					bool tabOpen = true;
 					ImGui.PushID(i);
-					bool tabSelected = ImGui.BeginTabItem(_dirs[i]._name._string+$"{_dirs[i]._path}", ref tabOpen);
+					bool tabSelected = ImGui.BeginTabItem(_dirs[i]._name._string, ref tabOpen);
 					ImGui.PopID();
 					if(tabSelected)
 					{
@@ -120,7 +120,7 @@ namespace igCauldron3
 		/// <param name="dir">the directory</param>
 		private void RenderDirectory(igObjectDirectory dir)
 		{
-			if(ImGui.TreeNode($"Objects_{dir._path}"))
+			if(ImGui.TreeNode($"Objects"))
 			{
 				//Logging.Info("RenDir");
 				for (int i = 0; i < dir._objectList._count; i++)
