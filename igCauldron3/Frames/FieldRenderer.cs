@@ -12,6 +12,7 @@ using igLibrary;
 using igLibrary.Core;
 using igLibrary.DotNet;
 using igLibrary.Math;
+using igLibrary.Tfb.Core;
 using igLibrary.Vfx;
 using ImGuiNET;
 
@@ -74,6 +75,7 @@ namespace igCauldron3
 			_renderFuncLookup.Add(typeof(igRawRefMetaField), RenderField_RawRef);
 			_renderFuncLookup.Add(typeof(igStructMetaField), RenderField_Struct);
 			_renderFuncLookup.Add(typeof(igVfxRangedCurveMetaField), RenderField_RangedCurve);
+			_renderFuncLookup.Add(typeof(tfbEulerTransformMetaField), RenderField_tfbEulerTransform);
 		}
 
 
@@ -681,6 +683,20 @@ namespace igCauldron3
 
 				ImGui.TreePop();
 			}
+		}
+		private static void RenderField_tfbEulerTransform(string id, object? raw, igMetaField field, FieldSetCallback cb)
+		{
+			tfbEulerTransform value = (tfbEulerTransform)raw!;
+			RenderField_Vec3f("$angle$", value._angle, igVec3fMetaField._MetaField, (newValue) =>
+			{
+				value._angle = (igVec3f)newValue!;
+				cb.Invoke(value);
+			});
+			RenderField_Vec3f("$position$", value._position, igVec3fMetaField._MetaField, (newValue) =>
+			{
+				value._position = (igVec3f)newValue!;
+				cb.Invoke(value);
+			});
 		}
 	}
 }
