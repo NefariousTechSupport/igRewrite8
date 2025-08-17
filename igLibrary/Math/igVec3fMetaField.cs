@@ -13,6 +13,7 @@ namespace igLibrary.Math
 {
 	public class igVec3fMetaField : igMetaField
 	{
+		public static igUnsignedCharMetaField _MetaField { get; private set; } = new igUnsignedCharMetaField();
 		public override object? ReadIGZField(igIGZLoader loader)
 		{
 			igVec3f data = new igVec3f();
