@@ -312,7 +312,8 @@ namespace igLibrary.Core
 		public void Save(string filePath)
 		{
 			FileStream fs = File.Create(filePath);
-			StreamHelper sh = new StreamHelper(fs, StreamHelper.Endianness.Big);
+			bool bigEndian = igAlchemyCore.isPlatformBigEndian(igRegistry.GetRegistry()._platform);
+			StreamHelper sh = new StreamHelper(fs, bigEndian ? StreamHelper.Endianness.Big : StreamHelper.Endianness.Little);
 			sh.WriteUInt32(0x1A414749);
 			sh.WriteUInt32(_archiveHeader._version);
 			UpdateFileHashes();
