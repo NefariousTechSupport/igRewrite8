@@ -96,6 +96,8 @@ namespace igLibrary.Core
 		public ulong GetFlags(igMemoryRefHandleMetaField ioField, IG_CORE_PLATFORM platform) => GetFlagsInternal(ioField._memType, platform);
 		private ulong GetFlagsInternal(igMetaField memType, IG_CORE_PLATFORM platform)
 		{
+			platform = IG_CORE_PLATFORM.IG_CORE_PLATFORM_PS4;
+
 			ulong flags = (uint)(_data == null ? 0 : _data.Length) * memType.GetSize(platform);
 			uint codedAlignment = memType.GetAlignment(platform) * _alignmentMultiple;
 			
@@ -115,8 +117,8 @@ namespace igLibrary.Core
 			//The following isn't valid on crash nst/ctrnf
 			if(igAlchemyCore.isPlatform64Bit(platform))
 			{
-				flags |= codedAlignment << 0x3B;
-				flags |= (_optimalCPUReadWrite ? 1u : 0u) << 0x3F;
+				flags |= (ulong)codedAlignment << 0x3B;
+				flags |= (_optimalCPUReadWrite ? 1ul : 0ul) << 0x3F;
 			}
 			else
 			{
