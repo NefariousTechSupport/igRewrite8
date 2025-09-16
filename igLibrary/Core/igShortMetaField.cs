@@ -11,6 +11,7 @@ namespace igLibrary.Core
 {
 	public class igShortMetaField : igMetaField
 	{
+		public static igShortMetaField _MetaField { get; private set; } = new igShortMetaField();
 		public override object? ReadIGZField(igIGZLoader loader) => loader._stream.ReadInt16();
 		public override void WriteIGZField(igIGZSaver saver, igIGZSaver.SaverSection section, object? value) => section._sh.WriteInt16((short)value);
 		public override uint GetAlignment(IG_CORE_PLATFORM platform) => 2;

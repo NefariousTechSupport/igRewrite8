@@ -13,8 +13,7 @@ namespace igLibrary.Core
 {
 	public class igObjectRefMetaField : igRefMetaField
 	{
-		private static igObjectRefMetaField _MetaField = new igObjectRefMetaField();
-		public static igObjectRefMetaField GetMetaField() => _MetaField;
+		public static igObjectRefMetaField _MetaField { get; private set; } = new igObjectRefMetaField();
 
 		public igMetaObject _metaObject;
 

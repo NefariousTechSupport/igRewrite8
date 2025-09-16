@@ -13,11 +13,12 @@ namespace igLibrary.DotNet
 {
 	public class DotNetTypeMetaField : igMetaField
 	{
+		public static DotNetTypeMetaField _MetaField { get; private set; } = new DotNetTypeMetaField();
 		public override object? ReadIGZField(igIGZLoader loader)
 		{
 			ulong baseOffset = loader._stream.Tell64();
 			DotNetType data = new DotNetType();
-			object? baseMeta = igObjectRefMetaField.GetMetaField().ReadIGZField(loader);
+			object? baseMeta = igObjectRefMetaField._MetaField.ReadIGZField(loader);
 			if (baseMeta != null && !baseMeta.GetType().IsAssignableTo(typeof(igBaseMeta)))
 			{
 				Logging.Warn("Got DotNetTypeMetaField that references _baseMeta that isn't an igBaseMeta. {0} @ byte 0x{1}", loader._dir._path, baseOffset.ToString("X08"));
@@ -36,7 +37,7 @@ namespace igLibrary.DotNet
 		public override void WriteIGZField(igIGZSaver saver, igIGZSaver.SaverSection section, object? value)
 		{
 			DotNetType data = (DotNetType)value!;
-			igObjectRefMetaField.GetMetaField().WriteIGZField(saver, section, data._baseMeta);
+			igObjectRefMetaField._MetaField.WriteIGZField(saver, section, data._baseMeta);
 			igIntMetaField._MetaField.WriteIGZField(saver, section, data._flags);
 		}
 		public override uint GetAlignment(IG_CORE_PLATFORM platform) => igAlchemyCore.GetPointerSize(platform);
