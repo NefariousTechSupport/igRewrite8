@@ -90,7 +90,14 @@ namespace igLibrary.Core
 		public void Realloc(int itemCount)
 		{
 			if(_data != null && itemCount == _data!.Length) return;
+
+			int oldItemCount = _data == null ? 0 : _data.Length;
 			Array.Resize<T>(ref _data, itemCount);
+
+			for (int i = oldItemCount; i < _data.Length && typeof(T).IsValueType; i++)
+			{
+				_data[i] = Activator.CreateInstance<T>();
+			}
 		}
 		public ulong GetFlags(igMemoryRefMetaField ioField, IG_CORE_PLATFORM platform) => GetFlagsInternal(ioField._memType, platform);
 		public ulong GetFlags(igMemoryRefHandleMetaField ioField, IG_CORE_PLATFORM platform) => GetFlagsInternal(ioField._memType, platform);
