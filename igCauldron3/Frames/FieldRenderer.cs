@@ -75,6 +75,8 @@ namespace igCauldron3
 			_renderFuncLookup.Add(typeof(igVfxRangedCurveMetaField), RenderField_RangedCurve);
 			_renderFuncLookup.Add(typeof(igVfxRgbCurveMetaField), RenderField_RgbCurve);
 			_renderFuncLookup.Add(typeof(igVfxModulationHelperMetaField), RenderField_ModulationHelper);
+			_renderFuncLookup.Add(typeof(DotNetTypeMetaField), RenderField_DotNetType);
+			_renderFuncLookup.Add(typeof(DotNetDataMetaField), RenderField_DotNetData);
 		}
 
 
@@ -875,6 +877,216 @@ namespace igCauldron3
 
 				ImGui.TreePop();
 			}
+		}
+		static readonly (ElementType, string)[] kElementTypeComboItems = new (ElementType, string)[]{
+			(ElementType.kElementTypeEnd,       "End"                        ),
+			(ElementType.kElementTypeVoid,      "Void"                       ),
+			(ElementType.kElementTypeBoolean,   "Boolean"                    ),
+			(ElementType.kElementTypeChar,      "Char"                       ),
+			(ElementType.kElementTypeI1,        "Integer (8-bit, signed)"    ),
+			(ElementType.kElementTypeU1,        "Integer (8-bit, unsigned)"  ),
+			(ElementType.kElementTypeI2,        "Integer (16-bit, signed)"   ),
+			(ElementType.kElementTypeU2,        "Integer (16-bit, unsigned)" ),
+			(ElementType.kElementTypeI4,        "Integer (32-bit, signed)"   ),
+			(ElementType.kElementTypeU4,        "Integer (32-bit, unsigned)" ),
+			(ElementType.kElementTypeI8,        "Integer (64-bit, signed)"   ),
+			(ElementType.kElementTypeU8,        "Integer (64-bit, unsigned)" ),
+			(ElementType.kElementTypeR4,        "Float (32-bit)"             ),
+			(ElementType.kElementTypeString,    "String"                     ),
+			(ElementType.kElementTypeValueType, "ValueType"                  ),
+			(ElementType.kElementTypeClass,     "Class"                      ),
+			(ElementType.kElementTypeObject,    "Object"                     )
+		};
+		static int sRegisteredEnumCount = 0;
+		static int sRegisteredClassCount = 0;
+		static List<igBaseMeta>? sMetaList = null;
+
+		public static void RenderField_DotNetType(string id, object? raw, igMetaField field, FieldSetCallback cb)
+		{
+			bool expanded = ImGui.TreeNode($"DotNetType##{id}");
+			if (!expanded)
+			{
+				return;
+			}
+
+			DotNetType type = (DotNetType)raw!;
+			bool changed = false;
+
+			int index = Array.FindIndex(kElementTypeComboItems, x => x.Item1 == type._elementType);
+			if(ImGui.BeginCombo("##elementType", kElementTypeComboItems[index].Item2))
+			{
+				for (uint i = 0; i < kElementTypeComboItems.Length; i++)
+				{
+					if(ImGui.Selectable(kElementTypeComboItems[i].Item2, type._elementType == kElementTypeComboItems[i].Item1))
+					{
+						changed = true;
+						type._elementType = kElementTypeComboItems[i].Item1;
+					}
+					if(type._elementType == kElementTypeComboItems[i].Item1)
+					{
+						ImGui.SetItemDefaultFocus();
+					}
+				}
+				ImGui.EndCombo();
+			}
+
+			RenderField(nameof(type._isSimple), nameof(type._isSimple), type._isSimple, igBoolMetaField._MetaField, (newValue) =>
+			{
+				type._isSimple = (bool)newValue!;
+				changed = true;
+			});
+
+			RenderField(nameof(type._isArray), nameof(type._isArray), type._isArray, igBoolMetaField._MetaField, (newValue) =>
+			{
+				type._isArray = (bool)newValue!;
+				changed = true;
+			});
+
+			if (sRegisteredEnumCount != igArkCore.MetaEnums.Count()
+			 || sRegisteredClassCount != igArkCore.MetaObjects.Count()
+			 || sMetaList == null)
+			{
+				sRegisteredEnumCount = igArkCore.MetaEnums.Count();
+				sRegisteredClassCount = igArkCore.MetaObjects.Count();
+
+				sMetaList = new List<igBaseMeta>(sRegisteredEnumCount + sRegisteredClassCount);
+
+				sMetaList.AddRange(igArkCore.MetaObjects);
+				sMetaList.AddRange(igArkCore.MetaEnums);
+
+				sMetaList = sMetaList.OrderBy(x => x._name).ToList();
+			}
+
+			if (type._elementType == ElementType.kElementTypeValueType
+			 || type._elementType == ElementType.kElementTypeClass
+			 || type._elementType == ElementType.kElementTypeObject)
+			{
+				if(ImGui.BeginCombo("##meta", type._baseMeta == null ? "<null>" : type._baseMeta._name))
+				{
+					for (int i = 0; i < sMetaList.Count; i++)
+					{
+						if (ImGui.Selectable(sMetaList[i]._name, type._baseMeta == sMetaList[i]))
+						{
+							type._baseMeta = sMetaList[i];
+							changed = true;
+						}
+						if(type._baseMeta == sMetaList[i])
+						{
+							ImGui.SetItemDefaultFocus();
+						}
+					}
+					ImGui.EndCombo();
+				}
+			}
+
+			if (changed)
+			{
+				cb.Invoke(type);
+			}
+
+			ImGui.TreePop();
+		}
+		public static void RenderField_DotNetData(string id, object? raw, igMetaField field, FieldSetCallback cb)
+		{
+			bool expanded = ImGui.TreeNode($"DotNetData##{id}");
+			if (!expanded)
+			{
+				return;
+			}
+
+			DotNetData data = (DotNetData)raw!;
+			bool changed = false;
+
+			RenderField($"{id}$DotNetData._type$", "Type", data._type, DotNetTypeMetaField._MetaField, (newValue) =>
+			{
+				data._type = (DotNetType)newValue!;
+				data.Reset();
+				changed = true;
+			});
+
+			igMetaField? metaField = null;
+			igBaseMeta? originalMeta = null;
+			switch (data._type._elementType)
+			{
+				case ElementType.kElementTypeEnd:
+				case ElementType.kElementTypeVoid:
+					break;
+				case ElementType.kElementTypeBoolean:
+					metaField = igBoolMetaField._MetaField;
+					break;
+				case ElementType.kElementTypeChar:
+					metaField = igWideCharMetaField._MetaField;
+					break;
+				case ElementType.kElementTypeI1:
+					metaField = igCharMetaField._MetaField;
+					break;
+				case ElementType.kElementTypeU1:
+					metaField = igUnsignedCharMetaField._MetaField;
+					break;
+				case ElementType.kElementTypeI2:
+					metaField = igShortMetaField._MetaField;
+					break;
+				case ElementType.kElementTypeU2:
+					metaField = igUnsignedShortMetaField._MetaField;
+					break;
+				case ElementType.kElementTypeI4:
+					metaField = igIntMetaField._MetaField;
+					break;
+				case ElementType.kElementTypeU4:
+					metaField = igUnsignedIntMetaField._MetaField;
+					break;
+				case ElementType.kElementTypeI8:
+					metaField = igLongMetaField._MetaField;
+					break;
+				case ElementType.kElementTypeU8:
+					metaField = igUnsignedLongMetaField._MetaField;
+					break;
+				case ElementType.kElementTypeR4:
+					metaField = igFloatMetaField._MetaField;
+					break;
+				case ElementType.kElementTypeString:
+					metaField = igStringMetaField._MetaField;
+					break;
+				case ElementType.kElementTypeValueType:
+					metaField = igEnumMetaField._MetaField;
+					originalMeta = igEnumMetaField._MetaField._metaEnum;
+					igEnumMetaField._MetaField._metaEnum = (igMetaEnum?)data._type._baseMeta!;
+					break;
+				case ElementType.kElementTypeClass:
+				case ElementType.kElementTypeObject:
+					metaField = igObjectRefMetaField._MetaField;
+					originalMeta = igObjectRefMetaField._MetaField._metaObject;
+					igObjectRefMetaField._MetaField._metaObject = (igMetaObject?)data._type._baseMeta!;
+					break;
+			}
+
+			if (metaField != null)
+			{
+				RenderField($"{id}$data$", "Data", data._data, metaField, (newValue) => 
+				{
+					data._data = newValue;
+					changed = true;
+					// Do the invoke cos igObject ones don't happen on the same frame
+					cb.Invoke(data);
+				});
+			}
+
+			if (data._type._elementType == ElementType.kElementTypeValueType)
+			{
+				igEnumMetaField._MetaField._metaEnum = (igMetaEnum?)originalMeta!;
+			}
+			else if (data._type._elementType == ElementType.kElementTypeClass
+			      || data._type._elementType == ElementType.kElementTypeObject)
+			{
+				igObjectRefMetaField._MetaField._metaObject = (igMetaObject?)originalMeta!;
+			}
+
+			if (changed)
+			{
+				cb.Invoke(data);
+			}
+
+			ImGui.TreePop();
 		}
 	}
 }
