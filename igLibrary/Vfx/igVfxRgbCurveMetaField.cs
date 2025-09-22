@@ -73,7 +73,7 @@ namespace igLibrary.Vfx
 			igVec4fMetaField._MetaField.WriteIGZField(saver, section, data._c13);
 			igVec4fMetaField._MetaField.WriteIGZField(saver, section, data._c14);
 		}
-		public override uint GetAlignment(IG_CORE_PLATFORM platform) => 0x04;
+		public override uint GetAlignment(IG_CORE_PLATFORM platform) => 0x10;
 		public override uint GetSize(IG_CORE_PLATFORM platform) => 0x110;
 		public override Type GetOutputType() => typeof(igVfxRgbCurve);
 
