@@ -51,7 +51,7 @@ namespace igLibrary.Vfx
 		}
 		public override void WriteIGZField(igIGZSaver saver, igIGZSaver.SaverSection section, object? value)
 		{
-			igVfxRgbCurve data = new igVfxRgbCurve();
+			igVfxRgbCurve data = (igVfxRgbCurve)value!;
 			section._sh.WriteBoolean(data._enableInterpolation);
 			section._sh.WriteBoolean(data._enableRandomness);
 			section._sh.WriteUInt16(0x0); // Padding
