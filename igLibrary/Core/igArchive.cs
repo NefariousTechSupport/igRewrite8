@@ -652,6 +652,15 @@ namespace igLibrary.Core
 			src.Seek(0, SeekOrigin.Begin);
 			fileInfo._length = (uint)src.Length;
 
+			CompressionType type = (CompressionType)(fileInfo._blockIndex >> 28);
+
+			// Temporary workaround for lack of support of other algorithms
+			if (type != CompressionType.kLzma
+			 && type != CompressionType.kUncompressed)
+			{
+				fileInfo._blockIndex = 0xFFFFFFFF;
+			}
+
 			//Add in setting the modification time for the funny
 			if(fileInfo._blockIndex == 0xFFFFFFFF)
 			{
@@ -660,7 +669,6 @@ namespace igLibrary.Core
 				return;
 			}
 			fileInfo._blocks = new uint[(src.Length + 0x7FFF) >> 0xF];
-			CompressionType type = (CompressionType)(fileInfo._blockIndex >> 28);
 			MemoryStream dst = new MemoryStream();
 			for(uint processedBytes = 0, blockI = 0; processedBytes < src.Length; processedBytes += 0x8000, blockI++)
 			{
