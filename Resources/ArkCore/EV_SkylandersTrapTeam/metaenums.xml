@@ -687,12 +687,12 @@
 		<value name="APP_CONFIG_GOLDEN" value="3"/>
 	</metaenum>
 	<metaenum refname="RelOp">
-		<value name="<=" value="0"/>
+		<value name="&lt;=" value="0"/>
 		<value name="=" value="1"/>
-		<value name=">=" value="2"/>
-		<value name="<" value="3"/>
-		<value name=">" value="4"/>
-		<value name="<>" value="5"/>
+		<value name="&gt;=" value="2"/>
+		<value name="&lt;" value="3"/>
+		<value name="&gt;" value="4"/>
+		<value name="&lt;&gt;" value="5"/>
 	</metaenum>
 	<metaenum refname="IG_MOVIE_AUDIO_TYPE">
 		<value name="IG_MOVIE_AUDIO_TYPE_DEFAULT" value="0"/>
@@ -1101,7 +1101,7 @@
 	</metaenum>
 	<metaenum refname="BoolOp">
 		<value name="=" value="1"/>
-		<value name="<>" value="5"/>
+		<value name="&lt;&gt;" value="5"/>
 	</metaenum>
 	<metaenum refname="shadowCastMethod">
 		<value name="no_shadow" value="0"/>
