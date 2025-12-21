@@ -33,8 +33,8 @@ namespace igLibrary.Core
 		public igHandleName(string name)
 		{
 			int separatorIndex = name.IndexOf('.');
-			_name = new igName(name.Substring(0, separatorIndex));
-			_ns = new igName(name.Substring(separatorIndex+1, name.Length-separatorIndex-1));
+			_ns = new igName(name.Substring(0, separatorIndex));
+			_name = new igName(name.Substring(separatorIndex+1, name.Length-separatorIndex-1));
 		}
 	}
 }
