@@ -8,7 +8,7 @@
 			<metafield type="igStructMetaField" offset="0x0018" name="_properties" implicitAlignment="false" requiredAlignment="4" typeSize="0x04" align="0x04"/>
 			<metafield type="igStringMetaField" offset="0x001C" name="_fieldName" construct="false" destruct="true" reconstruct="false" refCounted="true"/>
 			<metafield type="igMemoryRefMetaField" offset="0x0020" name="_default" resetMethod="none" persistent="false" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igUnsignedShortMetaField" offset="0x0010" name="_offset" persistent="false"/>
 			<metafield type="igShortMetaField" offset="0x0008" name="_parentMetaObjectIndex" persistent="false" default="-1"/>
@@ -820,7 +820,7 @@
 				<metafield type="igVertexElementMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igMemoryRefMetaField" offset="0x0014" name="_platformData" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igEnumMetaField" offset="0x001C" name="_platform" metaenum="IG_GFX_PLATFORM"/>
 			<metafield type="igObjectRefMetaField" offset="0x0020" name="_softwareBlendedFormat" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igVertexFormat"/>
@@ -1039,7 +1039,7 @@
 	<metaobject type="igMetaObject" refname="igStencilFunctionAttr" basetype="igVisualAttribute">
 		<metafields>
 			<metafield type="igUnsignedIntMetaField" offset="0x0010" name="_refVal"/>
-			<metafield type="igEnumMetaField" offset="0x0014" name="_func" metaenum="IG_GFX_STENCIL_FUNCTION" default="IG_GFX_STENCIL_FUNCTION_ALWAYS"/>
+			<metafield type="igEnumMetaField" offset="0x0014" name="_func" metaenum="IG_GFX_STENCIL_FUNCTION" default="IG_GFX_STENCIL_FUNCTION_NEVER IG_GFX_STENCIL_FUNCTION_LESS IG_GFX_STENCIL_FUNCTION_EQUAL IG_GFX_STENCIL_FUNCTION_GREATER"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x0018" name="_writeMask" default="4294967295"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x001C" name="_readMask" default="4294967295"/>
 			<metafield type="igEnumMetaField" offset="0x0020" name="_stenFailOp" metaenum="IG_GFX_STENCIL_OPERATION"/>
@@ -1174,7 +1174,7 @@
 			<metafield type="igBoolMetaField" offset="0x0041" name="_useAuxiliarySorting"/>
 			<metafield type="igObjectRefMetaField" offset="0x0044" name="_attrQueue" construct="false" destruct="false" reconstruct="false" refCounted="false" metaobject="igAttrQueue"/>
 			<metafield type="igBoolMetaField" offset="0x0048" name="_copyDynamicAttrs"/>
-			<metafield type="igEnumMetaField" offset="0x004C" name="_transparencyDrawMode" metaenum="TRANSPARENCY_DRAW_MODE" default="TRANSPARENCY_DRAW_NO_DEPTH_WRITE"/>
+			<metafield type="igEnumMetaField" offset="0x004C" name="_transparencyDrawMode" metaenum="TRANSPARENCY_DRAW_MODE" default="TRANSPARENCY_DRAW_DEPTH_WRITE TRANSPARENCY_DRAW_NO_DEPTH_WRITE"/>
 			<metafield type="igObjectRefMetaField" offset="0x0050" name="_depthWriteDisable" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="igDepthWriteStateAttr"/>
 			<metafield type="igEnumMetaField" offset="0x0054" name="_compoundPackageType" metaenum="RENDER_TYPE"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x0058" name="_compoundPackageSortId"/>
@@ -1395,17 +1395,17 @@
 				<metafield type="igEnumMetaField" offset="0x0000" implicitAlignment="false" requiredAlignment="4" metaenum="IG_GFX_PLATFORM"/>
 			</metafield>
 		</overriddenmetafields>
-		<hashtable invalidvalue="(null)" invalidkey="IG_GFX_PLATFORM_MAX"/>
+		<hashtable invalidvalue="(null)" invalidkey="IG_GFX_PLATFORM_DEFAULT IG_GFX_PLATFORM_WII IG_GFX_PLATFORM_PS4"/>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igTextureFunctionAttr" basetype="igVisualAttribute">
 		<metafields>
-			<metafield type="igEnumMetaField" offset="0x0010" name="_mode" metaenum="IG_GFX_TEXTURE_FUNCTION" default="IG_GFX_TEXTURE_FUNCTION_MODULATE"/>
+			<metafield type="igEnumMetaField" offset="0x0010" name="_mode" metaenum="IG_GFX_TEXTURE_FUNCTION" default="IG_GFX_TEXTURE_FUNCTION_REPLACE IG_GFX_TEXTURE_FUNCTION_MODULATE"/>
 			<metafield type="igIntMetaField" offset="0x0014" name="_unitID" default="-1"/>
-			<metafield type="igEnumMetaField" offset="0x0018" name="_arg0" metaenum="IG_GFX_TEXTURE_ARGUMENT" default="IG_GFX_TEXTURE_ARGUMENT_TEXTURE"/>
+			<metafield type="igEnumMetaField" offset="0x0018" name="_arg0" metaenum="IG_GFX_TEXTURE_ARGUMENT" default="IG_GFX_TEXTURE_ARGUMENT_PREV_STAGE_OUTPUT IG_GFX_TEXTURE_ARGUMENT_DIFFUSE IG_GFX_TEXTURE_ARGUMENT_SPECULAR"/>
 			<metafield type="igEnumMetaField" offset="0x001C" name="_arg1" metaenum="IG_GFX_TEXTURE_ARGUMENT"/>
-			<metafield type="igEnumMetaField" offset="0x0020" name="_type" metaenum="IG_GFX_TEXTURE_STAGE_TYPE" default="IG_GFX_TEXTURE_STAGE_TYPE_COMBINE2"/>
+			<metafield type="igEnumMetaField" offset="0x0020" name="_type" metaenum="IG_GFX_TEXTURE_STAGE_TYPE" default="IG_GFX_TEXTURE_STAGE_TYPE_DISABLE IG_GFX_TEXTURE_STAGE_TYPE_COMBINE2"/>
 			<metafield type="igUnsignedCharMetaField" offset="0x0024" name="_unused"/>
-			<metafield type="igEnumMetaField" offset="0x0028" name="_functionType" metaenum="IG_GFX_TEXTURE_FUNCTION_TYPE" default="IG_GFX_TEXTURE_FUNCTION_TYPE_COLOR_AND_ALPHA"/>
+			<metafield type="igEnumMetaField" offset="0x0028" name="_functionType" metaenum="IG_GFX_TEXTURE_FUNCTION_TYPE" default="IG_GFX_TEXTURE_FUNCTION_TYPE_COLOR IG_GFX_TEXTURE_FUNCTION_TYPE_COLOR_AND_ALPHA"/>
 		</metafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="tfbAnimationStatePlayer" basetype="igObject">
@@ -1495,7 +1495,7 @@
 			<metafield type="igStaticMetaField" offset="0x0000" name="_hero2FadingModelClass" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
 				<metafield type="igStringMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="false" destruct="true" reconstruct="false" refCounted="true" default="hero2Fading"/>
 			</metafield>
-			<metafield type="igEnumMetaField" offset="0x01F0" name="_updateStage" metaenum="EUpdateStage" default="eUS_postUpdate"/>
+			<metafield type="igEnumMetaField" offset="0x01F0" name="_updateStage" metaenum="EUpdateStage" default="eUS_preUpdate eUS_preUpdateRenderContext eUS_mainUpdate"/>
 			<metafield type="igObjectRefMetaField" offset="0x01F4" name="_debugRenderingData" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="CDebugRenderingData"/>
 		</metafields>
 	</metaobject>
@@ -1581,12 +1581,12 @@
 			</metafield>
 			<metafield type="igStaticMetaField" offset="0x0000" name="_traversalHeapMemory" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
 				<metafield type="igMemoryRefMetaField" offset="0x0000" resetMethod="none" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-					<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+					<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 				</metafield>
 			</metafield>
 			<metafield type="igStaticMetaField" offset="0x0000" name="_traversalHeapLevelData" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
 				<metafield type="igMemoryRefMetaField" offset="0x0000" resetMethod="none" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-					<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+					<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 				</metafield>
 			</metafield>
 			<metafield type="igStaticMetaField" offset="0x0000" name="_traversalTempHeapMemory" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
@@ -1746,7 +1746,7 @@
 		<overriddenmetafields>
 			<metafield type="igMemoryRefMetaField" offset="0x0010" name="_data" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
 				<metafield type="igMemoryRefMetaField" offset="0x0000" resetMethod="none" construct="false" destruct="false" reconstruct="false" refCounted="true" memType="f0">
-					<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+					<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 				</metafield>
 			</metafield>
 		</overriddenmetafields>
@@ -1933,7 +1933,7 @@
 			</metafield>
 			<metafield type="igStaticMetaField" offset="0x0000" name="_dynamicBoneBlendMatricesBuffer" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
 				<metafield type="igMemoryRefMetaField" offset="0x0000" resetMethod="none" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-					<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+					<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 				</metafield>
 			</metafield>
 			<metafield type="igStaticMetaField" offset="0x0000" name="_dynamicBoneBlendMatricesArrays" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
@@ -2113,7 +2113,7 @@
 			<metafield type="igVec4fMetaField" offset="0x0040" name="_clearColor" default="0.00000000,0.00000000,0.00000000,1.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x0050" name="_clearDepth" default="1.00000000"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x0054" name="_clearStencil"/>
-			<metafield type="igEnumMetaField" offset="0x0058" name="_clearHiStencil" metaenum="IG_GFX_HISTENCIL_CLEAR" default="IG_GFX_HISTENCIL_CLEAR_PASS"/>
+			<metafield type="igEnumMetaField" offset="0x0058" name="_clearHiStencil" metaenum="IG_GFX_HISTENCIL_CLEAR" default="IG_GFX_HISTENCIL_CLEAR_CULL IG_GFX_HISTENCIL_CLEAR_PASS"/>
 			<metafield type="igObjectRefMetaField" offset="0x005C" name="_clear" persistent="false" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="igClearAttr"/>
 			<metafield type="igStringMetaField" offset="0x0060" name="_cameraName" construct="false" destruct="true" reconstruct="false" refCounted="true" default="main"/>
 			<metafield type="igBoolMetaField" offset="0x0064" name="_updateProjectionOnSizeChange" default="true"/>
@@ -2129,7 +2129,7 @@
 			<metafield type="igBoolMetaField" offset="0x0088" name="_flushHiZStencil"/>
 			<metafield type="igBoolMetaField" offset="0x0089" name="_asynchronousHiZFlush"/>
 			<metafield type="igBoolMetaField" offset="0x008A" name="_flushAndSetSCull"/>
-			<metafield type="igEnumMetaField" offset="0x008C" name="_sCullFunction" metaenum="IG_GFX_STENCIL_FUNCTION" default="IG_GFX_STENCIL_FUNCTION_LESS"/>
+			<metafield type="igEnumMetaField" offset="0x008C" name="_sCullFunction" metaenum="IG_GFX_STENCIL_FUNCTION" default="IG_GFX_STENCIL_FUNCTION_NEVER IG_GFX_STENCIL_FUNCTION_LESS"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x0090" name="_sCullReference" default="128"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x0094" name="_sCullMask" default="255"/>
 			<metafield type="igObjectRefMetaField" offset="0x0098" name="_hiZStencilFlushAttr" persistent="false" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="igHiZStencilFlushAttr"/>
@@ -2323,22 +2323,22 @@
 			<metafield type="igMatrix44fMetaField" offset="0x00D0" name="_textureMatrix2" hasInvariance="true" default="1.00000000,0.00000000,0.00000000,0.00000000, 0.00000000,1.00000000,0.00000000,0.00000000, 0.00000000,0.00000000,1.00000000,0.00000000, 0.00000000,0.00000000,0.00000000,1.00000000"/>
 			<metafield type="igStringMetaField" offset="0x0110" name="_textureName_mask" hasInvariance="true" construct="false" destruct="true" reconstruct="false" refCounted="true" default="textures:/default_c.png"/>
 			<metafield type="igEnumMetaField" offset="0x0114" name="_blendFunction" hasInvariance="true" metaenum="BlendFunction"/>
-			<metafield type="igEnumMetaField" offset="0x0118" name="_diffuseColorBlendFactor" hasInvariance="true" metaenum="BlendMode" default="kOne"/>
+			<metafield type="igEnumMetaField" offset="0x0118" name="_diffuseColorBlendFactor" hasInvariance="true" metaenum="BlendMode" default="kDiffuseColor kMaskColor kZero"/>
 			<metafield type="igEnumMetaField" offset="0x011C" name="_diffuseColorBlendFormat" hasInvariance="true" metaenum="BlendFormat"/>
-			<metafield type="igEnumMetaField" offset="0x0120" name="_maskColorBlendFactor" hasInvariance="true" metaenum="BlendMode" default="kZero"/>
+			<metafield type="igEnumMetaField" offset="0x0120" name="_maskColorBlendFactor" hasInvariance="true" metaenum="BlendMode" default="kDiffuseColor kZero"/>
 			<metafield type="igEnumMetaField" offset="0x0124" name="_maskColorBlendFormat" hasInvariance="true" metaenum="BlendFormat"/>
-			<metafield type="igEnumMetaField" offset="0x0128" name="_diffuseAlphaBlendFactor" hasInvariance="true" metaenum="BlendMode" default="kDiffuseAlpha"/>
+			<metafield type="igEnumMetaField" offset="0x0128" name="_diffuseAlphaBlendFactor" hasInvariance="true" metaenum="BlendMode" default="kDiffuseColor kDiffuseAlpha"/>
 			<metafield type="igEnumMetaField" offset="0x012C" name="_diffuseAlphaBlendFormat" hasInvariance="true" metaenum="BlendFormat"/>
-			<metafield type="igEnumMetaField" offset="0x0130" name="_maskAlphaBlendFactor" hasInvariance="true" metaenum="BlendMode" default="kZero"/>
+			<metafield type="igEnumMetaField" offset="0x0130" name="_maskAlphaBlendFactor" hasInvariance="true" metaenum="BlendMode" default="kDiffuseColor kZero"/>
 			<metafield type="igEnumMetaField" offset="0x0134" name="_maskAlphaBlendFormat" hasInvariance="true" metaenum="BlendFormat"/>
 			<metafield type="igBoolMetaField" offset="0x0138" name="_preColor" hasInvariance="true" default="true"/>
 			<metafield type="igBoolMetaField" offset="0x0139" name="_preHue" hasInvariance="true"/>
 			<metafield type="igBoolMetaField" offset="0x013A" name="_generateMaskAlpha" hasInvariance="true"/>
 			<metafield type="igFloatMetaField" offset="0x013C" name="_thresholdBlend" hasInvariance="true" default="0.05000000"/>
 			<metafield type="igFloatMetaField" offset="0x0140" name="_thresholdBias" hasInvariance="true"/>
-			<metafield type="igEnumMetaField" offset="0x0144" name="_thresholdDiffuseAlphaBlendFactor" hasInvariance="true" metaenum="BlendMode" default="kDiffuseAlpha"/>
+			<metafield type="igEnumMetaField" offset="0x0144" name="_thresholdDiffuseAlphaBlendFactor" hasInvariance="true" metaenum="BlendMode" default="kDiffuseColor kDiffuseAlpha"/>
 			<metafield type="igEnumMetaField" offset="0x0148" name="_thresholdDiffuseAlphaBlendFormat" hasInvariance="true" metaenum="BlendFormat"/>
-			<metafield type="igEnumMetaField" offset="0x014C" name="_thresholdMaskAlphaBlendFactor" hasInvariance="true" metaenum="BlendMode" default="kZero"/>
+			<metafield type="igEnumMetaField" offset="0x014C" name="_thresholdMaskAlphaBlendFactor" hasInvariance="true" metaenum="BlendMode" default="kDiffuseColor kZero"/>
 			<metafield type="igEnumMetaField" offset="0x0150" name="_thresholdMaskAlphaBlendFormat" hasInvariance="true" metaenum="BlendFormat"/>
 			<metafield type="igFloatMetaField" offset="0x0154" name="_thresholdBlendInverse"/>
 			<metafield type="igFloatMetaField" offset="0x0158" name="_particleSoftnessInverse" persistent="false"/>
@@ -2612,7 +2612,7 @@
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igDepthFunctionAttr" basetype="igVisualAttribute">
 		<metafields>
-			<metafield type="igEnumMetaField" offset="0x0010" name="_func" metaenum="IG_GFX_DEPTH_TEST_FUNCTION" default="IG_GFX_DEPTH_TEST_FUNCTION_LEQUAL"/>
+			<metafield type="igEnumMetaField" offset="0x0010" name="_func" metaenum="IG_GFX_DEPTH_TEST_FUNCTION" default="IG_GFX_DEPTH_TEST_FUNCTION_NEVER IG_GFX_DEPTH_TEST_FUNCTION_LESS IG_GFX_DEPTH_TEST_FUNCTION_EQUAL"/>
 		</metafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igVfxTrailData" basetype="igVfxPlacedPrimitiveData">
@@ -2748,7 +2748,7 @@
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igFogAttr" basetype="igVisualAttribute">
 		<metafields>
-			<metafield type="igEnumMetaField" offset="0x0010" name="_mode" metaenum="IG_GFX_FOG_MODE" default="IG_GFX_FOG_MODE_EXP2"/>
+			<metafield type="igEnumMetaField" offset="0x0010" name="_mode" metaenum="IG_GFX_FOG_MODE" default="IG_GFX_FOG_MODE_LINEAR IG_GFX_FOG_MODE_EXP2"/>
 			<metafield type="igFloatMetaField" offset="0x0014" name="_nearVal"/>
 			<metafield type="igFloatMetaField" offset="0x0018" name="_farVal" default="1000.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x001C" name="_density"/>
@@ -2861,6 +2861,10 @@
 			</metafield>
 		</metafields>
 		<tfbBindings name="AnimationInfo">
+			<binding type="FloatMeasurement" name="blend Percent"/>
+			<binding type="EnumMeasurement" name="is layered"/>
+			<binding type="EnumMeasurement" name="type"/>
+			<binding type="SetVariant" name="events"/>
 			<binding type="ReferenceVariant" name="ambient"/>
 			<binding type="ReferenceVariant" name="walk"/>
 			<binding type="ReferenceVariant" name="run"/>
@@ -3359,6 +3363,32 @@
 			</metafield>
 		</metafields>
 		<tfbBindings name="ScriptController">
+			<binding type="ButtonMeasurement" name="action 1"/>
+			<binding type="ButtonMeasurement" name="action 2"/>
+			<binding type="ButtonMeasurement" name="action 3"/>
+			<binding type="ButtonMeasurement" name="action 4"/>
+			<binding type="ButtonMeasurement" name="accept button"/>
+			<binding type="ButtonMeasurement" name="cancel button"/>
+			<binding type="ButtonMeasurement" name="alt button"/>
+			<binding type="ButtonMeasurement" name="pause button"/>
+			<binding type="ButtonMeasurement" name="start button"/>
+			<binding type="ButtonMeasurement" name="select button"/>
+			<binding type="ButtonMeasurement" name="DPad left"/>
+			<binding type="ButtonMeasurement" name="DPad right"/>
+			<binding type="ButtonMeasurement" name="DPad up"/>
+			<binding type="ButtonMeasurement" name="DPad down"/>
+			<binding type="JoystickMeasurement" name="main stick"/>
+			<binding type="JoystickMeasurement" name="alt stick"/>
+			<binding type="ButtonMeasurement" name="Pause requested"/>
+			<binding type="ButtonMeasurement" name="Play requested"/>
+			<binding type="EnumMeasurement" name="rich presence"/>
+			<binding type="StandardController" name="360 / PS"/>
+			<binding type="WiiController" name="Wii"/>
+			<binding type="ControllerGestures" name="-Gestures"/>
+			<binding type="PS4Controller" name="PS4"/>
+			<binding type="EnumMeasurement" name="bound to in game actor"/>
+			<binding type="EnumMeasurement" name="signed out"/>
+			<binding type="EnumMeasurement" name="force sign in"/>
 			<binding type="IntMeasurement" name="Active Controllers"/>
 			<binding type="ReferenceVariant" name="controller 1"/>
 			<binding type="ReferenceVariant" name="controller 2"/>
@@ -3587,9 +3617,9 @@
 	</metaobject>
 	<metaobject type="igMetaObject" refname="LifetimeObjectMetaField" basetype="igCompoundMetaField">
 		<compoundfields>
-			<metafield type="igIntMetaField" offset="0x0000" name="_frames" implicitAlignment="false" requiredAlignment="4"/>
-			<metafield type="igIntMetaField" offset="0x0004" name="_signal" implicitAlignment="false" requiredAlignment="4"/>
-			<metafield type="igObjectRefMetaField" offset="0x0008" name="_statePlayer" implicitAlignment="false" requiredAlignment="4" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="tfbAnimationStatePlayer"/>
+			<metafield type="igIntMetaField" offset="0x0000" name="_frames"/>
+			<metafield type="igIntMetaField" offset="0x0004" name="_signal"/>
+			<metafield type="igObjectRefMetaField" offset="0x0008" name="_statePlayer" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="tfbAnimationStatePlayer"/>
 		</compoundfields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="LifetimeObjectArrayMetaField" basetype="LifetimeObjectMetaField">
@@ -3625,7 +3655,7 @@
 				<metafield type="igEnumMetaField" offset="0x0000" implicitAlignment="false" requiredAlignment="4" metaenum="IG_GFX_PLATFORM"/>
 			</metafield>
 		</overriddenmetafields>
-		<hashtable invalidvalue="(null)" invalidkey="IG_GFX_PLATFORM_MAX"/>
+		<hashtable invalidvalue="(null)" invalidkey="IG_GFX_PLATFORM_DEFAULT IG_GFX_PLATFORM_WII IG_GFX_PLATFORM_PS4"/>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igNormalizeNormalsStateAttr" basetype="igVisualAttribute">
 		<metafields>
@@ -3641,7 +3671,7 @@
 			<metafield type="igIntMetaField" offset="0x0020" name="_ID"/>
 			<metafield type="tfbEulerTransformMetaField" offset="0x0024" name="_initMatrix" copyMethod="none"/>
 			<metafield type="tfbEulerTransformMetaField" offset="0x003C" name="_currentMatrix" copyMethod="none" persistent="false"/>
-			<metafield type="igEnumMetaField" offset="0x0054" name="_activityState" copyMethod="none" metaenum="State" default="NUM_MANAGED_PLACEMENT_STATES"/>
+			<metafield type="igEnumMetaField" offset="0x0054" name="_activityState" copyMethod="none" metaenum="State" default="FIRST_PLACEMENT_STATE PLACEMENT_PLAYER NUM_MANAGED_PLACEMENT_STATES"/>
 			<metafield type="igObjectRefMetaField" offset="0x0058" name="_clones" copyMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="ScriptGroupStack"/>
 			<metafield type="igObjectRefMetaField" offset="0x005C" name="_parent" copyMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="AbstractPlacement"/>
 			<metafield type="igObjectRefMetaField" offset="0x0060" name="_activator" copyMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="tfbActorInfo"/>
@@ -4003,6 +4033,10 @@
 			</metafield>
 		</metafields>
 		<tfbBindings name="CutsceneInfo">
+			<binding type="SetVariant" name="events"/>
+			<binding type="SetVariant" name="attach nodes"/>
+			<binding type="SetVariant" name="actor animations"/>
+			<binding type="IntMeasurement" name="active camera"/>
 			<binding type="SetVariant" name="active cutscene streams"/>
 		</tfbBindings>
 	</metaobject>
@@ -4580,7 +4614,7 @@
 		<overriddenmetafields>
 			<metafield type="igMemoryRefMetaField" offset="0x0010" name="_data" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
 				<metafield type="igMemoryRefMetaField" offset="0x0000" resetMethod="none" construct="false" destruct="false" reconstruct="false" refCounted="true" memType="f0">
-					<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+					<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 				</metafield>
 			</metafield>
 		</overriddenmetafields>
@@ -4636,6 +4670,35 @@
 			</metafield>
 		</metafields>
 		<tfbBindings name="SoundInfo">
+			<binding type="FloatMeasurement" name="volume"/>
+			<binding type="FloatMeasurement" name="volume randomness"/>
+			<binding type="FloatMeasurement" name="pitch randomness"/>
+			<binding type="FloatMeasurement" name="rumble duration"/>
+			<binding type="FloatMeasurement" name="pan"/>
+			<binding type="EnumMeasurement" name="3D"/>
+			<binding type="EnumMeasurement" name="attenuates"/>
+			<binding type="FloatMeasurement" name="attenuation distance full"/>
+			<binding type="FloatMeasurement" name="attenuation distance silent"/>
+			<binding type="EnumMeasurement" name="ignores time scales"/>
+			<binding type="EnumMeasurement" name="category"/>
+			<binding type="FloatMeasurement" name="reverb amount"/>
+			<binding type="FloatMeasurement" name="reverb randomness"/>
+			<binding type="FloatMeasurement" name="filter percent"/>
+			<binding type="FloatMeasurement" name="filter randomness"/>
+			<binding type="EnumMeasurement" name="filter attenuates"/>
+			<binding type="FloatMeasurement" name="filter attenuation distance minimum"/>
+			<binding type="FloatMeasurement" name="filter attenuation distance maximum"/>
+			<binding type="FloatMeasurement" name="filter maximum percent"/>
+			<binding type="IntMeasurement" name="priority"/>
+			<binding type="IntMeasurement" name="actor limit"/>
+			<binding type="EnumMeasurement" name="actor limit behavior"/>
+			<binding type="IntMeasurement" name="global limit"/>
+			<binding type="EnumMeasurement" name="global limit behavior"/>
+			<binding type="EnumMeasurement" name="from controller"/>
+			<binding type="EnumMeasurement" name="from DRC"/>
+			<binding type="EnumMeasurement" name="streamed"/>
+			<binding type="EnumMeasurement" name="designer category"/>
+			<binding type="EnumMeasurement" name="authored category"/>
 			<binding type="FloatMeasurement" name="effects master volume"/>
 			<binding type="FloatMeasurement" name="effects master rate"/>
 			<binding type="SetVariant" name="active sound effects"/>
@@ -4723,7 +4786,7 @@
 			<metafield type="igObjectRefMetaField" offset="0x0048" name="_insight" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igInsightCore"/>
 			<metafield type="igStructMetaField" offset="0x004C" name="_videoFormat" implicitAlignment="false" requiredAlignment="4" typeSize="0x30" align="0x04"/>
 			<metafield type="igEnumMetaField" offset="0x0008" name="_appLocale" metaenum="appLocales"/>
-			<metafield type="igEnumMetaField" offset="0x000C" name="_appLanguage" metaenum="IG_CORE_LANGUAGE" default="IG_CORE_LANGUAGE_ENGLISH"/>
+			<metafield type="igEnumMetaField" offset="0x000C" name="_appLanguage" metaenum="IG_CORE_LANGUAGE" default="IG_CORE_LANGUAGE_HISPANIC IG_CORE_LANGUAGE_ARABIC IG_CORE_LANGUAGE_CHINESE IG_CORE_LANGUAGE_DANISH"/>
 			<metafield type="igEnumMetaField" offset="0x0010" name="_appPlatform" metaenum="IG_CORE_PLATFORM"/>
 			<metafield type="igEnumMetaField" offset="0x0014" name="_appState" metaenum="appState"/>
 			<metafield type="igIntMetaField" offset="0x0018" name="_dvdState"/>
@@ -4740,7 +4803,7 @@
 			<metafield type="igStaticMetaField" offset="0x0000" name="_framerate" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
 				<metafield type="igIntMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4"/>
 			</metafield>
-			<metafield type="igEnumMetaField" offset="0x0080" name="_appConfiguration" metaenum="appConfig" default="APP_CONFIG_DEVELOPMENT"/>
+			<metafield type="igEnumMetaField" offset="0x0080" name="_appConfiguration" metaenum="appConfig" default="APP_CONFIG_DEMO APP_CONFIG_DEVELOPMENT"/>
 			<metafield type="igFloatMetaField" offset="0x0084" name="_logicLoad"/>
 			<metafield type="igFloatMetaField" offset="0x0088" name="_GPUWait"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x008C" name="_curFrame"/>
@@ -4802,7 +4865,7 @@
 	<metaobject type="igMetaObject" refname="ValueRHSVariant" basetype="igObject">
 		<metafields>
 			<metafield type="igObjectRefMetaField" offset="0x0008" name="_varOp1" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="RHSValueStack"/>
-			<metafield type="igEnumMetaField" offset="0x000C" name="_arithOperator" metaenum="ArithOp" default="..."/>
+			<metafield type="igEnumMetaField" offset="0x000C" name="_arithOperator" metaenum="ArithOp" default="... +"/>
 			<metafield type="igObjectRefMetaField" offset="0x0010" name="_varOp2" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="RHSValueStack"/>
 			<metafield type="igRawRefMetaField" offset="0x0014" name="_resultFunc" resetMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true"/>
 			<metafield type="igObjectRefMetaField" offset="0x0018" name="_conditioner" resetMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="false" metaobject="igObject"/>
@@ -4843,7 +4906,7 @@
 			<metafield type="igBoolMetaField" offset="0x0052" name="_needsEndianSwap"/>
 			<metafield type="HeaderMetaField" offset="0x0058" name="_archiveHeader"/>
 			<metafield type="igMemoryRefMetaField" offset="0x0090" name="_tocBuffer" resetMethod="none" construct="false" destruct="false" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igRawRefMetaField" offset="0x0098" name="_fileIdTable" construct="false" destruct="false" reconstruct="false" refCounted="true"/>
 			<metafield type="igRawRefMetaField" offset="0x009C" name="_fileInfoTable" construct="false" destruct="false" reconstruct="false" refCounted="true"/>
@@ -4880,7 +4943,7 @@
 	<metaobject type="igMetaObject" refname="igMemoryStorageEntry" basetype="igNamedObject">
 		<metafields>
 			<metafield type="igMemoryRefMetaField" offset="0x000C" name="_memory" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igBoolMetaField" offset="0x0014" name="_readOnly" default="true"/>
 		</metafields>
@@ -5112,7 +5175,7 @@
 			<metafield type="igFloatMetaField" offset="0x0074" name="_transitionSizeNy" default="0.75000000"/>
 			<metafield type="igFloatMetaField" offset="0x0078" name="_transitionSizePz" default="0.75000000"/>
 			<metafield type="igFloatMetaField" offset="0x007C" name="_transitionSizeNz" default="0.75000000"/>
-			<metafield type="igEnumMetaField" offset="0x0080" name="_priority" metaenum="EPriority" default="kLow"/>
+			<metafield type="igEnumMetaField" offset="0x0080" name="_priority" metaenum="EPriority" default="kHigh kLow"/>
 			<metafield type="igBoolMetaField" offset="0x0084" name="_state" default="true"/>
 			<metafield type="igEnumMetaField" offset="0x0088" name="_animationType" hasInvariance="true" metaenum="EAnimationType"/>
 			<metafield type="igFloatMetaField" offset="0x008C" name="_animationDuration" hasInvariance="true" default="5.00000000"/>
@@ -5175,87 +5238,87 @@
 			<metafield type="igUnsignedIntMetaField" offset="0x00F4" name="_modelFlags" default="1"/>
 		</overriddenmetafields>
 		<metafields>
-			<metafield type="igVectorMetaField" offset="0x0104" name="_materialNodes" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0104" name="_materialNodes" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igFxMaterialNode"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0110" name="_tileSceneGraphs" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0110" name="_tileSceneGraphs" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igAttrSet"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x011C" name="_tileShaderParameters0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x011C" name="_tileShaderParameters0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderParametersAttr"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0128" name="_tileShaderParameters1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0128" name="_tileShaderParameters1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderParametersAttr"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0134" name="_tileTextureBinds0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0134" name="_tileTextureBinds0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igTextureBindAttr2"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0140" name="_tileTextureBinds1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0140" name="_tileTextureBinds1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igTextureBindAttr2"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x014C" name="_lightMatrixLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x014C" name="_lightMatrixLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantMatrixList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0158" name="_lightMatrixLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0158" name="_lightMatrixLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantMatrixList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0164" name="_lightDirectionLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0164" name="_lightDirectionLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantVectorList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0170" name="_lightDirectionLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0170" name="_lightDirectionLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantVectorList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x017C" name="_lightColorLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x017C" name="_lightColorLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantVectorList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0188" name="_lightColorLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0188" name="_lightColorLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantVectorList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0194" name="_lightParametersLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0194" name="_lightParametersLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantVectorList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x01A0" name="_lightParametersLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x01A0" name="_lightParametersLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantVectorList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x01AC" name="_lightUvTransformLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x01AC" name="_lightUvTransformLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantMatrixList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x01B8" name="_lightUvTransformLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x01B8" name="_lightUvTransformLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantMatrixList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x01C4" name="_tileLightCounts" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="false">
+			<metafield type="igVectorMetaField" offset="0x01C4" name="_tileLightCounts" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="false" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 				</templateargs>
@@ -5554,7 +5617,7 @@
 	<metaobject type="igMetaObject" refname="igDebugPrimitive" basetype="igObject">
 		<metafields>
 			<metafield type="igIntMetaField" offset="0x0008" name="_framesRemaining"/>
-			<metafield type="igEnumMetaField" offset="0x000C" name="_primType" metaenum="IG_GFX_DRAW" default="IG_GFX_DRAW_TRIANGLES"/>
+			<metafield type="igEnumMetaField" offset="0x000C" name="_primType" metaenum="IG_GFX_DRAW" default="IG_GFX_DRAW_POINTS IG_GFX_DRAW_LINES IG_GFX_DRAW_LINE_STRIP"/>
 			<metafield type="igVectorMetaField" offset="0x0010" name="_positions" construct="false" destruct="false" reconstruct="false" refCounted="false" memTypeAlignmentMultiple="0x00">
 				<templateargs>
 					<metafield type="igVec3fMetaField" offset="0x0000"/>
@@ -5596,7 +5659,7 @@
 		<metafields>
 			<metafield type="igRawRefMetaField" offset="0x001C" name="_idCode" construct="false" destruct="false" reconstruct="false" refCounted="true"/>
 			<metafield type="igObjectRefMetaField" offset="0x0020" name="_animationSystem" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="tfbPhysicsCombinerLink"/>
-			<metafield type="igVectorMetaField" offset="0x0008" name="_nowPlaying" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0008" name="_nowPlaying" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="animControl"/>
 				</templateargs>
@@ -5610,9 +5673,9 @@
 		<metafields>
 			<metafield type="igObjectRefMetaField" offset="0x0028" name="_buddyControllerList" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="tfbAnimationStateControllerList"/>
 			<metafield type="igObjectRefMetaField" offset="0x002C" name="_stateControls" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="tfbAnimationStatePlayerHashTable"/>
-			<metafield type="igVectorMetaField" offset="0x0030" name="_delayedRemoveControls" construct="false" destruct="false" reconstruct="false" refCounted="false">
+			<metafield type="igVectorMetaField" offset="0x0030" name="_delayedRemoveControls" construct="false" destruct="false" reconstruct="false" refCounted="false" memTypeAlignmentMultiple="0x00">
 				<templateargs>
-					<metafield type="LifetimeObjectMetaField" offset="0x0000" implicitAlignment="false" requiredAlignment="4"/>
+					<metafield type="LifetimeObjectMetaField" offset="0x0000"/>
 				</templateargs>
 			</metafield>
 			<metafield type="igObjectRefMetaField" offset="0x003C" name="_stateData" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="tfbAnimationStateData"/>
@@ -6584,10 +6647,10 @@
 		</overriddenmetafields>
 		<metafields>
 			<metafield type="igFloatMetaField" offset="0x01C4" name="_diffuseColorScale" hasInvariance="true"/>
-			<metafield type="igEnumMetaField" offset="0x01C8" name="_diffuseColorMaskAlpha" hasInvariance="true" metaenum="BlendFormat" default="kFormatOne"/>
+			<metafield type="igEnumMetaField" offset="0x01C8" name="_diffuseColorMaskAlpha" hasInvariance="true" metaenum="BlendFormat" default="kFormatNormal kFormatInvert kFormatInvertSigned kFormatTopHalf"/>
 			<metafield type="igFloatMetaField" offset="0x01CC" name="_diffuseAlphaScale" hasInvariance="true"/>
 			<metafield type="igFloatMetaField" offset="0x01D0" name="_maskColorScale" hasInvariance="true"/>
-			<metafield type="igEnumMetaField" offset="0x01D4" name="_maskColorMaskAlpha" hasInvariance="true" metaenum="BlendFormat" default="kFormatOne"/>
+			<metafield type="igEnumMetaField" offset="0x01D4" name="_maskColorMaskAlpha" hasInvariance="true" metaenum="BlendFormat" default="kFormatNormal kFormatInvert kFormatInvertSigned kFormatTopHalf"/>
 			<metafield type="igFloatMetaField" offset="0x01D8" name="_maskAlphaScale" hasInvariance="true"/>
 			<metafield type="igFloatMetaField" offset="0x01DC" name="_productColorScale" hasInvariance="true" default="1.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x01E0" name="_productAlphaScale" hasInvariance="true" default="1.00000000"/>
@@ -6616,10 +6679,10 @@
 			<metafield type="igFloatMetaField" offset="0x0264" name="_thresholdFactor" hasInvariance="true" default="1.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x0268" name="_thresholdOffset" hasInvariance="true"/>
 			<metafield type="igFloatMetaField" offset="0x026C" name="_diffuseColorScale2" hasInvariance="true"/>
-			<metafield type="igEnumMetaField" offset="0x0270" name="_diffuseColorMaskAlpha2" hasInvariance="true" metaenum="BlendFormat" default="kFormatOne"/>
+			<metafield type="igEnumMetaField" offset="0x0270" name="_diffuseColorMaskAlpha2" hasInvariance="true" metaenum="BlendFormat" default="kFormatNormal kFormatInvert kFormatInvertSigned kFormatTopHalf"/>
 			<metafield type="igFloatMetaField" offset="0x0274" name="_diffuseAlphaScale2" hasInvariance="true"/>
 			<metafield type="igFloatMetaField" offset="0x0278" name="_maskColorScale2" hasInvariance="true"/>
-			<metafield type="igEnumMetaField" offset="0x027C" name="_maskColorMaskAlpha2" hasInvariance="true" metaenum="BlendFormat" default="kFormatOne"/>
+			<metafield type="igEnumMetaField" offset="0x027C" name="_maskColorMaskAlpha2" hasInvariance="true" metaenum="BlendFormat" default="kFormatNormal kFormatInvert kFormatInvertSigned kFormatTopHalf"/>
 			<metafield type="igFloatMetaField" offset="0x0280" name="_maskAlphaScale2" hasInvariance="true"/>
 			<metafield type="igFloatMetaField" offset="0x0284" name="_productColorScale2" hasInvariance="true" default="1.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x0288" name="_productAlphaScale2" hasInvariance="true" default="1.00000000"/>
@@ -7069,7 +7132,7 @@
 			<metafield type="igVec4fMetaField" offset="0x0020" name="_color" default="0.00000000,0.00000000,0.00000000,1.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x0030" name="_depth" default="1.00000000"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x0034" name="_stencil"/>
-			<metafield type="igEnumMetaField" offset="0x0038" name="_hiStencil" metaenum="IG_GFX_HISTENCIL_CLEAR" default="IG_GFX_HISTENCIL_CLEAR_PASS"/>
+			<metafield type="igEnumMetaField" offset="0x0038" name="_hiStencil" metaenum="IG_GFX_HISTENCIL_CLEAR" default="IG_GFX_HISTENCIL_CLEAR_CULL IG_GFX_HISTENCIL_CLEAR_PASS"/>
 		</metafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="traversalContextMetaField" basetype="igCompoundMetaField">
@@ -7708,6 +7771,26 @@
 			</metafield>
 		</metafields>
 		<tfbBindings name="LightInfo">
+			<binding type="EnumMeasurement" name="type"/>
+			<binding type="EnumMeasurement" name="visible"/>
+			<binding type="FloatMeasurement" name="falloff rate"/>
+			<binding type="FloatMeasurement" name="cutoff angle"/>
+			<binding type="FloatMeasurement" name="constant attenuation factor"/>
+			<binding type="FloatMeasurement" name="linear attenuation factor"/>
+			<binding type="FloatMeasurement" name="quadratic attenuation factor"/>
+			<binding type="ColorMeasurement" name="diffuse color"/>
+			<binding type="ColorMeasurement" name="ambient color"/>
+			<binding type="ColorMeasurement" name="specular color"/>
+			<binding type="FloatMeasurement" name="multiplier"/>
+			<binding type="FloatMeasurement" name="pointFadeStart"/>
+			<binding type="FloatMeasurement" name="pointFadeEnd"/>
+			<binding type="FloatMeasurement" name="boxFalloffX"/>
+			<binding type="FloatMeasurement" name="boxFalloffY"/>
+			<binding type="FloatMeasurement" name="boxAttenuation"/>
+			<binding type="FloatMeasurement" name="boxNearAttenuation"/>
+			<binding type="FloatMeasurement" name="boxMaxX"/>
+			<binding type="FloatMeasurement" name="boxMaxY"/>
+			<binding type="FloatMeasurement" name="boxMaxZ"/>
 			<binding type="ReferenceVariant" name="directional light 1"/>
 			<binding type="ReferenceVariant" name="directional light 2"/>
 			<binding type="ReferenceVariant" name="directional light 3"/>
@@ -7891,6 +7974,37 @@
 			</metafield>
 		</metafields>
 		<tfbBindings name="ViewportInfo">
+			<binding type="FloatMeasurement" name="field of view"/>
+			<binding type="FloatMeasurement" name="far clip"/>
+			<binding type="EnumMeasurement" name="viewport enabled"/>
+			<binding type="EnumMeasurement" name="viewport display sprites content(DRC only)"/>
+			<binding type="EnumMeasurement" name="viewport display scene content(DRC only)"/>
+			<binding type="EnumMeasurement" name="viewport clone TV(DRC only)"/>
+			<binding type="FloatMeasurement" name="viewport aspect ratio override(DRC only)"/>
+			<binding type="ColorMeasurement" name="viewport directional light color(DRC only)"/>
+			<binding type="VectorMeasurement" name="viewport directional light direction(DRC only)"/>
+			<binding type="EnumMeasurement" name="horizon disabled"/>
+			<binding type="EnumMeasurement" name="water effect disabled"/>
+			<binding type="ReferenceVariant" name="fade effect"/>
+			<binding type="ReferenceVariant" name="blur effect"/>
+			<binding type="ReferenceVariant" name="bloom effect"/>
+			<binding type="ReferenceVariant" name="fog/caustic effect"/>
+			<binding type="ReferenceVariant" name="filter effect"/>
+			<binding type="ReferenceVariant" name="depth of field effect"/>
+			<binding type="ReferenceVariant" name="shadows control"/>
+			<binding type="ReferenceVariant" name="black and white effect"/>
+			<binding type="ReferenceVariant" name="audio listener"/>
+			<binding type="ReferenceVariant" name="audio attenuator"/>
+			<binding type="ReferenceVariant" name="container sprite"/>
+			<binding type="ReferenceVariant" name="title safe zone"/>
+			<binding type="ColorMeasurement" name="background color"/>
+			<binding type="EnumMeasurement" name="near/far alpha fade"/>
+			<binding type="ReferenceVariant" name="master controller"/>
+			<binding type="ReferenceVariant" name="view converter"/>
+			<binding type="FloatMeasurement" name="LOD shift scale"/>
+			<binding type="FloatMeasurement" name="frame traversal load"/>
+			<binding type="FloatMeasurement" name="frame render load"/>
+			<binding type="ReferenceVariant" name="cutscene"/>
 			<binding type="ReferenceVariant" name="default"/>
 			<binding type="ReferenceVariant" name="alternate viewport"/>
 			<binding type="FloatMeasurement" name="frame logic load"/>
@@ -7970,7 +8084,7 @@
 			<metafield type="igStringMetaField" offset="0x0008" name="_name" isAlikeMethod="none" persistent="false" construct="false" destruct="true" reconstruct="false" refCounted="true" default="flow"/>
 		</overriddenmetafields>
 		<metafields>
-			<metafield type="igEnumMetaField" offset="0x001C" name="_flowVal" metaenum="FlowVals" default="continue"/>
+			<metafield type="igEnumMetaField" offset="0x001C" name="_flowVal" metaenum="FlowVals" default="end continue"/>
 		</metafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igcActor" basetype="igObject">
@@ -8161,12 +8275,12 @@
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igCachedAttrList" basetype="igObject">
 		<metafields>
-			<metafield type="igVectorMetaField" offset="0x0008" name="_attrs" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0008" name="_attrs" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igAttr"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0014" name="_cachedValues" construct="false" destruct="false" reconstruct="false" refCounted="false">
+			<metafield type="igVectorMetaField" offset="0x0014" name="_cachedValues" construct="false" destruct="false" reconstruct="false" refCounted="false" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igShortMetaField" offset="0x0000"/>
 				</templateargs>
@@ -8456,7 +8570,7 @@
 	<metaobject type="igMetaObject" refname="OpAbstractCheckValue" basetype="OpBranch">
 		<metafields>
 			<metafield type="igObjectRefMetaField" offset="0x001C" name="_LHS" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="ValueStack"/>
-			<metafield type="igEnumMetaField" offset="0x0020" name="_relOperator" metaenum="RelOp" default="="/>
+			<metafield type="igEnumMetaField" offset="0x0020" name="_relOperator" metaenum="RelOp" default="&lt;= ="/>
 			<metafield type="igObjectRefMetaField" offset="0x0024" name="_RHS" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="ValueRHSVariant"/>
 		</metafields>
 	</metaobject>
@@ -8981,8 +9095,8 @@
 	<metaobject type="igMetaObject" refname="igVfxSubEffectData" basetype="igVfxPlacedPrimitiveData">
 		<metafields>
 			<metafield type="igHandleMetaField" offset="0x0204" name="_effect" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igVfxEffect"/>
-			<metafield type="igEnumMetaField" offset="0x0208" name="_secondBolt" metaenum="SubEffectSecondBolt" default="kBolt2Follow"/>
-			<metafield type="igEnumMetaField" offset="0x020C" name="_childKill" metaenum="SubEffectChildKill" default="kSoftKill"/>
+			<metafield type="igEnumMetaField" offset="0x0208" name="_secondBolt" metaenum="SubEffectSecondBolt" default="kBoltNone kBolt2Follow"/>
+			<metafield type="igEnumMetaField" offset="0x020C" name="_childKill" metaenum="SubEffectChildKill" default="kDontKill kSoftKill"/>
 			<metafield type="igEnumMetaField" offset="0x0210" name="_chain" metaenum="SubEffectChainMode"/>
 			<metafield type="igRangedFloatMetaField" offset="0x0214" name="_chainLength" default="0.00000000,0.00000000"/>
 			<metafield type="igBoolMetaField" offset="0x021C" name="_floatingChain" default="true"/>
@@ -9071,7 +9185,7 @@
 			<metafield type="igVec4fMetaField" offset="0x0040" name="_clearColor" default="0.00000000,0.00000000,0.00000000,1.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x0050" name="_clearDepth" default="1.00000000"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x0054" name="_clearStencil"/>
-			<metafield type="igEnumMetaField" offset="0x0058" name="_clearHiStencil" metaenum="IG_GFX_HISTENCIL_CLEAR" default="IG_GFX_HISTENCIL_CLEAR_PASS"/>
+			<metafield type="igEnumMetaField" offset="0x0058" name="_clearHiStencil" metaenum="IG_GFX_HISTENCIL_CLEAR" default="IG_GFX_HISTENCIL_CLEAR_CULL IG_GFX_HISTENCIL_CLEAR_PASS"/>
 			<metafield type="igStringMetaField" offset="0x0060" name="_cameraName" construct="false" destruct="true" reconstruct="false" refCounted="true" default="main"/>
 			<metafield type="igBoolMetaField" offset="0x0064" name="_updateProjectionOnSizeChange" default="true"/>
 			<metafield type="igBoolMetaField" offset="0x0065" name="_updateViewportOnSizeChange" default="true"/>
@@ -9336,7 +9450,7 @@
 			<metafield type="igObjectRefMetaField" offset="0x0020" name="_bolt1" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igVfxBolt"/>
 			<metafield type="igObjectRefMetaField" offset="0x0024" name="_bolt2" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igVfxBolt"/>
 			<metafield type="igObjectRefMetaField" offset="0x0028" name="_groundBolt" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igVfxBolt"/>
-			<metafield type="igEnumMetaField" offset="0x002C" name="_spawnGroupAtSpawn" metaenum="SpawnGroup" default="kSpawnGroupInherit"/>
+			<metafield type="igEnumMetaField" offset="0x002C" name="_spawnGroupAtSpawn" metaenum="SpawnGroup" default="kSpawnGroupInherit kSpawnGroupDefault kSpawnGroup0"/>
 			<metafield type="igUnsignedShortMetaField" offset="0x0030" name="_spawnLayers"/>
 			<metafield type="igUnsignedCharMetaField" offset="0x0032" name="_spawnGroup"/>
 			<metafield type="igIntMetaField" offset="0x0034" name="_priorityClass"/>
@@ -9535,6 +9649,9 @@
 			</metafield>
 		</metafields>
 		<tfbBindings name="ParticleInfo">
+			<binding type="SetVariant" name="generators"/>
+			<binding type="FloatMeasurement" name="disable time"/>
+			<binding type="FloatMeasurement" name="remove time"/>
 			<binding type="SetVariant" name="active particles"/>
 			<binding type="SetVariant" name="inactive particles"/>
 			<binding type="SetVariant" name="removed particles"/>
@@ -9560,7 +9677,7 @@
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igAlphaFunctionAttr" basetype="igVisualAttribute">
 		<metafields>
-			<metafield type="igEnumMetaField" offset="0x0010" name="_func" metaenum="IG_GFX_ALPHA_FUNCTION" default="IG_GFX_ALPHA_FUNCTION_GEQUAL"/>
+			<metafield type="igEnumMetaField" offset="0x0010" name="_func" metaenum="IG_GFX_ALPHA_FUNCTION" default="IG_GFX_ALPHA_FUNCTION_NEVER IG_GFX_ALPHA_FUNCTION_EQUAL IG_GFX_ALPHA_FUNCTION_GREATER"/>
 			<metafield type="igFloatMetaField" offset="0x0014" name="_refValue"/>
 		</metafields>
 	</metaobject>
@@ -9985,6 +10102,42 @@
 			</metafield>
 		</metafields>
 		<tfbBindings name="SpriteInfo">
+			<binding type="EnumMeasurement" name="type"/>
+			<binding type="EnumMeasurement" name="visible"/>
+			<binding type="ColorMeasurement" name="color"/>
+			<binding type="ScaleMeasurement" name="scale"/>
+			<binding type="ScreenMeasurement" name="location"/>
+			<binding type="ScreenMeasurement" name="screen location"/>
+			<binding type="FloatMeasurement" name="screen width"/>
+			<binding type="FloatMeasurement" name="screen height"/>
+			<binding type="ReferenceVariant" name="text"/>
+			<binding type="ReferenceVariant" name="dialog controller"/>
+			<binding type="FloatMeasurement" name="priority"/>
+			<binding type="FloatMeasurement" name="width"/>
+			<binding type="FloatMeasurement" name="height"/>
+			<binding type="FloatMeasurement" name="depth"/>
+			<binding type="ScreenMeasurement" name="natural size"/>
+			<binding type="SpriteMatrixMeasurement" name="origin"/>
+			<binding type="EnumMeasurement" name="blend mode"/>
+			<binding type="EnumMeasurement" name="alignment"/>
+			<binding type="EnumMeasurement" name="align to parent"/>
+			<binding type="EnumMeasurement" name="texture flip"/>
+			<binding type="EnumMeasurement" name="clipping"/>
+			<binding type="EnumMeasurement" name="Take a Picture"/>
+			<binding type="SpriteValueMeasurement" name="numeric value"/>
+			<binding type="EnumMeasurement" name="justify"/>
+			<binding type="EnumMeasurement" name="text visual type"/>
+			<binding type="EnumMeasurement" name="text spacing type"/>
+			<binding type="FloatMeasurement" name="text spacing"/>
+			<binding type="EnumMeasurement" name="text type"/>
+			<binding type="IntMeasurement" name="point size"/>
+			<binding type="SetVariant" name="playing animations"/>
+			<binding type="SetVariant" name="model attach nodes"/>
+			<binding type="SetVariant" name="generators"/>
+			<binding type="FloatMeasurement" name="Z Depth"/>
+			<binding type="ColorMeasurement" name="replace color"/>
+			<binding type="IntMeasurement" name="replace color percentage"/>
+			<binding type="IntMeasurement" name="bloom intensity"/>
 			<binding type="SetVariant" name="active"/>
 			<binding type="SetVariant" name="removed"/>
 			<binding type="TextColorConverter" name="Text Color Converter"/>
@@ -10006,7 +10159,7 @@
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igSCullParametersAttr" basetype="igVisualAttribute">
 		<metafields>
-			<metafield type="igEnumMetaField" offset="0x0010" name="_function" metaenum="IG_GFX_STENCIL_FUNCTION" default="IG_GFX_STENCIL_FUNCTION_LESS"/>
+			<metafield type="igEnumMetaField" offset="0x0010" name="_function" metaenum="IG_GFX_STENCIL_FUNCTION" default="IG_GFX_STENCIL_FUNCTION_NEVER IG_GFX_STENCIL_FUNCTION_LESS"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x0014" name="_refValue"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x0018" name="_mask"/>
 		</metafields>
@@ -10112,7 +10265,7 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 			<metafield type="igVec4ucMetaField" offset="0x0018" name="_color" persistent="false" default="0,0,255,255"/>
-			<metafield type="igEnumMetaField" offset="0x001C" name="_fogMode" persistent="false" metaenum="FogMode" default="LINEAR"/>
+			<metafield type="igEnumMetaField" offset="0x001C" name="_fogMode" persistent="false" metaenum="FogMode" default="NONE LINEAR"/>
 			<metafield type="igBoolMetaField" offset="0x0020" name="_rangeFog" persistent="false"/>
 			<metafield type="igFloatMetaField" offset="0x0024" name="_density" persistent="false" default="30.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x0028" name="_nearDistance" persistent="false" default="100000000.00000000"/>
@@ -10291,7 +10444,7 @@
 			<metafield type="igBoolMetaField" offset="0x00C4" name="_useBillboardOriginForPivot" hasInvariance="true" default="true"/>
 			<metafield type="igBoolMetaField" offset="0x00C5" name="_useCameraDirectionForBillboard" hasInvariance="true" default="true"/>
 			<metafield type="igBoolMetaField" offset="0x00C6" name="_onlyDrawInTools" hasInvariance="true"/>
-			<metafield type="igEnumMetaField" offset="0x00C8" name="_castShadows" hasInvariance="true" metaenum="ECastShadows" default="eCS_Yes"/>
+			<metafield type="igEnumMetaField" offset="0x00C8" name="_castShadows" hasInvariance="true" metaenum="ECastShadows" default="eCS_No eCS_Yes"/>
 			<metafield type="igBoolMetaField" offset="0x00CC" name="_depthBlendingState" hasInvariance="true"/>
 			<metafield type="igFloatMetaField" offset="0x00D0" name="_depthBlendingSoftness" hasInvariance="true" default="14.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x00D4" name="_depthBlendingSoftnessInverse" persistent="false"/>
@@ -10888,14 +11041,14 @@
 			<metafield type="igBoolMetaField" offset="0x006B" name="_clippingState" hasInvariance="true"/>
 			<metafield type="igBoolMetaField" offset="0x006C" name="_protanopiaState" hasInvariance="true"/>
 			<metafield type="igBoolMetaField" offset="0x006D" name="_deuteranopiaState" hasInvariance="true"/>
-			<metafield type="igEnumMetaField" offset="0x0070" name="_farSkyStateCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityDefault"/>
-			<metafield type="igEnumMetaField" offset="0x0074" name="_nearSkyStateCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityDefault"/>
-			<metafield type="igEnumMetaField" offset="0x0078" name="_staticEntityGeoStateCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityDefault"/>
-			<metafield type="igEnumMetaField" offset="0x007C" name="_staticLevelGeoStateCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityDefault"/>
-			<metafield type="igEnumMetaField" offset="0x0080" name="_dynamicEntityGeoCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityDefault"/>
-			<metafield type="igEnumMetaField" offset="0x0084" name="_actorGeoCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityDefault"/>
-			<metafield type="igEnumMetaField" offset="0x0088" name="_baseVfxStateCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityDefault"/>
-			<metafield type="igEnumMetaField" offset="0x008C" name="_rigidVfxStateCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityDefault"/>
+			<metafield type="igEnumMetaField" offset="0x0070" name="_farSkyStateCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityHide kDebugVisibilityDefault"/>
+			<metafield type="igEnumMetaField" offset="0x0074" name="_nearSkyStateCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityHide kDebugVisibilityDefault"/>
+			<metafield type="igEnumMetaField" offset="0x0078" name="_staticEntityGeoStateCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityHide kDebugVisibilityDefault"/>
+			<metafield type="igEnumMetaField" offset="0x007C" name="_staticLevelGeoStateCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityHide kDebugVisibilityDefault"/>
+			<metafield type="igEnumMetaField" offset="0x0080" name="_dynamicEntityGeoCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityHide kDebugVisibilityDefault"/>
+			<metafield type="igEnumMetaField" offset="0x0084" name="_actorGeoCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityHide kDebugVisibilityDefault"/>
+			<metafield type="igEnumMetaField" offset="0x0088" name="_baseVfxStateCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityHide kDebugVisibilityDefault"/>
+			<metafield type="igEnumMetaField" offset="0x008C" name="_rigidVfxStateCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityHide kDebugVisibilityDefault"/>
 			<metafield type="igBoolMetaField" offset="0x0090" name="_smallObjectCulling" default="true"/>
 			<metafield type="igBoolMetaField" offset="0x0091" name="_flickerSmallObjects"/>
 			<metafield type="igBoolMetaField" offset="0x0092" name="_drawOccluders"/>
@@ -10911,7 +11064,7 @@
 			<metafield type="igBoolMetaField" offset="0x00B4" name="_decal" default="true"/>
 			<metafield type="igBoolMetaField" offset="0x00B5" name="_water" default="true"/>
 			<metafield type="igBoolMetaField" offset="0x00B6" name="_vfx" default="true"/>
-			<metafield type="igEnumMetaField" offset="0x00B8" name="_decalVfxStateCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityDefault"/>
+			<metafield type="igEnumMetaField" offset="0x00B8" name="_decalVfxStateCache" copyMethod="none" persistent="false" metaenum="DebugVisibility" default="kDebugVisibilityHide kDebugVisibilityDefault"/>
 			<metafield type="igBoolMetaField" offset="0x00BC" name="_debugState" copyMethod="none" persistent="false"/>
 			<metafield type="igStaticMetaField" offset="0x0000" name="_debug_diffuse_lodName" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
 				<metafield type="igStringMetaField" offset="0x0000" persistent="false" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="false" destruct="false" reconstruct="false" refCounted="true" default="debug_diffuse_lod"/>
@@ -11277,8 +11430,8 @@
 		<metafields>
 			<metafield type="igEnumMetaField" offset="0x0018" name="_magFilter" metaenum="IG_GFX_TEXTURE_FILTER"/>
 			<metafield type="igEnumMetaField" offset="0x001C" name="_minFilter" metaenum="IG_GFX_TEXTURE_FILTER"/>
-			<metafield type="igEnumMetaField" offset="0x0020" name="_wrapS" metaenum="IG_GFX_TEXTURE_WRAP" default="IG_GFX_TEXTURE_WRAP_REPEAT"/>
-			<metafield type="igEnumMetaField" offset="0x0024" name="_wrapT" metaenum="IG_GFX_TEXTURE_WRAP" default="IG_GFX_TEXTURE_WRAP_REPEAT"/>
+			<metafield type="igEnumMetaField" offset="0x0020" name="_wrapS" metaenum="IG_GFX_TEXTURE_WRAP" default="IG_GFX_TEXTURE_WRAP_CLAMP IG_GFX_TEXTURE_WRAP_REPEAT"/>
+			<metafield type="igEnumMetaField" offset="0x0024" name="_wrapT" metaenum="IG_GFX_TEXTURE_WRAP" default="IG_GFX_TEXTURE_WRAP_CLAMP IG_GFX_TEXTURE_WRAP_REPEAT"/>
 			<metafield type="igEnumMetaField" offset="0x0028" name="_msaaType" metaenum="IG_GFX_MULTISAMPLE_TYPE"/>
 			<metafield type="igEnumMetaField" offset="0x002C" name="_source" metaenum="IG_GFX_TEXTURE_SOURCE"/>
 			<metafield type="igObjectRefMetaField" offset="0x0030" name="_image" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igImage2"/>
@@ -11290,7 +11443,7 @@
 				<metafield type="igBoolMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="1"/>
 			</metafield>
 			<metafield type="igBoolMetaField" offset="0x0014" name="_loadInVramForCtr"/>
-			<metafield type="igEnumMetaField" offset="0x0040" name="_wrapR" metaenum="IG_GFX_TEXTURE_WRAP" default="IG_GFX_TEXTURE_WRAP_REPEAT"/>
+			<metafield type="igEnumMetaField" offset="0x0040" name="_wrapR" metaenum="IG_GFX_TEXTURE_WRAP" default="IG_GFX_TEXTURE_WRAP_CLAMP IG_GFX_TEXTURE_WRAP_REPEAT"/>
 			<metafield type="igBoolMetaField" offset="0x0044" name="_filterFixedUp" persistent="false"/>
 		</metafields>
 	</metaobject>
@@ -11746,8 +11899,8 @@
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igBlendFunctionAttr" basetype="igVisualAttribute">
 		<metafields>
-			<metafield type="igEnumMetaField" offset="0x0010" name="_src" metaenum="IG_GFX_BLENDING_FUNCTION" default="IG_GFX_BLENDING_FUNCTION_SOURCE_ALPHA"/>
-			<metafield type="igEnumMetaField" offset="0x0014" name="_dst" metaenum="IG_GFX_BLENDING_FUNCTION" default="IG_GFX_BLENDING_FUNCTION_ONE_MINUS_SOURCE_ALPHA"/>
+			<metafield type="igEnumMetaField" offset="0x0010" name="_src" metaenum="IG_GFX_BLENDING_FUNCTION" default="IG_GFX_BLENDING_FUNCTION_ZERO IG_GFX_BLENDING_FUNCTION_SOURCE_ALPHA"/>
+			<metafield type="igEnumMetaField" offset="0x0014" name="_dst" metaenum="IG_GFX_BLENDING_FUNCTION" default="IG_GFX_BLENDING_FUNCTION_ZERO IG_GFX_BLENDING_FUNCTION_ONE IG_GFX_BLENDING_FUNCTION_SOURCE_ALPHA"/>
 			<metafield type="igEnumMetaField" offset="0x0018" name="_eq" metaenum="IG_GFX_BLENDING_EQUATION"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x001C" name="_unused"/>
 			<metafield type="igUnsignedCharMetaField" offset="0x0020" name="_blendConstant"/>
@@ -12091,10 +12244,10 @@
 	<metaobject type="igMetaObject" refname="igWiiGeometry" basetype="igObject">
 		<metafields>
 			<metafield type="igMemoryRefMetaField" offset="0x0008" name="_displayList" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igMemoryRefMetaField" offset="0x0010" name="_vertexBuffer" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igVectorMetaField" offset="0x0018" name="_arrayBases" construct="false" destruct="false" reconstruct="false" refCounted="false">
 				<templateargs>
@@ -12124,8 +12277,8 @@
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igAlphaBlendFunctionAttr" basetype="igVisualAttribute">
 		<metafields>
-			<metafield type="igEnumMetaField" offset="0x0010" name="_source" metaenum="IG_GFX_BLENDING_FUNCTION" default="IG_GFX_BLENDING_FUNCTION_SOURCE_ALPHA"/>
-			<metafield type="igEnumMetaField" offset="0x0014" name="_destination" metaenum="IG_GFX_BLENDING_FUNCTION" default="IG_GFX_BLENDING_FUNCTION_ONE_MINUS_SOURCE_ALPHA"/>
+			<metafield type="igEnumMetaField" offset="0x0010" name="_source" metaenum="IG_GFX_BLENDING_FUNCTION" default="IG_GFX_BLENDING_FUNCTION_ZERO IG_GFX_BLENDING_FUNCTION_SOURCE_ALPHA"/>
+			<metafield type="igEnumMetaField" offset="0x0014" name="_destination" metaenum="IG_GFX_BLENDING_FUNCTION" default="IG_GFX_BLENDING_FUNCTION_ZERO IG_GFX_BLENDING_FUNCTION_ONE IG_GFX_BLENDING_FUNCTION_SOURCE_ALPHA"/>
 			<metafield type="igEnumMetaField" offset="0x0018" name="_equation" metaenum="IG_GFX_BLENDING_EQUATION"/>
 		</metafields>
 	</metaobject>
@@ -12232,7 +12385,7 @@
 		<metafields>
 			<metafield type="igStaticMetaField" offset="0x0000" name="_platformNetMemory" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
 				<metafield type="igMemoryRefMetaField" offset="0x0000" resetMethod="none" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="false" destruct="false" reconstruct="false" refCounted="true" memType="f0">
-					<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+					<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 				</metafield>
 			</metafield>
 		</metafields>
@@ -12303,6 +12456,176 @@
 			</metafield>
 		</metafields>
 		<tfbBindings name="MoodBoxInfo">
+			<binding type="EnumMeasurement" name="box enabled"/>
+			<binding type="IntMeasurement" name="ID"/>
+			<binding type="EnumMeasurement" name="box priority"/>
+			<binding type="EnumMeasurement" name="influence mode"/>
+			<binding type="FloatMeasurement" name="explicit influence"/>
+			<binding type="FloatMeasurement" name="box width"/>
+			<binding type="FloatMeasurement" name="box length"/>
+			<binding type="FloatMeasurement" name="box height"/>
+			<binding type="FloatMeasurement" name="box transition size (+x)"/>
+			<binding type="FloatMeasurement" name="box transition size (+y)"/>
+			<binding type="FloatMeasurement" name="box transition size (+z)"/>
+			<binding type="FloatMeasurement" name="box transition size (-x)"/>
+			<binding type="FloatMeasurement" name="box transition size (-y)"/>
+			<binding type="FloatMeasurement" name="box transition size (-z)"/>
+			<binding type="FloatMeasurement" name="current influence (debug)"/>
+			<binding type="EnumMeasurement" name="sun color enabled"/>
+			<binding type="ColorMeasurement" name="sun color"/>
+			<binding type="EnumMeasurement" name="sun intensity enabled"/>
+			<binding type="FloatMeasurement" name="sun intensity"/>
+			<binding type="EnumMeasurement" name="sun angles enabled"/>
+			<binding type="FloatMeasurement" name="sun facing"/>
+			<binding type="FloatMeasurement" name="sun tilt"/>
+			<binding type="FloatMeasurement" name="sun roll"/>
+			<binding type="EnumMeasurement" name="light fade distance enabled"/>
+			<binding type="FloatMeasurement" name="light fade distance"/>
+			<binding type="EnumMeasurement" name="light fade range enabled"/>
+			<binding type="FloatMeasurement" name="light fade range"/>
+			<binding type="EnumMeasurement" name="shadow local influence enabled"/>
+			<binding type="FloatMeasurement" name="shadow local influence"/>
+			<binding type="EnumMeasurement" name="shadow range enabled"/>
+			<binding type="FloatMeasurement" name="shadow range"/>
+			<binding type="EnumMeasurement" name="shadow split distribution enabled"/>
+			<binding type="FloatMeasurement" name="shadow split distribution"/>
+			<binding type="EnumMeasurement" name="shadow bias enabled"/>
+			<binding type="EnumMeasurement" name="ambient specular scale enabled"/>
+			<binding type="FloatMeasurement" name="ambient specular scale"/>
+			<binding type="EnumMeasurement" name="ambient diffuse scale enabled"/>
+			<binding type="FloatMeasurement" name="ambient diffuse scale"/>
+			<binding type="EnumMeasurement" name="bloom luminance cutoff enabled"/>
+			<binding type="FloatMeasurement" name="bloom luminance cutoff"/>
+			<binding type="EnumMeasurement" name="bloom inner scale enabled"/>
+			<binding type="FloatMeasurement" name="bloom inner scale"/>
+			<binding type="EnumMeasurement" name="bloom outer scale enabled"/>
+			<binding type="FloatMeasurement" name="bloom outer scale"/>
+			<binding type="EnumMeasurement" name="bloom skybox amount enabled"/>
+			<binding type="FloatMeasurement" name="bloom skybox amount"/>
+			<binding type="EnumMeasurement" name="bloom diffuse scale enabled"/>
+			<binding type="FloatMeasurement" name="bloom diffuse scale"/>
+			<binding type="EnumMeasurement" name="haze start depth enabled"/>
+			<binding type="FloatMeasurement" name="haze start depth"/>
+			<binding type="EnumMeasurement" name="haze end depth enabled"/>
+			<binding type="FloatMeasurement" name="haze end depth"/>
+			<binding type="EnumMeasurement" name="haze min enabled"/>
+			<binding type="FloatMeasurement" name="haze min"/>
+			<binding type="EnumMeasurement" name="haze max enabled"/>
+			<binding type="FloatMeasurement" name="haze max"/>
+			<binding type="EnumMeasurement" name="haze density enabled"/>
+			<binding type="FloatMeasurement" name="haze density"/>
+			<binding type="EnumMeasurement" name="haze far sky amount enabled"/>
+			<binding type="FloatMeasurement" name="haze far sky amount"/>
+			<binding type="EnumMeasurement" name="haze near sky amount enabled"/>
+			<binding type="FloatMeasurement" name="haze near sky amount"/>
+			<binding type="EnumMeasurement" name="haze far sky tint enabled"/>
+			<binding type="ColorMeasurement" name="haze far sky tint"/>
+			<binding type="EnumMeasurement" name="haze near sky tint enabled"/>
+			<binding type="ColorMeasurement" name="haze near sky tint"/>
+			<binding type="EnumMeasurement" name="motion blur exposure time enabled"/>
+			<binding type="FloatMeasurement" name="motion blur exposure time"/>
+			<binding type="EnumMeasurement" name="dof start depth enabled"/>
+			<binding type="FloatMeasurement" name="dof start depth"/>
+			<binding type="EnumMeasurement" name="dof end depth enabled"/>
+			<binding type="FloatMeasurement" name="dof end depth"/>
+			<binding type="EnumMeasurement" name="dof near start depth enabled"/>
+			<binding type="FloatMeasurement" name="dof near start depth"/>
+			<binding type="EnumMeasurement" name="dof near end depth enabled"/>
+			<binding type="FloatMeasurement" name="dof near end depth"/>
+			<binding type="EnumMeasurement" name="dof skybox amount enabled"/>
+			<binding type="FloatMeasurement" name="dof skybox amount"/>
+			<binding type="EnumMeasurement" name="wind strength enabled"/>
+			<binding type="FloatMeasurement" name="wind strength"/>
+			<binding type="EnumMeasurement" name="wind facing enabled"/>
+			<binding type="FloatMeasurement" name="wind facing"/>
+			<binding type="EnumMeasurement" name="wind gust frequency enabled"/>
+			<binding type="FloatMeasurement" name="wind gust frequency"/>
+			<binding type="EnumMeasurement" name="wind gust primary distance enabled"/>
+			<binding type="FloatMeasurement" name="wind gust primary distance"/>
+			<binding type="EnumMeasurement" name="wind gust scale enabled"/>
+			<binding type="FloatMeasurement" name="wind gust scale"/>
+			<binding type="EnumMeasurement" name="wind gust strength min enabled"/>
+			<binding type="FloatMeasurement" name="wind gust strength min"/>
+			<binding type="EnumMeasurement" name="wind gust strength max enabled"/>
+			<binding type="FloatMeasurement" name="wind gust strength max"/>
+			<binding type="EnumMeasurement" name="wind gust duration min enabled"/>
+			<binding type="FloatMeasurement" name="wind gust duration min"/>
+			<binding type="EnumMeasurement" name="wind gust duration max enabled"/>
+			<binding type="FloatMeasurement" name="wind gust duration max"/>
+			<binding type="EnumMeasurement" name="wind gust direction adjustment enabled"/>
+			<binding type="FloatMeasurement" name="wind gust direction adjustment"/>
+			<binding type="EnumMeasurement" name="wind gust unison enabled"/>
+			<binding type="FloatMeasurement" name="wind gust unison"/>
+			<binding type="EnumMeasurement" name="hue enabled"/>
+			<binding type="FloatMeasurement" name="hue"/>
+			<binding type="EnumMeasurement" name="saturation enabled"/>
+			<binding type="FloatMeasurement" name="saturation"/>
+			<binding type="EnumMeasurement" name="brightness enabled"/>
+			<binding type="FloatMeasurement" name="brightness"/>
+			<binding type="EnumMeasurement" name="contrast enabled"/>
+			<binding type="FloatMeasurement" name="contrast"/>
+			<binding type="EnumMeasurement" name="tint enabled"/>
+			<binding type="ColorMeasurement" name="tint"/>
+			<binding type="EnumMeasurement" name="ao scale enabled"/>
+			<binding type="FloatMeasurement" name="ao scale"/>
+			<binding type="EnumMeasurement" name="ao radius enabled"/>
+			<binding type="FloatMeasurement" name="ao radius"/>
+			<binding type="EnumMeasurement" name="ao bias enabled"/>
+			<binding type="FloatMeasurement" name="ao bias"/>
+			<binding type="EnumMeasurement" name="Target_1 ambient enabled"/>
+			<binding type="ColorMeasurement" name="Target_1 ambient"/>
+			<binding type="EnumMeasurement" name="Target_1 light 1 color enabled"/>
+			<binding type="ColorMeasurement" name="Target_1 light 1 color"/>
+			<binding type="EnumMeasurement" name="Target_1 light 1 angles enabled"/>
+			<binding type="EnumMeasurement" name="Target_1 light 2 color enabled"/>
+			<binding type="ColorMeasurement" name="Target_1 light 2 color"/>
+			<binding type="EnumMeasurement" name="Target_1 light 2 angles enabled"/>
+			<binding type="EnumMeasurement" name="Target_1 light 3 color enabled"/>
+			<binding type="ColorMeasurement" name="Target_1 light 3 color"/>
+			<binding type="EnumMeasurement" name="Target_1 light 3 angles enabled"/>
+			<binding type="EnumMeasurement" name="Target_1 Shadow Distance enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 Shadow Distance"/>
+			<binding type="EnumMeasurement" name="Target_1 Shadow FOV enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 Shadow FOV"/>
+			<binding type="EnumMeasurement" name="Target_1 Shadow Pitch enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 Shadow Pitch"/>
+			<binding type="EnumMeasurement" name="Target_1 Shadow Yaw enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 Shadow Yaw"/>
+			<binding type="EnumMeasurement" name="Target_1 Shadow Intensity enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 Shadow Intensity"/>
+			<binding type="EnumMeasurement" name="Target_1 Bloom Min Limit enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 Bloom Min Limit"/>
+			<binding type="EnumMeasurement" name="Target_1 Bloom Max Limit enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 Bloom Max Limit"/>
+			<binding type="EnumMeasurement" name="Target_1 Bloom Level enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 Bloom Level"/>
+			<binding type="EnumMeasurement" name="Target_1 Bloom Radius enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 Bloom Radius"/>
+			<binding type="EnumMeasurement" name="Target_1 DOF Blur Level enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 DOF Blur Level"/>
+			<binding type="EnumMeasurement" name="Target_1 DOF Near enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 DOF Near"/>
+			<binding type="EnumMeasurement" name="Target_1 DOF Far enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 DOF Far"/>
+			<binding type="EnumMeasurement" name="Target_1 Fog color enabled"/>
+			<binding type="ColorMeasurement" name="Target_1 Fog color"/>
+			<binding type="EnumMeasurement" name="Target_1 Fog Near enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 Fog Near"/>
+			<binding type="EnumMeasurement" name="Target_1 Fog Far enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 Fog Far"/>
+			<binding type="EnumMeasurement" name="Target_1 Fog Near Sky Amount enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 Fog Near Sky Amount"/>
+			<binding type="EnumMeasurement" name="Target_1 Fog Far Sky Amount enabled"/>
+			<binding type="FloatMeasurement" name="Target_1 Fog Far Sky Amount"/>
+			<binding type="EnumMeasurement" name="Target_1 Fog Near Sky Color enabled"/>
+			<binding type="ColorMeasurement" name="Target_1 Fog Near Sky Color"/>
+			<binding type="EnumMeasurement" name="Target_1 Fog Far Sky Color enabled"/>
+			<binding type="ColorMeasurement" name="Target_1 Fog Far Sky Color"/>
+			<binding type="EnumMeasurement" name="Mobile lod 1 distance enabled"/>
+			<binding type="EnumMeasurement" name="Mobile lod 2 distance  enabled"/>
+			<binding type="EnumMeasurement" name="Mobile shader lod distance enabled"/>
+			<binding type="EnumMeasurement" name="Mobile small object culling distance enabled"/>
+			<binding type="EnumMeasurement" name="Mobile small object culling size enabled"/>
 			<binding type="SetVariant" name="boxes"/>
 			<binding type="SetVariant" name="contributing boxes (debug)"/>
 			<binding type="tfbScriptObject" name="*default"/>
@@ -12514,72 +12837,72 @@
 		<metafields>
 			<metafield type="igVec4fMetaField" offset="0x0110" name="_nearPlane" persistent="false"/>
 			<metafield type="igVec4fMetaField" offset="0x0120" name="_farPlane" persistent="false"/>
-			<metafield type="igVectorMetaField" offset="0x0130" name="_horizontalPlanes" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="false">
+			<metafield type="igVectorMetaField" offset="0x0130" name="_horizontalPlanes" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="false" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igVec4fMetaField" offset="0x0000"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x013C" name="_verticalPlanes" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="false">
+			<metafield type="igVectorMetaField" offset="0x013C" name="_verticalPlanes" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="false" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igVec4fMetaField" offset="0x0000"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0148" name="_materialNodes" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0148" name="_materialNodes" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igFxMaterialNode"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0154" name="_tileSceneGraphs" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0154" name="_tileSceneGraphs" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igAttrSet"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0160" name="_tileShaderParameters0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0160" name="_tileShaderParameters0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderParametersAttr"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x016C" name="_tileShaderParameters1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x016C" name="_tileShaderParameters1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderParametersAttr"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0178" name="_lightPositionLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0178" name="_lightPositionLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantVectorList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0184" name="_lightPositionLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0184" name="_lightPositionLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantVectorList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x0190" name="_lightColorLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x0190" name="_lightColorLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantVectorList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x019C" name="_lightColorLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x019C" name="_lightColorLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantVectorList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x01A8" name="_lightParametersLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x01A8" name="_lightParametersLists0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantVectorList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x01B4" name="_lightParametersLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x01B4" name="_lightParametersLists1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantVectorList"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x01C0" name="_lightBoxLightFlags0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x01C0" name="_lightBoxLightFlags0" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantBool"/>
 				</templateargs>
 			</metafield>
-			<metafield type="igVectorMetaField" offset="0x01CC" name="_lightBoxLightFlags1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true">
+			<metafield type="igVectorMetaField" offset="0x01CC" name="_lightBoxLightFlags1" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" memTypeAlignmentMultiple="0x01">
 				<templateargs>
 					<metafield type="igObjectRefMetaField" offset="0x0000" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igShaderConstantBool"/>
 				</templateargs>
@@ -13119,10 +13442,10 @@
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igTextureFunctionAlphaAttr" basetype="igVisualAttribute">
 		<metafields>
-			<metafield type="igEnumMetaField" offset="0x0010" name="_mode" metaenum="IG_GFX_TEXTURE_FUNCTION" default="IG_GFX_TEXTURE_FUNCTION_MODULATE"/>
-			<metafield type="igEnumMetaField" offset="0x0014" name="_arg0" metaenum="IG_GFX_TEXTURE_ARGUMENT" default="IG_GFX_TEXTURE_ARGUMENT_TEXTURE"/>
+			<metafield type="igEnumMetaField" offset="0x0010" name="_mode" metaenum="IG_GFX_TEXTURE_FUNCTION" default="IG_GFX_TEXTURE_FUNCTION_REPLACE IG_GFX_TEXTURE_FUNCTION_MODULATE"/>
+			<metafield type="igEnumMetaField" offset="0x0014" name="_arg0" metaenum="IG_GFX_TEXTURE_ARGUMENT" default="IG_GFX_TEXTURE_ARGUMENT_PREV_STAGE_OUTPUT IG_GFX_TEXTURE_ARGUMENT_DIFFUSE IG_GFX_TEXTURE_ARGUMENT_SPECULAR"/>
 			<metafield type="igEnumMetaField" offset="0x0018" name="_arg1" metaenum="IG_GFX_TEXTURE_ARGUMENT"/>
-			<metafield type="igEnumMetaField" offset="0x001C" name="_type" metaenum="IG_GFX_TEXTURE_STAGE_TYPE" default="IG_GFX_TEXTURE_STAGE_TYPE_COMBINE2"/>
+			<metafield type="igEnumMetaField" offset="0x001C" name="_type" metaenum="IG_GFX_TEXTURE_STAGE_TYPE" default="IG_GFX_TEXTURE_STAGE_TYPE_DISABLE IG_GFX_TEXTURE_STAGE_TYPE_COMBINE2"/>
 			<metafield type="igUnsignedCharMetaField" offset="0x0020" name="_unused"/>
 		</metafields>
 	</metaobject>
@@ -13329,7 +13652,7 @@
 			<metafield type="igEnumMetaField" offset="0x0008" name="_platform" metaenum="IG_GFX_PLATFORM"/>
 			<metafield type="igEnumMetaField" offset="0x000C" name="_shaderType" metaenum="IG_GFX_SHADER_TYPE"/>
 			<metafield type="igMemoryRefMetaField" offset="0x0010" name="_header" resetMethod="none" isAlikeMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igMemoryRefHandleMetaField" offset="0x0018" name="_shaderData" isAlikeMethod="none" construct="false" destruct="false" reconstruct="false" refCounted="true" memType="f0">
 				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
@@ -13815,7 +14138,7 @@
 			<metafield type="igIntMetaField" offset="0x0040" name="_externalAudioVolume"/>
 			<metafield type="igEnumMetaField" offset="0x0044" name="_minificationFilter" metaenum="IG_GFX_TEXTURE_FILTER"/>
 			<metafield type="igEnumMetaField" offset="0x0048" name="_magnificationFilter" metaenum="IG_GFX_TEXTURE_FILTER"/>
-			<metafield type="igEnumMetaField" offset="0x004C" name="_displaySizeMode" metaenum="IG_MOVIE_SIZE" default="IG_MOVIE_SIZE_FILE"/>
+			<metafield type="igEnumMetaField" offset="0x004C" name="_displaySizeMode" metaenum="IG_MOVIE_SIZE" default="IG_MOVIE_SIZE_WINDOW IG_MOVIE_SIZE_FILE"/>
 			<metafield type="igFloatMetaField" offset="0x0050" name="_userWidth"/>
 			<metafield type="igFloatMetaField" offset="0x0054" name="_userHeight"/>
 			<metafield type="igFloatMetaField" offset="0x0058" name="_userXOffset"/>
@@ -13824,7 +14147,7 @@
 			<metafield type="igFloatMetaField" offset="0x0064" name="_depth"/>
 			<metafield type="igIntMetaField" offset="0x0068" name="_bufferSize" default="-1"/>
 			<metafield type="igIntMetaField" offset="0x006C" name="_maxIoBytesPerSecond" default="-1"/>
-			<metafield type="igEnumMetaField" offset="0x0070" name="_block" metaenum="igBlockingType" default="kBlocking"/>
+			<metafield type="igEnumMetaField" offset="0x0070" name="_block" metaenum="igBlockingType" default="kNonBlocking kBlocking"/>
 			<metafield type="igStringMetaField" offset="0x0074" name="_codecType" construct="false" destruct="true" reconstruct="false" refCounted="true"/>
 			<metafield type="igIntMetaField" offset="0x0078" name="_primaryHardwareThread" default="-1"/>
 			<metafield type="igIntMetaField" offset="0x007C" name="_secondaryHardwareThread" default="-1"/>
@@ -14184,7 +14507,7 @@
 			<metafield type="igObjectRefArrayMetaField" offset="0x01F4" name="_previousMorphWeightsTable" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igUnsignedIntVec4fHashTable" num="2"/>
 			<metafield type="igObjectRefArrayMetaField" offset="0x01FC" name="_blendVectorTable" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igUnsignedIntIntHashTable" num="2"/>
 			<metafield type="igMemoryRefArrayMetaField" offset="0x0204" name="_blendVectorMemory" resetMethod="none" construct="false" destruct="false" reconstruct="false" refCounted="true" memType="f0" num="2">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igRawRefArrayMetaField" offset="0x0214" name="_blendVectorPool" construct="false" destruct="false" reconstruct="false" refCounted="true" num="2"/>
 			<metafield type="igIntMetaField" offset="0x021C" name="_blendVectorPoolNextBlock"/>
@@ -14204,7 +14527,7 @@
 			<metafield type="igObjectRefMetaField" offset="0x0250" name="_vertexArrays" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="igVertexArrayPool"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x0254" name="_dynamicVertexBufferOffset"/>
 			<metafield type="igMemoryRefArrayMetaField" offset="0x0258" name="_dynamicVertexBuffer" resetMethod="none" construct="false" destruct="false" reconstruct="false" refCounted="true" memType="f0" num="3">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igIntMetaField" offset="0x0270" name="_dynamicVertexCount"/>
 			<metafield type="igBoolMetaField" offset="0x0274" name="_outOfDynamicVertsLastFrame"/>
@@ -14720,7 +15043,7 @@
 			<metafield type="igObjectRefMetaField" offset="0x0BDC" name="_compressionTagBits" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="igBitMask"/>
 			<metafield type="igObjectRefMetaField" offset="0x0BE0" name="_zcullMemoryBits" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="igBitMask"/>
 			<metafield type="igIntArrayMetaField" offset="0x0BE4" name="_currentTexture" num="20"/>
-			<metafield type="igEnumArrayMetaField" offset="0x0C34" name="_currentTextureWrapW" metaenum="IG_GFX_TEXTURE_WRAP" num="20" default="IG_GFX_TEXTURE_WRAP_REPEAT"/>
+			<metafield type="igEnumArrayMetaField" offset="0x0C34" name="_currentTextureWrapW" metaenum="IG_GFX_TEXTURE_WRAP" num="20" default="IG_GFX_TEXTURE_WRAP_CLAMP IG_GFX_TEXTURE_WRAP_REPEAT"/>
 			<metafield type="igIntArrayMetaField" offset="0x0C84" name="_minTextureLod" num="20"/>
 			<metafield type="igIntArrayMetaField" offset="0x0CD4" name="_maxTextureLod" num="20" default="3072"/>
 			<metafield type="igIntArrayMetaField" offset="0x0D24" name="_textureAnisoPs3" num="20" default="0"/>
@@ -14765,8 +15088,8 @@
 			<metafield type="igFloatMetaField" offset="0x0E44" name="_aspectRatio" default="1.77777803"/>
 			<metafield type="igBoolMetaField" offset="0x0E48" name="_letterbox"/>
 			<metafield type="igBoolMetaField" offset="0x0E49" name="_alphaBlendEnabled"/>
-			<metafield type="igEnumMetaField" offset="0x0E4C" name="_alphaBlendSrc" metaenum="IG_GFX_BLENDING_FUNCTION" default="IG_GFX_BLENDING_FUNCTION_SOURCE_ALPHA"/>
-			<metafield type="igEnumMetaField" offset="0x0E50" name="_alphaBlendDest" metaenum="IG_GFX_BLENDING_FUNCTION" default="IG_GFX_BLENDING_FUNCTION_ONE_MINUS_SOURCE_ALPHA"/>
+			<metafield type="igEnumMetaField" offset="0x0E4C" name="_alphaBlendSrc" metaenum="IG_GFX_BLENDING_FUNCTION" default="IG_GFX_BLENDING_FUNCTION_ZERO IG_GFX_BLENDING_FUNCTION_SOURCE_ALPHA"/>
+			<metafield type="igEnumMetaField" offset="0x0E50" name="_alphaBlendDest" metaenum="IG_GFX_BLENDING_FUNCTION" default="IG_GFX_BLENDING_FUNCTION_ZERO IG_GFX_BLENDING_FUNCTION_ONE IG_GFX_BLENDING_FUNCTION_SOURCE_ALPHA"/>
 			<metafield type="igEnumMetaField" offset="0x0E54" name="_alphaBlendEquation" metaenum="IG_GFX_BLENDING_EQUATION"/>
 			<metafield type="igIntMetaField" offset="0x0E58" name="_currentVertexShaderHandle" default="-1"/>
 			<metafield type="igIntMetaField" offset="0x0E5C" name="_currentPixelShaderHandle" default="-1"/>
@@ -14894,66 +15217,6 @@
 			</metafield>
 		</metafields>
 		<tfbBindings name="System">
-			<binding type="FloatMeasurement" name="Script Timer"/>
-			<binding type="FloatMeasurement" name="Frame Rate Scale"/>
-			<binding type="IntMeasurement" name="Cast to Integer"/>
-			<binding type="FloatMeasurement" name="Normalized Angle"/>
-			<binding type="PositionMeasurement" name="Absolute Zero"/>
-			<binding type="FloatMeasurement" name="Game Time Scale"/>
-			<binding type="ReferenceVariant" name="Load Level"/>
-			<binding type="IntMeasurement" name="Load Level Variation"/>
-			<binding type="IntMeasurement" name="Game Achievement"/>
-			<binding type="ReferenceVariant" name="Browser Open URL"/>
-			<binding type="ReferenceVariant" name="Ray Cast"/>
-			<binding type="EnumMeasurement" name="Hardware Platform"/>
-			<binding type="ReferenceVariant" name="Device Name"/>
-			<binding type="EnumMeasurement" name="Installation State"/>
-			<binding type="IntMeasurement" name="Installation Percent"/>
-			<binding type="ReferenceVariant" name="Level to Install"/>
-			<binding type="EnumMeasurement" name="Installation Speed"/>
-			<binding type="EnumMeasurement" name="Pause State"/>
-			<binding type="EnumMeasurement" name="Save State"/>
-			<binding type="ReferenceVariant" name="Save Name"/>
-			<binding type="ScriptSetReference" name="Save Data"/>
-			<binding type="IntMeasurement" name="Save Space Available"/>
-			<binding type="IntMeasurement" name="Save Files Available"/>
-			<binding type="EnumMeasurement" name="Dvd State"/>
-			<binding type="EnumMeasurement" name="Game Language"/>
-			<binding type="EnumMeasurement" name="Console Language"/>
-			<binding type="EnumMeasurement" name="Locale"/>
-			<binding type="EnumMeasurement" name="Device Locale"/>
-			<binding type="DateTime" name="Date and time"/>
-			<binding type="EnumMeasurement" name="Render Disabled"/>
-			<binding type="EnumMeasurement" name="Precompile Effects"/>
-			<binding type="EnumMeasurement" name="Game Configuration"/>
-			<binding type="EnumMeasurement" name="Console Default Difficulty"/>
-			<binding type="EnumMeasurement" name="Console YAxis Inversion"/>
-			<binding type="IntMeasurement" name="Script Ticks"/>
-			<binding type="EnumMeasurement" name="Dump Memory"/>
-			<binding type="IntMeasurement" name="Fps"/>
-			<binding type="EnumMeasurement" name="Dump Statistics"/>
-			<binding type="EnumMeasurement" name="Gather Performance Statistics"/>
-			<binding type="IntMeasurement" name="Start Profile"/>
-			<binding type="IntMeasurement" name="Stop Profile"/>
-			<binding type="ReferenceVariant" name="Stress Test Command"/>
-			<binding type="EnumMeasurement" name="CPU/GPU Boundness"/>
-			<binding type="IntMeasurement" name="Perf Output Delay"/>
-			<binding type="ReferenceVariant" name="Take Screenshot"/>
-			<binding type="IntMeasurement" name="Video Recorder Buffer Length"/>
-			<binding type="IntMeasurement" name="Save Recorded Video"/>
-			<binding type="EnumMeasurement" name="Enable Video Recording"/>
-			<binding type="EnumMeasurement" name="Show Help"/>
-			<binding type="EnumMeasurement" name="BLE - Default portal favorite"/>
-			<binding type="EnumMeasurement" name="BLE - Clear portal favorite"/>
-			<binding type="EnumMeasurement" name="BLE - Default gamepad favorite"/>
-			<binding type="EnumMeasurement" name="BLE - Clear gamepad favorite"/>
-			<binding type="EnumMeasurement" name="Can Pause Suspended"/>
-			<binding type="EnumMeasurement" name="Save Slot"/>
-			<binding type="NameExtractor" name="Object Namer"/>
-			<binding type="ReferenceVariant" name="Portal"/>
-			<binding type="ReferenceVariant" name="Portal Set"/>
-			<binding type="VfxManager" name="VFXManager"/>
-			<binding type="tfbOnlineScriptObject" name="Online"/>
 		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igRenderTargetMemPolicyPreallocTextures" basetype="igRenderTargetMemPolicy">
@@ -15144,8 +15407,8 @@
 			<metafield type="igIntMetaField" offset="0x000C" name="_unitID"/>
 			<metafield type="igEnumMetaField" offset="0x0010" name="_magFilter" metaenum="IG_GFX_TEXTURE_FILTER"/>
 			<metafield type="igEnumMetaField" offset="0x0014" name="_minFilter" metaenum="IG_GFX_TEXTURE_FILTER"/>
-			<metafield type="igEnumMetaField" offset="0x0018" name="_wrapS" metaenum="IG_GFX_TEXTURE_WRAP" default="IG_GFX_TEXTURE_WRAP_REPEAT"/>
-			<metafield type="igEnumMetaField" offset="0x001C" name="_wrapT" metaenum="IG_GFX_TEXTURE_WRAP" default="IG_GFX_TEXTURE_WRAP_REPEAT"/>
+			<metafield type="igEnumMetaField" offset="0x0018" name="_wrapS" metaenum="IG_GFX_TEXTURE_WRAP" default="IG_GFX_TEXTURE_WRAP_CLAMP IG_GFX_TEXTURE_WRAP_REPEAT"/>
+			<metafield type="igEnumMetaField" offset="0x001C" name="_wrapT" metaenum="IG_GFX_TEXTURE_WRAP" default="IG_GFX_TEXTURE_WRAP_CLAMP IG_GFX_TEXTURE_WRAP_REPEAT"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x0020" name="_formatHint"/>
 			<metafield type="igBoolMetaField" offset="0x0024" name="_vertexSampler"/>
 			<metafield type="igBoolMetaField" offset="0x0025" name="_useMaterialSamplerState"/>
@@ -15462,7 +15725,7 @@
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igShadeModelAttr" basetype="igVisualAttribute">
 		<metafields>
-			<metafield type="igEnumMetaField" offset="0x0010" name="_mode" metaenum="IG_GFX_SHADING_MODE" default="IG_GFX_SHADING_MODE_SMOOTH"/>
+			<metafield type="igEnumMetaField" offset="0x0010" name="_mode" metaenum="IG_GFX_SHADING_MODE" default="IG_GFX_SHADING_MODE_FACET IG_GFX_SHADING_MODE_SMOOTH"/>
 		</metafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="tfbStreamMemoryConfiguration" basetype="igObject">
@@ -15630,7 +15893,7 @@
 			<metafield type="igObjectRefMetaField" offset="0x001C" name="_RHSfacing" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="ValueRHSVariant"/>
 			<metafield type="igObjectRefMetaField" offset="0x0020" name="_RHSfov" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="ValueRHSVariant"/>
 			<metafield type="igObjectRefMetaField" offset="0x0030" name="_LHS" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="ScriptGroupStack"/>
-			<metafield type="igEnumMetaField" offset="0x0034" name="_relOperator" metaenum="RelOp" default="="/>
+			<metafield type="igEnumMetaField" offset="0x0034" name="_relOperator" metaenum="RelOp" default="&lt;= ="/>
 			<metafield type="igObjectRefMetaField" offset="0x0038" name="_RHS" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="ValueRHSVariant"/>
 			<metafield type="igEnumMetaField" offset="0x0024" name="_mode" metaenum="obstructMode"/>
 			<metafield type="igObjectRefMetaField" offset="0x0028" name="_cachedObject" persistent="false" mutable="true" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="ScriptSet"/>
@@ -16014,7 +16277,7 @@
 		</overriddenmetafields>
 		<metafields>
 			<metafield type="igObjectRefMetaField" offset="0x001C" name="_NP" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="ValueStack"/>
-			<metafield type="igEnumMetaField" offset="0x0020" name="_dev" metaenum="PrintDevice" default="target"/>
+			<metafield type="igEnumMetaField" offset="0x0020" name="_dev" metaenum="PrintDevice" default="host target"/>
 			<metafield type="igStringMetaField" offset="0x0024" name="_comment" construct="false" destruct="true" reconstruct="false" refCounted="true"/>
 		</metafields>
 	</metaobject>
@@ -16491,7 +16754,7 @@
 		<metafields>
 			<metafield type="igEnumMetaField" offset="0x001C" name="_lastOperation" metaenum="Mode"/>
 			<metafield type="igMemoryRefMetaField" offset="0x0020" name="_buffer" resetMethod="none" construct="false" destruct="false" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igLongMetaField" offset="0x0028" name="_bufferPos"/>
 			<metafield type="igLongMetaField" offset="0x0030" name="_bufferLen"/>
@@ -16528,7 +16791,7 @@
 				<metafield type="igEnumMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" metaenum="SpawnGroup"/>
 			</metafield>
 			<metafield type="igStaticMetaField" offset="0x0000" name="Defocus" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
-				<metafield type="igEnumMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" metaenum="SpawnGroup" default="kSpawnGroup1"/>
+				<metafield type="igEnumMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" metaenum="SpawnGroup" default="kSpawnGroupDefault kSpawnGroup0 kSpawnGroup1"/>
 			</metafield>
 			<metafield type="igObjectRefMetaField" offset="0x0008" name="_manager" persistent="false" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="igVfxManager"/>
 			<metafield type="igObjectRefMetaField" offset="0x000C" name="_vfxPointLightPool" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igObjectPool"/>
@@ -16619,7 +16882,7 @@
 			<metafield type="igFloatMetaField" offset="0x0024" name="_focusWidth" persistent="false" default="12.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x0028" name="_focusDropNear" persistent="false" default="9.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x002C" name="_focusDropFar" persistent="false" default="70.00000000"/>
-			<metafield type="igEnumMetaField" offset="0x0030" name="_focusMapperMode" persistent="false" metaenum="FocusMapperMode" default="BELL_CURVE"/>
+			<metafield type="igEnumMetaField" offset="0x0030" name="_focusMapperMode" persistent="false" metaenum="FocusMapperMode" default="LINEAR BELL_CURVE"/>
 			<metafield type="igBoolMetaField" offset="0x0034" name="_nearEnable" persistent="false"/>
 			<metafield type="igFloatMetaField" offset="0x0038" name="_focusDistanceNear" persistent="false" default="10.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x003C" name="_focusWidthNear" persistent="false" default="5.00000000"/>
@@ -16907,6 +17170,21 @@
 			</metafield>
 		</metafields>
 		<tfbBindings name="ActorInfo">
+			<binding type="SetVariant" name="waypoints"/>
+			<binding type="VectorMeasurement" name="velocity"/>
+			<binding type="VectorMeasurement" name="angular velocity"/>
+			<binding type="tfbScriptObject" name="-movement"/>
+			<binding type="tfbScriptObject" name="-vehicle"/>
+			<binding type="tfbScriptObject" name="collision volume"/>
+			<binding type="PositionMeasurement" name="destination"/>
+			<binding type="ReferenceVariant" name="controller"/>
+			<binding type="SetVariant" name="attach nodes"/>
+			<binding type="SetVariant" name="playing sounds"/>
+			<binding type="SetVariant" name="playing animations"/>
+			<binding type="IntMeasurement" name="bloom intensity"/>
+			<binding type="FloatMeasurement" name="script load"/>
+			<binding type="ColorMeasurement" name="replace color"/>
+			<binding type="IntMeasurement" name="replace color percentage"/>
 			<binding type="SetVariant" name="players"/>
 			<binding type="SetVariant" name="NPCs"/>
 			<binding type="SetVariant" name="inactive"/>
@@ -16965,7 +17243,7 @@
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igLightAttr" basetype="igVisualAttribute">
 		<metafields>
-			<metafield type="igEnumMetaField" offset="0x0010" name="_lightType" hasInvariance="true" metaenum="IG_GFX_LIGHT_TYPE" default="IG_GFX_LIGHT_TYPE_POINT"/>
+			<metafield type="igEnumMetaField" offset="0x0010" name="_lightType" hasInvariance="true" metaenum="IG_GFX_LIGHT_TYPE" default="IG_GFX_LIGHT_TYPE_DIRECTIONAL IG_GFX_LIGHT_TYPE_POINT"/>
 			<metafield type="igIntMetaField" offset="0x0090" name="_lightId" copyMethod="none" isAlikeMethod="none" persistent="false" default="-1"/>
 			<metafield type="igVec3fMetaField" offset="0x0014" name="_position" hasInvariance="true"/>
 			<metafield type="igVec4fMetaField" offset="0x0020" name="_ambient" hasInvariance="true" default="0.60000002,0.60000002,0.60000002,1.00000000"/>
@@ -17001,10 +17279,10 @@
 			<metafield type="igFloatMetaField" offset="0x0030" name="_hardCullPauseDelay"/>
 			<metafield type="igFloatMetaField" offset="0x0034" name="_windupTime"/>
 			<metafield type="igFloatMetaField" offset="0x0038" name="_windupTick"/>
-			<metafield type="igEnumMetaField" offset="0x003C" name="_spawnGroup" metaenum="SpawnGroup" default="kSpawnGroupInherit"/>
+			<metafield type="igEnumMetaField" offset="0x003C" name="_spawnGroup" metaenum="SpawnGroup" default="kSpawnGroupInherit kSpawnGroupDefault kSpawnGroup0"/>
 			<metafield type="igBoolMetaField" offset="0x0040" name="_fixFrameLag"/>
 			<metafield type="igBoolMetaField" offset="0x0041" name="_useManagerCullRadius" default="true"/>
-			<metafield type="igEnumMetaField" offset="0x0044" name="_priority" metaenum="PriorityClass" default="kMediumPriority"/>
+			<metafield type="igEnumMetaField" offset="0x0044" name="_priority" metaenum="PriorityClass" default="kLowPriority kMediumPriority"/>
 			<metafield type="igPropertyFieldMetaField" offset="0x0000" name="_lifeSpan" implicitAlignment="false" requiredAlignment="0" innerMetaField="f0">
 				<metafield type="igTimeMetaField" offset="0x0000" implicitAlignment="false" requiredAlignment="4"/>
 			</metafield>
@@ -17097,7 +17375,7 @@
 		<compoundfields>
 			<metafield type="igFloatMetaField" offset="0x0000" name="_valueOrScale"/>
 			<metafield type="igMemoryRefMetaField" offset="0x0004" name="_data" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 		</compoundfields>
 	</metaobject>
@@ -17187,7 +17465,7 @@
 				<metafield type="igUnsignedShortMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igMemoryRefMetaField" offset="0x0010" name="_keys" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedIntPtrMetaField" offset="0x0000" implicitAlignment="false" requiredAlignment="4"/>
+				<metafield type="igUnsignedIntPtrMetaField" offset="0x0000"/>
 			</metafield>
 		</overriddenmetafields>
 		<hashtable invalidvalue="0" invalidkey="4210752250"/>
@@ -17199,7 +17477,7 @@
 			<metafield type="igUnsignedIntMetaField" offset="0x0010" name="_lastBlockIndex"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x0014" name="_blocksRemaining"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x0018" name="_activeBlockItemCount"/>
-			<metafield type="igEnumMetaField" offset="0x001C" name="_userStatus" metaenum="Status" default="kStatusComplete"/>
+			<metafield type="igEnumMetaField" offset="0x001C" name="_userStatus" metaenum="Status" default="kStatusInactive kStatusComplete"/>
 		</metafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igMorphGeometryAttr" basetype="igGeometryAttr">
@@ -17325,10 +17603,10 @@
 		<metafields>
 			<metafield type="igEnumMetaField" offset="0x0250" name="_blendFactor" hasInvariance="true" metaenum="BlendFormat"/>
 			<metafield type="igFloatMetaField" offset="0x0254" name="_diffuseColorScale2" hasInvariance="true"/>
-			<metafield type="igEnumMetaField" offset="0x0258" name="_diffuseColorMaskAlpha2" hasInvariance="true" metaenum="BlendFormat" default="kFormatOne"/>
+			<metafield type="igEnumMetaField" offset="0x0258" name="_diffuseColorMaskAlpha2" hasInvariance="true" metaenum="BlendFormat" default="kFormatNormal kFormatInvert kFormatInvertSigned kFormatTopHalf"/>
 			<metafield type="igFloatMetaField" offset="0x025C" name="_diffuseAlphaScale2" hasInvariance="true"/>
 			<metafield type="igFloatMetaField" offset="0x0260" name="_maskColorScale2" hasInvariance="true"/>
-			<metafield type="igEnumMetaField" offset="0x0264" name="_maskColorMaskAlpha2" hasInvariance="true" metaenum="BlendFormat" default="kFormatOne"/>
+			<metafield type="igEnumMetaField" offset="0x0264" name="_maskColorMaskAlpha2" hasInvariance="true" metaenum="BlendFormat" default="kFormatNormal kFormatInvert kFormatInvertSigned kFormatTopHalf"/>
 			<metafield type="igFloatMetaField" offset="0x0268" name="_maskAlphaScale2" hasInvariance="true"/>
 			<metafield type="igFloatMetaField" offset="0x026C" name="_productColorScale2" hasInvariance="true" default="1.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x0270" name="_productAlphaScale2" hasInvariance="true" default="1.00000000"/>
@@ -18069,7 +18347,7 @@
 			<metafield type="igStringMetaField" offset="0x0008" name="_shaderName" construct="false" destruct="true" reconstruct="false" refCounted="true"/>
 			<metafield type="igStringMetaField" offset="0x000C" name="_engineName" construct="false" destruct="true" reconstruct="false" refCounted="true"/>
 			<metafield type="igBoolMetaField" offset="0x0010" name="_isEngine"/>
-			<metafield type="igEnumMetaField" offset="0x0014" name="_type" metaenum="PARAMETER_TYPE" default="PARAMETER_TYPE_UNKNOWN"/>
+			<metafield type="igEnumMetaField" offset="0x0014" name="_type" metaenum="PARAMETER_TYPE" default="PARAMETER_TYPE_MATRIX PARAMETER_TYPE_UNKNOWN"/>
 			<metafield type="igIntMetaField" offset="0x0018" name="_vectorWidth" default="4"/>
 			<metafield type="igIntMetaField" offset="0x001C" name="_elementIndex"/>
 			<metafield type="igIntMetaField" offset="0x0020" name="_elementSize" default="1"/>
@@ -18134,42 +18412,42 @@
 	<metaobject type="igMetaObject" refname="igPS3EdgeGeometrySegment" basetype="igObject">
 		<metafields>
 			<metafield type="igMemoryRefMetaField" offset="0x0008" name="_spuConfigInfo" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igMemoryRefMetaField" offset="0x0010" name="_indexes" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igUnsignedShortArrayMetaField" offset="0x0018" name="_indexesSizes" num="2"/>
 			<metafield type="igMemoryRefMetaField" offset="0x001C" name="_spuVertexes0" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igMemoryRefMetaField" offset="0x0024" name="_spuVertexes1" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igUnsignedShortArrayMetaField" offset="0x002C" name="_spuVertexesSizes" num="6"/>
 			<metafield type="igMemoryRefMetaField" offset="0x0038" name="_rsxOnlyVertexes" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igUnsignedIntMetaField" offset="0x0040" name="_rsxOnlyVertexesSize"/>
 			<metafield type="igUnsignedShortArrayMetaField" offset="0x0044" name="_skinMatricesByteOffsets" num="2"/>
 			<metafield type="igUnsignedShortArrayMetaField" offset="0x0048" name="_skinMatricesSizes" num="2"/>
 			<metafield type="igUnsignedShortArrayMetaField" offset="0x004C" name="_skinIndexesAndWeightsSizes" num="2"/>
 			<metafield type="igMemoryRefMetaField" offset="0x0050" name="_skinIndexesAndWeights" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igUnsignedIntMetaField" offset="0x0058" name="_ioBufferSize"/>
 			<metafield type="igUnsignedIntMetaField" offset="0x005C" name="_scratchSize"/>
 			<metafield type="igMemoryRefMetaField" offset="0x0060" name="_spuInputStreamDescs0" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igMemoryRefMetaField" offset="0x0068" name="_spuInputStreamDescs1" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igMemoryRefMetaField" offset="0x0070" name="_spuOutputStreamDesc" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igMemoryRefMetaField" offset="0x0078" name="_rsxOnlyStreamDesc" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igUnsignedShortArrayMetaField" offset="0x0080" name="_spuInputStreamDescSizes" num="2"/>
 			<metafield type="igUnsignedShortMetaField" offset="0x0084" name="_spuOutputStreamDescSize"/>
@@ -18181,7 +18459,7 @@
 				</templateargs>
 			</metafield>
 			<metafield type="igMemoryRefMetaField" offset="0x0098" name="_blendShapeData" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igVectorMetaField" offset="0x00A0" name="_blendShapes" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="false">
 				<templateargs>
@@ -18216,7 +18494,7 @@
 			<metafield type="igUnsignedLongMetaField" offset="0x0048" name="_cacheTotalSize"/>
 			<metafield type="igBoolMetaField" offset="0x0050" name="_corruptionCheck"/>
 			<metafield type="igMemoryRefMetaField" offset="0x0054" name="_fetchBuffer" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
-				<metafield type="igUnsignedCharMetaField" offset="0x00D3"/>
+				<metafield type="igUnsignedCharMetaField" offset="0x0000"/>
 			</metafield>
 			<metafield type="igObjectRefMetaField" offset="0x005C" name="_workingFolder" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="igFolder"/>
 			<metafield type="igObjectRefMetaField" offset="0x0060" name="_sourceFile" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="igFile"/>
