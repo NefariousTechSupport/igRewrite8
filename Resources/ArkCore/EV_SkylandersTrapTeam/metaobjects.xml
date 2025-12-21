@@ -12329,7 +12329,7 @@
 		</overriddenmetafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="ValueStack" basetype="ScriptObjectList">
-		<objectlist elementtype="AbstractValueMeasurement"/>
+		<objectlist elementtype="AbstractScriptVariant"/>
 		<metafields>
 			<metafield type="igObjectRefMetaField" offset="0x0018" name="_otherPoint" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="PositionStack"/>
 			<metafield type="igStaticMetaField" offset="0x0000" name="_dereferencer" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">

@@ -192,4 +192,33 @@ public class MetadataTest
 	/// </summary>
 	[Fact]
 	public void ImaginatorsSamplerStateBundleDesc()   => SamplerStateBundleDescChecks(igArkCore.EGame.EV_SkylandersImaginators);
+
+
+
+	/// <summary>
+	/// Ensure ValueStack has its element type set to AbstractScriptVariant
+	/// instead of AbstractValueMeasurement
+	/// </summary>
+	[Fact]
+	private void ValueStackElementType()
+	{
+		igArkCore.ReadFromXmlFile(igArkCore.EGame.EV_SkylandersTrapTeam);
+
+		igMetaObject? valueStackMeta = igArkCore.GetObjectMeta("ValueStack");
+		Assert.NotNull(valueStackMeta);
+
+		igMetaField? dataField = valueStackMeta.GetFieldByName("_data");
+		Assert.NotNull(dataField);
+
+		Assert.IsType<igMemoryRefMetaField>(dataField);
+		igMemoryRefMetaField dataFieldMem = (igMemoryRefMetaField)dataField;
+
+		Assert.NotNull(dataFieldMem._memType);
+		Assert.IsType<igObjectRefMetaField>(dataFieldMem._memType);
+
+		igObjectRefMetaField memTypeField = (igObjectRefMetaField)dataFieldMem._memType;
+		Assert.NotNull(memTypeField._metaObject);
+		Assert.Equal("AbstractScriptVariant", memTypeField._metaObject._name);
+	}
+
 }
