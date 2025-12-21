@@ -50,13 +50,13 @@ namespace igLibrary.Core
 
 		public override object? ReadIGZField(igIGZLoader loader)
 		{
-			Logging.Warn("Using placeholder implementation of ReadIGZField of field type {0}, this is bad", GetType().Name);
+			Logging.Warn("Using placeholder implementation of ReadIGZField of field type {0}, this is bad", _platformInfo._name);
 			return loader._stream.ReadBytes(GetSize(loader._platform));
 		}
 
 		public override void WriteIGZField(igIGZSaver saver, igIGZSaver.SaverSection section, object? value)
 		{
-			Logging.Warn("Using placeholder implementation of WriteIGZField of field type {0}, this is bad", GetType().Name);
+			Logging.Warn("Using placeholder implementation of WriteIGZField of field type {0}, this is bad", _platformInfo._name);
 			section._sh.WriteBytes((byte[])value!);
 		}
 
