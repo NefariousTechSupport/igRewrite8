@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System;
 using System.Collections.ObjectModel;
+using igLibrary.Tfb.Script;
 
 namespace igLibrary.Core
 {
@@ -349,6 +350,8 @@ namespace igLibrary.Core
 				_compoundFieldInfos.Add(compound._name!, compound);
 				compound.PostUndump();
 			}
+
+			BindingManager.SetupBindings();
 
 			stopwatch.Stop();
 

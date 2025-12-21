@@ -583,12 +583,7 @@ namespace igLibrary.Core
 			}
 			string typeName = nameAttr.Value!;
 
-			igObjectDirectory bindingTypeDir = new igObjectDirectory();
-			bindingTypeDir._name = new igName(typeName);
-			bindingTypeDir._useNameList = true;
-			bindingTypeDir._nameList = new igNameList();
-			igObjectStreamManager.Singleton.AddObjectDirectory(bindingTypeDir, bindingTypeDir._name._string);
-			igObjectHandleManager.Singleton.AddSystemNamespace(typeName);
+			BindingManager.ClassBinding classBinding = BindingManager.MakeNewClassBinding(typeName);
 
 			for (XmlNode? bindingNode = node.FirstChild; bindingNode != null; bindingNode = bindingNode.NextSibling)
 			{
@@ -605,16 +600,7 @@ namespace igLibrary.Core
 				if (typeAttr == null) return new ArkCoreXmlError("All binding nodes must have a \"type\" attribute");
 				string bindingTypeName = typeAttr.Value!;
 
-				Type? type = igArkCore.GetObjectDotNetType(bindingTypeName);
-				if (type == null)
-				{
-					type = typeof(tfbScriptObject);
-					return new ArkCoreXmlError("Failed to find type {0}, defaulting to tfbScriptObject", bindingTypeName);
-				}
-
-				tfbScriptObject binding = (tfbScriptObject)Activator.CreateInstance(type)!;
-				binding._name = bindingName;
-				bindingTypeDir.AddObject(binding, default(igName), new igName(bindingName));
+				classBinding.AddFunction(bindingTypeName, bindingName);
 			}
 
 			return null;
