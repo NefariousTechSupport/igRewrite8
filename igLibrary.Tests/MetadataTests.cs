@@ -10,6 +10,7 @@
 namespace igLibrary.Tests;
 
 using igLibrary.Core;
+using igLibrary.Tfb.Script;
 using igLibrary.Vfx;
 
 public class MetadataTest
@@ -221,4 +222,25 @@ public class MetadataTest
 		Assert.Equal("AbstractScriptVariant", memTypeField._metaObject._name);
 	}
 
+
+
+	/// <summary>
+	/// Ensure AbstractScriptGroup's bindings are of type AbstractScriptVariant
+	/// instead of tfbScriptObject
+	/// </summary>
+	[Fact]
+	private void AbstractScriptGroupBindingsTest()
+	{
+		igArkCore.ReadFromXmlFile(igArkCore.EGame.EV_SkylandersTrapTeam);
+
+		igHandle itsHandle = igObjectHandleManager.Singleton.LookupHandle(new igHandleName("AbstractScriptGroup.its"));
+		igHandle nullHandle = igObjectHandleManager.Singleton.LookupHandle(new igHandleName("AbstractScriptGroup.null"));
+
+		// Baseline to make sure it exists
+		Assert.NotNull(itsHandle.GetObjectAlias<igObject>());
+		Assert.NotNull(nullHandle.GetObjectAlias<igObject>());
+
+		Assert.NotNull(itsHandle.GetObjectAlias<AbstractScriptVariant>());
+		Assert.NotNull(nullHandle.GetObjectAlias<AbstractScriptVariant>());
+	}
 }

@@ -16544,8 +16544,8 @@
 			</metafield>
 		</metafields>
 		<tfbBindings name="AbstractScriptGroup">
-			<binding type="tfbScriptObject" name="null"/>
-			<binding type="tfbScriptObject" name="its"/>
+			<binding type="AbstractScriptVariant" name="null"/>
+			<binding type="AbstractScriptVariant" name="its"/>
 		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igMatrix44fPool" basetype="igPool">
