@@ -1,0 +1,1190 @@
+<metaenums>
+	<metaenum refname="BlendFunction">
+		<value name="kBlendAdd" value="0"/>
+		<value name="kBlendMultiply" value="1"/>
+		<value name="kBlendAddMultiply" value="2"/>
+		<value name="kBlendMultiplyAdd" value="3"/>
+		<value name="kBlendThreshold" value="4"/>
+		<value name="kBlendValue" value="5"/>
+	</metaenum>
+	<metaenum refname="taperMode">
+		<value name="TAPER_NONE" value="0"/>
+		<value name="TAPER_END" value="1"/>
+		<value name="TAPER_START" value="2"/>
+		<value name="TAPER_BOTH" value="3"/>
+	</metaenum>
+	<metaenum refname="FocusMapperMode">
+		<value name="LINEAR" value="0"/>
+		<value name="BELL_CURVE" value="1"/>
+	</metaenum>
+	<metaenum refname="Direction">
+		<value name="kBottomUp" value="0"/>
+		<value name="kTopDown" value="1"/>
+	</metaenum>
+	<metaenum refname="Status">
+		<value name="kStatusInactive" value="0"/>
+		<value name="kStatusActive" value="1"/>
+		<value name="kStatusComplete" value="2"/>
+		<value name="kStatusDeviceNotFound" value="3"/>
+		<value name="kStatusInvalidPath" value="4"/>
+		<value name="kStatusTooManyOpenFiles" value="5"/>
+		<value name="kStatusBadParam" value="6"/>
+		<value name="kStatusOutOfMemory" value="7"/>
+		<value name="kStatusDiskFull" value="8"/>
+		<value name="kStatusDoorOpen" value="9"/>
+		<value name="kStatusReadError" value="10"/>
+		<value name="kStatusWriteError" value="11"/>
+		<value name="kStatusAlreadyInUse" value="12"/>
+		<value name="kStatusAlreadyExists" value="13"/>
+		<value name="kStatusEndOfFile" value="14"/>
+		<value name="kStatusDeviceNotInitialized" value="15"/>
+		<value name="kStatusMediaUnformatted" value="16"/>
+		<value name="kStatusMediaCorrupt" value="17"/>
+		<value name="kStatusGeneralError" value="18"/>
+		<value name="kStatusStopped" value="19"/>
+		<value name="kStatusUnsupported" value="20"/>
+		<value name="kStatusPermissionDenied" value="21"/>
+	</metaenum>
+	<metaenum refname="SubEffectSecondBolt">
+		<value name="kBoltNone" value="0"/>
+		<value name="kBolt1Follow" value="1"/>
+		<value name="kBolt1Position" value="2"/>
+		<value name="kSpawnPosition" value="3"/>
+		<value name="kBolt2Follow" value="4"/>
+		<value name="kBolt2Position" value="5"/>
+	</metaenum>
+	<metaenum refname="PriorityClass">
+		<value name="kLowPriority" value="0"/>
+		<value name="kMediumPriority" value="1"/>
+		<value name="kHighPriority" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_VERTEX_TYPE">
+		<value name="IG_VERTEX_TYPE_FLOAT1" value="0"/>
+		<value name="IG_VERTEX_TYPE_FLOAT2" value="1"/>
+		<value name="IG_VERTEX_TYPE_FLOAT3" value="2"/>
+		<value name="IG_VERTEX_TYPE_FLOAT4" value="3"/>
+		<value name="IG_VERTEX_TYPE_UBYTE4N_COLOR" value="4"/>
+		<value name="IG_VERTEX_TYPE_UBYTE4N_COLOR_ARGB" value="5"/>
+		<value name="IG_VERTEX_TYPE_UBYTE4N_COLOR_RGBA" value="6"/>
+		<value name="IG_VERTEX_TYPE_UNDEFINED_0" value="7"/>
+		<value name="IG_VERTEX_TYPE_UBYTE2N_COLOR_5650" value="8"/>
+		<value name="IG_VERTEX_TYPE_UBYTE2N_COLOR_5551" value="9"/>
+		<value name="IG_VERTEX_TYPE_UBYTE2N_COLOR_4444" value="10"/>
+		<value name="IG_VERTEX_TYPE_INT1" value="11"/>
+		<value name="IG_VERTEX_TYPE_INT2" value="12"/>
+		<value name="IG_VERTEX_TYPE_INT4" value="13"/>
+		<value name="IG_VERTEX_TYPE_UINT1" value="14"/>
+		<value name="IG_VERTEX_TYPE_UINT2" value="15"/>
+		<value name="IG_VERTEX_TYPE_UINT4" value="16"/>
+		<value name="IG_VERTEX_TYPE_INT1N" value="17"/>
+		<value name="IG_VERTEX_TYPE_INT2N" value="18"/>
+		<value name="IG_VERTEX_TYPE_INT4N" value="19"/>
+		<value name="IG_VERTEX_TYPE_UINT1N" value="20"/>
+		<value name="IG_VERTEX_TYPE_UINT2N" value="21"/>
+		<value name="IG_VERTEX_TYPE_UINT4N" value="22"/>
+		<value name="IG_VERTEX_TYPE_UBYTE4" value="23"/>
+		<value name="IG_VERTEX_TYPE_UBYTE4_X4" value="24"/>
+		<value name="IG_VERTEX_TYPE_BYTE4" value="25"/>
+		<value name="IG_VERTEX_TYPE_UBYTE4N" value="26"/>
+		<value name="IG_VERTEX_TYPE_UNDEFINED_1" value="27"/>
+		<value name="IG_VERTEX_TYPE_BYTE4N" value="28"/>
+		<value name="IG_VERTEX_TYPE_SHORT2" value="29"/>
+		<value name="IG_VERTEX_TYPE_SHORT4" value="30"/>
+		<value name="IG_VERTEX_TYPE_USHORT2" value="31"/>
+		<value name="IG_VERTEX_TYPE_USHORT4" value="32"/>
+		<value name="IG_VERTEX_TYPE_SHORT2N" value="33"/>
+		<value name="IG_VERTEX_TYPE_SHORT3N" value="34"/>
+		<value name="IG_VERTEX_TYPE_SHORT4N" value="35"/>
+		<value name="IG_VERTEX_TYPE_USHORT2N" value="36"/>
+		<value name="IG_VERTEX_TYPE_USHORT3N" value="37"/>
+		<value name="IG_VERTEX_TYPE_USHORT4N" value="38"/>
+		<value name="IG_VERTEX_TYPE_UDEC3" value="39"/>
+		<value name="IG_VERTEX_TYPE_DEC3N" value="40"/>
+		<value name="IG_VERTEX_TYPE_DEC3N_S11_11_10" value="41"/>
+		<value name="IG_VERTEX_TYPE_HALF2" value="42"/>
+		<value name="IG_VERTEX_TYPE_HALF4" value="43"/>
+		<value name="IG_VERTEX_TYPE_UNUSED" value="44"/>
+		<value name="IG_VERTEX_TYPE_BYTE3N" value="45"/>
+		<value name="IG_VERTEX_TYPE_SHORT3" value="46"/>
+		<value name="IG_VERTEX_TYPE_USHORT3" value="47"/>
+		<value name="IG_VERTEX_TYPE_UBYTE4_ENDIAN" value="48"/>
+		<value name="IG_VERTEX_TYPE_UBYTE4_COLOR" value="49"/>
+		<value name="IG_VERTEX_TYPE_BYTE3" value="50"/>
+		<value name="IG_VERTEX_TYPE_UBYTE2N_COLOR_5650_RGB" value="51"/>
+		<value name="IG_VERTEX_TYPE_UDEC3_OES" value="52"/>
+		<value name="IG_VERTEX_TYPE_DEC3N_OES" value="53"/>
+		<value name="IG_VERTEX_TYPE_MAX" value="54"/>
+	</metaenum>
+	<metaenum refname="MotionPathBehavior">
+		<value name="kSpawnAlongPath" value="0"/>
+		<value name="kInstanceAlignBolt" value="1"/>
+		<value name="kInstanceAlignSpawn" value="2"/>
+		<value name="kInstanceAlignMotion" value="3"/>
+		<value name="kInstanceAlignRotated" value="4"/>
+		<value name="kInstanceAlignWorld" value="5"/>
+		<value name="kInstanceAlignCamera" value="6"/>
+		<value name="kMotionPathDisabled" value="7"/>
+	</metaenum>
+	<metaenum refname="SubEffectChainMode">
+		<value name="kChainNone" value="0"/>
+		<value name="kChainTail" value="1"/>
+		<value name="kChainHead" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_TEXTURE_STAGE_TYPE">
+		<value name="IG_GFX_TEXTURE_STAGE_TYPE_DISABLE" value="0"/>
+		<value name="IG_GFX_TEXTURE_STAGE_TYPE_COMBINE1" value="1"/>
+		<value name="IG_GFX_TEXTURE_STAGE_TYPE_COMBINE2" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_VERTEX_PIPELINE_MODE">
+		<value name="IG_GFX_VERTEX_PIPELINE_MODE_DEFAULT" value="0"/>
+		<value name="IG_GFX_VERTEX_PIPELINE_MODE_SHADER" value="1"/>
+	</metaenum>
+	<metaenum refname="RequestType">
+		<value name="kOpen" value="0"/>
+		<value name="kClose" value="1"/>
+	</metaenum>
+	<metaenum refname="IG_INDEX_TYPE">
+		<value name="IG_INDEX_TYPE_INT8" value="1"/>
+		<value name="IG_INDEX_TYPE_INT16" value="2"/>
+		<value name="IG_INDEX_TYPE_INT32" value="4"/>
+	</metaenum>
+	<metaenum refname="SubEffectChildKill">
+		<value name="kDontKill" value="0"/>
+		<value name="kSoftKill" value="1"/>
+		<value name="kHardKill" value="2"/>
+	</metaenum>
+	<metaenum refname="ERenderer">
+		<value name="eR_Default" value="0"/>
+		<value name="eR_Loading" value="1"/>
+		<value name="eR_NumRenderers" value="2"/>
+	</metaenum>
+	<metaenum refname="SpeakerMode">
+		<value name="kSpeakerModeDefault" value="0"/>
+		<value name="kSpeakerModeMono" value="1"/>
+		<value name="kSpeakerModeStereo" value="2"/>
+		<value name="kSpeakerModePrologic" value="3"/>
+		<value name="kSpeakerMode5Point1" value="4"/>
+		<value name="kSpeakerMode7Point1" value="5"/>
+	</metaenum>
+	<metaenum refname="igBlockingType">
+		<value name="kNonBlocking" value="0"/>
+		<value name="kBlocking" value="1"/>
+		<value name="kMayBlock" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_MOVIE_SIZE">
+		<value name="IG_MOVIE_SIZE_WINDOW" value="0"/>
+		<value name="IG_MOVIE_SIZE_FILE" value="1"/>
+		<value name="IG_MOVIE_SIZE_USER" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_TEXTURE_ARGUMENT">
+		<value name="IG_GFX_TEXTURE_ARGUMENT_PREV_STAGE_OUTPUT" value="0"/>
+		<value name="IG_GFX_TEXTURE_ARGUMENT_DIFFUSE" value="1"/>
+		<value name="IG_GFX_TEXTURE_ARGUMENT_SPECULAR" value="2"/>
+		<value name="IG_GFX_TEXTURE_ARGUMENT_TEXTURE" value="3"/>
+		<value name="IG_GFX_TEXTURE_ARGUMENT_CONSTANT_COLOR" value="4"/>
+	</metaenum>
+	<metaenum refname="AnimatedFrameRotation">
+		<value name="kRotationNone" value="0"/>
+		<value name="kRotation90" value="1"/>
+		<value name="kRotation180" value="2"/>
+		<value name="kRotation270" value="3"/>
+		<value name="kRotationRandom" value="4"/>
+	</metaenum>
+	<metaenum refname="PrimitiveList">
+		<value name="kNoZTest" value="0"/>
+		<value name="kZTest" value="1"/>
+		<value name="kHud" value="2"/>
+		<value name="kPrimitiveListCount" value="3"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_RENDER_MODE">
+		<value name="IG_GFX_RENDER_MODE_FILL" value="0"/>
+		<value name="IG_GFX_RENDER_MODE_LINES" value="1"/>
+		<value name="IG_GFX_RENDER_MODE_POINTS" value="2"/>
+	</metaenum>
+	<metaenum refname="velocityDirection">
+		<value name="GENERATOR_ORIENTATION" value="0"/>
+		<value name="GENERATOR_OUTWARD" value="1"/>
+		<value name="GENERATOR_INWARD" value="2"/>
+	</metaenum>
+	<metaenum refname="Distribution">
+		<value name="kDistributionLinear" value="0"/>
+		<value name="kDistributionBinary" value="1"/>
+		<value name="kDistributionNormal" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_CORE_LANGUAGE">
+		<value name="IG_CORE_LANGUAGE_HISPANIC" value="0"/>
+		<value name="IG_CORE_LANGUAGE_ARABIC" value="0"/>
+		<value name="IG_CORE_LANGUAGE_BULGARIAN" value="1"/>
+		<value name="IG_CORE_LANGUAGE_CHINESE" value="2"/>
+		<value name="IG_CORE_LANGUAGE_CZECH" value="3"/>
+		<value name="IG_CORE_LANGUAGE_DANISH" value="4"/>
+		<value name="IG_CORE_LANGUAGE_DUTCH" value="5"/>
+		<value name="IG_CORE_LANGUAGE_ENGLISH" value="6"/>
+		<value name="IG_CORE_LANGUAGE_FINNISH" value="7"/>
+		<value name="IG_CORE_LANGUAGE_FRENCH" value="8"/>
+		<value name="IG_CORE_LANGUAGE_GERMAN" value="9"/>
+		<value name="IG_CORE_LANGUAGE_GREEK" value="10"/>
+		<value name="IG_CORE_LANGUAGE_HEBREW" value="11"/>
+		<value name="IG_CORE_LANGUAGE_HINDI" value="12"/>
+		<value name="IG_CORE_LANGUAGE_HUNGARIAN" value="13"/>
+		<value name="IG_CORE_LANGUAGE_ITALIAN" value="14"/>
+		<value name="IG_CORE_LANGUAGE_JAPANESE" value="15"/>
+		<value name="IG_CORE_LANGUAGE_KOREAN" value="16"/>
+		<value name="IG_CORE_LANGUAGE_NORWEGIAN" value="17"/>
+		<value name="IG_CORE_LANGUAGE_POLISH" value="18"/>
+		<value name="IG_CORE_LANGUAGE_PORTUGUESE" value="19"/>
+		<value name="IG_CORE_LANGUAGE_RUSSIAN" value="20"/>
+		<value name="IG_CORE_LANGUAGE_SPANISH" value="21"/>
+		<value name="IG_CORE_LANGUAGE_SPANISH_MEXICAN" value="22"/>
+		<value name="IG_CORE_LANGUAGE_SWEDISH" value="23"/>
+		<value name="IG_CORE_LANGUAGE_TAIWANESE" value="24"/>
+		<value name="IG_CORE_LANGUAGE_TURKISH" value="25"/>
+		<value name="IG_CORE_LANGUAGE_LAST" value="25"/>
+	</metaenum>
+	<metaenum refname="VerticalAlignment">
+		<value name="kVerticalAlignmentTop" value="0"/>
+		<value name="kVerticalAlignmentCenter" value="1"/>
+		<value name="kVerticalAlignmentBottom" value="2"/>
+	</metaenum>
+	<metaenum refname="InvalidBoltBehavior">
+		<value name="kSoftKill" value="0"/>
+		<value name="kHardKill" value="1"/>
+		<value name="kContinue" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_FOG_MODE">
+		<value name="IG_GFX_FOG_MODE_LINEAR" value="0"/>
+		<value name="IG_GFX_FOG_MODE_EXP" value="1"/>
+		<value name="IG_GFX_FOG_MODE_EXP2" value="2"/>
+		<value name="IG_GFX_FOG_MODE_REVEXP" value="3"/>
+		<value name="IG_GFX_FOG_MODE_REVEXP2" value="4"/>
+	</metaenum>
+	<metaenum refname="Publicity">
+		<value name="unpublished" value="0"/>
+		<value name="published" value="1"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_DRAW">
+		<value name="IG_GFX_DRAW_POINTS" value="0"/>
+		<value name="IG_GFX_DRAW_LINES" value="1"/>
+		<value name="IG_GFX_DRAW_LINE_STRIP" value="2"/>
+		<value name="IG_GFX_DRAW_TRIANGLES" value="3"/>
+		<value name="IG_GFX_DRAW_TRIANGLE_STRIP" value="4"/>
+		<value name="IG_GFX_DRAW_TRIANGLE_FAN" value="5"/>
+		<value name="IG_GFX_DRAW_QUADS" value="6"/>
+	</metaenum>
+	<metaenum refname="Type">
+		<value name="kTypeInvalid" value="0"/>
+		<value name="kTypeExists" value="1"/>
+		<value name="kTypeOpen" value="2"/>
+		<value name="kTypeClose" value="3"/>
+		<value name="kTypeRead" value="4"/>
+		<value name="kTypeWrite" value="5"/>
+		<value name="kTypeTruncate" value="6"/>
+		<value name="kTypeMkdir" value="7"/>
+		<value name="kTypeRmdir" value="8"/>
+		<value name="kTypeFileList" value="9"/>
+		<value name="kTypeFileListWithSizes" value="10"/>
+		<value name="kTypeUnlink" value="11"/>
+		<value name="kTypeRename" value="12"/>
+		<value name="kTypePrefetch" value="13"/>
+		<value name="kTypeFormat" value="14"/>
+		<value name="kTypeCommit" value="15"/>
+	</metaenum>
+	<metaenum refname="SortMode">
+		<value name="kSortNone" value="0"/>
+		<value name="kSortBackToFront" value="1"/>
+		<value name="kSortFrontToBack" value="2"/>
+	</metaenum>
+	<metaenum refname="MembershipTest">
+		<value name="includes" value="0"/>
+		<value name="excludes" value="1"/>
+		<value name="intersects_with" value="2"/>
+		<value name="includes_all" value="3"/>
+	</metaenum>
+	<metaenum refname="combineMode">
+		<value name="relative" value="0"/>
+		<value name="absolute" value="1"/>
+		<value name="local" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_TEXTURE_SOURCE">
+		<value name="IG_GFX_TEXTURE_SOURCE_IMAGE" value="0"/>
+		<value name="IG_GFX_TEXTURE_SOURCE_VIDEO" value="2"/>
+		<value name="IG_GFX_TEXTURE_SOURCE_BUFFER" value="3"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_SHADER_TYPE">
+		<value name="IG_GFX_PIXEL_SHADER" value="0"/>
+		<value name="IG_GFX_VERTEX_SHADER" value="1"/>
+	</metaenum>
+	<metaenum refname="SpriteRenderTarget">
+		<value name="TV" value="1"/>
+		<value name="DRC" value="2"/>
+		<value name="BOTH" value="3"/>
+	</metaenum>
+	<metaenum refname="enumRHSfunc">
+		<value name="kRHSfuncNone" value="0"/>
+		<value name="kRHSfuncRandom" value="1"/>
+		<value name="__separator0__" value="1"/>
+		<value name="kRHSfuncInteger" value="2"/>
+		<value name="kRHSfuncRound" value="3"/>
+		<value name="kRHSfuncFloor" value="4"/>
+		<value name="kRHSfuncCeiling" value="5"/>
+		<value name="__separator1__" value="5"/>
+		<value name="kRHSfuncAbsolute_value" value="6"/>
+		<value name="kRHSfuncSign" value="7"/>
+		<value name="kRHSfuncSquare" value="8"/>
+		<value name="kRHSfuncSquare_root" value="9"/>
+		<value name="__separator2__" value="9"/>
+		<value name="kRHSfuncNormalize_angle" value="10"/>
+		<value name="kRHSfuncSine" value="11"/>
+		<value name="kRHSfuncCosine" value="12"/>
+		<value name="kRHSfuncTangent" value="13"/>
+		<value name="kRHSfuncArc_sine" value="14"/>
+		<value name="kRHSfuncArc_cosine" value="15"/>
+		<value name="kRHSfuncArc_tangent" value="16"/>
+	</metaenum>
+	<metaenum refname="Ps3Location">
+		<value name="kPs3LocationLocal" value="0"/>
+		<value name="kPs3LocationMain" value="1"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_TEXTURE_FUNCTION_TYPE">
+		<value name="IG_GFX_TEXTURE_FUNCTION_TYPE_COLOR" value="0"/>
+		<value name="IG_GFX_TEXTURE_FUNCTION_TYPE_ALPHA" value="1"/>
+		<value name="IG_GFX_TEXTURE_FUNCTION_TYPE_COLOR_AND_ALPHA" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_VERTEX_USAGE">
+		<value name="IG_VERTEX_USAGE_POSITION" value="0"/>
+		<value name="IG_VERTEX_USAGE_NORMAL" value="1"/>
+		<value name="IG_VERTEX_USAGE_TANGENT" value="2"/>
+		<value name="IG_VERTEX_USAGE_BINORMAL" value="3"/>
+		<value name="IG_VERTEX_USAGE_COLOR" value="4"/>
+		<value name="IG_VERTEX_USAGE_TEXCOORD" value="5"/>
+		<value name="IG_VERTEX_USAGE_BLENDWEIGHTS" value="6"/>
+		<value name="IG_VERTEX_USAGE_UNUSED_0" value="7"/>
+		<value name="IG_VERTEX_USAGE_BLENDINDICES" value="8"/>
+		<value name="IG_VERTEX_USAGE_FOGCOORD" value="9"/>
+		<value name="IG_VERTEX_USAGE_PSIZE" value="10"/>
+	</metaenum>
+	<metaenum refname="SpriteAlignment">
+		<value name="ALIGN_TOP_LEFT" value="0"/>
+		<value name="ALIGN_TOP_CENTER" value="1"/>
+		<value name="ALIGN_TOP_RIGHT" value="2"/>
+		<value name="ALIGN_MID_LEFT" value="3"/>
+		<value name="ALIGN_MID_CENTER" value="4"/>
+		<value name="ALIGN_MID_RIGHT" value="5"/>
+		<value name="ALIGN_BOTTOM_LEFT" value="6"/>
+		<value name="ALIGN_BOTTOM_CENTER" value="7"/>
+		<value name="ALIGN_BOTTOM_RIGHT" value="8"/>
+	</metaenum>
+	<metaenum refname="LockType">
+		<value name="LOCK_WORLD_COORDINATE" value="0"/>
+		<value name="LOCK_SCREEN_LOCATION" value="1"/>
+	</metaenum>
+	<metaenum refname="CameraMode">
+		<value name="kPerspective" value="0"/>
+		<value name="kOrthographic" value="1"/>
+	</metaenum>
+	<metaenum refname="State">
+		<value name="kStateIdle" value="0"/>
+		<value name="kStateOpening" value="1"/>
+		<value name="kStateOpened" value="2"/>
+		<value name="kStateReadingHeader" value="3"/>
+		<value name="kStateReadHeader" value="4"/>
+		<value name="kStateReadingSections" value="5"/>
+		<value name="kStateReadSections" value="6"/>
+		<value name="kStateFinished" value="7"/>
+		<value name="kStateAborting" value="8"/>
+		<value name="kStateFailed" value="9"/>
+	</metaenum>
+	<metaenum refname="AnimatedFrameMirror">
+		<value name="kMirrorNone" value="0"/>
+		<value name="kMirrorReverse" value="1"/>
+		<value name="kMirrorRandom" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_DEPTH_TEST_FUNCTION">
+		<value name="IG_GFX_DEPTH_TEST_FUNCTION_NEVER" value="0"/>
+		<value name="IG_GFX_DEPTH_TEST_FUNCTION_LESS" value="1"/>
+		<value name="IG_GFX_DEPTH_TEST_FUNCTION_EQUAL" value="2"/>
+		<value name="IG_GFX_DEPTH_TEST_FUNCTION_LEQUAL" value="3"/>
+		<value name="IG_GFX_DEPTH_TEST_FUNCTION_GREATER" value="4"/>
+		<value name="IG_GFX_DEPTH_TEST_FUNCTION_NOT_EQUAL" value="5"/>
+		<value name="IG_GFX_DEPTH_TEST_FUNCTION_GEQUAL" value="6"/>
+		<value name="IG_GFX_DEPTH_TEST_FUNCTION_ALWAYS" value="7"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_TEXTURE_COORD_SOURCE">
+		<value name="IG_GFX_TEXTURE_COORD_SOURCE_VERTEX" value="0"/>
+		<value name="IG_GFX_TEXTURE_COORD_SOURCE_CAMERA_SPACE_POSITION" value="1"/>
+		<value name="IG_GFX_TEXTURE_COORD_SOURCE_SPHERE_MAP" value="2"/>
+		<value name="IG_GFX_TEXTURE_COORD_SOURCE_CAMERA_SPACE_NORMAL" value="3"/>
+		<value name="IG_GFX_TEXTURE_COORD_SOURCE_CAMERA_SPACE_REFLECTION_VEC" value="4"/>
+	</metaenum>
+	<metaenum refname="ColorMode">
+		<value name="kFlatColor" value="0"/>
+		<value name="kLinearVerticalAToB" value="1"/>
+	</metaenum>
+	<metaenum refname="PlayMode">
+		<value name="ONE_WAY" value="0"/>
+		<value name="PING_PONG" value="1"/>
+	</metaenum>
+	<metaenum refname="GameEventIndex">
+		<value name="kEnemyCaptured" value="0"/>
+		<value name="kSkylanderCollected" value="1"/>
+		<value name="kStoryModeStarsEarned" value="2"/>
+		<value name="kKaosModeStarsEarned" value="3"/>
+		<value name="kCrystalCollected" value="4"/>
+		<value name="kVillainQuestCompleted" value="5"/>
+		<value name="kKaosModeWaveCompleted" value="6"/>
+		<value name="kArenaLevelCompleted" value="7"/>
+		<value name="kHatOrTrinketCollected" value="8"/>
+		<value name="kSkystoneSmashWin" value="9"/>
+		<value name="kChapterCompleted" value="10"/>
+		<value name="kStoryModeCompleted" value="11"/>
+		<value name="kKaosModeCompleted" value="12"/>
+		<value name="kEnemyDefeated" value="13"/>
+		<value name="kBrockArenaUnlocked" value="14"/>
+		<value name="kElementalZoneUnlocked" value="15"/>
+		<value name="kSkystoneCollected" value="16"/>
+		<value name="kSkylanderLevelReached" value="17"/>
+		<value name="kAllSkylanderQuestsCompleted" value="18"/>
+		<value name="kScriptedAchievementChapter" value="19"/>
+		<value name="kMoneyAwarded" value="20"/>
+		<value name="kDistanceTraveled" value="21"/>
+		<value name="kPortalMasterRankAchieved" value="22"/>
+		<value name="kDamageDealtAsAVillain" value="23"/>
+		<value name="kGameProgress" value="24"/>
+		<value name="kKaosModeEnemyKilled" value="25"/>
+		<value name="kAllArenaLevelsCompleted" value="26"/>
+		<value name="kCount" value="27"/>
+	</metaenum>
+	<metaenum refname="EventCode">
+		<value name="ec_none" value="0"/>
+		<value name="ec_session" value="100"/>
+		<value name="ec_tagTeam" value="200"/>
+		<value name="ec_levelEntrance" value="300"/>
+		<value name="ec_mapProgress" value="400"/>
+		<value name="ec_menu" value="500"/>
+		<value name="ec_snapShot" value="600"/>
+		<value name="ec_toyDeath" value="700"/>
+		<value name="ec_magicMoment" value="800"/>
+		<value name="ec_soulGem" value="900"/>
+		<value name="ec_collectable" value="1000"/>
+		<value name="ec_elementalGate" value="1100"/>
+		<value name="ec_miniGameStart" value="1200"/>
+		<value name="ec_cardGameEnd" value="1300"/>
+		<value name="ec_musicGameEnd" value="1400"/>
+		<value name="ec_lockGameEnd" value="1500"/>
+		<value name="ec_questGameEnd" value="1600"/>
+		<value name="ec_purchase" value="1700"/>
+		<value name="ec_respawn" value="1800"/>
+		<value name="ec_levelUp" value="1900"/>
+		<value name="ec_crystalCapture" value="2000"/>
+		<value name="ec_cutScene" value="2100"/>
+		<value name="ec_bossFight" value="2200"/>
+		<value name="ec_levelComplete" value="2700"/>
+		<value name="ec_tower" value="2800"/>
+		<value name="ec_meleeAttack" value="3000"/>
+		<value name="ec_motd" value="3100"/>
+		<value name="ec_villianGameEnd" value="3300"/>
+		<value name="ec_portal" value="5000"/>
+		<value name="ec_dynamicContent" value="5100"/>
+		<value name="ec_mtx" value="5200"/>
+		<value name="ec_externalUpSell" value="5300"/>
+	</metaenum>
+	<metaenum refname="ArithOp">
+		<value name="..." value="-1"/>
+		<value name="+" value="0"/>
+		<value name="-" value="1"/>
+		<value name="*" value="2"/>
+		<value name="/" value="3"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_TEXTURE_FILTER">
+		<value name="IG_GFX_TEXTURE_FILTER_NEAREST" value="0"/>
+		<value name="IG_GFX_TEXTURE_FILTER_NEAREST_MIPMAP_NONE" value="0"/>
+		<value name="IG_GFX_TEXTURE_FILTER_LINEAR" value="1"/>
+		<value name="IG_GFX_TEXTURE_FILTER_LINEAR_MIPMAP_NONE" value="1"/>
+		<value name="IG_GFX_TEXTURE_FILTER_NEAREST_MIPMAP_NEAREST" value="2"/>
+		<value name="IG_GFX_TEXTURE_FILTER_NEAREST_MIPMAP_LINEAR" value="3"/>
+		<value name="IG_GFX_TEXTURE_FILTER_LINEAR_MIPMAP_NEAREST" value="4"/>
+		<value name="IG_GFX_TEXTURE_FILTER_LINEAR_MIPMAP_LINEAR" value="5"/>
+		<value name="IG_GFX_TEXTURE_FILTER_ANISOTROPIC" value="6"/>
+		<value name="IG_GFX_TEXTURE_FILTER_ANISOTROPIC_MIPMAP_NONE" value="6"/>
+		<value name="IG_GFX_TEXTURE_FILTER_ANISOTROPIC_MIPMAP_NEAREST" value="7"/>
+		<value name="IG_GFX_TEXTURE_FILTER_ANISOTROPIC_MIPMAP_LINEAR" value="8"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_MULTISAMPLE_TYPE">
+		<value name="IG_GFX_MULTISAMPLE_NONE" value="0"/>
+		<value name="IG_GFX_MULTISAMPLE_2X" value="1"/>
+		<value name="IG_GFX_MULTISAMPLE_4X" value="2"/>
+		<value name="IG_GFX_MULTISAMPLE_4X_ROTATED" value="3"/>
+	</metaenum>
+	<metaenum refname="IG_MATH_SPATIAL_REGION">
+		<value name="IG_MATH_SPATIAL_REGION_XP_YP_ZP" value="0"/>
+		<value name="IG_MATH_SPATIAL_REGION_XP_YP_ZN" value="1"/>
+		<value name="IG_MATH_SPATIAL_REGION_XP_YN_ZP" value="2"/>
+		<value name="IG_MATH_SPATIAL_REGION_XP_YN_ZN" value="3"/>
+		<value name="IG_MATH_SPATIAL_REGION_XN_YP_ZP" value="4"/>
+		<value name="IG_MATH_SPATIAL_REGION_XN_YP_ZN" value="5"/>
+		<value name="IG_MATH_SPATIAL_REGION_XN_YN_ZP" value="6"/>
+		<value name="IG_MATH_SPATIAL_REGION_XN_YN_ZN" value="7"/>
+	</metaenum>
+	<metaenum refname="SaveState">
+		<value name="kSaveStateInactive" value="0"/>
+		<value name="kSaveStateLoad" value="1"/>
+		<value name="kSaveStateSave" value="2"/>
+		<value name="kSaveStateActive" value="3"/>
+		<value name="kSaveStateLoadError" value="4"/>
+		<value name="kSaveStateSaveError" value="5"/>
+		<value name="kSaveStateBadParam" value="6"/>
+		<value name="kSaveStateGeneralError" value="7"/>
+	</metaenum>
+	<metaenum refname="SpawnOrderMethod">
+		<value name="kShuffled" value="0"/>
+		<value name="kRandom" value="1"/>
+	</metaenum>
+	<metaenum refname="PARAMETER_TYPE">
+		<value name="PARAMETER_TYPE_MATRIX" value="0"/>
+		<value name="PARAMETER_TYPE_VECTOR" value="1"/>
+		<value name="PARAMETER_TYPE_INTEGER" value="2"/>
+		<value name="PARAMETER_TYPE_BOOL" value="3"/>
+		<value name="PARAMETER_TYPE_BOOL_ARRAY" value="4"/>
+		<value name="PARAMETER_TYPE_VECTORI" value="5"/>
+		<value name="PARAMETER_TYPE_MATRIX_ARRAY" value="6"/>
+		<value name="PARAMETER_TYPE_VECTOR_ARRAY" value="7"/>
+		<value name="PARAMETER_TYPE_INTEGER_ARRAY" value="8"/>
+		<value name="PARAMETER_TYPE_VECTORI_ARRAY" value="9"/>
+		<value name="PARAMETER_TYPE_FLOAT" value="10"/>
+		<value name="PARAMETER_TYPE_FLOAT_ARRAY" value="11"/>
+		<value name="PARAMETER_TYPE_UNKNOWN" value="65536"/>
+	</metaenum>
+	<metaenum refname="TRANSPARENCY_DRAW_MODE">
+		<value name="TRANSPARENCY_DRAW_DEPTH_WRITE" value="0"/>
+		<value name="TRANSPARENCY_DRAW_NO_DEPTH_WRITE" value="1"/>
+	</metaenum>
+	<metaenum refname="ePointOfInterestUpdateMode">
+		<value name="kPOIUpdateFirstPlayer" value="0"/>
+		<value name="kPOIUpdateManual" value="1"/>
+	</metaenum>
+	<metaenum refname="CompressionType">
+		<value name="kUncompressed" value="0"/>
+		<value name="kZlib" value="1"/>
+		<value name="kLzma" value="2"/>
+		<value name="kLz4" value="3"/>
+		<value name="kCompressionFormatShift" value="28"/>
+		<value name="kCompressionFormatMask" value="-268435456"/>
+		<value name="kFirstBlockMask" value="268435455"/>
+		<value name="kOffsetBits" value="40"/>
+	</metaenum>
+	<metaenum refname="motionType">
+		<value name="UNINITIALIZED" value="-1"/>
+		<value name="ON_FOOT" value="0"/>
+		<value name="WHEELED" value="1"/>
+		<value name="UNCONSTRAINED" value="2"/>
+		<value name="PHYSICAL" value="3"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_BLENDING_EQUATION">
+		<value name="IG_GFX_BLENDING_EQUATION_ADD" value="0"/>
+		<value name="IG_GFX_BLENDING_EQUATION_SUBTRACT" value="1"/>
+		<value name="IG_GFX_BLENDING_EQUATION_REVERSE_SUBTRACT" value="2"/>
+		<value name="IG_GFX_BLENDING_EQUATION_MIN" value="3"/>
+		<value name="IG_GFX_BLENDING_EQUATION_MAX" value="4"/>
+	</metaenum>
+	<metaenum refname="PlacementChangeType">
+		<value name="NONE" value="0"/>
+		<value name="ADD" value="1"/>
+		<value name="REMOVE" value="2"/>
+		<value name="SELECT" value="3"/>
+		<value name="FIND" value="4"/>
+	</metaenum>
+	<metaenum refname="obstructMode">
+		<value name="ignore_obstructions" value="0"/>
+		<value name="consider_obstructions" value="1"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_PLATFORM">
+		<value name="IG_GFX_PLATFORM_DEFAULT" value="0"/>
+		<value name="IG_GFX_PLATFORM_DX" value="1"/>
+		<value name="IG_GFX_PLATFORM_WII" value="2"/>
+		<value name="IG_GFX_PLATFORM_DURANGO" value="3"/>
+		<value name="IG_GFX_PLATFORM_ASPEN" value="4"/>
+		<value name="IG_GFX_PLATFORM_XENON" value="5"/>
+		<value name="IG_GFX_PLATFORM_PS3" value="6"/>
+		<value name="IG_GFX_PLATFORM_OSX" value="7"/>
+		<value name="IG_GFX_PLATFORM_DX11" value="8"/>
+		<value name="IG_GFX_PLATFORM_CAFE" value="9"/>
+		<value name="IG_GFX_PLATFORM_RASPI" value="10"/>
+		<value name="IG_GFX_PLATFORM_NULL" value="11"/>
+		<value name="IG_GFX_PLATFORM_ANDROID" value="12"/>
+		<value name="IG_GFX_PLATFORM_DEPRECATED" value="13"/>
+		<value name="IG_GFX_PLATFORM_WGL" value="14"/>
+		<value name="IG_GFX_PLATFORM_LGTV" value="15"/>
+		<value name="IG_GFX_PLATFORM_PS4" value="16"/>
+		<value name="IG_GFX_PLATFORM_LINUX" value="17"/>
+		<value name="IG_GFX_PLATFORM_MAX" value="18"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_TEXTURE_WRAP">
+		<value name="IG_GFX_TEXTURE_WRAP_CLAMP" value="0"/>
+		<value name="IG_GFX_TEXTURE_WRAP_REPEAT" value="1"/>
+		<value name="IG_GFX_TEXTURE_WRAP_REGION_CLAMP" value="2"/>
+		<value name="IG_GFX_TEXTURE_WRAP_REGION_REPEAT" value="3"/>
+		<value name="IG_GFX_TEXTURE_WRAP_BORDER" value="4"/>
+	</metaenum>
+	<metaenum refname="SpawnGroup">
+		<value name="kSpawnGroupInherit" value="-1"/>
+		<value name="kSpawnGroupDefault" value="0"/>
+		<value name="kSpawnGroup0" value="0"/>
+		<value name="kSpawnGroup1" value="1"/>
+		<value name="kSpawnGroup2" value="2"/>
+		<value name="kSpawnGroup3" value="3"/>
+		<value name="kSpawnGroup4" value="4"/>
+		<value name="kSpawnGroup5" value="5"/>
+		<value name="kSpawnGroup6" value="6"/>
+		<value name="kSpawnGroup7" value="7"/>
+		<value name="kMaxSpawnGroupCount" value="8"/>
+	</metaenum>
+	<metaenum refname="EUpdateStage">
+		<value name="eUS_preUpdate" value="0"/>
+		<value name="eUS_preUpdateRenderContext" value="1"/>
+		<value name="eUS_mainUpdate" value="2"/>
+		<value name="eUS_postUpdate" value="3"/>
+		<value name="eUS_initial" value="3"/>
+	</metaenum>
+	<metaenum refname="SpriteTextJustify">
+		<value name="JUSTIFY_LEFT" value="0"/>
+		<value name="JUSTIFY_CENTER" value="1"/>
+		<value name="JUSTIFY_RIGHT" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_SCISSOR_TYPE">
+		<value name="IG_GFX_SCISSOR_TYPE_EQUALS_VIEWPORT" value="0"/>
+		<value name="IG_GFX_SCISSOR_TYPE_INDEPENDENT" value="1"/>
+	</metaenum>
+	<metaenum refname="appLocales">
+		<value name="LOCALE_NORTH_AMERICA" value="0"/>
+		<value name="LOCALE_EUROPE" value="1"/>
+		<value name="LOCALE_NORSE" value="2"/>
+		<value name="LOCALE_RUSSIA" value="3"/>
+		<value name="LOCALE_ASIA" value="4"/>
+		<value name="NUM_LOCALES" value="5"/>
+		<value name="LOCALE_WORLDWIDE" value="0"/>
+	</metaenum>
+	<metaenum refname="ECastShadows">
+		<value name="eCS_No" value="0"/>
+		<value name="eCS_Yes" value="1"/>
+		<value name="eCS_Only" value="2"/>
+	</metaenum>
+	<metaenum refname="EAnimationType">
+		<value name="kSpacial" value="0"/>
+		<value name="kTime" value="1"/>
+		<value name="kExplicit" value="2"/>
+	</metaenum>
+	<metaenum refname="SubEffectChainOrientationMode">
+		<value name="kChainOrientationForward" value="0"/>
+		<value name="kChainOrientationReverse" value="1"/>
+		<value name="kChainOrientationAlternate" value="2"/>
+		<value name="kChainOrientationRandom" value="3"/>
+	</metaenum>
+	<metaenum refname="appConfig">
+		<value name="APP_CONFIG_OFFLINE" value="-1"/>
+		<value name="APP_CONFIG_DEMO" value="0"/>
+		<value name="APP_CONFIG_DEVELOPMENT" value="1"/>
+		<value name="APP_CONFIG_QA" value="2"/>
+		<value name="APP_CONFIG_GOLDEN" value="3"/>
+	</metaenum>
+	<metaenum refname="RelOp">
+		<value name="<=" value="0"/>
+		<value name="=" value="1"/>
+		<value name=">=" value="2"/>
+		<value name="<" value="3"/>
+		<value name=">" value="4"/>
+		<value name="<>" value="5"/>
+	</metaenum>
+	<metaenum refname="IG_MOVIE_AUDIO_TYPE">
+		<value name="IG_MOVIE_AUDIO_TYPE_DEFAULT" value="0"/>
+		<value name="IG_MOVIE_AUDIO_TYPE_STEREO" value="1"/>
+		<value name="IG_MOVIE_AUDIO_TYPE_5POINT1" value="2"/>
+		<value name="IG_MOVIE_AUDIO_TYPE_7POINT1" value="3"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_MATERIAL_COMPONENT">
+		<value name="IG_GFX_MATERIAL_COMPONENT_NONE" value="0"/>
+		<value name="IG_GFX_MATERIAL_COMPONENT_AMBIENT" value="1"/>
+		<value name="IG_GFX_MATERIAL_COMPONENT_DIFFUSE" value="2"/>
+		<value name="IG_GFX_MATERIAL_COMPONENT_AMBIENT_AND_DIFFUSE" value="3"/>
+		<value name="IG_GFX_MATERIAL_COMPONENT_SPECULAR" value="4"/>
+		<value name="IG_GFX_MATERIAL_COMPONENT_EMISSIVE" value="5"/>
+	</metaenum>
+	<metaenum refname="eType">
+		<value name="kGetCriticalBox" value="0"/>
+		<value name="kSetCriticalBox" value="1"/>
+		<value name="kEnableBox" value="2"/>
+		<value name="kDisableBox" value="3"/>
+	</metaenum>
+	<metaenum refname="Priority">
+		<value name="kLow" value="50"/>
+		<value name="kNormal" value="128"/>
+		<value name="kHigh" value="200"/>
+		<value name="kUrgent" value="255"/>
+	</metaenum>
+	<metaenum refname="BlendMode">
+		<value name="kDiffuseColor" value="0"/>
+		<value name="kMaskColor" value="1"/>
+		<value name="kVertHue" value="2"/>
+		<value name="kVertColor" value="3"/>
+		<value name="kDiffuseAlpha" value="4"/>
+		<value name="kMaskAlpha" value="5"/>
+		<value name="kVertValue" value="6"/>
+		<value name="kVertAlpha" value="7"/>
+		<value name="kZero" value="8"/>
+		<value name="kOne" value="9"/>
+	</metaenum>
+	<metaenum refname="ModulationMix">
+		<value name="kMixRange" value="0"/>
+		<value name="kMixAdd" value="1"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_BLENDING_FUNCTION">
+		<value name="IG_GFX_BLENDING_FUNCTION_ZERO" value="0"/>
+		<value name="IG_GFX_BLENDING_FUNCTION_ONE" value="1"/>
+		<value name="IG_GFX_BLENDING_FUNCTION_SOURCE_COLOR" value="2"/>
+		<value name="IG_GFX_BLENDING_FUNCTION_ONE_MINUS_SOURCE_COLOR" value="3"/>
+		<value name="IG_GFX_BLENDING_FUNCTION_SOURCE_ALPHA" value="4"/>
+		<value name="IG_GFX_BLENDING_FUNCTION_ONE_MINUS_SOURCE_ALPHA" value="5"/>
+		<value name="IG_GFX_BLENDING_FUNCTION_DESTINATION_COLOR" value="6"/>
+		<value name="IG_GFX_BLENDING_FUNCTION_ONE_MINUS_DESTINATION_COLOR" value="7"/>
+		<value name="IG_GFX_BLENDING_FUNCTION_DESTINATION_ALPHA" value="8"/>
+		<value name="IG_GFX_BLENDING_FUNCTION_ONE_MINUS_DESTINATION_ALPHA" value="9"/>
+		<value name="IG_GFX_BLENDING_FUNCTION_SOURCE_ALPHA_SATURATE" value="10"/>
+	</metaenum>
+	<metaenum refname="appState">
+		<value name="APP_STATE_EXIT" value="-1"/>
+		<value name="APP_STATE_RUNNING" value="0"/>
+		<value name="APP_STATE_SHUTDOWN" value="1"/>
+	</metaenum>
+	<metaenum refname="Mode">
+		<value name="kModeRead" value="1"/>
+		<value name="kModeWrite" value="2"/>
+		<value name="kModeReadWrite" value="3"/>
+		<value name="kModeText" value="4"/>
+		<value name="kModeReadText" value="5"/>
+		<value name="kModeWriteText" value="6"/>
+		<value name="kModeReadWriteText" value="7"/>
+		<value name="kModeCache" value="8"/>
+		<value name="kModeSequential" value="16"/>
+		<value name="kModeCacheInternal" value="32"/>
+	</metaenum>
+	<metaenum refname="FogMode">
+		<value name="NONE" value="0"/>
+		<value name="LINEAR" value="1"/>
+		<value name="EXPONENTIAL" value="2"/>
+		<value name="EXPONENTIAL_SQUARED" value="3"/>
+	</metaenum>
+	<metaenum refname="IG_UTILS_PLAY_MODE">
+		<value name="IG_UTILS_PLAY_MODE_REPEAT" value="0"/>
+		<value name="IG_UTILS_PLAY_MODE_CLAMP" value="1"/>
+		<value name="IG_UTILS_PLAY_MODE_BOUNCE" value="2"/>
+		<value name="IG_UTILS_PLAY_MODE_LOOP" value="3"/>
+		<value name="IG_UTILS_PLAY_MODE_BOUNCEONCE" value="4"/>
+		<value name="IG_UTILS_PLAY_MODE_MANUAL" value="5"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_MESH_SORT_MODE">
+		<value name="IG_GFX_MESH_SORT_NONE" value="0"/>
+		<value name="IG_GFX_MESH_SORT_BACK_TO_FRONT" value="1"/>
+		<value name="IG_GFX_MESH_SORT_FRONT_TO_BACK" value="2"/>
+	</metaenum>
+	<metaenum refname="ModulationType">
+		<value name="kModulationNone" value="0"/>
+		<value name="kModulationPoint" value="1"/>
+		<value name="kModulationLinear" value="2"/>
+		<value name="kModulationSmooth" value="3"/>
+		<value name="kModulationWhite" value="4"/>
+		<value name="kModulationSin" value="5"/>
+		<value name="kModulationRampUp" value="6"/>
+		<value name="kModulationRampDown" value="7"/>
+		<value name="kModulationTriangle" value="8"/>
+	</metaenum>
+	<metaenum refname="CullType">
+		<value name="kCullNone" value="0"/>
+		<value name="kCullDefault" value="1"/>
+		<value name="kCullSoft" value="2"/>
+		<value name="kCullHard" value="4"/>
+		<value name="kCullPause" value="8"/>
+		<value name="kCullAll" value="14"/>
+	</metaenum>
+	<metaenum refname="ThreadMode">
+		<value name="kThreadNone" value="0"/>
+		<value name="kThreadDraw" value="1"/>
+		<value name="kThreadTraversal" value="2"/>
+		<value name="kThreadAll" value="3"/>
+	</metaenum>
+	<metaenum refname="HorizontalAlignment">
+		<value name="kHorizontalAlignmentLeft" value="0"/>
+		<value name="kHorizontalAlignmentRight" value="1"/>
+		<value name="kHorizontalAlignmentCenter" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_HISTENCIL_FUNCTION">
+		<value name="IG_GFX_HISTENCIL_FUNCTION_EQUAL" value="0"/>
+		<value name="IG_GFX_HISTENCIL_FUNCTION_NOTEQUAL" value="1"/>
+	</metaenum>
+	<metaenum refname="IG_CORE_PLATFORM">
+		<value name="IG_CORE_PLATFORM_DEFAULT" value="0"/>
+		<value name="IG_CORE_PLATFORM_WIN32" value="1"/>
+		<value name="IG_CORE_PLATFORM_WII" value="2"/>
+		<value name="IG_CORE_PLATFORM_DURANGO" value="3"/>
+		<value name="IG_CORE_PLATFORM_ASPEN" value="4"/>
+		<value name="IG_CORE_PLATFORM_XENON" value="5"/>
+		<value name="IG_CORE_PLATFORM_PS3" value="6"/>
+		<value name="IG_CORE_PLATFORM_OSX" value="7"/>
+		<value name="IG_CORE_PLATFORM_WIN64" value="8"/>
+		<value name="IG_CORE_PLATFORM_CAFE" value="9"/>
+		<value name="IG_CORE_PLATFORM_RASPI" value="10"/>
+		<value name="IG_CORE_PLATFORM_ANDROID" value="11"/>
+		<value name="IG_CORE_PLATFORM_DEPRECATED" value="12"/>
+		<value name="IG_CORE_PLATFORM_LGTV" value="13"/>
+		<value name="IG_CORE_PLATFORM_PS4" value="14"/>
+		<value name="IG_CORE_PLATFORM_WP8" value="15"/>
+		<value name="IG_CORE_PLATFORM_LINUX" value="16"/>
+		<value name="IG_CORE_PLATFORM_MAX" value="17"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_STENCIL_OPERATION">
+		<value name="IG_GFX_STENCIL_OPERATION_KEEP" value="0"/>
+		<value name="IG_GFX_STENCIL_OPERATION_ZERO" value="1"/>
+		<value name="IG_GFX_STENCIL_OPERATION_REPLACE" value="2"/>
+		<value name="IG_GFX_STENCIL_OPERATION_INCR" value="3"/>
+		<value name="IG_GFX_STENCIL_OPERATION_INCR_WRAP" value="4"/>
+		<value name="IG_GFX_STENCIL_OPERATION_DECR" value="5"/>
+		<value name="IG_GFX_STENCIL_OPERATION_DECR_WRAP" value="6"/>
+		<value name="IG_GFX_STENCIL_OPERATION_INVERT" value="7"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_LIGHT_TYPE">
+		<value name="IG_GFX_LIGHT_TYPE_DIRECTIONAL" value="0"/>
+		<value name="IG_GFX_LIGHT_TYPE_POINT" value="1"/>
+		<value name="IG_GFX_LIGHT_TYPE_SPOT" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_MORPH_MODE">
+		<value name="IG_GFX_MORPH_MODE_CPU" value="0"/>
+		<value name="IG_GFX_MORPH_MODE_HYBRID" value="1"/>
+		<value name="IG_GFX_MORPH_MODE_GPU" value="2"/>
+	</metaenum>
+	<metaenum refname="AnimatedFrameLoopMode">
+		<value name="kLoopNone" value="0"/>
+		<value name="kLoopLoop" value="1"/>
+		<value name="kLoopPingPong" value="2"/>
+		<value name="kLoopReverse" value="3"/>
+	</metaenum>
+	<metaenum refname="igCustomMaterialAnimationTimeSource">
+		<value name="kAnimationTimeSourceTransformed" value="0"/>
+		<value name="kAnimationTimeSourceGlobal" value="1"/>
+	</metaenum>
+	<metaenum refname="eUpdatePhase">
+		<value name="kCombined" value="0"/>
+		<value name="kEarly" value="1"/>
+		<value name="kMain" value="2"/>
+		<value name="kLate" value="3"/>
+	</metaenum>
+	<metaenum refname="shapeType">
+		<value name="SHAPE_NONE" value="0"/>
+		<value name="SHAPE_BOX" value="1"/>
+		<value name="SHAPE_CAPSULE" value="2"/>
+		<value name="SHAPE_SPHERE" value="3"/>
+		<value name="SHAPE_CYLINDER" value="4"/>
+		<value name="SHAPE_MESH" value="5"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_SHADING_MODE">
+		<value name="IG_GFX_SHADING_MODE_FACET" value="0"/>
+		<value name="IG_GFX_SHADING_MODE_SMOOTH" value="1"/>
+	</metaenum>
+	<metaenum refname="FileType">
+		<value name="kAuto" value="0"/>
+		<value name="kIGB" value="1"/>
+		<value name="kIGX" value="2"/>
+		<value name="kIGZ" value="3"/>
+	</metaenum>
+	<metaenum refname="AttachmentType">
+		<value name="StandardAttachment" value="0"/>
+		<value name="PartnerAttachment" value="1"/>
+		<value name="LookAtAttachment" value="2"/>
+		<value name="numAttachmentTypes" value="3"/>
+	</metaenum>
+	<metaenum refname="SpriteTextType">
+		<value name="TEXT_NORMAL_TYPE" value="0"/>
+		<value name="TEXT_STROKE_TYPE" value="1"/>
+		<value name="TEXT_SHADOW_TYPE" value="2"/>
+	</metaenum>
+	<metaenum refname="AlphaBlendModes">
+		<value name="ALPHA_BLEND_OPAQUE" value="0"/>
+		<value name="ALPHA_BLEND_CROSSFADE" value="1"/>
+		<value name="ALPHA_BLEND_ADDITIVE" value="2"/>
+		<value name="ALPHA_BLEND_CUTOUT" value="3"/>
+		<value name="ALPHA_BLEND_RECEIVE_CUTOUT" value="4"/>
+		<value name="ALPHA_BLEND_CLEAR_CUTOUT" value="5"/>
+		<value name="ALPHA_BLEND_RECEIVE_CUTOUT_ADDITIVE" value="6"/>
+		<value name="ALPHA_BLEND_CUTOUT_INVERT" value="7"/>
+		<value name="ALPHA_BLEND_COUNT" value="8"/>
+	</metaenum>
+	<metaenum refname="Combiner">
+		<value name="include" value="0"/>
+		<value name="exclude" value="1"/>
+		<value name="intersect_with" value="2"/>
+		<value name="be_replaced_by" value="3"/>
+		<value name="add" value="4"/>
+		<value name="exclude_all" value="5"/>
+	</metaenum>
+	<metaenum refname="BlendModes">
+		<value name="BLEND_MODE_KNOCKOUT" value="0"/>
+		<value name="BLEND_MODE_BLEND" value="1"/>
+		<value name="BLEND_MODE_ADD" value="2"/>
+	</metaenum>
+	<metaenum refname="Category">
+		<value name="CATEGORY_EFFECTS" value="0"/>
+		<value name="CATEGORY_VOICE" value="12"/>
+		<value name="CATEGORY_INTERFACE" value="25"/>
+		<value name="CATEGORY_MUSIC" value="28"/>
+		<value name="CATEGORY_AMBIENCE" value="10"/>
+		<value name="CATEGORY_PORTAL" value="29"/>
+		<value name="NUMBER_OF_CATEGORIES" value="32"/>
+	</metaenum>
+	<metaenum refname="igCustomMaterialAnimationTarget">
+		<value name="kAnimationTargetTextureMatrix" value="0"/>
+		<value name="kAnimationTargetColor" value="1"/>
+	</metaenum>
+	<metaenum refname="DebugVisibility">
+		<value name="kDebugVisibilityHide" value="0"/>
+		<value name="kDebugVisibilityShow" value="1"/>
+		<value name="kDebugVisibilityDefault" value="2"/>
+	</metaenum>
+	<metaenum refname="TransformSpace">
+		<value name="kCameraSpace" value="0"/>
+		<value name="kWorldSpace" value="1"/>
+		<value name="kLocalSpace" value="2"/>
+	</metaenum>
+	<metaenum refname="volumeType">
+		<value name="SPAWN_VOLUME_BOX" value="0"/>
+		<value name="SPAWN_VOLUME_SPHERE" value="1"/>
+		<value name="SPAWN_VOLUME_CYLINDER" value="2"/>
+	</metaenum>
+	<metaenum refname="EFluidType">
+		<value name="eFT_Water" value="0"/>
+		<value name="eFT_Goo" value="1"/>
+	</metaenum>
+	<metaenum refname="PrintDevice">
+		<value name="host" value="0"/>
+		<value name="target" value="1"/>
+		<value name="debug" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_MOVIE_TYPE">
+		<value name="IG_MOVIE_TYPE_DEFAULT" value="0"/>
+		<value name="IG_MOVIE_TYPE_VIDEO" value="1"/>
+		<value name="IG_MOVIE_TYPE_AUDIO" value="2"/>
+		<value name="IG_MOVIE_TYPE_BOTH" value="3"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_HISTENCIL_CLEAR">
+		<value name="IG_GFX_HISTENCIL_CLEAR_CULL" value="0"/>
+		<value name="IG_GFX_HISTENCIL_CLEAR_PASS" value="1"/>
+	</metaenum>
+	<metaenum refname="traverseHints">
+		<value name="normal" value="0"/>
+		<value name="jump" value="1"/>
+		<value name="swim" value="2"/>
+		<value name="fly" value="3"/>
+		<value name="teleport" value="4"/>
+		<value name="unreachable" value="5"/>
+	</metaenum>
+	<metaenum refname="SetDirection">
+		<value name="forward" value="0"/>
+		<value name="backward" value="1"/>
+		<value name="randomly" value="2"/>
+	</metaenum>
+	<metaenum refname="screenshotMode">
+		<value name="SCREENSHOT_MODE_NONE" value="0"/>
+		<value name="SCREENSHOT_MODE_START_CAPTURE" value="1"/>
+		<value name="SCREENSHOT_MODE_CAPTURING" value="2"/>
+	</metaenum>
+	<metaenum refname="findFilter">
+		<value name="in_script" value="0"/>
+		<value name="as_tag" value="1"/>
+		<value name="force_tag" value="2"/>
+		<value name="remove_tag" value="3"/>
+		<value name="count_typed_tags" value="4"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_STEREO3D_MODE">
+		<value name="IG_GFX_STEREO3D_DISABLED" value="0"/>
+		<value name="IG_GFX_STEREO3D_ANAGLYPH" value="1"/>
+		<value name="IG_GFX_STEREO3D_HARDWARE" value="2"/>
+	</metaenum>
+	<metaenum refname="LimitBehavior">
+		<value name="LIMIT_JUST_FAIL" value="0"/>
+		<value name="LIMIT_STEAL_QUIETEST" value="1"/>
+		<value name="LIMIT_STEAL_FURTHEST" value="2"/>
+		<value name="LIMIT_STEAL_OLDEST" value="3"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_ALPHA_FUNCTION">
+		<value name="IG_GFX_ALPHA_FUNCTION_NEVER" value="0"/>
+		<value name="IG_GFX_ALPHA_FUNCTION_LESS" value="1"/>
+		<value name="IG_GFX_ALPHA_FUNCTION_EQUAL" value="2"/>
+		<value name="IG_GFX_ALPHA_FUNCTION_LEQUAL" value="3"/>
+		<value name="IG_GFX_ALPHA_FUNCTION_GREATER" value="4"/>
+		<value name="IG_GFX_ALPHA_FUNCTION_NOTEQUAL" value="5"/>
+		<value name="IG_GFX_ALPHA_FUNCTION_GEQUAL" value="6"/>
+		<value name="IG_GFX_ALPHA_FUNCTION_ALWAYS" value="7"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_STENCIL_FUNCTION">
+		<value name="IG_GFX_STENCIL_FUNCTION_NEVER" value="0"/>
+		<value name="IG_GFX_STENCIL_FUNCTION_LESS" value="1"/>
+		<value name="IG_GFX_STENCIL_FUNCTION_EQUAL" value="2"/>
+		<value name="IG_GFX_STENCIL_FUNCTION_LEQUAL" value="3"/>
+		<value name="IG_GFX_STENCIL_FUNCTION_GREATER" value="4"/>
+		<value name="IG_GFX_STENCIL_FUNCTION_NOTEQUAL" value="5"/>
+		<value name="IG_GFX_STENCIL_FUNCTION_GEQUAL" value="6"/>
+		<value name="IG_GFX_STENCIL_FUNCTION_ALWAYS" value="7"/>
+	</metaenum>
+	<metaenum refname="ControllerType">
+		<value name="kControllerTypeNone" value="0"/>
+		<value name="kControllerTypeDefault" value="1"/>
+		<value name="kControllerTypeNunchaku" value="2"/>
+		<value name="kControllerTypeClassic" value="3"/>
+		<value name="kControllerTypePro" value="4"/>
+		<value name="kControllerTypeDRC" value="5"/>
+		<value name="kControllerTypePS4IndexStart" value="7"/>
+		<value name="kControllerTypeLocal" value="1"/>
+		<value name="kControllerTypeRemotePlay" value="2"/>
+		<value name="kControllerTypeMobileIndexStart" value="10"/>
+		<value name="kControllerTypeVirtual" value="0"/>
+		<value name="kControllerTypeBLE" value="1"/>
+		<value name="kControllerTypeBluetooth" value="2"/>
+	</metaenum>
+	<metaenum refname="blendShape">
+		<value name="SMOOTH_SHAPE" value="0"/>
+		<value name="FAST_IN_SHAPE" value="1"/>
+		<value name="FAST_OUT_SHAPE" value="2"/>
+		<value name="SMOOTH_IN_SHAPE" value="3"/>
+		<value name="SMOOTH_OUT_SHAPE" value="4"/>
+		<value name="LINEAR_SHAPE" value="5"/>
+		<value name="MAGIC_NUMBER_6" value="6"/>
+	</metaenum>
+	<metaenum refname="IG_CORE_DEVICE">
+		<value name="IG_CORE_DEVICE_UNKNOWN" value="0"/>
+		<value name="IG_CORE_DEVICE_PC" value="1"/>
+		<value name="IG_CORE_DEVICE_WII" value="2"/>
+		<value name="IG_CORE_DEVICE_ASPENSIMULATOR" value="3"/>
+		<value name="IG_CORE_DEVICE_IPODTOUCH" value="4"/>
+		<value name="IG_CORE_DEVICE_IPODTOUCH2" value="5"/>
+		<value name="IG_CORE_DEVICE_IPODTOUCH3" value="6"/>
+		<value name="IG_CORE_DEVICE_IPODTOUCH4" value="7"/>
+		<value name="IG_CORE_DEVICE_IPHONE" value="8"/>
+		<value name="IG_CORE_DEVICE_IPHONE3G" value="9"/>
+		<value name="IG_CORE_DEVICE_IPHONE3GS" value="10"/>
+		<value name="IG_CORE_DEVICE_IPHONE4" value="11"/>
+		<value name="IG_CORE_DEVICE_IPHONE4S" value="12"/>
+		<value name="IG_CORE_DEVICE_IPHONE5" value="13"/>
+		<value name="IG_CORE_DEVICE_IPHONE5S" value="14"/>
+		<value name="IG_CORE_DEVICE_IPAD" value="15"/>
+		<value name="IG_CORE_DEVICE_IPAD2" value="16"/>
+		<value name="IG_CORE_DEVICE_IPAD3" value="17"/>
+		<value name="IG_CORE_DEVICE_IPAD4" value="18"/>
+		<value name="IG_CORE_DEVICE_IPAD5" value="19"/>
+		<value name="IG_CORE_DEVICE_XENON" value="20"/>
+		<value name="IG_CORE_DEVICE_PS3" value="21"/>
+		<value name="IG_CORE_DEVICE_MAC" value="22"/>
+		<value name="IG_CORE_DEVICE_CAFE" value="23"/>
+		<value name="IG_CORE_DEVICE_RASPI" value="24"/>
+		<value name="IG_CORE_DEVICE_ANDROID" value="25"/>
+		<value name="IG_CORE_DEVICE_DEPRECATED" value="26"/>
+		<value name="IG_CORE_DEVICE_LGTV_M13" value="27"/>
+		<value name="IG_CORE_DEVICE_LGTV_H13" value="28"/>
+		<value name="IG_CORE_DEVICE_LGTV_M14" value="29"/>
+		<value name="IG_CORE_DEVICE_LGTV_H14" value="30"/>
+		<value name="IG_CORE_DEVICE_DURANGO" value="31"/>
+		<value name="IG_CORE_DEVICE_PS4" value="32"/>
+		<value name="IG_CORE_DEVICE_WP8" value="33"/>
+		<value name="IG_CORE_DEVICE_LINUX" value="34"/>
+		<value name="IG_CORE_DEVICE_MAX" value="35"/>
+	</metaenum>
+	<metaenum refname="BlurType">
+		<value name="SIMPLE" value="0"/>
+		<value name="BOX_3x3" value="1"/>
+		<value name="GAUSSIAN_5x5" value="2"/>
+		<value name="NUM_TYPES" value="3"/>
+	</metaenum>
+	<metaenum refname="BoolOp">
+		<value name="=" value="1"/>
+		<value name="<>" value="5"/>
+	</metaenum>
+	<metaenum refname="shadowCastMethod">
+		<value name="no_shadow" value="0"/>
+		<value name="full_mesh" value="1"/>
+		<value name="full_mesh_no_fade" value="2"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_PIXEL_PIPELINE_MODE">
+		<value name="IG_GFX_PIXEL_PIPELINE_MODE_DEFAULT" value="0"/>
+		<value name="IG_GFX_PIXEL_PIPELINE_MODE_SHADER" value="2"/>
+	</metaenum>
+	<metaenum refname="RENDER_TYPE">
+		<value name="RENDER_TYPE_OPAQUE" value="0"/>
+		<value name="RENDER_TYPE_ALPHATEST" value="1"/>
+		<value name="RENDER_TYPE_TRANSPARENT" value="2"/>
+		<value name="RENDER_TYPE_END" value="3"/>
+	</metaenum>
+	<metaenum refname="StreamBufferUnits">
+		<value name="kUnitsBytes" value="0"/>
+		<value name="kUnitsMs" value="1"/>
+	</metaenum>
+	<metaenum refname="SpriteVisualType">
+		<value name="SPRITE_ART" value="0"/>
+		<value name="SPRITE_TEXT" value="1"/>
+		<value name="SPRITE_MODEL" value="2"/>
+		<value name="SPRITE_CONTAINER" value="3"/>
+		<value name="SPRITE_PARTICLES" value="4"/>
+	</metaenum>
+	<metaenum refname="EyeEnum">
+		<value name="kEyeBoth" value="0"/>
+		<value name="kEyeLeft" value="1"/>
+		<value name="kEyeRight" value="2"/>
+		<value name="kEyeNone" value="3"/>
+	</metaenum>
+	<metaenum refname="FlowVals">
+		<value name="else" value="-2"/>
+		<value name="else if" value="-1"/>
+		<value name="end" value="0"/>
+		<value name="continue" value="1"/>
+		<value name="out 2" value="2"/>
+		<value name="out 3" value="3"/>
+		<value name="out 4" value="4"/>
+		<value name="out 5" value="5"/>
+		<value name="out 6" value="6"/>
+		<value name="out 7" value="7"/>
+		<value name="out 8" value="8"/>
+		<value name="out 9" value="9"/>
+		<value name="out 10" value="10"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_TEXTURE_FUNCTION">
+		<value name="IG_GFX_TEXTURE_FUNCTION_REPLACE" value="0"/>
+		<value name="IG_GFX_TEXTURE_FUNCTION_MODULATE" value="1"/>
+		<value name="IG_GFX_TEXTURE_FUNCTION_ADD" value="2"/>
+	</metaenum>
+	<metaenum refname="EPriority">
+		<value name="kHigh" value="0"/>
+		<value name="kMedium" value="1"/>
+		<value name="kLow" value="2"/>
+	</metaenum>
+	<metaenum refname="BlendFormat">
+		<value name="kFormatNormal" value="0"/>
+		<value name="kFormatInvert" value="1"/>
+		<value name="kFormatSigned" value="2"/>
+		<value name="kFormatInvertDouble" value="3"/>
+		<value name="kFormatInvertSigned" value="4"/>
+		<value name="kFormatDouble" value="5"/>
+		<value name="kFormatBottomHalf" value="6"/>
+		<value name="kFormatInvertTopHalf" value="7"/>
+		<value name="kFormatTopHalf" value="8"/>
+		<value name="kFormatInvertBottomHalf" value="9"/>
+		<value name="kFormatNegative" value="10"/>
+		<value name="kFormatNegativeHalf" value="11"/>
+		<value name="kFormatNegativeDouble" value="12"/>
+		<value name="kFormatOne" value="13"/>
+		<value name="kFormatZero" value="14"/>
+	</metaenum>
+	<metaenum refname="IG_GFX_CULL_FACE_MODE">
+		<value name="IG_GFX_CULL_FACE_MODE_BACK" value="0"/>
+		<value name="IG_GFX_CULL_FACE_MODE_FRONT" value="1"/>
+	</metaenum>
+	<metaenum refname="RolloutMethod">
+		<value name="kDrag" value="0"/>
+		<value name="kStretch" value="1"/>
+		<value name="kWipe" value="2"/>
+		<value name="kRoll" value="3"/>
+	</metaenum>
+</metaenums>
