@@ -59,7 +59,7 @@ namespace igLibrary.Core
 		/// <returns>The object, or null if the cast fails or if it can't be located</returns>
 		public T? GetObjectAlias<T>() where T : igObject
 		{
-			if(_object != null) return (T)_object;
+			if(_object != null) return _object as T;
 
 			Dictionary<uint, igObjectDirectoryList> dirLists = igObjectStreamManager.Singleton._directoriesByName;
 			if(dirLists.ContainsKey(_namespace._hash))
