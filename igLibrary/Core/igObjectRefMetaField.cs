@@ -161,7 +161,17 @@ namespace igLibrary.Core
 		}
 		public override Type GetOutputType()
 		{
-			if(_metaObject._vTablePointer == null) _metaObject.GatherDependancies();
+			if(_metaObject._vTablePointer == null)
+			{
+				_metaObject.GatherDependancies();
+			}
+
+			if(_metaObject._name == "AbstractPlacementList")
+			{
+				// Bit of a hack to deal with AbstractPlacementLists references never pointing to that
+				return typeof(Tfb.Script.IScriptObjectList);
+			}
+
 			return _metaObject._vTablePointer!;
 		}
 		public override object? GetDefault(igMemoryPool pool)
