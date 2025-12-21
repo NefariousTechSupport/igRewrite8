@@ -44,7 +44,10 @@ namespace igCauldron3
 		/// <param name="wnd">Reference to the main window object</param>
 		public ArchiveFrame(Window wnd) : base(wnd)
 		{
-			_looseArchives.Add(igFileContext.Singleton.LoadArchive("app:/archives/loosefiles.pak"));
+			if (igRegistry.GetRegistry()._engineType == EngineType.AlchemyLaboratory)
+			{
+				_looseArchives.Add(igFileContext.Singleton.LoadArchive("app:/archives/loosefiles.pak"));
+			}
 		}
 
 
