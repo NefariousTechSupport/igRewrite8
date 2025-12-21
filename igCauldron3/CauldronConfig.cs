@@ -131,7 +131,7 @@ namespace igCauldron3
 			switch (_config._preferences._fontName)
 			{
 				case EFontType.kArial:
-					Styles._currentFont = Styles._arielFont;
+					Styles._currentFont = Styles._arialFont;
 					break;
 				case EFontType.kComicSans:
 					Styles._currentFont = Styles._comicSansFont;

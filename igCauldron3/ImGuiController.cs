@@ -69,7 +69,7 @@ namespace igCauldron3
 			string fontPath = Environment.GetFolderPath(Environment.SpecialFolder.Fonts);
 			const float kFontSize = 24.0f;
 
-			Styles._arielFont = io.Fonts.AddFontFromFileTTF(Path.Combine(fontPath, "arial.ttf"), kFontSize);
+			Styles._arialFont = io.Fonts.AddFontFromFileTTF(Path.Combine(fontPath, "arial.ttf"), kFontSize);
 			Styles._comicSansFont = io.Fonts.AddFontFromFileTTF(Path.Combine(fontPath, "comic.ttf"), kFontSize);
 			Styles._consolasFont = io.Fonts.AddFontFromFileTTF(Path.Combine(fontPath, "consola.ttf"), kFontSize);
 			Styles._verdanaFont = io.Fonts.AddFontFromFileTTF(Path.Combine(fontPath, "verdana.ttf"), kFontSize);
