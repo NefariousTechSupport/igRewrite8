@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Xml;
 using igLibrary.DotNet;
+using igLibrary.Tfb.Script;
 
 namespace igLibrary.Core
 {
@@ -507,6 +508,11 @@ namespace igLibrary.Core
 					error = ParseCompoundNodePass2(childNode, _compoundLookup[metaobject._name!]);
 					if (error != null) return null;
 				}
+				else if (childNode.Name == "tfbBindings")
+				{
+					error = ParseTfbBindingsNode(childNode, metaobject);
+					if (error != null) return error;
+				}
 				else if (childNode.Name == "dotnetfields"
 				      && metaobject is igDotNetMetaObject dnmo // This only applies to igDotNetMetaObject
 				      && childNode.FirstChild != null)         // If there are no children then do nothing
@@ -562,6 +568,53 @@ namespace igLibrary.Core
 				if (error != null) return error;
 
 				compoundInfo._fieldList.Add(field!);
+			}
+
+			return null;
+		}
+
+
+		private ArkCoreXmlError? ParseTfbBindingsNode(XmlNode node, igMetaObject metaObject)
+		{
+			XmlNode? nameAttr = node.Attributes!.GetNamedItem("name");
+			if (nameAttr == null)
+			{
+				return new ArkCoreXmlError("All tfbBindings nodes must have a \"name\" attribute");
+			}
+			string typeName = nameAttr.Value!;
+
+			igObjectDirectory bindingTypeDir = new igObjectDirectory();
+			bindingTypeDir._name = new igName(typeName);
+			bindingTypeDir._useNameList = true;
+			bindingTypeDir._nameList = new igNameList();
+			igObjectStreamManager.Singleton.AddObjectDirectory(bindingTypeDir, bindingTypeDir._name._string);
+			igObjectHandleManager.Singleton.AddSystemNamespace(typeName);
+
+			for (XmlNode? bindingNode = node.FirstChild; bindingNode != null; bindingNode = bindingNode.NextSibling)
+			{
+				if (bindingNode.Name != "binding")
+				{
+					return new ArkCoreXmlError("All children of a tfbBindings node should be binding nodes");
+				}
+
+				nameAttr = bindingNode.Attributes!.GetNamedItem("name");
+				if (nameAttr == null) return new ArkCoreXmlError("All binding nodes must have a \"name\" attribute");
+				string bindingName = nameAttr.Value!;
+
+				XmlNode? typeAttr = bindingNode.Attributes!.GetNamedItem("type");
+				if (typeAttr == null) return new ArkCoreXmlError("All binding nodes must have a \"type\" attribute");
+				string bindingTypeName = typeAttr.Value!;
+
+				Type? type = igArkCore.GetObjectDotNetType(bindingTypeName);
+				if (type == null)
+				{
+					type = typeof(tfbScriptObject);
+					return new ArkCoreXmlError("Failed to find type {0}, defaulting to tfbScriptObject", bindingTypeName);
+				}
+
+				tfbScriptObject binding = (tfbScriptObject)Activator.CreateInstance(type)!;
+				binding._name = bindingName;
+				bindingTypeDir.AddObject(binding, default(igName), new igName(bindingName));
 			}
 
 			return null;
