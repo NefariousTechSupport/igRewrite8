@@ -12,6 +12,13 @@ namespace igLibrary.Vfx
 	public struct igRangedQuadratic
 	{
 		//no idea
-		public byte[] _data; // 0x20 bytes long
+		public float _data0;
+		public float _data1;
+		public float _data2;
+		public float _data3;
+		public float _data4;
+		public float _data5;
+		public float _data6;
+		public float _data7;
 	}
 }
