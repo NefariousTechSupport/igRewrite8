@@ -84,7 +84,8 @@ namespace igLibrary.Core
 					for(int i = 0; i < objects.Length; i++)
 					{
 						loader._stream.Seek((long)offset + memSize * i);
-						objects.SetValue(_memType.ReadIGZField(loader), i);
+						object? arrItem = _memType.ReadIGZField(loader);
+						objects.SetValue(arrItem, i);
 					}
 
 					memory.SetData(objects);
