@@ -37,8 +37,14 @@ namespace igLibrary.Vfx
 		/// <returns>boolean indicating whether the input was read successfully</returns>
 		public override bool SetMemoryFromString(ref object? target, string input)
 		{
-			// I cannot be bothered to implement this
-			Logging.Warn("Tried parsing igRangedFloatMetaField value string when unimplemented, returning success...");
+			string[] floats = input.Split(',');
+			if (floats.Length != 4) return false;
+
+			igRangedFloat tempTarget;
+
+			if (!float.TryParse(floats[0], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._min)) return false;
+			if (!float.TryParse(floats[1], Localisation.kENNumberStyles, Localisation.kENCultureInfo, out tempTarget._max)) return false;
+
 			return true;
 		}
 	}
