@@ -16,5 +16,8 @@ namespace igLibrary.Gfx
 		public bool _isSpeedTree;
 		public bool _isVertexAnimated;
 		public bool _hasVertexColor;
+
+		// TfbTool only
+		public uint _hashCode;
 	}
 }

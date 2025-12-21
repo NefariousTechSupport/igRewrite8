@@ -37,6 +37,7 @@ namespace igLibrary.Gfx
 		public igMemory<byte> _blendShapeData;
 		public igVector<ulong> _blendShapes;
 		public int _speedTreeType;
+		public uint _enableZeroPixelCull = 1;
 	}
 	public class igPS3EdgeGeometrySegmentList : igTObjectList<igPS3EdgeGeometrySegment>{}
 }
