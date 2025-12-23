@@ -46,6 +46,13 @@ namespace igLibrary.Tfb.Game
 
 
 		/// <summary>
+		/// Counter for the global.bld igHandle namespace
+		/// </summary>
+		private uint _globalBldCounter = 0;
+
+
+
+		/// <summary>
 		/// public accessor for the streamable items
 		/// </summary>
 		public IReadOnlyDictionary<string, Streamable> Streamables => _streamables;
@@ -126,6 +133,26 @@ namespace igLibrary.Tfb.Game
 				// instead of creating a new one
 				igHandle handle = igObjectHandleManager.Singleton.LookupHandle(new igName(Path.GetFileNameWithoutExtension(effect._name)), new igName(effectPlatform));
 				handle._object = effect;
+			}
+		}
+
+
+
+		/// <summary>
+		/// handles global.bld EXID stuff
+		/// </summary>
+		/// <param name="globalBld">the global.bld level.bld directory</param>
+		public void HandleGlobalBld(igObjectDirectory globalBld)
+		{
+			igHandleName name = new igHandleName();
+			name._ns = new igName("global.bld");
+
+			for (int g = 0; g < globalBld._objectList._count; g++)
+			{
+				name._name._hash = ++_globalBldCounter;
+
+				igHandle handle = igObjectHandleManager.Singleton.LookupHandle(name);
+				handle._object = globalBld._objectList[g];
 			}
 		}
 	}

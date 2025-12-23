@@ -1,6 +1,6 @@
 [engine_type]
 TfbTool
 
-[bld_load_tfb]
+[global_bld_load_tfb]
 
 app:/permanent/bootstrap

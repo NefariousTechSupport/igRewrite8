@@ -23,6 +23,7 @@ namespace igLibrary
 			FullPackage,
 			LoosePackage,
 			StreamContextLoad,
+			GlobalStreamContextLoad,
 			EngineType,
 			Noop
 		};
@@ -52,6 +53,7 @@ namespace igLibrary
 			{ "loose_pak_lab",                   new(LoaderTask.LoosePak,                  LoaderTask.LoosePak                  ) },
 			{ "full_package_lab",                new(LoaderTask.FullPackage,               LoaderTask.Noop                      ) },
 			{ "bld_load_tfb",                    new(LoaderTask.StreamContextLoad,         LoaderTask.StreamContextLoad         ) },
+			{ "global_bld_load_tfb",             new(LoaderTask.GlobalStreamContextLoad,   LoaderTask.GlobalStreamContextLoad   ) },
 			{ "engine_type",                     new(LoaderTask.EngineType,                LoaderTask.EngineType                ) },
 		};
 
@@ -200,6 +202,10 @@ namespace igLibrary
 					break;
 				case LoaderTask.StreamContextLoad:
 					Tfb.Game.StreamContext.Singleton.Load(line);
+					break;
+				case LoaderTask.GlobalStreamContextLoad:
+					igObjectDirectory globalBld = Tfb.Game.StreamContext.Singleton.Load(line);
+					Tfb.Game.StreamContext.Singleton.HandleGlobalBld(globalBld);
 					break;
 				case LoaderTask.EngineType:
 					if (igRegistry.GetRegistry()._engineType != EngineType.None)
