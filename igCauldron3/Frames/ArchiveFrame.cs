@@ -10,6 +10,7 @@
 using ImGuiNET;
 using igLibrary.Core;
 using igLibrary;
+using igLibrary.Tfb.Game;
 
 namespace igCauldron3
 {
@@ -73,6 +74,11 @@ namespace igCauldron3
 				for(int i = 0; i < packages._count; i++)
 				{
 					RenderPackage(packages[i]);
+				}
+				IReadOnlyDictionary<string, StreamContext.Streamable> streamables = StreamContext.Singleton.Streamables;
+				foreach (var streamable in streamables)
+				{
+					RenderTfbStreamable(streamable.Key, streamable.Value);
 				}
 				searchQuery = "";
 			}
@@ -312,15 +318,49 @@ namespace igCauldron3
 			}
 			if(ImGui.TreeNode(archive._path))
 			{
-				for(int i = 0; i < fileHeaders.Count(); i++)
+				bool tfbBld = Path.GetExtension(archive._path) == ".bld";
+
+				for(int i = 0; i < fileHeaders.Length; i++)
 				{
-					string name = fileHeaders.ElementAt(i)._logicalName;
-					if(!(name.EndsWith(".igz") || name.EndsWith(".lng"))) continue;
-					if(ImGui.Button(name))
+					string logicalName = fileHeaders[i]._logicalName;
+					string extension   = Path.GetExtension(logicalName);
+					
+					if (extension == ".igz"
+					 || extension == ".lng"
+					 || tfbBld)
 					{
-						DirectoryManagerFrame._instance.AddDirectory(igObjectStreamManager.Singleton.Load(fileHeaders.ElementAt(i)._logicalName)!);
+						if(ImGui.Button(logicalName))
+						{
+							igObjectDirectory? directory = null;
+							if (tfbBld && igRegistry.GetRegistry()._engineType == EngineType.TfbTool)
+							{
+								directory = StreamContext.Singleton.Load(archive._path);
+							}
+							else
+							{
+								directory = igObjectStreamManager.Singleton.Load(logicalName)!;
+							}
+
+							DirectoryManagerFrame._instance.AddDirectory(directory);
+						}
 					}
+
 				}
+				ImGui.TreePop();
+			}
+		}
+
+
+
+		private void RenderTfbStreamable(string name, StreamContext.Streamable streamable)
+		{
+			if (ImGui.TreeNode(name))
+			{
+				if (ImGui.Button("level.bld"))
+				{
+					DirectoryManagerFrame._instance.AddDirectory(streamable._levelBundle);
+				}
+
 				ImGui.TreePop();
 			}
 		}

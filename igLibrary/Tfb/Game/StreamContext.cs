@@ -30,7 +30,7 @@ namespace igLibrary.Tfb.Game
 		/// <summary>
 		/// Structure representing a loaded file
 		/// </summary>
-		private struct Streamable
+		public struct Streamable
 		{
 			public igArchive _archive;
 			public igObjectDirectory _levelBundle;
@@ -43,6 +43,12 @@ namespace igLibrary.Tfb.Game
 		/// </summary>
 		private Dictionary<string, Streamable> _streamables = new Dictionary<string, Streamable>();
 
+
+
+		/// <summary>
+		/// public accessor for the streamable items
+		/// </summary>
+		public IReadOnlyDictionary<string, Streamable> Streamables => _streamables;
 
 
 		/// <summary>
