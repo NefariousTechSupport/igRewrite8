@@ -158,6 +158,14 @@ public class MetadataTest
 
 
 	/// <summary>
+	/// Ensure that the metadata for igVfxModulationHelper has been corrected
+	/// </summary>
+	[Fact]
+	public void TrapTeamVfxModulationHelper()      => VfxModulationHelperChecks(igArkCore.EGame.EV_SkylandersTrapTeam);
+
+
+
+	/// <summary>
 	/// Ensure that the metadata for igSamplerStateBundleDescMetaField has been corrected
 	/// The one from the metadata dump forgets to list the default for a non-persistent boolean
 	/// </summary>
