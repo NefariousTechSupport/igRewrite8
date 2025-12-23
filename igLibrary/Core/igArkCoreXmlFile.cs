@@ -59,6 +59,8 @@ namespace igLibrary.Core
 		private XmlNode _metaenumRoot;
 		private XmlDocument _metafieldDocument;
 		private XmlNode _metafieldRoot;
+		private XmlDocument _tfbbindingsDocument;
+		private XmlNode _tfbbindingsRoot;
 
 
 		// Lookup tables for looking up types by name
@@ -83,6 +85,7 @@ namespace igLibrary.Core
 			_metaobjectDocument = new XmlDocument();
 			_metaenumDocument = new XmlDocument();
 			_metafieldDocument = new XmlDocument();
+			_tfbbindingsDocument = new XmlDocument();
 			_metaobjectLookup = new Dictionary<string, igMetaObject>();
 			_metaenumLookup = new Dictionary<string, igMetaEnum>();
 			_metafieldLookup = new Dictionary<string, igMetaFieldPlatformInfo>();
@@ -508,11 +511,6 @@ namespace igLibrary.Core
 					error = ParseCompoundNodePass2(childNode, _compoundLookup[metaobject._name!]);
 					if (error != null) return null;
 				}
-				else if (childNode.Name == "tfbBindings")
-				{
-					error = ParseTfbBindingsNode(childNode, metaobject);
-					if (error != null) return error;
-				}
 				else if (childNode.Name == "dotnetfields"
 				      && metaobject is igDotNetMetaObject dnmo // This only applies to igDotNetMetaObject
 				      && childNode.FirstChild != null)         // If there are no children then do nothing
@@ -568,39 +566,6 @@ namespace igLibrary.Core
 				if (error != null) return error;
 
 				compoundInfo._fieldList.Add(field!);
-			}
-
-			return null;
-		}
-
-
-		private ArkCoreXmlError? ParseTfbBindingsNode(XmlNode node, igMetaObject metaObject)
-		{
-			XmlNode? nameAttr = node.Attributes!.GetNamedItem("name");
-			if (nameAttr == null)
-			{
-				return new ArkCoreXmlError("All tfbBindings nodes must have a \"name\" attribute");
-			}
-			string typeName = nameAttr.Value!;
-
-			BindingManager.ClassBinding classBinding = BindingManager.MakeNewClassBinding(typeName);
-
-			for (XmlNode? bindingNode = node.FirstChild; bindingNode != null; bindingNode = bindingNode.NextSibling)
-			{
-				if (bindingNode.Name != "binding")
-				{
-					return new ArkCoreXmlError("All children of a tfbBindings node should be binding nodes");
-				}
-
-				nameAttr = bindingNode.Attributes!.GetNamedItem("name");
-				if (nameAttr == null) return new ArkCoreXmlError("All binding nodes must have a \"name\" attribute");
-				string bindingName = nameAttr.Value!;
-
-				XmlNode? typeAttr = bindingNode.Attributes!.GetNamedItem("type");
-				if (typeAttr == null) return new ArkCoreXmlError("All binding nodes must have a \"type\" attribute");
-				string bindingTypeName = typeAttr.Value!;
-
-				classBinding.AddFunction(bindingTypeName, bindingName);
 			}
 
 			return null;
@@ -852,6 +817,82 @@ namespace igLibrary.Core
 			if (defaultValue != "(null)")
 			{
 				metafield.SetMemoryFromString(ref metafield._default, defaultValue!);
+			}
+
+			return null;
+		}
+
+
+		/// <summary>
+		/// Load TfbScript bindings
+		/// </summary>
+		/// <param name="filePath">the path to the xml file</param>
+		/// <returns>an error if an error occurred, else null</returns>
+		public ArkCoreXmlError? LoadTfbBindings(string filePath)
+		{
+			_tfbbindingsDocument.Load(filePath);
+
+			if (_tfbbindingsDocument.FirstChild != _tfbbindingsDocument.LastChild)
+			{
+				return new ArkCoreXmlError("\"{0}\" must have exactly one root node!", filePath);
+			}
+			_tfbbindingsRoot = _tfbbindingsDocument.FirstChild!;
+			if (_tfbbindingsRoot.Name != "tfbbindings")
+			{
+				return new ArkCoreXmlError("\"{0}\" must have exactly one root node named \"tfbbindings\"!", filePath);
+			}
+
+			for (XmlNode? bindingNode = _tfbbindingsRoot.FirstChild; bindingNode != null; bindingNode = bindingNode.NextSibling)
+			{
+				if (bindingNode.Name != "binding")
+				{
+					return new ArkCoreXmlError("children of tfbbindings node must be a \"binding\" node!");
+				}
+
+				XmlNode? typeAttr = bindingNode.Attributes!.GetNamedItem("type");
+				if (typeAttr == null)
+				{
+					return new ArkCoreXmlError("\"binding\" node must have \"type\" attribute!");
+				}
+
+				XmlNode? nameAttr = bindingNode.Attributes!.GetNamedItem("name");
+				if (nameAttr == null)
+				{
+					return new ArkCoreXmlError("\"binding\" node must have \"name\" attribute!");
+				}
+
+				igMetaObject? meta = igArkCore.GetObjectMeta(typeAttr.Value!);
+				Type? type = typeof(tfbScriptObject);
+				if (meta != null)
+				{
+					meta.GatherDependancies();
+					igArkCore.FlushPendingTypes();
+
+					type = meta._vTablePointer!;
+				}
+
+				igHandleName name = new igHandleName(nameAttr.Value!);
+				// Locate or create the igObjectDirectory
+				igObjectDirectory dir;
+				if (igObjectStreamManager.Singleton._directoriesByName.TryGetValue(name._ns._hash, out igObjectDirectoryList? dirList))
+				{
+					dir = dirList[0];
+				}
+				else
+				{
+					dir = new igObjectDirectory();
+					dir._name = name._ns;
+					dir._useNameList = true;
+					dir._nameList = new igNameList();
+					igObjectStreamManager.Singleton.AddObjectDirectory(dir, dir._name._string);
+					igObjectHandleManager.Singleton.AddSystemNamespace(dir._name._string);
+				}
+
+				igObject? binding = Activator.CreateInstance(type) as igObject;
+				if (binding != null)
+				{
+					dir.AddObject(binding, name._ns, name._name);
+				}
 			}
 
 			return null;

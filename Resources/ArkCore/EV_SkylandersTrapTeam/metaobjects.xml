@@ -1092,16 +1092,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="Sequence">
-			<binding type="FloatMeasurement" name="time remaining"/>
-			<binding type="FloatMeasurement" name="percent remaining"/>
-			<binding type="EnumMeasurement" name="playback mode"/>
-			<binding type="FloatMeasurement" name="playback rate"/>
-			<binding type="EnumMeasurement" name="looping"/>
-			<binding type="EnumMeasurement" name="allow restart"/>
-			<binding type="EnumMeasurement" name="condition"/>
-			<binding type="FloatMeasurement" name="raw duration"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="ClonedSequence" basetype="Sequence">
 		<metafields>
@@ -1111,11 +1101,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="ClonedSequence">
-			<binding type="SetVariant" name="clones"/>
-			<binding type="ReferenceVariant" name="parent"/>
-			<binding type="ReferenceVariant" name="activator"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="tfbScriptInfo" basetype="tfbComplexDataInfo">
 		<metafields>
@@ -1612,13 +1597,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="VectorMeasurement">
-			<binding type="FloatMeasurement" name="length"/>
-			<binding type="FloatMeasurement" name="heading"/>
-			<binding type="FloatMeasurement" name="pitch"/>
-			<binding type="FloatMeasurement" name="vertical difference"/>
-			<binding type="FloatMeasurement" name="horizontal length"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igModelViewMatrixAttrList" basetype="igObjectList">
 		<objectlist elementtype="igModelViewMatrixAttr"/>
@@ -1956,15 +1934,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="PositionMeasurement">
-			<binding type="PairedFloatMeasurement" name="distance"/>
-			<binding type="PairedFloatMeasurement" name="heading"/>
-			<binding type="PairedFloatMeasurement" name="pitch"/>
-			<binding type="PairedFloatMeasurement" name="vertical offset"/>
-			<binding type="PairedFloatMeasurement" name="horizontal distance"/>
-			<binding type="PairedEnumMeasurement" name="collision"/>
-			<binding type="PairedFloatMeasurement" name="separation"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="MatrixMeasurement" basetype="PositionMeasurement">
 		<metafields>
@@ -1972,9 +1941,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="MatrixMeasurement">
-			<binding type="OrientationMeasurement" name="-orientation"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="AbstractAttachNode" basetype="MatrixMeasurement">
 		<metafields>
@@ -1983,10 +1949,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="AbstractAttachNode">
-			<binding type="ReferenceVariant" name="root"/>
-			<binding type="ReferenceVariant" name="look-at target"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="AbstractVFXGenerator" basetype="AbstractAttachNode">
 		<overriddenmetafields>
@@ -2011,19 +1973,6 @@
 				<metafield type="igBoolMetaField" offset="0x0000"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="GeneratorInfo">
-			<binding type="ReferenceVariant" name="-generation"/>
-			<binding type="ReferenceVariant" name="-movement"/>
-			<binding type="ReferenceVariant" name="-appearance"/>
-			<binding type="SetVariant" name="affectors"/>
-			<binding type="ReferenceVariant" name="lightning"/>
-			<binding type="ReferenceVariant" name="ribbon"/>
-			<binding type="ReferenceVariant" name="vfx"/>
-			<binding type="FloatMeasurement" name="bloom intensity"/>
-			<binding type="FloatMeasurement" name="start delay"/>
-			<binding type="IntMeasurement" name="sort overlay layer"/>
-			<binding type="EnumMeasurement" name="mute"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="SegmentGenerator" basetype="AbstractVFXGenerator">
 		<metafields>
@@ -2045,14 +1994,6 @@
 				<metafield type="igUnsignedIntMetaField" offset="0x0000"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="SegmentGenerator">
-			<binding type="EnumMeasurement" name="taper"/>
-			<binding type="FloatMeasurement" name="uv scroll"/>
-			<binding type="FloatMeasurement" name="uv scale"/>
-			<binding type="FloatMeasurement" name="segment width"/>
-			<binding type="IntMeasurement" name="segment count"/>
-			<binding type="ColorMeasurement" name="tint color"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="LightningFields" basetype="SegmentGenerator">
 		<metafields>
@@ -2065,12 +2006,6 @@
 			<metafield type="igObjectRefMetaField" offset="0x0060" name="_attachNode" copyMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="AbstractAttachNode"/>
 			<metafield type="igObjectRefMetaField" offset="0x0064" name="_attachNodeOwner" copyMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="AbstractPlacement"/>
 		</metafields>
-		<tfbBindings name="LightningFields">
-			<binding type="ReferenceVariant" name="target"/>
-			<binding type="FloatMeasurement" name="chaos"/>
-			<binding type="EnumMeasurement" name="constrained"/>
-			<binding type="EnumMeasurement" name="freeze animation"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="LightningGenerator" basetype="LightningFields">
 		<metafields>
@@ -2424,10 +2359,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="GestureMeasurement">
-			<binding type="EnumMeasurement" name="pressure state"/>
-			<binding type="FloatMeasurement" name="pressure value"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igMemoryPool" basetype="igObject">
 		<metafields>
@@ -2663,8 +2594,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="RigidBodyPhysics">
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="OpCheckMembership" basetype="OpBranch">
 		<overriddenmetafields>
@@ -2860,19 +2789,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="AnimationInfoResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="AnimationInfo">
-			<binding type="FloatMeasurement" name="blend Percent"/>
-			<binding type="EnumMeasurement" name="is layered"/>
-			<binding type="EnumMeasurement" name="type"/>
-			<binding type="SetVariant" name="events"/>
-			<binding type="ReferenceVariant" name="ambient"/>
-			<binding type="ReferenceVariant" name="walk"/>
-			<binding type="ReferenceVariant" name="run"/>
-			<binding type="ReferenceVariant" name="jump"/>
-			<binding type="SetVariant" name="animation palette"/>
-			<binding type="IntMeasurement" name="material slot"/>
-			<binding type="IntMeasurement" name="glow intensity"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="tfbScrollUVAnimData" basetype="tfbMaterialUVAnimData">
 		<metafields>
@@ -2980,13 +2896,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="SpritePositionMeasurement">
-			<binding type="PairedFloatMeasurement" name="screen distance"/>
-			<binding type="PairedFloatMeasurement" name="heading"/>
-			<binding type="PairedFloatMeasurement" name="X offset"/>
-			<binding type="PairedFloatMeasurement" name="Y offset"/>
-			<binding type="PairedFloatMeasurement" name="priority offset"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="SpriteMatrixMeasurement" basetype="SpritePositionMeasurement">
 		<metafields>
@@ -2994,16 +2903,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="SpriteMatrixMeasurement">
-			<binding type="OrientationMeasurement" name="-orientation"/>
-			<binding type="ReferenceVariant" name="attach node"/>
-			<binding type="SetVariant" name="attached objects"/>
-			<binding type="IntMeasurement" name="ID"/>
-			<binding type="MatrixMeasurement" name="origin"/>
-			<binding type="SetVariant" name="clones"/>
-			<binding type="ReferenceVariant" name="parent"/>
-			<binding type="ReferenceVariant" name="activator"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igPS3EdgeManager" basetype="igObject">
 		<metafields>
@@ -3157,38 +3056,6 @@
 			<metafield type="igRawRefMetaField" offset="0x00D0" name="_previousMagicState" construct="false" destruct="false" reconstruct="false" refCounted="true"/>
 			<metafield type="igObjectRefMetaField" offset="0x00D4" name="_prevMenu" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="StringInfo"/>
 		</metafields>
-		<tfbBindings name="OnlineEventReporter">
-			<binding type="ScriptSetReference" name="player 1 top data"/>
-			<binding type="ScriptSetReference" name="player 1 bottom data"/>
-			<binding type="ScriptSetReference" name="player 2 top data"/>
-			<binding type="ScriptSetReference" name="player 2 bottom data"/>
-			<binding type="ScriptSetReference" name="player 1 global data"/>
-			<binding type="ScriptSetReference" name="player 2 global data"/>
-			<binding type="ScriptSetReference" name="trap data"/>
-			<binding type="ScriptSetReference" name="trap global data"/>
-			<binding type="ScriptSetReference" name="item data"/>
-			<binding type="PositionMeasurement" name="player 1 position"/>
-			<binding type="PositionMeasurement" name="player 2 position"/>
-			<binding type="PositionMeasurement" name="respawn location"/>
-			<binding type="PositionMeasurement" name="respawn trigger position"/>
-			<binding type="IntMeasurement" name="player 1 health"/>
-			<binding type="IntMeasurement" name="player 2 health"/>
-			<binding type="EnumMeasurement" name="ally assignment"/>
-			<binding type="IntMeasurement" name="game mode"/>
-			<binding type="ReferenceVariant" name="game level"/>
-			<binding type="ReferenceVariant" name="game area"/>
-			<binding type="IntMeasurement" name="game area elemental affinity"/>
-			<binding type="IntMeasurement" name="game initial difficulty"/>
-			<binding type="IntMeasurement" name="game dynamic difficulty"/>
-			<binding type="IntMeasurement" name="trap door 1 activated?"/>
-			<binding type="IntMeasurement" name="trap door 2 activated?"/>
-			<binding type="FloatMeasurement" name="game damage multiplier"/>
-			<binding type="FloatMeasurement" name="game HP multiplier"/>
-			<binding type="IntMeasurement" name="language"/>
-			<binding type="PositionMeasurement" name="tower position"/>
-			<binding type="IntMeasurement" name="event code"/>
-			<binding type="EnumMeasurement" name="event save state"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="SpriteInfoList" basetype="ScriptObjectList">
 		<objectlist elementtype="SpriteAttachment"/>
@@ -3362,58 +3229,6 @@
 				<metafield type="igBoolMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="1"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="ScriptController">
-			<binding type="ButtonMeasurement" name="action 1"/>
-			<binding type="ButtonMeasurement" name="action 2"/>
-			<binding type="ButtonMeasurement" name="action 3"/>
-			<binding type="ButtonMeasurement" name="action 4"/>
-			<binding type="ButtonMeasurement" name="accept button"/>
-			<binding type="ButtonMeasurement" name="cancel button"/>
-			<binding type="ButtonMeasurement" name="alt button"/>
-			<binding type="ButtonMeasurement" name="pause button"/>
-			<binding type="ButtonMeasurement" name="start button"/>
-			<binding type="ButtonMeasurement" name="select button"/>
-			<binding type="ButtonMeasurement" name="DPad left"/>
-			<binding type="ButtonMeasurement" name="DPad right"/>
-			<binding type="ButtonMeasurement" name="DPad up"/>
-			<binding type="ButtonMeasurement" name="DPad down"/>
-			<binding type="JoystickMeasurement" name="main stick"/>
-			<binding type="JoystickMeasurement" name="alt stick"/>
-			<binding type="ButtonMeasurement" name="Pause requested"/>
-			<binding type="ButtonMeasurement" name="Play requested"/>
-			<binding type="EnumMeasurement" name="rich presence"/>
-			<binding type="StandardController" name="360 / PS"/>
-			<binding type="WiiController" name="Wii"/>
-			<binding type="ControllerGestures" name="-Gestures"/>
-			<binding type="PS4Controller" name="PS4"/>
-			<binding type="EnumMeasurement" name="bound to in game actor"/>
-			<binding type="EnumMeasurement" name="signed out"/>
-			<binding type="EnumMeasurement" name="force sign in"/>
-			<binding type="IntMeasurement" name="Active Controllers"/>
-			<binding type="ReferenceVariant" name="controller 1"/>
-			<binding type="ReferenceVariant" name="controller 2"/>
-			<binding type="ReferenceVariant" name="controller 3"/>
-			<binding type="ReferenceVariant" name="controller 4"/>
-			<binding type="ReferenceVariant" name="dialog controller"/>
-			<binding type="tfbPS3Controller" name="inactive controller"/>
-			<binding type="FloatMeasurement" name="joystick X dead zone"/>
-			<binding type="FloatMeasurement" name="joystick Y dead zone"/>
-			<binding type="FloatMeasurement" name="analog button dead zone"/>
-			<binding type="EnumMeasurement" name="rumble disabled"/>
-			<binding type="FloatMeasurement" name="last input time"/>
-			<binding type="EnumMeasurement" name="display console menu"/>
-			<binding type="IntMeasurement" name="display no home icon"/>
-			<binding type="IntMeasurement" name="erreula error"/>
-			<binding type="EnumMeasurement" name="erreula error button selected"/>
-			<binding type="EnumMeasurement" name="erreula error result type"/>
-			<binding type="EnumMeasurement" name="disable home menu"/>
-			<binding type="IntMeasurement" name="erreula error result code"/>
-			<binding type="EnumMeasurement" name="allow multiple BLE gamepads"/>
-			<binding type="tfbPS3Controller" name="physical controller 1"/>
-			<binding type="tfbPS3Controller" name="physical controller 2"/>
-			<binding type="tfbPS3Controller" name="physical controller 3"/>
-			<binding type="tfbPS3Controller" name="physical controller 4"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igBaseVertexArray" basetype="igObject">
 		<metafields>
@@ -3457,12 +3272,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="ColorMeasurement">
-			<binding type="IntMeasurement" name="alpha"/>
-			<binding type="IntMeasurement" name="red"/>
-			<binding type="IntMeasurement" name="green"/>
-			<binding type="IntMeasurement" name="blue"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="ScriptColorInfo" basetype="ColorMeasurement">
 		<overriddenmetafields>
@@ -3475,8 +3284,6 @@
 			<metafield type="igIntMetaField" offset="0x0018" name="_value"/>
 			<metafield type="igIntMetaField" offset="0x001C" name="_resetValue" persistent="false"/>
 		</metafields>
-		<tfbBindings name="ScriptColorInfo">
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="BoneAttachInfoList" basetype="ScriptObjectList">
 		<objectlist elementtype="BoneAttachInfo"/>
@@ -3692,16 +3499,6 @@
 				<metafield type="igBoolMetaField" offset="0x0000"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="AbstractPlacement">
-			<binding type="ReferenceVariant" name="attach node"/>
-			<binding type="SetVariant" name="attached objects"/>
-			<binding type="IntMeasurement" name="ID"/>
-			<binding type="MatrixMeasurement" name="origin"/>
-			<binding type="SetVariant" name="clones"/>
-			<binding type="ReferenceVariant" name="parent"/>
-			<binding type="ReferenceVariant" name="activator"/>
-			<binding type="ReferenceVariant" name="ground"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="tfbRedOctanePeripheralScriptObject" basetype="AbstractPlacement">
 		<overriddenmetafields>
@@ -3731,38 +3528,6 @@
 			<metafield type="igObjectRefMetaField" offset="0x00C4" name="_colorSet" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="tfbPortalColorList"/>
 			<metafield type="igStructMetaField" offset="0x00C8" name="_debug" implicitAlignment="false" requiredAlignment="4" typeSize="0x08" align="0x04"/>
 		</metafields>
-		<tfbBindings name="RedOctanePeripheralScriptObject">
-			<binding type="EnumMeasurement" name="connection state"/>
-			<binding type="SetVariant" name="playing sounds"/>
-			<binding type="EnumMeasurement" name="device presence"/>
-			<binding type="IntMeasurement" name="firmware version"/>
-			<binding type="SetVariant" name="tag set"/>
-			<binding type="ColorMeasurement" name="LED color"/>
-			<binding type="SetVariant" name="all LED colors"/>
-			<binding type="EnumMeasurement" name="antenna enable"/>
-			<binding type="EnumMeasurement" name="battery status"/>
-			<binding type="FloatMeasurement" name="battery remaining"/>
-			<binding type="IntMeasurement" name="size of region 1"/>
-			<binding type="IntMeasurement" name="size of region 2"/>
-			<binding type="IntMeasurement" name="size of magic moment data"/>
-			<binding type="IntMeasurement" name="size of remaining data"/>
-			<binding type="IntMeasurement" name="command delay time"/>
-			<binding type="EnumMeasurement" name="delay after commands"/>
-			<binding type="EnumMeasurement" name="auto read tag level"/>
-			<binding type="EnumMeasurement" name="save type"/>
-			<binding type="IntMeasurement" name="save offset"/>
-			<binding type="IntMeasurement" name="connected count"/>
-			<binding type="IntMeasurement" name="checksum length"/>
-			<binding type="IntMeasurement" name="checksum"/>
-			<binding type="EnumMeasurement" name="debug mode"/>
-			<binding type="EnumMeasurement" name="audio enabled"/>
-			<binding type="EnumMeasurement" name="audio LED modulation"/>
-			<binding type="IntMeasurement" name="audio modulation level"/>
-			<binding type="EnumMeasurement" name="auto color cycle"/>
-			<binding type="IntMeasurement" name="color slide time"/>
-			<binding type="ScriptSetReference" name="update code set"/>
-			<binding type="ScriptSetReference" name="trading card code set"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igRenderQueueEntryMetaField" basetype="igCompoundMetaField">
 		<compoundfields>
@@ -4032,13 +3797,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="CutsceneResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="CutsceneInfo">
-			<binding type="SetVariant" name="events"/>
-			<binding type="SetVariant" name="attach nodes"/>
-			<binding type="SetVariant" name="actor animations"/>
-			<binding type="IntMeasurement" name="active camera"/>
-			<binding type="SetVariant" name="active cutscene streams"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igUnsignedShortMetaField" basetype="igMetaField">
 	</metaobject>
@@ -4274,9 +4032,6 @@
 				<metafield type="igRawRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="false" destruct="false" reconstruct="false" refCounted="true"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="StringInfo">
-			<binding type="StringConverter" name="String Converter"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="NameExtractor" basetype="StringInfo">
 		<overriddenmetafields>
@@ -4294,13 +4049,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="StringInfo"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="NameExtractor">
-			<binding type="ReferenceVariant" name="Object to name"/>
-			<binding type="IntMeasurement" name="Name checksum"/>
-			<binding type="IntMeasurement" name="Instantiation size"/>
-			<binding type="IntMeasurement" name="type count"/>
-			<binding type="ReferenceVariant" name="Name string"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="CMaterialHelpersArrayMetaField" basetype="CMaterialHelpersMetaField">
 		<metafields>
@@ -4455,10 +4203,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="OpTopLevelBehavior">
-			<binding type="ScriptReference" name="my"/>
-			<binding type="ReferenceVariant" name="behavior"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="GetViewportListenerPropertiesMessage" basetype="igObject">
 		<metafields>
@@ -4669,58 +4413,6 @@
 				<metafield type="igEnumMetaField" offset="0x0000" implicitAlignment="false" requiredAlignment="4" metaenum="LimitBehavior"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="SoundInfo">
-			<binding type="FloatMeasurement" name="volume"/>
-			<binding type="FloatMeasurement" name="volume randomness"/>
-			<binding type="FloatMeasurement" name="pitch randomness"/>
-			<binding type="FloatMeasurement" name="rumble duration"/>
-			<binding type="FloatMeasurement" name="pan"/>
-			<binding type="EnumMeasurement" name="3D"/>
-			<binding type="EnumMeasurement" name="attenuates"/>
-			<binding type="FloatMeasurement" name="attenuation distance full"/>
-			<binding type="FloatMeasurement" name="attenuation distance silent"/>
-			<binding type="EnumMeasurement" name="ignores time scales"/>
-			<binding type="EnumMeasurement" name="category"/>
-			<binding type="FloatMeasurement" name="reverb amount"/>
-			<binding type="FloatMeasurement" name="reverb randomness"/>
-			<binding type="FloatMeasurement" name="filter percent"/>
-			<binding type="FloatMeasurement" name="filter randomness"/>
-			<binding type="EnumMeasurement" name="filter attenuates"/>
-			<binding type="FloatMeasurement" name="filter attenuation distance minimum"/>
-			<binding type="FloatMeasurement" name="filter attenuation distance maximum"/>
-			<binding type="FloatMeasurement" name="filter maximum percent"/>
-			<binding type="IntMeasurement" name="priority"/>
-			<binding type="IntMeasurement" name="actor limit"/>
-			<binding type="EnumMeasurement" name="actor limit behavior"/>
-			<binding type="IntMeasurement" name="global limit"/>
-			<binding type="EnumMeasurement" name="global limit behavior"/>
-			<binding type="EnumMeasurement" name="from controller"/>
-			<binding type="EnumMeasurement" name="from DRC"/>
-			<binding type="EnumMeasurement" name="streamed"/>
-			<binding type="EnumMeasurement" name="designer category"/>
-			<binding type="EnumMeasurement" name="authored category"/>
-			<binding type="FloatMeasurement" name="effects master volume"/>
-			<binding type="FloatMeasurement" name="effects master rate"/>
-			<binding type="SetVariant" name="active sound effects"/>
-			<binding type="SetVariant" name="active movies"/>
-			<binding type="FloatMeasurement" name="streams master volume"/>
-			<binding type="FloatMeasurement" name="streams master rate"/>
-			<binding type="SetVariant" name="active sound streams"/>
-			<binding type="SetVariant" name="active controller rumbles"/>
-			<binding type="SetVariant" name="category templates"/>
-			<binding type="EnumMeasurement" name="music disabled"/>
-			<binding type="FloatMeasurement" name="music master volume"/>
-			<binding type="EnumMeasurement" name="reverb setting 1"/>
-			<binding type="EnumMeasurement" name="reverb setting 2"/>
-			<binding type="FloatMeasurement" name="reverb amount 1"/>
-			<binding type="FloatMeasurement" name="reverb amount 2"/>
-			<binding type="FloatMeasurement" name="music volume 1"/>
-			<binding type="FloatMeasurement" name="music volume 2"/>
-			<binding type="FloatMeasurement" name="music volume 3"/>
-			<binding type="EnumMeasurement" name="pan listener mode"/>
-			<binding type="EnumMeasurement" name="volume listener mode"/>
-			<binding type="IntMeasurement" name="diagnostic level"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igDecalAttr" basetype="igVisualAttribute">
 		<metafields>
@@ -5017,8 +4709,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="tfbVizBoxInfoList"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="VizBoxInfo">
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igDebugLineMetaField" basetype="igCompoundMetaField">
 		<compoundfields>
@@ -5039,9 +4729,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="PS4Controller">
-			<binding type="EnumMeasurement" name="controller connection type"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igPlane" basetype="igVolume">
 		<metafields>
@@ -5126,36 +4813,6 @@
 				<metafield type="igEnumMetaField" offset="0x0000" implicitAlignment="false" requiredAlignment="4" metaenum="velocityDirection"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="GeneratorMovementFields">
-			<binding type="EnumMeasurement" name="spawn volume type"/>
-			<binding type="FloatMeasurement" name="spawn volume width"/>
-			<binding type="FloatMeasurement" name="spawn volume length"/>
-			<binding type="FloatMeasurement" name="spawn volume height"/>
-			<binding type="EnumMeasurement" name="spawn volume distribution"/>
-			<binding type="EnumMeasurement" name="initial speed direction"/>
-			<binding type="FloatMeasurement" name="initial speed"/>
-			<binding type="FloatMeasurement" name="initial speed randomness"/>
-			<binding type="FloatMeasurement" name="initial direction spread"/>
-			<binding type="FloatMeasurement" name="start accel"/>
-			<binding type="FloatMeasurement" name="start accel randomness"/>
-			<binding type="VectorMeasurement" name="start accel direction"/>
-			<binding type="FloatMeasurement" name="start accel direction spread"/>
-			<binding type="FloatMeasurement" name="mid accel"/>
-			<binding type="FloatMeasurement" name="mid accel randomness"/>
-			<binding type="VectorMeasurement" name="mid accel direction"/>
-			<binding type="FloatMeasurement" name="mid accel direction spread"/>
-			<binding type="FloatMeasurement" name="end accel"/>
-			<binding type="FloatMeasurement" name="end accel randomness"/>
-			<binding type="VectorMeasurement" name="end accel direction"/>
-			<binding type="FloatMeasurement" name="end accel direction spread"/>
-			<binding type="FloatMeasurement" name="start drag"/>
-			<binding type="FloatMeasurement" name="mid drag"/>
-			<binding type="FloatMeasurement" name="end drag"/>
-			<binding type="FloatMeasurement" name="start gravity"/>
-			<binding type="FloatMeasurement" name="mid gravity"/>
-			<binding type="FloatMeasurement" name="end gravity"/>
-			<binding type="EnumMeasurement" name="inherits translation"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igImage2ConvertFunctionList" basetype="igDataList">
 		<overriddenmetafields>
@@ -5403,30 +5060,6 @@
 				<metafield type="igBoolMetaField" offset="0x0000"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="GeneratorAppearanceFields">
-			<binding type="ColorMeasurement" name="start color"/>
-			<binding type="ColorMeasurement" name="start color randomness"/>
-			<binding type="ColorMeasurement" name="mid color"/>
-			<binding type="ColorMeasurement" name="mid color randomness"/>
-			<binding type="ColorMeasurement" name="end color"/>
-			<binding type="ColorMeasurement" name="end color randomness"/>
-			<binding type="ScaleMeasurement" name="start size"/>
-			<binding type="ScaleMeasurement" name="start size randomness"/>
-			<binding type="ScaleMeasurement" name="mid size"/>
-			<binding type="ScaleMeasurement" name="mid size randomness"/>
-			<binding type="ScaleMeasurement" name="end size"/>
-			<binding type="ScaleMeasurement" name="end size randomness"/>
-			<binding type="FloatMeasurement" name="initial rotation angle"/>
-			<binding type="FloatMeasurement" name="initial rotation angle randomness"/>
-			<binding type="FloatMeasurement" name="start rotation speed"/>
-			<binding type="FloatMeasurement" name="start rotation speed randomness"/>
-			<binding type="FloatMeasurement" name="mid rotation speed"/>
-			<binding type="FloatMeasurement" name="mid rotation speed randomness"/>
-			<binding type="FloatMeasurement" name="end rotation speed"/>
-			<binding type="FloatMeasurement" name="end rotation speed randomness"/>
-			<binding type="EnumMeasurement" name="view alignment"/>
-			<binding type="FloatMeasurement" name="bloom intensity"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igRenderLightProbeList" basetype="igObjectList">
 		<objectlist elementtype="igRenderLightProbe"/>
@@ -5708,8 +5341,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="OpDefineStructure"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="ScriptStructure">
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="perViewStateVecMetaField" basetype="igMetaField">
 	</metaobject>
@@ -6392,11 +6023,6 @@
 				<metafield type="igBoolMetaField" offset="0x0000"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="AnimationClip">
-			<binding type="FloatMeasurement" name="blend Percent"/>
-			<binding type="EnumMeasurement" name="is layered"/>
-			<binding type="EnumMeasurement" name="type"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igVfxCurveSpawnLocationData" basetype="igVfxVolumetricSpawnLocationData">
 		<metafields>
@@ -7165,26 +6791,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="WiiController">
-			<binding type="ScreenMeasurement" name="pointer"/>
-			<binding type="FloatMeasurement" name="pointer tilt"/>
-			<binding type="FloatMeasurement" name="pointer roll"/>
-			<binding type="FloatMeasurement" name="pointer X acceleration"/>
-			<binding type="FloatMeasurement" name="pointer Y acceleration"/>
-			<binding type="FloatMeasurement" name="pointer Z acceleration"/>
-			<binding type="FloatMeasurement" name="nunchuk tilt"/>
-			<binding type="FloatMeasurement" name="nunchuk roll"/>
-			<binding type="FloatMeasurement" name="nunchuk X acceleration"/>
-			<binding type="FloatMeasurement" name="nunchuk Y acceleration"/>
-			<binding type="FloatMeasurement" name="nunchuk Z acceleration"/>
-			<binding type="FloatMeasurement" name="pointer distance"/>
-			<binding type="EnumMeasurement" name="pointer enabled"/>
-			<binding type="ButtonMeasurement" name="button 1"/>
-			<binding type="ButtonMeasurement" name="button 2"/>
-			<binding type="ButtonMeasurement" name="home button"/>
-			<binding type="EnumMeasurement" name="controller type"/>
-			<binding type="EnumMeasurement" name="save state"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="TfbTiUtils" basetype="igObject">
 	</metaobject>
@@ -7326,11 +6932,6 @@
 			<metafield type="igFloatMetaField" offset="0x001C" name="_tagTime" persistent="false"/>
 			<metafield type="igFloatMetaField" offset="0x0020" name="_tagLength" persistent="false"/>
 		</metafields>
-		<tfbBindings name="sequenceEvent">
-			<binding type="IntMeasurement" name="event number"/>
-			<binding type="FloatMeasurement" name="event time"/>
-			<binding type="FloatMeasurement" name="event length"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="SoundInfoList" basetype="ScriptObjectList">
 		<objectlist elementtype="tfbSoundInfo"/>
@@ -7460,10 +7061,6 @@
 			<metafield type="igVec4ucMetaField" offset="0x0058" name="_endColor" default="127,127,127,255"/>
 			<metafield type="igFloatMetaField" offset="0x005C" name="_segmentGranularity" default="100.00000000"/>
 		</metafields>
-		<tfbBindings name="RibbonFields">
-			<binding type="FloatMeasurement" name="segment granularity"/>
-			<binding type="ColorMeasurement" name="end color"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igVfxTrailInstancePool" basetype="igPool">
 		<metafields>
@@ -7715,18 +7312,6 @@
 				<metafield type="igUnsignedIntMetaField" offset="0x0000"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="Placement">
-			<binding type="FloatMeasurement" name="activation range"/>
-			<binding type="FloatMeasurement" name="deactivation buffer"/>
-			<binding type="ScaleMeasurement" name="scale"/>
-			<binding type="ColorMeasurement" name="tint"/>
-			<binding type="EnumMeasurement" name="shadow cast"/>
-			<binding type="EnumMeasurement" name="shadow receive"/>
-			<binding type="EnumMeasurement" name="near/far alpha fade"/>
-			<binding type="EnumMeasurement" name="script suspended"/>
-			<binding type="EnumMeasurement" name="fog enabled"/>
-			<binding type="EnumMeasurement" name="bring to front"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="tfbLightInfo" basetype="Placement">
 		<overriddenmetafields>
@@ -7770,38 +7355,6 @@
 				<metafield type="igBoolMetaField" offset="0x0000" persistent="false" hasPoolName="true" implicitAlignment="false" requiredAlignment="1"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="LightInfo">
-			<binding type="EnumMeasurement" name="type"/>
-			<binding type="EnumMeasurement" name="visible"/>
-			<binding type="FloatMeasurement" name="falloff rate"/>
-			<binding type="FloatMeasurement" name="cutoff angle"/>
-			<binding type="FloatMeasurement" name="constant attenuation factor"/>
-			<binding type="FloatMeasurement" name="linear attenuation factor"/>
-			<binding type="FloatMeasurement" name="quadratic attenuation factor"/>
-			<binding type="ColorMeasurement" name="diffuse color"/>
-			<binding type="ColorMeasurement" name="ambient color"/>
-			<binding type="ColorMeasurement" name="specular color"/>
-			<binding type="FloatMeasurement" name="multiplier"/>
-			<binding type="FloatMeasurement" name="pointFadeStart"/>
-			<binding type="FloatMeasurement" name="pointFadeEnd"/>
-			<binding type="FloatMeasurement" name="boxFalloffX"/>
-			<binding type="FloatMeasurement" name="boxFalloffY"/>
-			<binding type="FloatMeasurement" name="boxAttenuation"/>
-			<binding type="FloatMeasurement" name="boxNearAttenuation"/>
-			<binding type="FloatMeasurement" name="boxMaxX"/>
-			<binding type="FloatMeasurement" name="boxMaxY"/>
-			<binding type="FloatMeasurement" name="boxMaxZ"/>
-			<binding type="ReferenceVariant" name="directional light 1"/>
-			<binding type="ReferenceVariant" name="directional light 2"/>
-			<binding type="ReferenceVariant" name="directional light 3"/>
-			<binding type="ReferenceVariant" name="caustic light"/>
-			<binding type="ReferenceVariant" name="sprite light 1"/>
-			<binding type="ReferenceVariant" name="sprite light 2"/>
-			<binding type="ReferenceVariant" name="sprite light 3"/>
-			<binding type="SetVariant" name="active lights"/>
-			<binding type="SetVariant" name="inactive lights"/>
-			<binding type="SetVariant" name="removed lights"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="CWaterMaterial" basetype="tfbMaterial">
 		<overriddenmetafields>
@@ -7973,46 +7526,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="ViewportResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="ViewportInfo">
-			<binding type="FloatMeasurement" name="field of view"/>
-			<binding type="FloatMeasurement" name="far clip"/>
-			<binding type="EnumMeasurement" name="viewport enabled"/>
-			<binding type="EnumMeasurement" name="viewport display sprites content(DRC only)"/>
-			<binding type="EnumMeasurement" name="viewport display scene content(DRC only)"/>
-			<binding type="EnumMeasurement" name="viewport clone TV(DRC only)"/>
-			<binding type="FloatMeasurement" name="viewport aspect ratio override(DRC only)"/>
-			<binding type="ColorMeasurement" name="viewport directional light color(DRC only)"/>
-			<binding type="VectorMeasurement" name="viewport directional light direction(DRC only)"/>
-			<binding type="EnumMeasurement" name="horizon disabled"/>
-			<binding type="EnumMeasurement" name="water effect disabled"/>
-			<binding type="ReferenceVariant" name="fade effect"/>
-			<binding type="ReferenceVariant" name="blur effect"/>
-			<binding type="ReferenceVariant" name="bloom effect"/>
-			<binding type="ReferenceVariant" name="fog/caustic effect"/>
-			<binding type="ReferenceVariant" name="filter effect"/>
-			<binding type="ReferenceVariant" name="depth of field effect"/>
-			<binding type="ReferenceVariant" name="shadows control"/>
-			<binding type="ReferenceVariant" name="black and white effect"/>
-			<binding type="ReferenceVariant" name="audio listener"/>
-			<binding type="ReferenceVariant" name="audio attenuator"/>
-			<binding type="ReferenceVariant" name="container sprite"/>
-			<binding type="ReferenceVariant" name="title safe zone"/>
-			<binding type="ColorMeasurement" name="background color"/>
-			<binding type="EnumMeasurement" name="near/far alpha fade"/>
-			<binding type="ReferenceVariant" name="master controller"/>
-			<binding type="ReferenceVariant" name="view converter"/>
-			<binding type="FloatMeasurement" name="LOD shift scale"/>
-			<binding type="FloatMeasurement" name="frame traversal load"/>
-			<binding type="FloatMeasurement" name="frame render load"/>
-			<binding type="ReferenceVariant" name="cutscene"/>
-			<binding type="ReferenceVariant" name="default"/>
-			<binding type="ReferenceVariant" name="alternate viewport"/>
-			<binding type="FloatMeasurement" name="frame logic load"/>
-			<binding type="FloatMeasurement" name="frame script load"/>
-			<binding type="FloatMeasurement" name="screen filter percentage"/>
-			<binding type="FloatMeasurement" name="screen filter intensity"/>
-			<binding type="EnumMeasurement" name="3D scene refresh"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="AppendObjectMessage" basetype="igObject">
 		<metafields>
@@ -8067,10 +7580,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="ButtonMeasurement">
-			<binding type="EnumMeasurement" name="pressure state"/>
-			<binding type="FloatMeasurement" name="pressure value"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="OpIfElse" basetype="OpBranch">
 	</metaobject>
@@ -8198,12 +7707,6 @@
 			<metafield type="igIntMetaField" offset="0x003C" name="_contactFlags" persistent="false"/>
 			<metafield type="igRawRefMetaField" offset="0x0040" name="_dynamicContact" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true"/>
 		</metafields>
-		<tfbBindings name="ContactInfo">
-			<binding type="IntMeasurement" name="type"/>
-			<binding type="VectorMeasurement" name="normal"/>
-			<binding type="FloatMeasurement" name="magnitude"/>
-			<binding type="EnumMeasurement" name="is trigger"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igSceneRenderer" basetype="igInsightRenderer">
 		<metafields>
@@ -8450,12 +7953,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="StandardController">
-			<binding type="ButtonMeasurement" name="L1 button"/>
-			<binding type="ButtonMeasurement" name="R1 button"/>
-			<binding type="ButtonMeasurement" name="L2 button"/>
-			<binding type="ButtonMeasurement" name="R2 button"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igVfxPlacedPrimitiveInstancePool" basetype="igPool">
 		<metafields>
@@ -8702,15 +8199,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="SetVariant">
-			<binding type="IntMeasurement" name="count"/>
-			<binding type="ReferenceVariant" name="first"/>
-			<binding type="ReferenceVariant" name="last"/>
-			<binding type="ReferenceVariant" name="random"/>
-			<binding type="ReferenceVariant" name="next"/>
-			<binding type="EnumMeasurement" name="choose next randomly"/>
-			<binding type="EnumMeasurement" name="allow random next repeats"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="CWaterRippleMaterial" basetype="tfbMaterial">
 		<overriddenmetafields>
@@ -8817,12 +8305,6 @@
 			<metafield type="igIntMetaField" offset="0x0020" name="_titleSafeUpper"/>
 			<metafield type="igIntMetaField" offset="0x0024" name="_titleSafeLower"/>
 		</metafields>
-		<tfbBindings name="ViewportTitleSafeInfo">
-			<binding type="IntMeasurement" name="left margin"/>
-			<binding type="IntMeasurement" name="right margin"/>
-			<binding type="IntMeasurement" name="upper margin"/>
-			<binding type="IntMeasurement" name="lower margin"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="ContactInfoList" basetype="ScriptObjectList">
 		<objectlist elementtype="ContactInfo"/>
@@ -8865,10 +8347,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="TextColorConverter">
-			<binding type="ScriptSetReference" name="color set"/>
-			<binding type="ReferenceVariant" name="text sprite"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igQuaternionfMetaField" basetype="igMetaField">
 	</metaobject>
@@ -9506,10 +8984,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="ScreenMeasurement">
-			<binding type="FloatMeasurement" name="X"/>
-			<binding type="FloatMeasurement" name="Y"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="CollisionData" basetype="igObject">
 	</metaobject>
@@ -9648,14 +9122,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="PlacementInterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="ParticleInfo">
-			<binding type="SetVariant" name="generators"/>
-			<binding type="FloatMeasurement" name="disable time"/>
-			<binding type="FloatMeasurement" name="remove time"/>
-			<binding type="SetVariant" name="active particles"/>
-			<binding type="SetVariant" name="inactive particles"/>
-			<binding type="SetVariant" name="removed particles"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igVectorArrayMetaField" basetype="igVectorMetaField">
 		<metafields>
@@ -10101,61 +9567,6 @@
 				<metafield type="igEnumMetaField" offset="0x0000" implicitAlignment="false" requiredAlignment="4" metaenum="SpriteRenderTarget"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="SpriteInfo">
-			<binding type="EnumMeasurement" name="type"/>
-			<binding type="EnumMeasurement" name="visible"/>
-			<binding type="ColorMeasurement" name="color"/>
-			<binding type="ScaleMeasurement" name="scale"/>
-			<binding type="ScreenMeasurement" name="location"/>
-			<binding type="ScreenMeasurement" name="screen location"/>
-			<binding type="FloatMeasurement" name="screen width"/>
-			<binding type="FloatMeasurement" name="screen height"/>
-			<binding type="ReferenceVariant" name="text"/>
-			<binding type="ReferenceVariant" name="dialog controller"/>
-			<binding type="FloatMeasurement" name="priority"/>
-			<binding type="FloatMeasurement" name="width"/>
-			<binding type="FloatMeasurement" name="height"/>
-			<binding type="FloatMeasurement" name="depth"/>
-			<binding type="ScreenMeasurement" name="natural size"/>
-			<binding type="SpriteMatrixMeasurement" name="origin"/>
-			<binding type="EnumMeasurement" name="blend mode"/>
-			<binding type="EnumMeasurement" name="alignment"/>
-			<binding type="EnumMeasurement" name="align to parent"/>
-			<binding type="EnumMeasurement" name="texture flip"/>
-			<binding type="EnumMeasurement" name="clipping"/>
-			<binding type="EnumMeasurement" name="Take a Picture"/>
-			<binding type="SpriteValueMeasurement" name="numeric value"/>
-			<binding type="EnumMeasurement" name="justify"/>
-			<binding type="EnumMeasurement" name="text visual type"/>
-			<binding type="EnumMeasurement" name="text spacing type"/>
-			<binding type="FloatMeasurement" name="text spacing"/>
-			<binding type="EnumMeasurement" name="text type"/>
-			<binding type="IntMeasurement" name="point size"/>
-			<binding type="SetVariant" name="playing animations"/>
-			<binding type="SetVariant" name="model attach nodes"/>
-			<binding type="SetVariant" name="generators"/>
-			<binding type="FloatMeasurement" name="Z Depth"/>
-			<binding type="ColorMeasurement" name="replace color"/>
-			<binding type="IntMeasurement" name="replace color percentage"/>
-			<binding type="IntMeasurement" name="bloom intensity"/>
-			<binding type="SetVariant" name="active"/>
-			<binding type="SetVariant" name="removed"/>
-			<binding type="TextColorConverter" name="Text Color Converter"/>
-			<binding type="ReferenceVariant" name="Virtual - left analog base sprite"/>
-			<binding type="ReferenceVariant" name="Virtual - left analog center sprite"/>
-			<binding type="ReferenceVariant" name="Virtual - button A sprite"/>
-			<binding type="ReferenceVariant" name="Virtual - button B sprite"/>
-			<binding type="ReferenceVariant" name="Virtual - button X sprite"/>
-			<binding type="ReferenceVariant" name="Virtual - button Y sprite"/>
-			<binding type="ReferenceVariant" name="Virtual - button context sprite"/>
-			<binding type="ReferenceVariant" name="Virtual - button switch sprite"/>
-			<binding type="ReferenceVariant" name="Virtual - button start sprite"/>
-			<binding type="ReferenceVariant" name="Virtual - button select sprite"/>
-			<binding type="EnumMeasurement" name="Virtual - ignore virtual controller"/>
-			<binding type="EnumMeasurement" name="Virtual - virtual controller visible"/>
-			<binding type="EnumMeasurement" name="Virtual - display context button"/>
-			<binding type="EnumMeasurement" name="Virtual - display switch button"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igSCullParametersAttr" basetype="igVisualAttribute">
 		<metafields>
@@ -10284,25 +9695,6 @@
 			<metafield type="igFloatMetaField" offset="0x005C" name="_causticMoveX" persistent="false" default="1.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x0060" name="_causticMoveY" persistent="false" default="1.00000000"/>
 		</metafields>
-		<tfbBindings name="ViewportFogEffectInfo">
-			<binding type="EnumMeasurement" name="Fog type"/>
-			<binding type="FloatMeasurement" name="fog start"/>
-			<binding type="FloatMeasurement" name="fog range"/>
-			<binding type="FloatMeasurement" name="fog min"/>
-			<binding type="FloatMeasurement" name="fog max"/>
-			<binding type="ColorMeasurement" name="fog color"/>
-			<binding type="FloatMeasurement" name="fog of Sky dome"/>
-			<binding type="FloatMeasurement" name="fog of yon ignore"/>
-			<binding type="ColorMeasurement" name="fog color of sky dome"/>
-			<binding type="ColorMeasurement" name="fog color of yon ignore"/>
-			<binding type="EnumMeasurement" name="turn on caustic effect"/>
-			<binding type="FloatMeasurement" name="caustic scale"/>
-			<binding type="FloatMeasurement" name="caustic skin scale"/>
-			<binding type="ColorMeasurement" name="caustic color"/>
-			<binding type="FloatMeasurement" name="caustic speed"/>
-			<binding type="FloatMeasurement" name="caustic movement X"/>
-			<binding type="FloatMeasurement" name="caustic movement Y"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igTextPool" basetype="igPool">
 		<metafields>
@@ -11585,13 +10977,6 @@
 			<metafield type="igFloatMetaField" offset="0x0038" name="_moodboxFocusDistanceFromGameCamera" persistent="false" default="20.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x003C" name="_moodboxIntensity" persistent="false" default="37.50000000"/>
 		</metafields>
-		<tfbBindings name="ViewportShadowsControlInfo">
-			<binding type="FloatMeasurement" name="facing"/>
-			<binding type="FloatMeasurement" name="tilt"/>
-			<binding type="FloatMeasurement" name="field of view"/>
-			<binding type="FloatMeasurement" name="focus distance from game camera"/>
-			<binding type="FloatMeasurement" name="intensity"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igVCProcGeometryBuilder" basetype="igProcGeometryBuilder">
 		<metafields>
@@ -11610,23 +10995,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="ControllerGestures">
-			<binding type="GestureMeasurement" name="action snap"/>
-			<binding type="GestureMeasurement" name="action shake"/>
-			<binding type="GestureMeasurement" name="action flip"/>
-			<binding type="GestureMeasurement" name="action 1 / snap"/>
-			<binding type="GestureMeasurement" name="action 1 / flip"/>
-			<binding type="GestureMeasurement" name="action 2 / shake"/>
-			<binding type="GestureMeasurement" name="action 3 / snap"/>
-			<binding type="GestureMeasurement" name="action2 / shake / snap"/>
-			<binding type="GestureMeasurement" name="action3 / shake / snap"/>
-			<binding type="GestureMeasurement" name="action power meter"/>
-			<binding type="GestureMeasurement" name="pseudo right stick"/>
-			<binding type="GestureMeasurement" name="main stick / pointer"/>
-			<binding type="GestureMeasurement" name="action nunchuk snap"/>
-			<binding type="GestureMeasurement" name="action nunchuk flip"/>
-			<binding type="GestureMeasurement" name="action nunchuk shake"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="OpCreateVariableArray" basetype="OpCreateVariable">
 		<metafields>
@@ -11642,11 +11010,6 @@
 			<metafield type="igFloatMetaField" offset="0x001C" name="_bloomRadius" persistent="false" default="5.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x0020" name="_skyBloomPercent" persistent="false"/>
 		</metafields>
-		<tfbBindings name="ViewportBloomEffectInfo">
-			<binding type="FloatMeasurement" name="level"/>
-			<binding type="FloatMeasurement" name="radius"/>
-			<binding type="FloatMeasurement" name="sky level"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igExtendByVecFunctionList" basetype="igDataList">
 		<overriddenmetafields>
@@ -11926,12 +11289,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="ScaleMeasurement">
-			<binding type="FloatMeasurement" name="X"/>
-			<binding type="FloatMeasurement" name="Y"/>
-			<binding type="FloatMeasurement" name="Z"/>
-			<binding type="FloatMeasurement" name="uniform"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="tfbActorUpdateGame" basetype="tfbInfoManager">
 		<metafields>
@@ -12455,185 +11812,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="tfbMoodBoxInfo"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="MoodBoxInfo">
-			<binding type="EnumMeasurement" name="box enabled"/>
-			<binding type="IntMeasurement" name="ID"/>
-			<binding type="EnumMeasurement" name="box priority"/>
-			<binding type="EnumMeasurement" name="influence mode"/>
-			<binding type="FloatMeasurement" name="explicit influence"/>
-			<binding type="FloatMeasurement" name="box width"/>
-			<binding type="FloatMeasurement" name="box length"/>
-			<binding type="FloatMeasurement" name="box height"/>
-			<binding type="FloatMeasurement" name="box transition size (+x)"/>
-			<binding type="FloatMeasurement" name="box transition size (+y)"/>
-			<binding type="FloatMeasurement" name="box transition size (+z)"/>
-			<binding type="FloatMeasurement" name="box transition size (-x)"/>
-			<binding type="FloatMeasurement" name="box transition size (-y)"/>
-			<binding type="FloatMeasurement" name="box transition size (-z)"/>
-			<binding type="FloatMeasurement" name="current influence (debug)"/>
-			<binding type="EnumMeasurement" name="sun color enabled"/>
-			<binding type="ColorMeasurement" name="sun color"/>
-			<binding type="EnumMeasurement" name="sun intensity enabled"/>
-			<binding type="FloatMeasurement" name="sun intensity"/>
-			<binding type="EnumMeasurement" name="sun angles enabled"/>
-			<binding type="FloatMeasurement" name="sun facing"/>
-			<binding type="FloatMeasurement" name="sun tilt"/>
-			<binding type="FloatMeasurement" name="sun roll"/>
-			<binding type="EnumMeasurement" name="light fade distance enabled"/>
-			<binding type="FloatMeasurement" name="light fade distance"/>
-			<binding type="EnumMeasurement" name="light fade range enabled"/>
-			<binding type="FloatMeasurement" name="light fade range"/>
-			<binding type="EnumMeasurement" name="shadow local influence enabled"/>
-			<binding type="FloatMeasurement" name="shadow local influence"/>
-			<binding type="EnumMeasurement" name="shadow range enabled"/>
-			<binding type="FloatMeasurement" name="shadow range"/>
-			<binding type="EnumMeasurement" name="shadow split distribution enabled"/>
-			<binding type="FloatMeasurement" name="shadow split distribution"/>
-			<binding type="EnumMeasurement" name="shadow bias enabled"/>
-			<binding type="EnumMeasurement" name="ambient specular scale enabled"/>
-			<binding type="FloatMeasurement" name="ambient specular scale"/>
-			<binding type="EnumMeasurement" name="ambient diffuse scale enabled"/>
-			<binding type="FloatMeasurement" name="ambient diffuse scale"/>
-			<binding type="EnumMeasurement" name="bloom luminance cutoff enabled"/>
-			<binding type="FloatMeasurement" name="bloom luminance cutoff"/>
-			<binding type="EnumMeasurement" name="bloom inner scale enabled"/>
-			<binding type="FloatMeasurement" name="bloom inner scale"/>
-			<binding type="EnumMeasurement" name="bloom outer scale enabled"/>
-			<binding type="FloatMeasurement" name="bloom outer scale"/>
-			<binding type="EnumMeasurement" name="bloom skybox amount enabled"/>
-			<binding type="FloatMeasurement" name="bloom skybox amount"/>
-			<binding type="EnumMeasurement" name="bloom diffuse scale enabled"/>
-			<binding type="FloatMeasurement" name="bloom diffuse scale"/>
-			<binding type="EnumMeasurement" name="haze start depth enabled"/>
-			<binding type="FloatMeasurement" name="haze start depth"/>
-			<binding type="EnumMeasurement" name="haze end depth enabled"/>
-			<binding type="FloatMeasurement" name="haze end depth"/>
-			<binding type="EnumMeasurement" name="haze min enabled"/>
-			<binding type="FloatMeasurement" name="haze min"/>
-			<binding type="EnumMeasurement" name="haze max enabled"/>
-			<binding type="FloatMeasurement" name="haze max"/>
-			<binding type="EnumMeasurement" name="haze density enabled"/>
-			<binding type="FloatMeasurement" name="haze density"/>
-			<binding type="EnumMeasurement" name="haze far sky amount enabled"/>
-			<binding type="FloatMeasurement" name="haze far sky amount"/>
-			<binding type="EnumMeasurement" name="haze near sky amount enabled"/>
-			<binding type="FloatMeasurement" name="haze near sky amount"/>
-			<binding type="EnumMeasurement" name="haze far sky tint enabled"/>
-			<binding type="ColorMeasurement" name="haze far sky tint"/>
-			<binding type="EnumMeasurement" name="haze near sky tint enabled"/>
-			<binding type="ColorMeasurement" name="haze near sky tint"/>
-			<binding type="EnumMeasurement" name="motion blur exposure time enabled"/>
-			<binding type="FloatMeasurement" name="motion blur exposure time"/>
-			<binding type="EnumMeasurement" name="dof start depth enabled"/>
-			<binding type="FloatMeasurement" name="dof start depth"/>
-			<binding type="EnumMeasurement" name="dof end depth enabled"/>
-			<binding type="FloatMeasurement" name="dof end depth"/>
-			<binding type="EnumMeasurement" name="dof near start depth enabled"/>
-			<binding type="FloatMeasurement" name="dof near start depth"/>
-			<binding type="EnumMeasurement" name="dof near end depth enabled"/>
-			<binding type="FloatMeasurement" name="dof near end depth"/>
-			<binding type="EnumMeasurement" name="dof skybox amount enabled"/>
-			<binding type="FloatMeasurement" name="dof skybox amount"/>
-			<binding type="EnumMeasurement" name="wind strength enabled"/>
-			<binding type="FloatMeasurement" name="wind strength"/>
-			<binding type="EnumMeasurement" name="wind facing enabled"/>
-			<binding type="FloatMeasurement" name="wind facing"/>
-			<binding type="EnumMeasurement" name="wind gust frequency enabled"/>
-			<binding type="FloatMeasurement" name="wind gust frequency"/>
-			<binding type="EnumMeasurement" name="wind gust primary distance enabled"/>
-			<binding type="FloatMeasurement" name="wind gust primary distance"/>
-			<binding type="EnumMeasurement" name="wind gust scale enabled"/>
-			<binding type="FloatMeasurement" name="wind gust scale"/>
-			<binding type="EnumMeasurement" name="wind gust strength min enabled"/>
-			<binding type="FloatMeasurement" name="wind gust strength min"/>
-			<binding type="EnumMeasurement" name="wind gust strength max enabled"/>
-			<binding type="FloatMeasurement" name="wind gust strength max"/>
-			<binding type="EnumMeasurement" name="wind gust duration min enabled"/>
-			<binding type="FloatMeasurement" name="wind gust duration min"/>
-			<binding type="EnumMeasurement" name="wind gust duration max enabled"/>
-			<binding type="FloatMeasurement" name="wind gust duration max"/>
-			<binding type="EnumMeasurement" name="wind gust direction adjustment enabled"/>
-			<binding type="FloatMeasurement" name="wind gust direction adjustment"/>
-			<binding type="EnumMeasurement" name="wind gust unison enabled"/>
-			<binding type="FloatMeasurement" name="wind gust unison"/>
-			<binding type="EnumMeasurement" name="hue enabled"/>
-			<binding type="FloatMeasurement" name="hue"/>
-			<binding type="EnumMeasurement" name="saturation enabled"/>
-			<binding type="FloatMeasurement" name="saturation"/>
-			<binding type="EnumMeasurement" name="brightness enabled"/>
-			<binding type="FloatMeasurement" name="brightness"/>
-			<binding type="EnumMeasurement" name="contrast enabled"/>
-			<binding type="FloatMeasurement" name="contrast"/>
-			<binding type="EnumMeasurement" name="tint enabled"/>
-			<binding type="ColorMeasurement" name="tint"/>
-			<binding type="EnumMeasurement" name="ao scale enabled"/>
-			<binding type="FloatMeasurement" name="ao scale"/>
-			<binding type="EnumMeasurement" name="ao radius enabled"/>
-			<binding type="FloatMeasurement" name="ao radius"/>
-			<binding type="EnumMeasurement" name="ao bias enabled"/>
-			<binding type="FloatMeasurement" name="ao bias"/>
-			<binding type="EnumMeasurement" name="Target_1 ambient enabled"/>
-			<binding type="ColorMeasurement" name="Target_1 ambient"/>
-			<binding type="EnumMeasurement" name="Target_1 light 1 color enabled"/>
-			<binding type="ColorMeasurement" name="Target_1 light 1 color"/>
-			<binding type="EnumMeasurement" name="Target_1 light 1 angles enabled"/>
-			<binding type="EnumMeasurement" name="Target_1 light 2 color enabled"/>
-			<binding type="ColorMeasurement" name="Target_1 light 2 color"/>
-			<binding type="EnumMeasurement" name="Target_1 light 2 angles enabled"/>
-			<binding type="EnumMeasurement" name="Target_1 light 3 color enabled"/>
-			<binding type="ColorMeasurement" name="Target_1 light 3 color"/>
-			<binding type="EnumMeasurement" name="Target_1 light 3 angles enabled"/>
-			<binding type="EnumMeasurement" name="Target_1 Shadow Distance enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 Shadow Distance"/>
-			<binding type="EnumMeasurement" name="Target_1 Shadow FOV enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 Shadow FOV"/>
-			<binding type="EnumMeasurement" name="Target_1 Shadow Pitch enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 Shadow Pitch"/>
-			<binding type="EnumMeasurement" name="Target_1 Shadow Yaw enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 Shadow Yaw"/>
-			<binding type="EnumMeasurement" name="Target_1 Shadow Intensity enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 Shadow Intensity"/>
-			<binding type="EnumMeasurement" name="Target_1 Bloom Min Limit enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 Bloom Min Limit"/>
-			<binding type="EnumMeasurement" name="Target_1 Bloom Max Limit enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 Bloom Max Limit"/>
-			<binding type="EnumMeasurement" name="Target_1 Bloom Level enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 Bloom Level"/>
-			<binding type="EnumMeasurement" name="Target_1 Bloom Radius enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 Bloom Radius"/>
-			<binding type="EnumMeasurement" name="Target_1 DOF Blur Level enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 DOF Blur Level"/>
-			<binding type="EnumMeasurement" name="Target_1 DOF Near enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 DOF Near"/>
-			<binding type="EnumMeasurement" name="Target_1 DOF Far enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 DOF Far"/>
-			<binding type="EnumMeasurement" name="Target_1 Fog color enabled"/>
-			<binding type="ColorMeasurement" name="Target_1 Fog color"/>
-			<binding type="EnumMeasurement" name="Target_1 Fog Near enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 Fog Near"/>
-			<binding type="EnumMeasurement" name="Target_1 Fog Far enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 Fog Far"/>
-			<binding type="EnumMeasurement" name="Target_1 Fog Near Sky Amount enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 Fog Near Sky Amount"/>
-			<binding type="EnumMeasurement" name="Target_1 Fog Far Sky Amount enabled"/>
-			<binding type="FloatMeasurement" name="Target_1 Fog Far Sky Amount"/>
-			<binding type="EnumMeasurement" name="Target_1 Fog Near Sky Color enabled"/>
-			<binding type="ColorMeasurement" name="Target_1 Fog Near Sky Color"/>
-			<binding type="EnumMeasurement" name="Target_1 Fog Far Sky Color enabled"/>
-			<binding type="ColorMeasurement" name="Target_1 Fog Far Sky Color"/>
-			<binding type="EnumMeasurement" name="Mobile lod 1 distance enabled"/>
-			<binding type="EnumMeasurement" name="Mobile lod 2 distance  enabled"/>
-			<binding type="EnumMeasurement" name="Mobile shader lod distance enabled"/>
-			<binding type="EnumMeasurement" name="Mobile small object culling distance enabled"/>
-			<binding type="EnumMeasurement" name="Mobile small object culling size enabled"/>
-			<binding type="SetVariant" name="boxes"/>
-			<binding type="SetVariant" name="contributing boxes (debug)"/>
-			<binding type="tfbScriptObject" name="*default"/>
-			<binding type="tfbScriptObject" name="*master"/>
-			<binding type="EnumMeasurement" name="point of interest update mode"/>
-			<binding type="PositionMeasurement" name="point of interest"/>
-			<binding type="ReferenceVariant" name="critical box"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igSizeTypeMetaField" basetype="igMetaField">
 	</metaobject>
@@ -13095,10 +12273,6 @@
 			<metafield type="igVec4ucMetaField" offset="0x0018" name="_color" persistent="false" default="0,0,0,0"/>
 			<metafield type="igFloatMetaField" offset="0x001C" name="_fadeLevel" persistent="false"/>
 		</metafields>
-		<tfbBindings name="ViewportFadeEffectInfo">
-			<binding type="FloatMeasurement" name="level"/>
-			<binding type="ColorMeasurement" name="fade color"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="OpCheckValue" basetype="OpAbstractCheckValue">
 		<overriddenmetafields>
@@ -13221,30 +12395,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="false" destruct="true" reconstruct="false" refCounted="false" metaobject="tfbOnlineScriptObject"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="OnlineScriptObject">
-			<binding type="EnumMeasurement" name="connection state"/>
-			<binding type="ScriptSetReference" name="leaderboard save index"/>
-			<binding type="EnumMeasurement" name="leaderboard save state"/>
-			<binding type="IntMeasurement" name="leaderboard save id"/>
-			<binding type="IntMeasurement" name="config parameter"/>
-			<binding type="IntMeasurement" name="config parameter value"/>
-			<binding type="IntMeasurement" name="config parameter state"/>
-			<binding type="IntMeasurement" name="online id high"/>
-			<binding type="IntMeasurement" name="online id low"/>
-			<binding type="ReferenceVariant" name="event reporter"/>
-			<binding type="EnumMeasurement" name="game event player"/>
-			<binding type="EnumMeasurement" name="game event index"/>
-			<binding type="IntMeasurement" name="game event value"/>
-			<binding type="EnumMeasurement" name="online status"/>
-			<binding type="EnumMeasurement" name="MOTD - request download message"/>
-			<binding type="ReferenceVariant" name="MOTD - message"/>
-			<binding type="ReferenceVariant" name="MOTD - campaign id"/>
-			<binding type="EnumMeasurement" name="MOTD - is available"/>
-			<binding type="IntMeasurement" name="MOTD - message id low"/>
-			<binding type="IntMeasurement" name="MOTD - message id high"/>
-			<binding type="ReferenceVariant" name="Primary User Display Name"/>
-			<binding type="EnumMeasurement" name="Primary User Type"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igVfxSpriteInstancePool" basetype="igPool">
 		<metafields>
@@ -13277,12 +12427,6 @@
 			<metafield type="igObjectRefMetaField" offset="0x0048" name="_attachNode" copyMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="AbstractAttachNode"/>
 			<metafield type="igObjectRefMetaField" offset="0x004C" name="_attachNodeOwner" copyMethod="none" persistent="false" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="AbstractPlacement"/>
 		</metafields>
-		<tfbBindings name="VFXGenerator">
-			<binding type="ReferenceVariant" name="Vfx target"/>
-			<binding type="IntMeasurement" name="currently alive"/>
-			<binding type="FloatMeasurement" name="lifespan"/>
-			<binding type="FloatMeasurement" name="longest life"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igRenderScene" basetype="igObject">
 		<metafields>
@@ -13758,11 +12902,6 @@
 			<metafield type="igVec3fMetaField" offset="0x001C" name="_worldPosition" mutable="true"/>
 			<metafield type="igStructMetaField" offset="0x0028" name="_screenLocation" mutable="true" implicitAlignment="false" requiredAlignment="2" typeSize="0x04" align="0x02"/>
 		</metafields>
-		<tfbBindings name="ViewConverter">
-			<binding type="PositionMeasurement" name="world position"/>
-			<binding type="ScreenMeasurement" name="screen location"/>
-			<binding type="EnumMeasurement" name="lock type"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igModel" basetype="igNamedObject">
 		<metafields>
@@ -13904,11 +13043,6 @@
 			<metafield type="igObjectRefMetaField" offset="0x0048" name="_end" construct="true" destruct="false" reconstruct="true" refCounted="true" metaobject="RayEndPoint"/>
 			<metafield type="igStructMetaField" offset="0x004C" name="_testRayFunc" implicitAlignment="false" requiredAlignment="4" typeSize="0x04" align="0x04"/>
 		</metafields>
-		<tfbBindings name="RayContact">
-			<binding type="RayEndPoint" name="start"/>
-			<binding type="RayEndPoint" name="end"/>
-			<binding type="EnumMeasurement" name="has contact"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igRawRefArrayMetaField" basetype="igRawRefMetaField">
 		<metafields>
@@ -14112,9 +13246,6 @@
 				</metafield>
 			</metafield>
 		</metafields>
-		<tfbBindings name="Slider">
-			<binding type="EnumMeasurement" name="ignores time scales"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igVfxModulationHelperArrayMetaField" basetype="igVfxModulationHelperMetaField">
 		<metafields>
@@ -14188,15 +13319,6 @@
 			<metafield type="igFloatMetaField" offset="0x0028" name="_ambientDiffuseMultiplier" default="1.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x002C" name="_ambientSpecularMultiplier" default="1.00000000"/>
 		</metafields>
-		<tfbBindings name="DirectionalLightInfo">
-			<binding type="OrientationMeasurement" name="-orientation"/>
-			<binding type="ColorMeasurement" name="diffuse color"/>
-			<binding type="ColorMeasurement" name="ambient color"/>
-			<binding type="ColorMeasurement" name="specular color"/>
-			<binding type="FloatMeasurement" name="multiplier"/>
-			<binding type="FloatMeasurement" name="ambient diffuse multiplier"/>
-			<binding type="FloatMeasurement" name="ambient specular multiplier"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="ActorPhysics" basetype="tfbScriptObject">
 		<metafields>
@@ -14204,24 +13326,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="ActorPhysics">
-			<binding type="FloatMeasurement" name="ground max speed"/>
-			<binding type="FloatMeasurement" name="ground acceleration"/>
-			<binding type="FloatMeasurement" name="ground deceleration"/>
-			<binding type="FloatMeasurement" name="ground turn rate"/>
-			<binding type="FloatMeasurement" name="air max speed"/>
-			<binding type="FloatMeasurement" name="air acceleration"/>
-			<binding type="FloatMeasurement" name="air deceleration"/>
-			<binding type="FloatMeasurement" name="air turn rate"/>
-			<binding type="FloatMeasurement" name="gravity max speed"/>
-			<binding type="FloatMeasurement" name="gravity acceleration"/>
-			<binding type="FloatMeasurement" name="jump max speed"/>
-			<binding type="FloatMeasurement" name="jump acceleration"/>
-			<binding type="FloatMeasurement" name="jump initial speed"/>
-			<binding type="EnumMeasurement" name="move type"/>
-			<binding type="EnumMeasurement" name="tilts with ground"/>
-			<binding type="FloatMeasurement" name="time scale"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="ViewportAudioListener" basetype="AbstractPlacement">
 	</metaobject>
@@ -14240,8 +13344,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="RedOctanePeripheralSystemObject">
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="CSkyboxBlendAttr" basetype="igVisualAttribute">
 		<metafields>
@@ -14386,8 +13488,6 @@
 			<metafield type="igIntMetaField" offset="0x0020" name="_value"/>
 			<metafield type="igIntMetaField" offset="0x0018" name="_resetValue" persistent="false"/>
 		</metafields>
-		<tfbBindings name="ValueInfo">
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="BoundValue" basetype="ValueInfo">
 		<metafields>
@@ -15216,8 +14316,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="StringInfo"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="System">
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igRenderTargetMemPolicyPreallocTextures" basetype="igRenderTargetMemPolicy">
 		<metafields>
@@ -15372,24 +14470,6 @@
 				<metafield type="igBoolMetaField" offset="0x0000"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="CollisionInfo">
-			<binding type="SetVariant" name="contacts with me"/>
-			<binding type="SetVariant" name="environment contacts"/>
-			<binding type="SetVariant" name="object collisions"/>
-			<binding type="FloatMeasurement" name="width"/>
-			<binding type="FloatMeasurement" name="length"/>
-			<binding type="FloatMeasurement" name="height"/>
-			<binding type="FloatMeasurement" name="local X offset"/>
-			<binding type="FloatMeasurement" name="local Y offset"/>
-			<binding type="FloatMeasurement" name="local Z offset"/>
-			<binding type="FloatMeasurement" name="weight"/>
-			<binding type="FloatMeasurement" name="rebound"/>
-			<binding type="EnumMeasurement" name="interacts with actors"/>
-			<binding type="EnumMeasurement" name="interacts with level mesh"/>
-			<binding type="EnumMeasurement" name="acts as actor surface"/>
-			<binding type="EnumMeasurement" name="acts as physics object"/>
-			<binding type="EnumMeasurement" name="shape"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="ViewportBlackAndWhiteEffectInfo" basetype="tfbScriptObject">
 		<metafields>
@@ -15398,9 +14478,6 @@
 			</metafield>
 			<metafield type="igFloatMetaField" offset="0x0018" name="_percentage" persistent="false"/>
 		</metafields>
-		<tfbBindings name="ViewportBlackAndWhiteEffectInfo">
-			<binding type="FloatMeasurement" name="level"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igTechniqueSampler" basetype="igNamedObject">
 		<metafields>
@@ -16565,10 +15642,6 @@
 			<metafield type="igFloatMetaField" offset="0x0018" name="_filterPercentage" persistent="false"/>
 			<metafield type="igFloatMetaField" offset="0x001C" name="_filterIntensity" persistent="false" default="100.00000000"/>
 		</metafields>
-		<tfbBindings name="ViewportFilterEffectInfo">
-			<binding type="FloatMeasurement" name="non-sprite percentage"/>
-			<binding type="FloatMeasurement" name="non-sprite intensity"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igQueue" basetype="igObject">
 		<metafields>
@@ -16606,28 +15679,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="VehiclePhysics">
-			<binding type="FloatMeasurement" name="engine max RPM"/>
-			<binding type="FloatMeasurement" name="engine max torque"/>
-			<binding type="FloatMeasurement" name="vehicle top speed"/>
-			<binding type="FloatMeasurement" name="vehicle top reverse speed"/>
-			<binding type="FloatMeasurement" name="max steer angle"/>
-			<binding type="FloatMeasurement" name="steer sensitivity"/>
-			<binding type="FloatMeasurement" name="suspension length"/>
-			<binding type="FloatMeasurement" name="rear suspension length"/>
-			<binding type="FloatMeasurement" name="suspension strength"/>
-			<binding type="FloatMeasurement" name="tire friction"/>
-			<binding type="FloatMeasurement" name="rear tire friction"/>
-			<binding type="FloatMeasurement" name="chassis friction"/>
-			<binding type="FloatMeasurement" name="chassis restitution"/>
-			<binding type="FloatMeasurement" name="front tire compression damper"/>
-			<binding type="FloatMeasurement" name="rear tire compression damper"/>
-			<binding type="FloatMeasurement" name="front tire relaxation damper"/>
-			<binding type="FloatMeasurement" name="rear tire relaxation damper"/>
-			<binding type="FloatMeasurement" name="anti-flip strength"/>
-			<binding type="FloatMeasurement" name="center of mass X-offset"/>
-			<binding type="FloatMeasurement" name="center of mass Y-offset"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igIntAttrPoolHashTable" basetype="igHashTable">
 		<overriddenmetafields>
@@ -16806,10 +15857,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="AbstractScriptGroup">
-			<binding type="AbstractScriptVariant" name="null"/>
-			<binding type="AbstractScriptVariant" name="its"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igMatrix44fPool" basetype="igPool">
 		<metafields>
@@ -16887,18 +15934,6 @@
 			<metafield type="igFloatMetaField" offset="0x0038" name="_focusDistanceNear" persistent="false" default="10.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x003C" name="_focusWidthNear" persistent="false" default="5.00000000"/>
 		</metafields>
-		<tfbBindings name="ViewportDepthOfFieldEffectInfo">
-			<binding type="EnumMeasurement" name="enabled"/>
-			<binding type="FloatMeasurement" name="level"/>
-			<binding type="FloatMeasurement" name="focus distance"/>
-			<binding type="FloatMeasurement" name="focus drop at near length"/>
-			<binding type="FloatMeasurement" name="focus drop at far length"/>
-			<binding type="FloatMeasurement" name="focus width"/>
-			<binding type="EnumMeasurement" name="Focus Mapper mode"/>
-			<binding type="EnumMeasurement" name="near enabled"/>
-			<binding type="FloatMeasurement" name="near focus distance"/>
-			<binding type="FloatMeasurement" name="near focus width"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igVfxDecalInstancePool" basetype="igPool">
 		<metafields>
@@ -17132,14 +16167,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="DateTime">
-			<binding type="IntMeasurement" name="year"/>
-			<binding type="IntMeasurement" name="month"/>
-			<binding type="IntMeasurement" name="day"/>
-			<binding type="IntMeasurement" name="hour"/>
-			<binding type="IntMeasurement" name="minute"/>
-			<binding type="IntMeasurement" name="second"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="VfxManager" basetype="tfbScriptObject">
 		<metafields>
@@ -17147,11 +16174,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="VfxManager">
-			<binding type="IntMeasurement" name="vfx report pool"/>
-			<binding type="IntMeasurement" name="vfx report usage"/>
-			<binding type="IntMeasurement" name="vfx debug draws"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="tfbActorInfo" basetype="Placement">
 		<overriddenmetafields>
@@ -17169,30 +16191,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="ActorInterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="ActorInfo">
-			<binding type="SetVariant" name="waypoints"/>
-			<binding type="VectorMeasurement" name="velocity"/>
-			<binding type="VectorMeasurement" name="angular velocity"/>
-			<binding type="tfbScriptObject" name="-movement"/>
-			<binding type="tfbScriptObject" name="-vehicle"/>
-			<binding type="tfbScriptObject" name="collision volume"/>
-			<binding type="PositionMeasurement" name="destination"/>
-			<binding type="ReferenceVariant" name="controller"/>
-			<binding type="SetVariant" name="attach nodes"/>
-			<binding type="SetVariant" name="playing sounds"/>
-			<binding type="SetVariant" name="playing animations"/>
-			<binding type="IntMeasurement" name="bloom intensity"/>
-			<binding type="FloatMeasurement" name="script load"/>
-			<binding type="ColorMeasurement" name="replace color"/>
-			<binding type="IntMeasurement" name="replace color percentage"/>
-			<binding type="SetVariant" name="players"/>
-			<binding type="SetVariant" name="NPCs"/>
-			<binding type="SetVariant" name="inactive"/>
-			<binding type="SetVariant" name="removed"/>
-			<binding type="EnumMeasurement" name="footstep sound enabled"/>
-			<binding type="EnumMeasurement" name="draw behind enabled"/>
-			<binding type="EnumMeasurement" name="ignore player presence"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="tfbEffectInfo" basetype="igInfo">
 		<metafields>
@@ -17356,9 +16354,6 @@
 			<metafield type="igIntMetaField" offset="0x0018" name="_blurType" persistent="false"/>
 			<metafield type="igFloatMetaField" offset="0x001C" name="_blurLevel" persistent="false"/>
 		</metafields>
-		<tfbBindings name="ViewportBlurEffectInfo">
-			<binding type="FloatMeasurement" name="level"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="OpUseMacro" basetype="OpBranch">
 		<overriddenmetafields>
@@ -17433,14 +16428,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="StringConverter">
-			<binding type="ScriptSetReference" name="value set"/>
-			<binding type="ReferenceVariant" name="text"/>
-			<binding type="EnumMeasurement" name="'@' representation"/>
-			<binding type="IntMeasurement" name="integer digits"/>
-			<binding type="IntMeasurement" name="decimal digits"/>
-			<binding type="EnumMeasurement" name="use comma"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igTextureAttr2List" basetype="igObjectList">
 		<objectlist elementtype="igTextureAttr2"/>
@@ -17456,8 +16443,6 @@
 			<metafield type="igIntMetaField" offset="0x0018" name="_value"/>
 			<metafield type="igIntMetaField" offset="0x001C" name="_resetValue" persistent="false"/>
 		</metafields>
-		<tfbBindings name="ScriptScreenInfo">
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="tfbEntityMap" basetype="igHashTable">
 		<overriddenmetafields>
@@ -17537,14 +16522,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="OrientationMeasurement">
-			<binding type="FloatMeasurement" name="facing"/>
-			<binding type="FloatMeasurement" name="tilt"/>
-			<binding type="FloatMeasurement" name="roll"/>
-			<binding type="FloatMeasurement" name="relative facing"/>
-			<binding type="FloatMeasurement" name="relative tilt"/>
-			<binding type="FloatMeasurement" name="relative roll"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igVfxRangedCurveSpawnCountData" basetype="igVfxSpawnRateData">
 		<metafields>
@@ -17678,13 +16655,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="GestureStickMeasurement">
-			<binding type="FloatMeasurement" name="X"/>
-			<binding type="FloatMeasurement" name="Y"/>
-			<binding type="FloatMeasurement" name="heading"/>
-			<binding type="FloatMeasurement" name="magnitude"/>
-			<binding type="EnumMeasurement" name="connection"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igSerialScheduler" basetype="igInsightScheduler">
 		<metafields>
@@ -17697,10 +16667,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="pathConnection">
-			<binding type="EnumMeasurement" name="traverse hint"/>
-			<binding type="ReferenceVariant" name="next"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igQueryOcclusionAttr" basetype="igVisualAttribute">
 		<metafields>
@@ -17740,13 +16706,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="true" destruct="true" reconstruct="true" refCounted="false" metaobject="InterfaceResolver"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="JoystickMeasurement">
-			<binding type="FloatMeasurement" name="X"/>
-			<binding type="FloatMeasurement" name="Y"/>
-			<binding type="FloatMeasurement" name="heading"/>
-			<binding type="FloatMeasurement" name="magnitude"/>
-			<binding type="EnumMeasurement" name="connection"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igVfxSphericalSpawnLocation" basetype="igVfxVolumetricSpawnLocation">
 	</metaobject>
@@ -17914,15 +16873,6 @@
 			<metafield type="igFloatMetaField" offset="0x002C" name="_midpointPercent" default="-50.00000000"/>
 			<metafield type="igFloatMetaField" offset="0x0030" name="_nextGenScaleFactor" default="1.00000000"/>
 		</metafields>
-		<tfbBindings name="GeneratorGenerationFields">
-			<binding type="FloatMeasurement" name="spawn rate"/>
-			<binding type="IntMeasurement" name="max alive"/>
-			<binding type="IntMeasurement" name="currently alive"/>
-			<binding type="FloatMeasurement" name="lifespan"/>
-			<binding type="FloatMeasurement" name="lifespan randomness"/>
-			<binding type="FloatMeasurement" name="max distance"/>
-			<binding type="FloatMeasurement" name="midpoint percent"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="tfbPhysicsCombinerLink" basetype="tfbPhysicsCombiner">
 		<metafields>
@@ -17939,9 +16889,6 @@
 				<metafield type="igObjectRefMetaField" offset="0x0000" hasPoolName="true" implicitAlignment="false" requiredAlignment="4" construct="false" destruct="false" reconstruct="false" refCounted="false" metaobject="MatrixMeasurement"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="PlacementReference">
-			<binding type="MatrixMeasurement" name="remembered"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="tfbVfxDecalData" basetype="igVfxDecalData">
 		<metafields>
@@ -18030,11 +16977,6 @@
 			<metafield type="igUnsignedIntMetaField" offset="0x0058" name="_saveSize"/>
 			<metafield type="igIntMetaField" offset="0x005C" name="_saveState"/>
 		</metafields>
-		<tfbBindings name="RedOctaneTagScriptObject">
-			<binding type="EnumMeasurement" name="presence"/>
-			<binding type="EnumMeasurement" name="tag class"/>
-			<binding type="EnumMeasurement" name="save state"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igModelList" basetype="igObjectList">
 		<objectlist elementtype="igModel"/>
@@ -18620,11 +17562,6 @@
 				<metafield type="igUnsignedIntMetaField" offset="0x0000"/>
 			</metafield>
 		</metafields>
-		<tfbBindings name="ActorWaypoint">
-			<binding type="IntMeasurement" name="radius"/>
-			<binding type="pathConnection" name="forward"/>
-			<binding type="pathConnection" name="backward"/>
-		</tfbBindings>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igProcGeometryHelperPool" basetype="igPool">
 		<metafields>

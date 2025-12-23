@@ -351,7 +351,12 @@ namespace igLibrary.Core
 				compound.PostUndump();
 			}
 
-			BindingManager.SetupBindings();
+			// initscript hasn't run yet so just check to see if the file exists or not
+			string tfbbindingsPath = $"{igArkCoreFile.ArkCoreFolder}/{game}/tfbbindings.xml";
+			if (File.Exists(tfbbindingsPath))
+			{
+				loader.LoadTfbBindings(tfbbindingsPath);
+			}
 
 			stopwatch.Stop();
 
