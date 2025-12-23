@@ -34,6 +34,7 @@ namespace igLibrary.Tfb.Game
 		{
 			public igArchive _archive;
 			public igObjectDirectory _levelBundle;
+			public igObjectDirectory _languagePak;
 		}
 
 
@@ -80,16 +81,49 @@ namespace igLibrary.Tfb.Game
 			Streamable streamable = new Streamable();
 			streamable._archive = igFileContext.Singleton.LoadArchive(path);
 
-			// Manually load the level.bld
+			// Load the language pak if it exists
 
-			streamable._levelBundle = new igObjectDirectory(path, new igName(path));
+			bool hasLanguagePak = streamable._archive.HasFile("ENGLISH.pak");
 
-			// interface with the archive directly and bypass the vfs
-			MemoryStream memoryStream = new MemoryStream();
-			streamable._archive.Decompress("level.bld", memoryStream);
+			if (hasLanguagePak)
+			{
+				streamable._languagePak = new igObjectDirectory(path, new igName(path + " (language pak)"));
 
-			igIGZLoader loader = new igIGZLoader(streamable._levelBundle, memoryStream, false);
-			loader.Read(streamable._levelBundle, false);
+				// bypass vfs and load it from the archive directly
+				MemoryStream languagePakStream = new MemoryStream();
+				streamable._archive.Decompress("ENGLISH.pak", languagePakStream);
+
+				igIGZLoader languageLoader = new igIGZLoader(streamable._languagePak, languagePakStream, false);
+				languageLoader.Read(streamable._languagePak, false);
+
+				// ...then set up the handles...
+				igHandleName levelBldName = new igHandleName();
+				levelBldName._ns = new igName("level.bld");
+				for (int l = 0; l < streamable._languagePak._objectList._count; l++)
+				{
+					igObject obj = streamable._languagePak._objectList[l];
+
+					levelBldName._name._hash = (uint)(l + 1);
+
+					igHandle handle = igObjectHandleManager.Singleton.LookupHandle(levelBldName);
+					handle._object = obj;
+				}
+			}
+
+			// Then load the level.bld
+
+			streamable._levelBundle = new igObjectDirectory(path, new igName(path + " (level bld)"));
+
+			// bypass vfs and load it from the archive directly
+			MemoryStream levelBundleStream = new MemoryStream();
+			streamable._archive.Decompress("level.bld", levelBundleStream);
+
+			// ...finally load the level.bld
+
+			igIGZLoader levelLoader = new igIGZLoader(streamable._levelBundle, levelBundleStream, false);
+			levelLoader.Read(streamable._levelBundle, false);
+
+			// TODO: Remove the handles
 
 			PostLoadTasks(streamable._levelBundle);
 
