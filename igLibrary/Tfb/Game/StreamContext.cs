@@ -7,6 +7,9 @@
 */
 
 
+using igLibrary.Sg;
+using igLibrary.Tfb.Attrs;
+
 namespace igLibrary.Tfb.Game
 {
 	/// <summary>
@@ -75,9 +78,49 @@ namespace igLibrary.Tfb.Game
 			igIGZLoader loader = new igIGZLoader(streamable._levelBundle, memoryStream, false);
 			loader.Read(streamable._levelBundle, false);
 
+			PostLoadTasks(streamable._levelBundle);
+
 			_streamables.Add(path, streamable);
 
 			return streamable._levelBundle;
+		}
+
+
+		/// <summary>
+		/// Tfb like to do additional things to the objects after loading a file
+		/// </summary>
+		/// <param name="dir">the directory to fix up</param>
+		private void PostLoadTasks(igObjectDirectory dir)
+		{
+			for (int o = 0; o < dir._objectList._count; o++)
+			{
+				igObject obj = dir._objectList[o];
+
+				if (obj is tfbEffectInfo effectInfo)
+				{
+					PostLoadTfbEffectInfo(effectInfo);
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// handle tfbEffectInfo post load conditions
+		/// </summary>
+		/// <param name="effectInfo">the tfbEffectInfo</param>
+		private void PostLoadTfbEffectInfo(tfbEffectInfo effectInfo)
+		{
+			string effectPlatform = "effect" + igAlchemyCore.GetPlatformString(igRegistry.GetRegistry()._platform);
+
+			for (int e = 0; e < effectInfo._effectList._count; e++)
+			{
+				igEffect effect = effectInfo._effectList[e];
+
+				// handle would've already been created so let's patch it up
+				// instead of creating a new one
+				igHandle handle = igObjectHandleManager.Singleton.LookupHandle(new igName(Path.GetFileNameWithoutExtension(effect._name)), new igName(effectPlatform));
+				handle._object = effect;
+			}
 		}
 	}
 }
