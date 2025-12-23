@@ -1,0 +1,26 @@
+/*
+	Copyright (c) 2022-2025, The igLibrary Contributors.
+	igLibrary and its libraries are free software: You can redistribute it and
+	its libraries under the terms of the Apache License 2.0 as published by
+	The Apache Software Foundation.
+	Please see the LICENSE file for more details.
+*/
+
+
+namespace igLibrary.Gfx
+{
+	public enum IG_GFX_BLENDING_FUNCTION : int
+	{
+		IG_GFX_BLENDING_FUNCTION_ZERO = 0,
+		IG_GFX_BLENDING_FUNCTION_ONE = 1,
+		IG_GFX_BLENDING_FUNCTION_SOURCE_COLOR = 2,
+		IG_GFX_BLENDING_FUNCTION_ONE_MINUS_SOURCE_COLOR = 3,
+		IG_GFX_BLENDING_FUNCTION_SOURCE_ALPHA = 4,
+		IG_GFX_BLENDING_FUNCTION_ONE_MINUS_SOURCE_ALPHA = 5,
+		IG_GFX_BLENDING_FUNCTION_DESTINATION_COLOR = 6,
+		IG_GFX_BLENDING_FUNCTION_ONE_MINUS_DESTINATION_COLOR = 7,
+		IG_GFX_BLENDING_FUNCTION_DESTINATION_ALPHA = 8,
+		IG_GFX_BLENDING_FUNCTION_ONE_MINUS_DESTINATION_ALPHA = 9,
+		IG_GFX_BLENDING_FUNCTION_SOURCE_ALPHA_SATURATE = 10,
+	}
+}

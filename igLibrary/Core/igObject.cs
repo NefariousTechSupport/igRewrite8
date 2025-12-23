@@ -132,5 +132,8 @@ namespace igLibrary.Core
 				field.SetValue(this, data);
 			}
 		}
+		public virtual void PostReadFile()
+		{
+		}
 	}
 }
