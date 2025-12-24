@@ -367,7 +367,7 @@ namespace igLibrary.Core
 		public ulong DeserializeOffset(ulong offset)
 		{
 			if(_version <= 0x06) return (_loadedPointers[(offset >> 0x18)] + (offset & 0x00FFFFFF));
-			else                 return (_loadedPointers[(offset >> 0x1B)] + (offset & 0x00FFFFFF));
+			else                 return (_loadedPointers[(offset >> 0x1B)] + (offset & 0x07FFFFFF));
 		}
 		public igMemoryPool GetMemoryPoolFromSerializedOffset(ulong offset)
 		{
