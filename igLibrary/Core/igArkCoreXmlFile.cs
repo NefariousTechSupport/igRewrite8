@@ -425,7 +425,11 @@ namespace igLibrary.Core
 					metaobject._parent = baseType;
 					metaobject.InheritFields();
 
-					if (baseType._name == "igDataList" || metaobject._parent._name == "igObjectList" || metaobject._parent._name == "igNonRefCountedObjectList"  || metaobject._parent._name == "ScriptObjectList")
+					if (baseType._name == "igDataList"
+					 || baseType._name == "igObjectList"
+					 || baseType._name == "igNonRefCountedObjectList"
+					 || baseType._name == "ScriptObjectList"
+					 || baseType._name == "AnimationStack")
 					{
 						metaobject._metaFields[0] = metaobject._metaFields[0].CreateFieldCopy();
 						metaobject._metaFields[1] = metaobject._metaFields[1].CreateFieldCopy();
