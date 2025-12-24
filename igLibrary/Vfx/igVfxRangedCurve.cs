@@ -7,14 +7,21 @@
 */
 
 
+using System.Runtime.CompilerServices;
+
 namespace igLibrary.Vfx
 {
 	public unsafe struct igVfxRangedCurve
 	{
+		// SuperChargers onwards
 		public readonly igVfxCurveKeyframe[] _keyframes;
 		public igVfxModulationHelper _modulationHelper;
 		public ushort _field_0x50;
 		public ushort _field_0x52;
+
+		// Pre-SuperChargers
+		public float _valueOrScale;
+		public igMemory<byte> _data;
 
 		public igVfxRangedCurve()
 		{
@@ -22,6 +29,9 @@ namespace igLibrary.Vfx
 			_modulationHelper = default;
 			_field_0x50 = default;
 			_field_0x52 = default;
+
+			_valueOrScale = default;
+			_data = default;
 		}
 	}
 }
