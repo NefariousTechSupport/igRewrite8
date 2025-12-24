@@ -13,6 +13,7 @@ namespace igLibrary.Core
 {
 	public class igMemoryRefMetaField : igRefMetaField
 	{
+		public static igMemoryRefMetaField _MetaField { get; private set; } = new igMemoryRefMetaField();
 		[Obsolete("This exists for the reflection system, do not use.")] public int _memSize;
 		public igMetaField _memType;
 		[Obsolete("This exists for the reflection system, do not use.")] public int _memTypeAlignment = -1;
