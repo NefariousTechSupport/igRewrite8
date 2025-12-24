@@ -4,3 +4,4 @@ TfbTool
 [global_bld_load_tfb]
 
 app:/permanent/bootstrap
+app:/permanent/global
