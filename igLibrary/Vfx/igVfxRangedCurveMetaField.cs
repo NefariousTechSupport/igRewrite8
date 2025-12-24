@@ -49,6 +49,7 @@ namespace igLibrary.Vfx
 			else
 			{
 				data._valueOrScale = loader._stream.ReadSingle();
+				igMemoryRefMetaField._MetaField._memType = igUnsignedCharMetaField._MetaField;
 				data._data = (igMemory<byte>)igMemoryRefMetaField._MetaField.ReadIGZField(loader)!;
 			}
 			return data;
@@ -79,6 +80,7 @@ namespace igLibrary.Vfx
 			else
 			{
 				section._sh.WriteSingle(data._valueOrScale);
+				igMemoryRefMetaField._MetaField._memType = igUnsignedCharMetaField._MetaField;
 				igMemoryRefMetaField._MetaField.WriteIGZField(saver, section, data._data);
 			}
 		}
