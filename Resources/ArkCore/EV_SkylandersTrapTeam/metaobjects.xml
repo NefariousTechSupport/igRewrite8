@@ -2311,7 +2311,7 @@
 		</metafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="ReferenceStack" basetype="ScriptObjectList">
-		<objectlist elementtype="ReferenceVariant"/>
+		<objectlist elementtype="tfbScriptObject"/>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="CBoxLight0bMaterial" basetype="tfbMaterial">
 		<overriddenmetafields>
@@ -8220,7 +8220,7 @@
 		</metafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="PositionStack" basetype="ScriptObjectList">
-		<objectlist elementtype="PositionMeasurement"/>
+		<objectlist elementtype="tfbScriptObject"/>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igVfxTrailControlPointMetaField" basetype="igCompoundMetaField">
 		<compoundfields>
@@ -10952,7 +10952,7 @@
 		</metafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="VectorStack" basetype="ScriptObjectList">
-		<objectlist elementtype="VectorMeasurement"/>
+		<objectlist elementtype="tfbScriptObject"/>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igDestinationAlphaAttr" basetype="igVisualAttribute">
 		<metafields>
@@ -11627,7 +11627,7 @@
 		</metafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="AbstractPlacementList" basetype="ScriptObjectList">
-		<objectlist elementtype="AbstractPlacement"/>
+		<objectlist elementtype="tfbScriptObject"/>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igFrustumCullerMetaField" basetype="igCompoundMetaField">
 		<compoundfields>
@@ -11834,7 +11834,7 @@
 		</overriddenmetafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="ValueStack" basetype="ScriptObjectList">
-		<objectlist elementtype="AbstractScriptVariant"/>
+		<objectlist elementtype="tfbScriptObject"/>
 		<metafields>
 			<metafield type="igObjectRefMetaField" offset="0x0018" name="_otherPoint" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="PositionStack"/>
 			<metafield type="igStaticMetaField" offset="0x0000" name="_dereferencer" persistent="false" implicitAlignment="false" requiredAlignment="0" storageMetaField="f0">
@@ -13068,7 +13068,7 @@
 		</overriddenmetafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="RHSValueStack" basetype="ValueStack">
-		<objectlist elementtype="AbstractScriptVariant"/>
+		<objectlist elementtype="tfbScriptObject"/>
 		<metafields>
 			<metafield type="igObjectRefMetaField" offset="0x0020" name="_type" construct="false" destruct="false" reconstruct="false" refCounted="false" metaobject="igMetaObject"/>
 			<metafield type="igIntMetaField" offset="0x0024" name="_value"/>
@@ -13386,7 +13386,7 @@
 		</metafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="SetStack" basetype="ScriptObjectList">
-		<objectlist elementtype="SetVariant"/>
+		<objectlist elementtype="tfbScriptObject"/>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igVfxSubEffectInstanceArrayMetaField" basetype="igVfxSubEffectInstanceMetaField">
 		<metafields>
@@ -16018,7 +16018,7 @@
 		</overriddenmetafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="RHSReferenceStack" basetype="RHSValueStack">
-		<objectlist elementtype="AbstractScriptVariant"/>
+		<objectlist elementtype="tfbScriptObject"/>
 		<metafields>
 			<metafield type="igBoolMetaField" offset="0x0028" name="_typeIsMeta" persistent="false"/>
 			<metafield type="igObjectRefMetaField" offset="0x002C" name="_editType" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igObject"/>

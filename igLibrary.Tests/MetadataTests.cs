@@ -205,18 +205,15 @@ public class MetadataTest
 
 
 	/// <summary>
-	/// Ensure ValueStack has its element type set to AbstractScriptVariant
-	/// instead of AbstractValueMeasurement
+	/// Ensure a type has its element type set to tfbScriptObject
+	/// instead of whatever it was before. Tfb love assigning the wrong type to things.
 	/// </summary>
-	[Fact]
-	private void ValueStackElementType()
+	private void TfbScriptObjectElementTypeChecks(string metaobjectName)
 	{
-		igArkCore.ReadFromXmlFile(igArkCore.EGame.EV_SkylandersTrapTeam);
+		igMetaObject? meta = igArkCore.GetObjectMeta(metaobjectName);
+		Assert.NotNull(meta);
 
-		igMetaObject? valueStackMeta = igArkCore.GetObjectMeta("ValueStack");
-		Assert.NotNull(valueStackMeta);
-
-		igMetaField? dataField = valueStackMeta.GetFieldByName("_data");
+		igMetaField? dataField = meta.GetFieldByName("_data");
 		Assert.NotNull(dataField);
 
 		Assert.IsType<igMemoryRefMetaField>(dataField);
@@ -227,7 +224,28 @@ public class MetadataTest
 
 		igObjectRefMetaField memTypeField = (igObjectRefMetaField)dataFieldMem._memType;
 		Assert.NotNull(memTypeField._metaObject);
-		Assert.Equal("AbstractScriptVariant", memTypeField._metaObject._name);
+		Assert.Equal("tfbScriptObject", memTypeField._metaObject._name);
+	}
+
+
+
+	/// <summary>
+	/// Ensure various types have their element type set to tfbScriptObject
+	/// instead of whatever it was before. Tfb love assigning the wrong type to things.
+	/// </summary>
+	[Fact]
+	private void ValueStackElementType()
+	{
+		igArkCore.ReadFromXmlFile(igArkCore.EGame.EV_SkylandersTrapTeam);
+
+		TfbScriptObjectElementTypeChecks("AbstractPlacementList");
+		TfbScriptObjectElementTypeChecks("PositionStack");
+		TfbScriptObjectElementTypeChecks("ReferenceStack");
+		TfbScriptObjectElementTypeChecks("RHSReferenceStack");
+		TfbScriptObjectElementTypeChecks("RHSValueStack");
+		TfbScriptObjectElementTypeChecks("SetStack");
+		TfbScriptObjectElementTypeChecks("ValueStack");
+		TfbScriptObjectElementTypeChecks("VectorStack");
 	}
 
 
