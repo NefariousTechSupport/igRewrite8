@@ -307,7 +307,7 @@ namespace igLibrary.Core
 		public void UnpackCompressedInts(List<ulong> list, byte[] bytes, uint count, bool deserialize = true)
 		{
 			list.Capacity = (int)count;
-			uint previousInt = 0;
+			ulong previousInt = 0;
 
 			bool shiftMoveOrMask = false;
 
@@ -346,11 +346,11 @@ namespace igLibrary.Core
 								data++;
 								shiftMoveOrMask = false;
 							}
-							unpackedInt = unpackedInt | (currentByte & 7) << (byte)(shiftAmount & 0x1f);
+							unpackedInt = unpackedInt | ((currentByte & 7) << (byte)(shiftAmount & 0x1f));
 							shiftAmount += 3;
 						}
 
-						previousInt = (uint)(previousInt + (unpackedInt * 4) + (_version < 9 ? 4 : 0));
+						previousInt = previousInt + (unpackedInt * 4u) + (_version < 9 ? 4u : 0u);
 						if(deserialize)
 						{
 							list.Add(DeserializeOffset(previousInt));
