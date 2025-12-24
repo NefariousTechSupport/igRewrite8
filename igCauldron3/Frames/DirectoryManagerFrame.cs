@@ -170,7 +170,17 @@ namespace igCauldron3
 			}
 
 			igMetaObject meta = obj.GetMeta();
-			if(ImGui.TreeNode(id, meta._name))
+
+			// Render names for readability sake
+			string nameToRender = meta._name!;
+			igStringMetaField? nameField = meta.GetFieldByName("_name") as igStringMetaField;
+			if (nameField != null)
+			{
+				string? nameValue = (string?)nameField._fieldHandle!.GetValue(obj);
+				nameToRender += nameValue != null ? $" ({nameValue})" : string.Empty;
+			}
+
+			if(ImGui.TreeNode(id, nameToRender))
 			{
 				int overrideIndex = _overrides.FindIndex(x => meta._vTablePointer!.IsAssignableTo(x._t));
 				if(overrideIndex < 0)
