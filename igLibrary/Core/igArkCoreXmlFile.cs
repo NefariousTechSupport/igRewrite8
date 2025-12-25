@@ -892,9 +892,10 @@ namespace igLibrary.Core
 					igObjectHandleManager.Singleton.AddSystemNamespace(dir._name._string);
 				}
 
-				igObject? binding = Activator.CreateInstance(type) as igObject;
+				igNamedObject? binding = Activator.CreateInstance(type) as igNamedObject;
 				if (binding != null)
 				{
+					binding._name = nameAttr.Value!;
 					dir.AddObject(binding, name._ns, name._name);
 				}
 			}
