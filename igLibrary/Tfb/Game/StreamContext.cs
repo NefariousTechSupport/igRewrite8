@@ -36,6 +36,10 @@ namespace igLibrary.Tfb.Game
 			public igArchive? _streamArchive;
 			public igObjectDirectory _levelBundle;
 			public igObjectDirectory _languagePak;
+
+			// hacky way of tying the igObjectDirectorys to the igArchive
+			public igFileDescriptor _ignoreBundleFd;
+			public igFileDescriptor _ignoreStreamedFd;
 		}
 
 
@@ -81,11 +85,15 @@ namespace igLibrary.Tfb.Game
 
 			Streamable streamable = new Streamable();
 			streamable._bundleArchive = igFileContext.Singleton.LoadArchive(path);
+			streamable._ignoreBundleFd = new igFileDescriptor();
+			streamable._ignoreBundleFd._device = streamable._bundleArchive;
 
 			string streamPath = Path.ChangeExtension(path, ".arc");
 			if (igFileContext.Singleton.Exists(streamPath))
 			{
 				streamable._streamArchive = igFileContext.Singleton.LoadArchive(streamPath);
+				streamable._ignoreStreamedFd = new igFileDescriptor();
+				streamable._ignoreStreamedFd._device = streamable._bundleArchive;
 			}
 
 			// Load the language pak if it exists
@@ -95,6 +103,8 @@ namespace igLibrary.Tfb.Game
 			if (hasLanguagePak)
 			{
 				streamable._languagePak = new igObjectDirectory(path, new igName(path + " (language pak)"));
+				streamable._languagePak._type = igObjectDirectory.FileType.kIGZ;
+				streamable._languagePak._fd = streamable._ignoreBundleFd;
 
 				// bypass vfs and load it from the archive directly
 				MemoryStream languagePakStream = new MemoryStream();
@@ -120,6 +130,8 @@ namespace igLibrary.Tfb.Game
 			// Then load the level.bld
 
 			streamable._levelBundle = new igObjectDirectory(path, new igName(path + " (level bld)"));
+			streamable._levelBundle._type = igObjectDirectory.FileType.kIGZ;
+			streamable._levelBundle._fd = streamable._ignoreBundleFd;
 
 			// bypass vfs and load it from the archive directly
 			MemoryStream levelBundleStream = new MemoryStream();
@@ -158,6 +170,8 @@ namespace igLibrary.Tfb.Game
 
 			string directoryName = $"{archive._path} ({tocHash.ToString("X08")})";
 			igObjectDirectory directory = new igObjectDirectory(directoryName, new igName(directoryName));
+			directory._type = igObjectDirectory.FileType.kIGZ;
+			directory._fd = streamable._ignoreStreamedFd;
 
 			igIGZLoader loader = new igIGZLoader(directory, ms, false);
 			loader.Read(directory, false);
