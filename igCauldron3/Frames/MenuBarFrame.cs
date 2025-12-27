@@ -9,6 +9,7 @@
 
 using ImGuiNET;
 using igLibrary.Core;
+using igLibrary.Tfb.Game;
 
 namespace igCauldron3
 {
@@ -30,6 +31,7 @@ namespace igCauldron3
 		public override void Render()
 		{
 			igObjectDirectory? currentDirectory = DirectoryManagerFrame._instance.CurrentDir;
+			EngineType engineType = igRegistry.GetRegistry()._engineType;
 			if(ImGui.BeginMainMenuBar())
 			{
 				if(ImGui.BeginMenu("File"))
@@ -40,76 +42,14 @@ namespace igCauldron3
 					}
 					if(ImGui.BeginMenu("Save", currentDirectory != null))
 					{
-						igObjectDirectory target = currentDirectory!;
-						igStorageDevice device = target._fd._device;
-						igArchive? archive = device as igArchive;
-						string displayName;
-						bool isPatchArchive = false;
-
-						if (archive != null)
+						switch (engineType)
 						{
-							displayName = Path.GetFileName(archive._path);
-
-							// Dumb long line
-							if (igFileContext.Singleton._archiveManager._patchArchives.Contains(archive))
-							{
-								isPatchArchive = true;
-							}
-						}
-						else
-						{
-							displayName = device.GetType().Name;
-						}
-
-
-						// tracks user's selection
-						// 0: nothing selected
-						// 1: selected base game pack
-						// 2: selected update.pak
-						byte state = 0;
-						if (ImGui.MenuItem(string.Format("To {0}", displayName)))
-						{
-							state = 1;
-						}
-						if (!isPatchArchive && ImGui.MenuItem(string.Format("To update.pak")))
-						{
-							state = 2;
-							archive = igFileContext.Singleton._archiveManager._patchArchives[0];
-						}
-
-						if (state != 0 && archive != null)
-						{
-							// Write to memory
-							MemoryStream ms = new MemoryStream();
-							target.WriteFile(ms, igRegistry.GetRegistry()._platform);
-							ms.Seek(0, SeekOrigin.Begin);
-
-#if DEBUG // Save to a local file for testing
-							FileStream fs = File.Create("test.igz");
-							ms.CopyTo(fs);
-							fs.Close();
-							ms.Seek(0, SeekOrigin.Begin);
-#endif // DEBUG
-
-							// Output to the archive
-							igFilePath fp = new igFilePath();
-							fp.Set(target._path);
-							archive.GetAddFile(fp._path);
-							archive.Compress(fp._path, ms);
-							ms.Close();
-
-							// Write out the archive
-							if(archive._path[1] == ':')
-							{
-								archive.Save(archive._path);
-							}
-							else
-							{
-								archive.Save($"{igFileContext.Singleton._root}/archives/{Path.GetFileName(archive._path)}");
-							}
-
-							// This is bad but will be fixed when the vfs is refactored
-							target._fd._device = archive;
+							case EngineType.AlchemyLaboratory:
+								RenderAlchemyLaboratorySaveMenu(currentDirectory!);
+								break;
+							case EngineType.TfbTool:
+								RenderTfbToolSaveMenu(currentDirectory!);
+								break;
 						}
 
 						ImGui.EndMenu();
@@ -137,6 +77,106 @@ namespace igCauldron3
 					ImGui.EndMenu();
 				}
 				ImGui.EndMainMenuBar();
+			}
+		}
+
+
+
+		/// <summary>
+		/// Alchemy laboratory save menu
+		/// </summary>
+		/// <param name="currentDirectory">the directory to save</param>
+		private void RenderAlchemyLaboratorySaveMenu(igObjectDirectory currentDirectory)
+		{
+			igObjectDirectory target = currentDirectory!;
+			igStorageDevice device = target._fd._device;
+			igArchive? archive = device as igArchive;
+			string displayName;
+			bool isPatchArchive = false;
+
+			if (archive != null)
+			{
+				displayName = Path.GetFileName(archive._path);
+
+				// Dumb long line
+				if (igFileContext.Singleton._archiveManager._patchArchives.Contains(archive))
+				{
+					isPatchArchive = true;
+				}
+			}
+			else
+			{
+				displayName = device.GetType().Name;
+			}
+
+
+			// tracks user's selection
+			// 0: nothing selected
+			// 1: selected base game pack
+			// 2: selected update.pak
+			byte state = 0;
+			if (ImGui.MenuItem(string.Format("To {0}", displayName)))
+			{
+				state = 1;
+			}
+			if (!isPatchArchive && ImGui.MenuItem(string.Format("To update.pak")))
+			{
+				state = 2;
+				archive = igFileContext.Singleton._archiveManager._patchArchives[0];
+			}
+
+			if (state != 0 && archive != null)
+			{
+				// Write to memory
+				MemoryStream ms = new MemoryStream();
+				target.WriteFile(ms, igRegistry.GetRegistry()._platform);
+				ms.Seek(0, SeekOrigin.Begin);
+
+#if DEBUG // Save to a local file for testing
+				FileStream fs = File.Create("test.igz");
+				ms.CopyTo(fs);
+				fs.Close();
+				ms.Seek(0, SeekOrigin.Begin);
+#endif // DEBUG
+				// Output to the archive
+				igFilePath fp = new igFilePath();
+				fp.Set(target._path);
+				archive.GetAddFile(fp._path);
+				archive.Compress(fp._path, ms);
+				ms.Close();
+
+				// Write out the archive
+				if(archive._path[1] == ':')
+				{
+					archive.Save(archive._path);
+				}
+				else
+				{
+					archive.Save($"{igFileContext.Singleton._root}/archives/{Path.GetFileName(archive._path)}");
+				}
+
+				// This is bad but will be fixed when the vfs is refactored
+				target._fd._device = archive;
+			}
+		}
+
+
+
+		/// <summary>
+		/// TfbTool save menu
+		/// </summary>
+		/// <param name="currentDirectory">the directory to save</param>
+		private void RenderTfbToolSaveMenu(igObjectDirectory currentDirectory)
+		{
+			if (ImGui.MenuItem("To File"))
+			{
+				KeyValuePair<string, StreamContext.Streamable> kvp = StreamContext.Singleton.Streamables.FirstOrDefault(x => x.Value._ignoreBundleFd == currentDirectory._fd || x.Value._ignoreStreamedFd == currentDirectory._fd);
+				StreamContext.Streamable? streamable = kvp.Value;
+
+				if (streamable != null)
+				{
+					StreamContext.Singleton.Save(streamable);
+				}
 			}
 		}
 	}
