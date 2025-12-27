@@ -198,10 +198,11 @@ namespace igLibrary.Core
 			CreateWorkItem(fd, igFileWorkItem.WorkType.kTypeClose, null, 0, 0, 0, fd._path, blockingType, priority, null, null);
 			_fileDescriptorPool.Remove(fd);
 		}
-		public void FileList(string dir, out igStringRefList list, igBlockingType blockingType, igFileWorkItem.Priority priority)
+		public void FileList(string dir, out igStringRefList list, bool recursive, igBlockingType blockingType, igFileWorkItem.Priority priority)
 		{
 			list = new igStringRefList();
-			CreateWorkItem(null, igFileWorkItem.WorkType.kTypeFileList, list, 0, 0, 0, dir, blockingType, priority, null, null);
+			uint flags = (recursive ? 0x04u : 0x00u);
+			CreateWorkItem(null, igFileWorkItem.WorkType.kTypeFileList, list, 0, 0, flags, dir, blockingType, priority, null, null);
 		}
 		public bool Exists(string path)
 		{

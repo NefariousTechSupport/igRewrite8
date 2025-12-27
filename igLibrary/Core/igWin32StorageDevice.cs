@@ -56,7 +56,8 @@ namespace igLibrary.Core
 
 			Debug.Assert(list != null);
 
-			string[] files = Directory.GetFiles(workItem._path);
+			bool isRecursive = (workItem._flags & 0x04) != 0;
+			string[] files = Directory.GetFiles(workItem._path, "*.*", isRecursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
 
 			list.SetCapacity(list._capacity + files.Length);
 			for(int i = 0; i < files.Length; i++)
