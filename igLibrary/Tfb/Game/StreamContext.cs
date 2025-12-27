@@ -32,7 +32,8 @@ namespace igLibrary.Tfb.Game
 		/// </summary>
 		public class Streamable
 		{
-			public igArchive _archive;
+			public igArchive _bundleArchive;
+			public igArchive? _streamArchive;
 			public igObjectDirectory _levelBundle;
 			public igObjectDirectory _languagePak;
 		}
@@ -79,11 +80,17 @@ namespace igLibrary.Tfb.Game
 			// Mount the archive
 
 			Streamable streamable = new Streamable();
-			streamable._archive = igFileContext.Singleton.LoadArchive(path);
+			streamable._bundleArchive = igFileContext.Singleton.LoadArchive(path);
+
+			string streamPath = Path.ChangeExtension(path, ".arc");
+			if (igFileContext.Singleton.Exists(streamPath))
+			{
+				streamable._streamArchive = igFileContext.Singleton.LoadArchive(streamPath);
+			}
 
 			// Load the language pak if it exists
 
-			bool hasLanguagePak = streamable._archive.HasFile("ENGLISH.pak");
+			bool hasLanguagePak = streamable._bundleArchive.HasFile("ENGLISH.pak");
 
 			if (hasLanguagePak)
 			{
@@ -91,7 +98,7 @@ namespace igLibrary.Tfb.Game
 
 				// bypass vfs and load it from the archive directly
 				MemoryStream languagePakStream = new MemoryStream();
-				streamable._archive.Decompress("ENGLISH.pak", languagePakStream);
+				streamable._bundleArchive.Decompress("ENGLISH.pak", languagePakStream);
 
 				igIGZLoader languageLoader = new igIGZLoader(streamable._languagePak, languagePakStream, false);
 				languageLoader.Read(streamable._languagePak, false);
@@ -116,7 +123,7 @@ namespace igLibrary.Tfb.Game
 
 			// bypass vfs and load it from the archive directly
 			MemoryStream levelBundleStream = new MemoryStream();
-			streamable._archive.Decompress("level.bld", levelBundleStream);
+			streamable._bundleArchive.Decompress("level.bld", levelBundleStream);
 
 			// ...finally load the level.bld
 
@@ -130,6 +137,32 @@ namespace igLibrary.Tfb.Game
 			_streamables.Add(path, streamable);
 
 			return streamable._levelBundle;
+		}
+
+
+		public igObjectDirectory? StreamDirectory(Streamable streamable, uint tocHash)
+		{
+			igArchive? archive = streamable._streamArchive;
+			if (archive == null)
+			{
+				return null;
+			}
+
+			if (!archive.HasFile(tocHash))
+			{
+				return null;
+			}
+
+			MemoryStream ms = new MemoryStream();
+			archive.Decompress(tocHash, ms);
+
+			string directoryName = $"{archive._path} ({tocHash.ToString("X08")})";
+			igObjectDirectory directory = new igObjectDirectory(directoryName, new igName(directoryName));
+
+			igIGZLoader loader = new igIGZLoader(directory, ms, false);
+			loader.Read(directory, false);
+
+			return directory;
 		}
 
 
