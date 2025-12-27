@@ -109,7 +109,7 @@ namespace igLibrary.Core
 				_objectToHandleTable.Add(dir._objectList[i], hnd);
 			}
 		}
-		public void AddObject(igObject obj, igName nameSpace, igName name)
+		public igHandle AddObject(igObject obj, igName nameSpace, igName name)
 		{
 			igHandle hnd = new igHandle();
 			hnd._object = obj;
@@ -117,10 +117,11 @@ namespace igLibrary.Core
 			hnd._alias = name;
 			_objectToHandleTable.Add(obj, hnd);
 			_handleTable.Add(GetHandleKey(hnd._namespace, hnd._alias), hnd);
+			return hnd;
 		}
-		public void AddObject(igObject obj, igHandleName name) => AddObject(obj, name._ns, name._name);
-		public void AddObject(igObjectDirectory dir, igObject obj, igName name) => AddObject(obj, dir._name, name);
-		public void AddObject(igObjectDirectory dir, igObject obj, uint hash) => AddObject(dir, obj, new igName(hash));
-		public void AddObject(igObjectDirectory dir, igObject obj, string name) => AddObject(dir, obj, new igName(name));
+		public igHandle AddObject(igObject obj, igHandleName name) => AddObject(obj, name._ns, name._name);
+		public igHandle AddObject(igObjectDirectory dir, igObject obj, igName name) => AddObject(obj, dir._name, name);
+		public igHandle AddObject(igObjectDirectory dir, igObject obj, uint hash) => AddObject(dir, obj, new igName(hash));
+		public igHandle AddObject(igObjectDirectory dir, igObject obj, string name) => AddObject(dir, obj, new igName(name));
 	}
 }
