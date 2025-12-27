@@ -21,6 +21,9 @@ namespace igLibrary.Sg
 		public uint _formatHint;
 		public bool _vertexSampler;
 		public bool _useMaterialSamplerState;
+
+		// Imaginators onwards
+		public bool _useMaterialSamplerWrap;
 	}
 
 	public class igTechniqueSamplerList : igTObjectList<igTechniqueSampler>
