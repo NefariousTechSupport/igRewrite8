@@ -58,6 +58,9 @@ namespace igCauldron3
 		public override void Render()
 		{
 			ImGui.Begin("igArchive Manager", ImGuiWindowFlags.HorizontalScrollbar);
+
+			EngineType engineType = igRegistry.GetRegistry()._engineType;
+
 			if(!_isChoosingArchive)
 			{
 				igArchiveList archives = igFileContext.Singleton._archiveManager._archiveList;
@@ -100,10 +103,22 @@ namespace igCauldron3
 					if (_allowedArchivePaths[i].ToLower().Contains(searchQuery.ToLower()))
 					{
 						ImGui.PushID(_allowedArchivePaths[i]);
-						bool full = ImGui.Button("Full");
-						ImGui.SameLine();
-						bool loose = ImGui.Button("Loose");
+
+						bool full = false;
+						bool loose = false;
+						if (engineType == EngineType.TfbTool)
+						{
+							full = ImGui.Button("Open");
+						}
+						else
+						{
+							full = ImGui.Button("Full");
+							ImGui.SameLine();
+							loose = ImGui.Button("Loose");
+						}
+
 						ImGui.PopID();
+
 						ImGui.SameLine();
 						ImGui.Text(_allowedArchiveNames[i]);
 
@@ -111,12 +126,19 @@ namespace igCauldron3
 						{
 							_isChoosingArchive = false;
 
-							igArchive loaded = igFileContext.Singleton.LoadArchive(_allowedArchivePaths[i]);
-							for (int j = 0; j < loaded._files.Count; j++)
+							if (engineType == EngineType.TfbTool)
 							{
-								if (loaded._files[j]._logicalName.EndsWith("_pkg.igz"))
+								StreamContext.Singleton.Load(_allowedArchiveNames[i]);
+							}
+							else
+							{
+								igArchive loaded = igFileContext.Singleton.LoadArchive(_allowedArchivePaths[i]);
+								for (int j = 0; j < loaded._files.Count; j++)
 								{
-									CPrecacheManager._Instance.PrecachePackage(loaded._files[j]._logicalName, EMemoryPoolID.MP_DEFAULT);
+									if (loaded._files[j]._logicalName.EndsWith("_pkg.igz"))
+									{
+										CPrecacheManager._Instance.PrecachePackage(loaded._files[j]._logicalName, EMemoryPoolID.MP_DEFAULT);
+									}
 								}
 							}
 						}
@@ -267,37 +289,58 @@ namespace igCauldron3
 		{
 			igArchiveList archives = igFileContext.Singleton._archiveManager._archiveList;
 
-			igFileContext.Singleton.FileList(Path.Combine(igFileContext.Singleton._root, "archives"), out igStringRefList realFiles, igBlockingType.kMayBlock, igFileWorkItem.Priority.kPriorityNormal);
-			igFileContext.Singleton.FileList(igFileContext.Singleton._archiveManager._patchArchives[0]._path, out igStringRefList virtualFiles, igBlockingType.kMayBlock, igFileWorkItem.Priority.kPriorityNormal);
-
 			igStringRefList files = new igStringRefList();
-			files.SetCapacity(realFiles._capacity + virtualFiles._count);
+
+			bool tfbTool = igRegistry.GetRegistry()._engineType == EngineType.TfbTool;
+			string dirName = tfbTool ? "" : "archives";
+			string rootName = Path.Combine(igFileContext.Singleton._root, dirName);
+
+			igFileContext.Singleton.FileList(rootName, out igStringRefList realFiles, tfbTool, igBlockingType.kMayBlock, igFileWorkItem.Priority.kPriorityNormal);
+
+			files.SetCapacity(realFiles._capacity);
 			for(int i = 0; i < realFiles._count; i++)
 			{
-				files.Append("app:/archives/" + Path.GetFileName(realFiles[i]));
+				files.Append(Path.Combine("app:/", dirName, Path.GetRelativePath(rootName, realFiles[i])).Replace('\\', '/'));
 			}
-			for(int i = 0; i < virtualFiles._count; i++)
+
+			if (igFileContext.Singleton._archiveManager._patchArchives._count > 0)
 			{
-				files.Append(virtualFiles[i]);
+				igFileContext.Singleton.FileList(igFileContext.Singleton._archiveManager._patchArchives[0]._path, out igStringRefList virtualFiles, tfbTool, igBlockingType.kMayBlock, igFileWorkItem.Priority.kPriorityNormal);
+
+				for(int i = 0; i < virtualFiles._count; i++)
+				{
+					files.Append(virtualFiles[i]);
+				}
 			}
 
 			List<string> allowedArchivePaths = new List<string>();
 			List<string> allowedArchiveNames = new List<string>();
+			List<string> allowedExtensions = new List<string>();
+			if (tfbTool)
+			{
+				allowedExtensions.Add(".bld");
+			}
+			else
+			{
+				allowedExtensions.Add(".pak");
+			}
 
 			for(int i = 0; i < files._count; i++)
 			{
-				if(Path.GetExtension(files[i]) == ".pak")
+				string extension = Path.GetExtension(files[i]);
+				if (allowedExtensions.Contains(extension))
 				{
 					if(!archives.Any(x => Path.GetFileName(x._path).ToLower() == Path.GetFileName(files[i])))
 					{
 						allowedArchivePaths.Add(files[i]);
-						allowedArchiveNames.Add(Path.GetFileName(files[i]));
+						allowedArchiveNames.Add(Path.ChangeExtension(files[i], null));
 					}
 				} 
 			}
 
-			//Not proud of this
-			_allowedArchivePaths = allowedArchivePaths.OrderBy(x => Path.GetFileName(x)).ToArray();
+			//Not proud of the fact these are being sorted twice
+			allowedArchivePaths.Sort();
+			_allowedArchivePaths = allowedArchivePaths.ToArray();
 
 			allowedArchiveNames.Sort();
 			_allowedArchiveNames = allowedArchiveNames.ToArray();
@@ -318,29 +361,17 @@ namespace igCauldron3
 			}
 			if(ImGui.TreeNode(archive._path))
 			{
-				bool tfbBld = Path.GetExtension(archive._path) == ".bld";
-
 				for(int i = 0; i < fileHeaders.Length; i++)
 				{
 					string logicalName = fileHeaders[i]._logicalName;
 					string extension   = Path.GetExtension(logicalName);
 					
 					if (extension == ".igz"
-					 || extension == ".lng"
-					 || tfbBld)
+					 || extension == ".lng")
 					{
 						if(ImGui.Button(logicalName))
 						{
-							igObjectDirectory? directory = null;
-							if (tfbBld && igRegistry.GetRegistry()._engineType == EngineType.TfbTool)
-							{
-								directory = StreamContext.Singleton.Load(archive._path);
-							}
-							else
-							{
-								directory = igObjectStreamManager.Singleton.Load(logicalName)!;
-							}
-
+							igObjectDirectory? directory = igObjectStreamManager.Singleton.Load(logicalName)!;
 							DirectoryManagerFrame._instance.AddDirectory(directory);
 						}
 					}
@@ -352,10 +383,61 @@ namespace igCauldron3
 
 
 
+		/// <summary>
+		/// Renders a loose archive but tfb
+		/// </summary>
+		/// <param name="streamable">streamable asset</param>
+		private void RenderTfbLooseArchive(StreamContext.Streamable streamable)
+		{
+			igArchive? archive = streamable._streamArchive;
+			if (archive == null)
+			{
+				return;
+			}
+
+			igArchive.FileInfo[]? fileHeaders;
+			if(!_sortedFileHeaders.TryGetValue(archive._path, out fileHeaders))
+			{
+				fileHeaders = archive._files.OrderBy(x => x._name).ToArray();
+				_sortedFileHeaders.Add(archive._path, fileHeaders);
+			}
+			if(ImGui.TreeNode("streamable assets"))
+			{
+				for(int i = 0; i < fileHeaders.Length; i++)
+				{
+					string displayName = fileHeaders[i]._name;
+					string extension   = Path.GetExtension(displayName);
+					
+					if (extension == ".igz")
+					{
+						if(ImGui.Button(displayName))
+						{
+							igObjectDirectory? directory = StreamContext.Singleton.StreamDirectory(streamable, fileHeaders[i]._hash);
+							if (directory != null)
+							{
+								DirectoryManagerFrame._instance.AddDirectory(directory);
+							}
+						}
+					}
+
+				}
+				ImGui.TreePop();
+			}
+		}
+
+
+
+		/// <summary>
+		/// Renders a tfb streamable asset
+		/// </summary>
+		/// <param name="name">name of the streamable</param>
+		/// <param name="streamable">the streamable asset</param>
 		private void RenderTfbStreamable(string name, StreamContext.Streamable streamable)
 		{
 			if (ImGui.TreeNode(name))
 			{
+				RenderTfbLooseArchive(streamable);
+
 				if (ImGui.Button("level.bld"))
 				{
 					DirectoryManagerFrame._instance.AddDirectory(streamable._levelBundle);
