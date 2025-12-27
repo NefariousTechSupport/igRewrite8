@@ -2,6 +2,11 @@
 TfbTool
 
 [global_bld_load_tfb]
-
 app:/permanent/bootstrap
+
+[bld_load_tfb]
+app:/misc/bootstrap_lang
+app:/item/legal
+
+[global_bld_load_tfb]
 app:/permanent/global
