@@ -7,7 +7,9 @@
 */
 
 
-using System.Reflection;
+#if DEBUG
+using System.Diagnostics;
+#endif // DEBUG
 
 namespace igLibrary.Core
 {
@@ -48,7 +50,11 @@ namespace igLibrary.Core
 			bool isExid = loader._runtimeFields._externals.BinarySearch(baseOffset) >= 0;
 			if(isExid)
 			{
-				return loader._externalList[(int)(raw & 0x7FFFFFFF)].GetObjectAlias<igObject>();
+				igObject? obj = loader._externalList[(int)(raw & 0x7FFFFFFF)].GetObjectAlias<igObject>();
+#if DEBUG // Assert that the exid has been set beforehand
+				Debug.Assert(obj != null);
+#endif // _DEBUG
+				return obj;
 			}
 			if(raw != 0)
 				throw new InvalidDataException("Failed to read igObjectRefMetaField properly");
