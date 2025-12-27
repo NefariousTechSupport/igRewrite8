@@ -184,6 +184,31 @@ namespace igLibrary.Tfb.Game
 
 
 		/// <summary>
+		/// Saves a Streamable to a file
+		/// </summary>
+		/// <param name="streamable">The streamable to save</param>
+		public void Save(Streamable streamable)
+		{
+			BindLanguagePackHandles(streamable);
+
+			// Write to memory
+			MemoryStream ms = new MemoryStream();
+			streamable._levelBundle.WriteFile(ms, igRegistry.GetRegistry()._platform);
+			ms.Seek(0, SeekOrigin.Begin);
+
+#if DEBUG // Save to a local file for testing
+			FileStream fs = File.Create("test.igz");
+			ms.CopyTo(fs);
+			fs.Close();
+			ms.Seek(0, SeekOrigin.Begin);
+#endif // DEBUG
+
+			UnbindLanguagePackHandles(streamable);
+		}
+
+
+
+		/// <summary>
 		/// Add "level.bld" (language pack) handles to the igObjectHandleManager
 		/// </summary>
 		/// <param name="streamable"></param>
