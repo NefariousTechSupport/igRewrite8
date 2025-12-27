@@ -95,6 +95,22 @@ namespace igLibrary.Core
 			_stream = new StreamHelper(dst, igAlchemyCore.isPlatformBigEndian(platform) ? StreamHelper.Endianness.Big : StreamHelper.Endianness.Little);
 			_dir = dir;
 
+			// tfbTool level.bld nd language packs do this funky thing where
+			// they seemingly preallocate the sections this will be incorrect
+			// for the tfbTool texture igzs but don't worry about it as it won't
+			// cause problems
+			if (igRegistry.GetRegistry()._engineType == EngineType.TfbTool)
+			{
+				Func<string, igMemoryPool?> dumb = igMemoryContext.Singleton.GetMemoryPoolByName;
+				GetSaverSection(dumb("Default")!);
+				GetSaverSection(dumb("Image")!);
+				GetSaverSection(dumb("Vertex")!);
+				GetSaverSection(dumb("Audio")!);
+				GetSaverSection(dumb("AnimationData")!);
+				GetSaverSection(dumb("VertexObject")!);
+				GetSaverSection(dumb("String")!);
+			}
+
 			SaverSection rootSection = GetSaverSection(dir._objectList.internalMemoryPool);
 			rootSection._runtimeFields._objectLists.Add(SaveObject(dir._objectList));
 			if(dir._useNameList)
@@ -236,10 +252,13 @@ namespace igLibrary.Core
 				_stream.WriteUInt32((uint)(memPoolNameOffset & 0xFFFF) | ((unknown << 16) & 0xFFFF));
 				_stream.WriteUInt32(memoryOffset);
 				uint sectionSize = (uint)_sections[i]._sh.BaseStream.Length;
-				_stream.WriteUInt32(sectionSize);
+				// Dumb thing where they write 0xFFFFFFFF insted of the real size
+				// if it's 4 since it cannot be addressed by R fixups
+				bool realSection = _version >= 9 || sectionSize > 4;
+				_stream.WriteUInt32(realSection ? sectionSize : 0xFFFFFFFF);
 
 				uint alignment = _sections[i]._alignment;
-				if (alignment == 0)
+				if (realSection && alignment == 0)
 				{
 					Logging.Warn("The alignment of section {0} in file {1} has an alignment of 0, this is bad, forcing the alignment to 0x10 to prevent game crashes", i, _dir._path);
 					alignment = 0x10;
