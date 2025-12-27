@@ -32,6 +32,10 @@ namespace igLibrary.Core
 				_systemNamespaces.Append(name);
 			}
 		}
+		public void RemoveSystemNamespace(string name)
+		{
+			_systemNamespaces.Remove(name);
+		}
 		public bool IsSystemObject(igObject obj)
 		{
 			igHandle hnd = GetHandleInternal(obj);
@@ -67,6 +71,21 @@ namespace igLibrary.Core
 			}
 
 			return handle;
+		}
+
+		public void RemoveHandle(igHandleName handleName)
+		{
+			ulong key = GetHandleKey(handleName._ns, handleName._name);
+			if (_handleTable.TryGetValue(key, out igHandle? handle))
+			{
+				_handleTable.Remove(key);
+
+				igObject? obj = handle._object;
+				if (obj != null)
+				{
+					_objectToHandleTable.Remove(obj);
+				}
+			}
 		}
 
 		public igHandle GetHandle(igObject obj) => GetHandleInternal(obj);
