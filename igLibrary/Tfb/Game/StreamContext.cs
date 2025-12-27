@@ -64,6 +64,17 @@ namespace igLibrary.Tfb.Game
 		public IReadOnlyDictionary<string, Streamable> Streamables => _streamables;
 
 
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		private StreamContext()
+		{
+			igObjectHandleManager.Singleton.AddSystemNamespace("global.bld");
+		}
+
+
+
 		/// <summary>
 		/// Loads a tfb path
 		/// </summary>
@@ -114,17 +125,7 @@ namespace igLibrary.Tfb.Game
 				languageLoader.Read(streamable._languagePak, false);
 
 				// ...then set up the handles...
-				igHandleName levelBldName = new igHandleName();
-				levelBldName._ns = new igName("level.bld");
-				for (int l = 0; l < streamable._languagePak._objectList._count; l++)
-				{
-					igObject obj = streamable._languagePak._objectList[l];
-
-					levelBldName._name._hash = (uint)(l + 1);
-
-					igHandle handle = igObjectHandleManager.Singleton.LookupHandle(levelBldName);
-					handle._object = obj;
-				}
+				BindLanguagePackHandles(streamable);
 			}
 
 			// Then load the level.bld
@@ -142,7 +143,8 @@ namespace igLibrary.Tfb.Game
 			igIGZLoader levelLoader = new igIGZLoader(streamable._levelBundle, levelBundleStream, false);
 			levelLoader.Read(streamable._levelBundle, false);
 
-			// TODO: Remove the handles
+			// clean up the handles
+			UnbindLanguagePackHandles(streamable);
 
 			PostLoadTasks(streamable._levelBundle);
 
@@ -177,6 +179,58 @@ namespace igLibrary.Tfb.Game
 			loader.Read(directory, false);
 
 			return directory;
+		}
+
+
+
+		/// <summary>
+		/// Add "level.bld" (language pack) handles to the igObjectHandleManager
+		/// </summary>
+		/// <param name="streamable"></param>
+		private void BindLanguagePackHandles(Streamable streamable)
+		{
+			if (streamable._languagePak == null)
+			{
+				return;
+			}
+
+			// Set up handles
+			igHandleName levelBldName = new igHandleName();
+			levelBldName._ns = new igName("level.bld");
+			for (int l = 0; l < streamable._languagePak._objectList._count; l++)
+			{
+				igObject obj = streamable._languagePak._objectList[l];
+
+				levelBldName._name._hash = (uint)(l + 1);
+
+				igObjectHandleManager.Singleton.AddObject(obj, levelBldName);
+			}
+			igObjectHandleManager.Singleton.AddSystemNamespace("level.bld");
+		}
+
+
+
+		/// <summary>
+		/// Add "level.bld" (language pack) handles to the igObjectHandleManager
+		/// </summary>
+		/// <param name="streamable"></param>
+		private void UnbindLanguagePackHandles(Streamable streamable)
+		{
+			if (streamable._languagePak == null)
+			{
+				return;
+			}
+
+			igObjectHandleManager.Singleton.RemoveSystemNamespace("level.bld");
+
+			igHandleName levelBldName = new igHandleName();
+			levelBldName._ns = new igName("level.bld");
+			for (int l = 0; l < streamable._languagePak._objectList._count; l++)
+			{
+				levelBldName._name._hash = (uint)(l + 1);
+
+				igObjectHandleManager.Singleton.RemoveHandle(levelBldName);
+			}
 		}
 
 
@@ -230,10 +284,10 @@ namespace igLibrary.Tfb.Game
 
 			for (int g = 0; g < globalBld._objectList._count; g++)
 			{
+				igObject obj = globalBld._objectList[g];
 				name._name._hash = ++_globalBldCounter;
 
-				igHandle handle = igObjectHandleManager.Singleton.LookupHandle(name);
-				handle._object = globalBld._objectList[g];
+				igObjectHandleManager.Singleton.AddObject(obj, name);
 			}
 		}
 	}
