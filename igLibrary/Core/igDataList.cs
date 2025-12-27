@@ -11,12 +11,16 @@ using System.Collections;
 
 namespace igLibrary.Core
 {
-	public class igTDataList<T> : igContainer, IEnumerable<T>, IigDataList
+	public class igTDataList<T> : igContainer, IList<T>, IigDataList
 	{
 		//TODO: Modify the reflection system so we can put proper access modifiers on these
 		public int _count;
 		public int _capacity;
 		public igMemory<T> _data = new igMemory<T>();
+
+		public int Count => throw new NotImplementedException();
+
+		public bool IsReadOnly => throw new NotImplementedException();
 
 		public T this[int index]
 		{
@@ -90,6 +94,71 @@ namespace igLibrary.Core
 			}
 		}
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+		public int IndexOf(T value)
+		{
+			for (int i = 0; i < _count; i++)
+			{
+				if (Equals(_data[i], value))
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		public void Insert(int index, T item)
+		{
+			if (_capacity <= _count)
+			{
+				SetCapacity(_capacity + 1);
+			}
+
+			// Shift things back
+			for (int i = _capacity - 1; i >= index+1; i--)
+			{
+				_data[i] = _data[i-1];
+			}
+
+			_data[index] = item;
+		}
+
+		public void RemoveAt(int index)
+		{
+			// Shift things forward
+			for (int i = _capacity - 2; i >= index; i--)
+			{
+				_data[i] = _data[i+1];
+			}
+		}
+
+		public void Add(T item) => Append(item);
+
+		public void Clear()
+		{
+			_data.Dealloc();
+		}
+
+		public bool Contains(T item)
+		{
+			return IndexOf(item) >= 0;
+		}
+
+		public void CopyTo(T[] array, int arrayIndex)
+		{
+			Array.Copy(_data.Buffer, arrayIndex, array, 0, _count - arrayIndex);
+		}
+
+		public bool Remove(T item)
+		{
+			int index = IndexOf(item);
+			if (index >= 0)
+			{
+				RemoveAt(index);
+			}
+			return index >= 0;
+		}
 	}
 
 	public interface IigDataList

@@ -83,6 +83,10 @@ namespace igLibrary.Core
 		}
 		public object? GetItem(int i) => this[i];
 		public void SetItem(int i, object? obj) => this[i] = (T)obj;
+		public void Dealloc()
+		{
+			_data = null;
+		}
 		public void Alloc(int itemCount)
 		{
 			_data = new T[itemCount];
