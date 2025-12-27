@@ -80,7 +80,18 @@ namespace igLibrary.Core
 		public void WriteFile(igObjectDirectory dir, Stream dst, IG_CORE_PLATFORM platform)
 		{
 			_platform = platform;
-			_version = 0x09;
+			switch (igArkCore.Game)
+			{
+				case igArkCore.EGame.EV_SkylandersTrapTeam:
+					_version = 0x08;
+					break;
+				case igArkCore.EGame.EV_SkylandersSuperchargers:
+				case igArkCore.EGame.EV_SkylandersImaginators:
+					_version = 0x09;
+					break;
+				default:
+					throw new NotImplementedException($"Game {igArkCore.Game} is not implemented");
+			}
 			_stream = new StreamHelper(dst, igAlchemyCore.isPlatformBigEndian(platform) ? StreamHelper.Endianness.Big : StreamHelper.Endianness.Little);
 			_dir = dir;
 
