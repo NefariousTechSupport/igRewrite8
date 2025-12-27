@@ -55,6 +55,7 @@ namespace igCauldron3
 					return;
 				}
 
+				// TODO: this causes a memory leak whenever the igImage2 is unloaded
 				igTContext<igBaseGraphicsDevice>._instance.CreateTexture(igResourceUsage.kUsageDefault, image);
 			}
 
