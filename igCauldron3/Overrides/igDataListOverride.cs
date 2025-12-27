@@ -42,6 +42,18 @@ namespace igCauldron3
 				dataList.SetCount(memValue.GetData().Length);
 				dataList.SetCapacity(memValue.GetData().Length);
 			});
+
+			// Render remaining fields
+			for (int i = 3; i < meta._metaFields.Count; i++)
+			{
+				igMetaField field = meta._metaFields[i];
+
+				if (field is igStaticMetaField) continue;
+				if (field is igPropertyFieldMetaField) continue;
+
+				object? fieldValue = field._fieldHandle!.GetValue(obj);
+				FieldRenderer.RenderField(id, field._fieldName, fieldValue, field, (newValue) => field._fieldHandle.SetValue(obj, newValue));
+			}
 		}
 	}
 }
