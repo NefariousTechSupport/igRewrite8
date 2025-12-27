@@ -226,6 +226,11 @@ namespace igLibrary.Core
 				}
 			}
 
+			if (File.Exists(Path.Combine(_root, fp.getNativePath())))
+			{
+				return true;
+			}
+
 			return false;
 		}
 
