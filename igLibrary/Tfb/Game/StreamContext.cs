@@ -30,7 +30,7 @@ namespace igLibrary.Tfb.Game
 		/// <summary>
 		/// Structure representing a loaded file
 		/// </summary>
-		public struct Streamable
+		public class Streamable
 		{
 			public igArchive _archive;
 			public igObjectDirectory _levelBundle;
