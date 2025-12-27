@@ -612,7 +612,21 @@ namespace igLibrary.Core
 			WriteRuntimeFixup(0x444E4852, ref startOffset, ref endOffset, x => x._runtimeFields._handles);			//RHND
 			WriteRuntimeFixup(0x58454E52, ref startOffset, ref endOffset, x => x._runtimeFields._namedExternals);	//RNEX
 			WriteRuntimeFixup(0x4E484D52, ref startOffset, ref endOffset, x => x._runtimeFields._memoryHandles);	//RMHN
-			WriteRuntimeFixup(0x544F4F52, ref startOffset, ref endOffset, x => x._runtimeFields._objectLists);		//ROOT
+
+			// ROOT fixup isn't actually compressed, it took me 3 years to learn this
+			startOffset = endOffset;
+			uint rootAlignedStart = 0x10;
+			if (((startOffset & 0x4) != 0) && igAlchemyCore.isPlatform64Bit(_platform))
+			{
+				rootAlignedStart += 4;
+			}
+			_stream.WriteUInt32(0x544F4F52);
+			_stream.WriteInt32(1);
+			_stream.WriteUInt32(rootAlignedStart + 4);
+			_stream.WriteUInt32(rootAlignedStart);
+			_stream.WriteUInt32((uint)_sections[0]._runtimeFields._objectLists[0]);
+			endOffset = startOffset + rootAlignedStart + 4;
+			_fixupCount += 1;
 
 			_stream.Seek(endOffset);
 

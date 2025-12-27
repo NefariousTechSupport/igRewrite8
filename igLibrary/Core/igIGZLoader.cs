@@ -268,8 +268,8 @@ namespace igLibrary.Core
 						InstantiateAndAppendObjects();
 						break;
 					case 0x544F4F52:							//ROOT
-						UnpackCompressedInts(_runtimeFields._objectLists, _stream.ReadBytes(length - start), count, false);
-						_dir._objectList = (igObjectList)_offsetObjectList[_runtimeFields._objectLists[0]];
+						// it's not actually compressed
+						_dir._objectList = (igObjectList)_offsetObjectList[_stream.ReadUInt32()];
 						break;
 					case 0x53464F52:							//ROFS
 						UnpackCompressedInts(_runtimeFields._offsets, _stream.ReadBytes(length - start), count);
