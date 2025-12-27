@@ -307,6 +307,14 @@ namespace igLibrary.Core
 			{
 				ret = new SaverSection(pool, _platform);
 				ret._index = (uint)_sections.Count;
+
+				if (_version < 9)
+				{
+					// first 4 bytes cannot be addressed by the R fixups
+					// so pad that out
+					ret._sh.WriteUInt32(0);
+				}
+
 				_sections.Add(ret);
 			}
 			else
