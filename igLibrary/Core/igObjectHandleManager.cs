@@ -115,7 +115,11 @@ namespace igLibrary.Core
 			hnd._object = obj;
 			hnd._namespace = nameSpace;
 			hnd._alias = name;
-			_objectToHandleTable.Add(obj, hnd);
+
+			// For some reason in tfbTool some things are added to the root
+			// object list multiple times
+			_objectToHandleTable.TryAdd(obj, hnd);
+
 			_handleTable.Add(GetHandleKey(hnd._namespace, hnd._alias), hnd);
 			return hnd;
 		}
