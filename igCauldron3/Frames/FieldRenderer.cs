@@ -92,6 +92,7 @@ namespace igCauldron3
 		{
 			if(field is igStaticMetaField) return;
 			if(field is igPropertyFieldMetaField) return;
+			if(field is igRawRefMetaField) return;
 			ImGui.Text(label);
 			ImGui.SameLine();
 			RenderFieldNoLabel(id + label, value, field, cb);
