@@ -183,7 +183,6 @@ namespace igLibrary.Core
 							igObject? obj = null;
 							if(!igObjectStreamManager.Singleton._directoriesByName.TryGetValue(depName._ns._hash, out igObjectDirectoryList? list))
 							{
-								Logging.Warn("igIGZ EXID load: Failed to find namespace {0}, referenced in {1}", depName._ns._hash.ToString("X08"), _dir._path);
 								goto finish;
 							}
 							for(int d = 0; d < list._count; d++)
@@ -202,12 +201,13 @@ namespace igLibrary.Core
 								}
 								if(obj != null) break;
 							}
-							if(obj == null)
+						finish:
+							igHandle handle = igObjectHandleManager.Singleton.LookupHandle(depName);
+							if (handle._object == null)
 							{
-								Logging.Warn("igIGZ EXID load: Failed to find object {0} in {1}, referenced in {2}", depName._name._hash.ToString("X08"), list[0]._name._string, _dir._path);
+								Logging.Warn("igIGZ EXID load: Failed to find object for handle {0}, referenced in {1}", handle.ToString(), _dir._path);
 							}
-							finish:
-								_externalList.Add(igObjectHandleManager.Singleton.LookupHandle(depName));
+							_externalList.Add(handle);
 						}
 						break;
 					case 0x4D4E5845:							//EXNM
