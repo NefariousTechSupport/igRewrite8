@@ -29,6 +29,7 @@ namespace igLibrary.Core
 		private uint _fixupCount;
 		private uint _fixupSize;
 		private ulong _nameListOffset = 0;
+		private ulong _rootListOffset = 0;
 
 		public class SaverSection
 		{
@@ -112,7 +113,7 @@ namespace igLibrary.Core
 			}
 
 			SaverSection rootSection = GetSaverSection(dir._objectList.internalMemoryPool);
-			rootSection._runtimeFields._objectLists.Add(SaveObject(dir._objectList));
+			_rootListOffset = SaveObject(dir._objectList);
 			if(dir._useNameList)
 			{
 				_nameListOffset = SaveObject(dir._nameList);
@@ -624,7 +625,7 @@ namespace igLibrary.Core
 			_stream.WriteInt32(1);
 			_stream.WriteUInt32(rootAlignedStart + 4);
 			_stream.WriteUInt32(rootAlignedStart);
-			_stream.WriteUInt32((uint)_sections[0]._runtimeFields._objectLists[0]);
+			_stream.WriteUInt32((uint)_rootListOffset);
 			endOffset = startOffset + rootAlignedStart + 4;
 			_fixupCount += 1;
 
