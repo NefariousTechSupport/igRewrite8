@@ -61,20 +61,20 @@ namespace igCauldron3
 
 			object? castName = image._name;
 			FieldRenderer.RenderField(id, "_name", castName, meta.GetFieldByName("_name")!, (value) => image._name = (string)value!);
-			if(ImGui.Button("Extract"))
+			if (ImGui.Button("Extract"))
 			{
 				string defaultFile = Path.ChangeExtension(Path.GetFileName(image._name), ".png");
 				string? filePath = CrossFileDialog.SaveFile("Save Image...", ".bmp;.dds;.gif;.jpg;.pbm;.png;.qoi;.tga;.tiff;.webp", defaultFile);
-				if(!string.IsNullOrWhiteSpace(filePath))
+				if (!string.IsNullOrWhiteSpace(filePath))
 				{
 					FileStream fs = File.Create(filePath);
 					string ext = Path.GetExtension(filePath);
-					if(ext == ".dds") igImage2Exporter.ExportToDds(image, fs);
-					else              TextureConversion.Export(image, fs, ext);
+					if (ext == ".dds") igImage2Exporter.ExportToDds(image, fs);
+					else TextureConversion.Export(image, fs, ext);
 					fs.Close();
 				}
 			}
-			if(ImGui.Button("Replace"))
+			if (ImGui.Button("Replace"))
 			{
 				string defaultFile = Path.ChangeExtension(Path.GetFileName(image._name), ".png");
 				string? filePath = CrossFileDialog.OpenFile("Open Image...", ".bmp;.dds;.gif;.jpg;.pbm;.png;.qoi;.tga;.tiff;.webp", defaultFile);
