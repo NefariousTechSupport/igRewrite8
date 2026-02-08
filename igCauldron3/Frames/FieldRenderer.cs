@@ -7,12 +7,14 @@
 */
 
 
-using System.Reflection;
+using igCauldron3.Frames;
 using igLibrary.Core;
 using igLibrary.DotNet;
 using igLibrary.Math;
+using igLibrary.Tfb.Script;
 using igLibrary.Vfx;
 using ImGuiNET;
+using System.Reflection;
 
 namespace igCauldron3
 {
@@ -427,7 +429,23 @@ namespace igCauldron3
 		public static void RenderField_Object(string id, object? raw, igMetaField field, FieldSetCallback cb)
 		{
 			DirectoryManagerFrame._instance.RenderObject(id, (igObject?)raw);
-			if(ImGui.BeginPopupContextItem(id))
+			
+			if (raw is tfbScriptInfo ts)
+			{
+                ImGui.SameLine();
+                ImGui.PushID(id);
+                bool editscript = ImGui.Button("edit script");
+                if (editscript)
+                {
+                    OpCodeList codeList = ts._opList;
+                    OpCreateVariableList varList = ts._masterVarList;
+					igObjectDirectory capturedDir = DirectoryManagerFrame._instance.CurrentDir!;
+                    Window._instance._frames.Add(new TfbScriptEditor(Window._instance, capturedDir, codeList, varList));
+
+                }
+                ImGui.PopID();
+            }
+            if (ImGui.BeginPopupContextItem(id))
 			{
 				if(ImGui.Selectable("Change Reference"))
 				{

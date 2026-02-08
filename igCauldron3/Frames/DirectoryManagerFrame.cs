@@ -7,8 +7,11 @@
 */
 
 
+using System.Diagnostics;
 using System.Reflection;
+using igCauldron3.Frames;
 using igLibrary.Core;
+using igLibrary.Tfb.Script;
 using ImGuiNET;
 
 namespace igCauldron3
@@ -156,7 +159,6 @@ namespace igCauldron3
 				ImGui.Text("null");
 				return;
 			}
-
 			//TODO: add editing for these
 			if(obj is igMetaObject mo)
 			{
