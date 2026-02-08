@@ -12,6 +12,7 @@ namespace igLibrary.Tests;
 using igLibrary.Core;
 using igLibrary.Tfb.Script;
 using igLibrary.Vfx;
+using igLibrary.Tfb;
 
 public class MetadataTest
 {
@@ -228,6 +229,70 @@ public class MetadataTest
 	}
 
 
+    /// <summary>
+    ///  Ensure metaenums which share the same name are overwritten
+    ///  to "(Object)_Metaenum" 
+    ///  example: State -> AbstractPlacement_State
+    /// </summary>
+    [Fact]
+    public void MetaEnumCheck()
+	{
+		igArkCore.ReadFromXmlFile(igArkCore.EGame.EV_SkylandersTrapTeam);
+		CheckEnum("AbstractPlacement_State");
+		CheckEnum("igIGZLoader_State");
+	}
+	private void CheckEnum(string metaenum2)
+	{
+		igMetaEnum? metaEnum = igArkCore.GetMetaEnum(metaenum2);
+        Assert.NotNull(metaEnum);
+		switch (metaEnum._name)
+		{
+			case "AbstractPlacement_State":
+                Assert.Equal("FIRST_PLACEMENT_STATE", metaEnum._names[0]);
+                Assert.Equal(0, metaEnum._values[0]);
+                Assert.Equal("PLACEMENT_PLAYER", metaEnum._names[1]);
+                Assert.Equal(0, metaEnum._values[1]);
+                Assert.Equal("PLACEMENT_ACTIVE", metaEnum._names[2]);
+                Assert.Equal(1, metaEnum._values[2]);
+                Assert.Equal("PLACEMENT_INACTIVE", metaEnum._names[3]);
+                Assert.Equal(2, metaEnum._values[3]);
+                Assert.Equal("NUM_ITERATED_PLACEMENT_STATES", metaEnum._names[4]);
+                Assert.Equal(3, metaEnum._values[4]);
+                Assert.Equal("PLACEMENT_REMOVED", metaEnum._names[5]);
+                Assert.Equal(3, metaEnum._values[5]);
+                Assert.Equal("NUM_MANAGED_PLACEMENT_STATES", metaEnum._names[6]);
+                Assert.Equal(4, metaEnum._values[6]);
+                Assert.Equal("PLACEMENT_UNMANAGED", metaEnum._names[7]);
+                Assert.Equal(4, metaEnum._values[7]);
+                Assert.Equal("PLACEMENT_TEMPLATE", metaEnum._names[8]);
+                Assert.Equal(5, metaEnum._values[8]);
+                break;
+			case "igIGZLoader_State":
+                Assert.Equal("kStateIdle", metaEnum._names[0]);
+                Assert.Equal(0, metaEnum._values[0]);
+                Assert.Equal("kStateOpening", metaEnum._names[1]);
+                Assert.Equal(1, metaEnum._values[1]);
+                Assert.Equal("kStateOpened", metaEnum._names[2]);
+                Assert.Equal(2, metaEnum._values[2]);
+                Assert.Equal("kStateReadingHeader", metaEnum._names[3]);
+                Assert.Equal(3, metaEnum._values[3]);
+                Assert.Equal("kStateReadHeader", metaEnum._names[4]);
+                Assert.Equal(4, metaEnum._values[4]);
+                Assert.Equal("kStateReadingSections", metaEnum._names[5]);
+                Assert.Equal(5, metaEnum._values[5]);
+                Assert.Equal("kStateReadSections", metaEnum._names[6]);
+                Assert.Equal(6, metaEnum._values[6]);
+                Assert.Equal("kStateFinished", metaEnum._names[7]);
+                Assert.Equal(7, metaEnum._values[7]);
+                Assert.Equal("kStateAborting", metaEnum._names[8]);
+                Assert.Equal(8, metaEnum._values[8]);
+                Assert.Equal("kStateFailed", metaEnum._names[9]);
+                Assert.Equal(9, metaEnum._values[9]);
+                break;
+			default:
+				break;
+		}
+    }
 
 	/// <summary>
 	/// Ensure various types have their element type set to tfbScriptObject
@@ -246,7 +311,13 @@ public class MetadataTest
 		TfbScriptObjectElementTypeChecks("SetStack");
 		TfbScriptObjectElementTypeChecks("ValueStack");
 		TfbScriptObjectElementTypeChecks("VectorStack");
-	}
+		TfbScriptObjectElementTypeChecks("ScriptVariantList");
+        TfbScriptObjectElementTypeChecks("TagList");
+        TfbScriptObjectElementTypeChecks("OpCreateVariableList");
+        TfbScriptObjectElementTypeChecks("OpCodeList");
+        TfbScriptObjectElementTypeChecks("SoundList");
+        TfbScriptObjectElementTypeChecks("SpriteInfoList");
+    }
 
 
 
