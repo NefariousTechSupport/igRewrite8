@@ -14,6 +14,7 @@ namespace igLibrary.Sg
 	public class igTechnique : igNamedObject
 	{
 		public igCachedAttrList _attrs;
+		public igObject _passList; // igTechniquePassList
 		public igTechniqueParameterList _parameterList;
 		public igTechniqueSamplerList _samplerList;
 		public igTechniqueVertexComponentList _vertexComponents;

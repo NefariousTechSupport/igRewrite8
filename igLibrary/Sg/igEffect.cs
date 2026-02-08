@@ -11,7 +11,10 @@ namespace igLibrary.Sg
 {
 	public class igEffect : igNamedObject
 	{
-		public igStringIntHashTable _globalTechniqueTable;
+		public igObject _parameterList; //igEffectParameterList
+		public igObject _samplerList; //igEffectSamplerList
+		public igObject _vertexComponentDefinitionList; //igVertexComponentDefinitionList
+        public igStringIntHashTable _globalTechniqueTable;
 		public int _globalTechniqueIndexCounter;
 		public igTechniqueList _techniqueList;
 		public igObjectAnnotationTable _annotations;
