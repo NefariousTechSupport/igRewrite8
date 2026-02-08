@@ -13,6 +13,7 @@ namespace igLibrary.Core
 	{
 		public igFileDescriptor _file;
 		public long _offset = 0;
+		public Mode _mode;
 		public igFileWorkItem.Priority _priority = igFileWorkItem.Priority.kPriorityNormal;
 		public void Open(string path)
 		{

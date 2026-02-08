@@ -76,6 +76,7 @@ namespace igLibrary.Core
 		public Priority _priority;
 		public Status _status;
 		public igBlockingType _blocking;
+		public int _id;
 		public void SetStatus(Status status)
 		{
 			_status = status;

@@ -18,7 +18,8 @@ namespace igLibrary.Core
 		public igMemory<U> _keys;
 		public int _hashItemCount;
 		public bool _autoRehash = true;
-		public float _loadFactor = 0.5f;	//how much is expected to used up, basically if i wanna expect to fill in 0x10 items, allocate 0x20
+		public float _loadFactor = 0.5f;    //how much is expected to used up, basically if i wanna expect to fill in 0x10 items, allocate 0x20
+		public igRawRefMetaField _hashFunc;
 		public ICollection<U> Keys {
 			get
 			{

@@ -23,7 +23,7 @@ namespace igLibrary.Core
 			for(int i = 0; i < metaFields.Count; i++)
 			{
 				if(metaFields[i] is igStaticMetaField) continue;
-				if(metaFields[i] is igPropertyFieldMetaField) continue;
+                if (metaFields[i] is igPropertyFieldMetaField) continue;
 				if(!metaFields[i].IsApplicableForPlatform(loader._platform)) continue;
 
 				//if(!metaFields[i]._properties._persistent) continue;
@@ -97,19 +97,29 @@ namespace igLibrary.Core
 
 				object? data = null;
 
-				if(metaFields[i]._properties._persistent)
+				if (saver._version < 0x7)
 				{
-					FieldInfo? field = metaFields[i]._fieldHandle;
+                    FieldInfo? field = metaFields[i]._fieldHandle;
 
-					if(field == null) continue;
-
-					data = field.GetValue(this);
-				}
+                    if (field == null) continue;
+                    data = field.GetValue(this);
+                }
 				else
 				{
-					data = metaFields[i].GetDefault(internalMemoryPool);
-					if((metaFields[i].GetOutputType().IsValueType || metaFields[i].GetOutputType() == typeof(string)) && data == null) continue;
-				}
+                    if (metaFields[i]._properties._persistent)
+                    {
+                        FieldInfo? field = metaFields[i]._fieldHandle;
+
+                        if (field == null) continue;
+
+                        data = field.GetValue(this);
+                    }
+                    else
+                    {
+                        data = metaFields[i].GetDefault(internalMemoryPool);
+                        if ((metaFields[i].GetOutputType().IsValueType || metaFields[i].GetOutputType() == typeof(string)) && data == null) continue;
+                    }
+                }
 				
 				section._sh.Seek(objectOffset + metaFields[i]._offsets[saver._platform]);
 

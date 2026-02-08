@@ -17,6 +17,7 @@ namespace igLibrary.Core
 	{
 		public string _path;
 		public igName _name;
+		public static uint _igzVersion;
 		public List<igObjectDirectory> _dependencies = new List<igObjectDirectory>();
 		public igObjectList _objectList = new igObjectList();
 		public bool _useNameList = false;

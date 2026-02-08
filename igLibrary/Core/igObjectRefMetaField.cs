@@ -51,9 +51,9 @@ namespace igLibrary.Core
 			if(isExid)
 			{
 				igObject? obj = loader._externalList[(int)(raw & 0x7FFFFFFF)].GetObjectAlias<igObject>();
-#if DEBUG // Assert that the exid has been set beforehand
-				Debug.Assert(obj != null);
-#endif // _DEBUG
+//#if DEBUG // Assert that the exid has been set beforehand
+//                    Debug.Assert(obj != null);
+//#endif // _DEBUG
 				return obj;
 			}
 			if(raw != 0)

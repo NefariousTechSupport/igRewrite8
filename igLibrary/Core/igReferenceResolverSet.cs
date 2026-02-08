@@ -30,7 +30,7 @@ namespace igLibrary.Core
 		public igObject? ResolveReference(igHandleName handleName, igReferenceResolverContext ctx)
 		{
 			igReferenceResolver resolver;
-			if(this.TryGetValue(handleName._ns._string, out resolver))
+			if(this.TryGetValue(handleName._ns._string, out resolver)) // crash because of null
 			{
 				return resolver.ResolveReference(handleName._name._string, ctx);
 			}

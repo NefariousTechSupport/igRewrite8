@@ -12,6 +12,11 @@ namespace igLibrary.Core
 	public class igRawRefMetaField : igRefMetaField
 	{
 		public override object? ReadIGZField(igIGZLoader loader) => loader.ReadRawOffset();
+        public override bool SetMemoryFromString(ref object? target, string input)
+        {
+			target = null;
+			return true;
+        }
 		public override void WriteIGZField(igIGZSaver saver, igIGZSaver.SaverSection section, object? value){}
 		public override uint GetAlignment(IG_CORE_PLATFORM platform) => igAlchemyCore.GetPointerSize(platform);
 		public override uint GetSize(IG_CORE_PLATFORM platform) => igAlchemyCore.GetPointerSize(platform);
