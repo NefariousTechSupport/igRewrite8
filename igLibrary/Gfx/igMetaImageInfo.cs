@@ -16,6 +16,8 @@ namespace igLibrary.Gfx
 		private static Lazy<igMetaImageInfo> _metaImageInfoLazy = new Lazy<igMetaImageInfo>(() => new igMetaImageInfo());
 		public static igMetaImageInfo _metaImageInfo => _metaImageInfoLazy.Value;
 		public igStringMetaImageHashTable _metaImagesTable = new igStringMetaImageHashTable() { _autoRehash = true };
+		public igObject _platformMetaImages; // igPlatformMetaImagelist
+		public igImagePluginList _imagePlugins;
 		private igObjectDirectory? _metaimageDirInternal = null;
 		public igMetaImageList _metaImages = new igMetaImageList();
 		public igObjectDirectory _metaimageDir {

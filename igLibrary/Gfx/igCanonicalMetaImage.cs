@@ -11,6 +11,8 @@ namespace igLibrary.Gfx
 {
 	public class igCanonicalMetaImage : igMetaImage
 	{
+		public igRawRefArrayMetaField _platformFormats;
+		public igRawRefArrayMetaField _platformTileFormats;
 		public override ushort GetAlignment() => 1;
 		public override uint GetPadding(uint width) => 1;
 		public override uint GetTextureLevelOffset(int width, int height, int depth, int levelCount, int imageCount, int targetLevel, int imageIndex)
