@@ -1,0 +1,11 @@
+[engine_type]
+TfbTool
+
+[global_bld_load_tfb]
+app:/permanent/bootstrap
+
+[bld_load_tfb]
+app:/misc/bootstrap_lang
+
+[global_bld_load_tfb]
+app:/permanent/global
