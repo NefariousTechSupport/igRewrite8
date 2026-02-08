@@ -311,8 +311,8 @@ namespace igLibrary.Core
                         break;
                     case 0x544F4F52:
                     case 0x08:                          //ROOT
-                        UnpackCompressedInts(_runtimeFields._objectLists, _stream.ReadBytes(length - start), count, false);
-                        _dir._objectList = (igObjectList)_offsetObjectList[_runtimeFields._objectLists[0]];
+                        // it's not actually compressed
+						_dir._objectList = (igObjectList)_offsetObjectList[_stream.ReadUInt32()];
                         break;
                     case 0x53464F52:
                     case 0x06:                          //ROFS
@@ -471,5 +471,6 @@ namespace igLibrary.Core
 
             return obj;
         }
+
     }
 }
