@@ -7214,7 +7214,7 @@
 	<metaobject type="igMetaObject" refname="igShaderPool" basetype="igPool">
 	</metaobject>
 	<metaobject type="igMetaObject" refname="OpDefineMacroStack" basetype="ScriptObjectList">
-		<objectlist elementtype="OpDefineMacro"/>
+		<objectlist elementtype="tfbScriptObject"/>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="tfbMulti2WiiPixelShader" basetype="tfbWiiPixelShader">
 		<metafields>
