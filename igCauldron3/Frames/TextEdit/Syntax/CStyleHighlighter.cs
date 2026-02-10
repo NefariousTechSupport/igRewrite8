@@ -19,11 +19,22 @@ public class CStyleHighlighter : ISyntaxHighlighter
     /// <summary>
     /// Creates a new instance of the CStyleHighlighter.
     /// </summary>
-    public CStyleHighlighter()
+    public CStyleHighlighter(Dictionary<string, string>? variables = null)
     {
         var language = LanguageDefinition.TFBScript();
 
         _identifiers = new();
+        if (variables != null)
+        {
+            foreach (var kvp in variables)
+            {
+                var identifier = new Identifier(PaletteIndex.Default)
+                {
+                    Declaration = kvp.Value,
+                };
+                _identifiers.Add(kvp.Key, identifier);
+            }
+        }
         if (language.Keywords != null)
             foreach (var keyword in language.Keywords)
                 _identifiers.Add(keyword, new(PaletteIndex.Keyword));

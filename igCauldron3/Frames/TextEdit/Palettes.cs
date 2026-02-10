@@ -17,7 +17,7 @@ public static class Palettes
         0xff408080, // Preprocessor
         0xffaaaaaa, // Identifier
         0xff9bc64d, // Known identifier
-        0xffc040a0, // Preproc identifier
+        0xffc040ff, // Preproc identifier // ffc040a0
         0xff50c050, // Comment (single line)
         0xff70c050, // Comment (multi line)
         0xff101010, // Background

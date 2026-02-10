@@ -450,6 +450,19 @@ internal class TextEditorText
         if (cindex >= line.Count)
             return position;
 
+        for (int j = cindex; j >= 0; j--)
+        {
+            if (line[j].Char == ']')
+            {
+                break;
+            }
+            if (line[j].Char == '[')
+            {
+                return (position.Line, GetCharacterColumn(position.Line, j));
+            }
+        }
+
+        // if no brackets look for space
         while (cindex > 0 && char.IsWhiteSpace(line[cindex].Char))
             --cindex;
 
@@ -483,6 +496,18 @@ internal class TextEditorText
 
         if (cindex >= line.Count)
             return position;
+
+        for (int j = cindex; j < line.Count; j++)
+        {
+            if (line[j].Char == '[')
+            {
+                break;
+            }
+            if (line[j].Char == ']')
+            {
+                return (position.Line, GetCharacterColumn(position.Line, j + 1));
+            }
+        }
 
         bool prevspace = char.IsWhiteSpace(line[cindex].Char);
         var cstart = line[cindex].ColorIndex;

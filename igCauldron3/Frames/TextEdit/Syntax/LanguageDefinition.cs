@@ -189,13 +189,13 @@ public class LanguageDefinition
             Keywords = new[]
             {
                 "int", "float", "screenmeasurement", "color", "string", "actor", "actorwaypoint", "sound", "sprite", "particle", "animationinfo",
-                "scriptcolorinfo", "slider", "scriptcontroller", "valueinfo", "light", "struct", "variable", "placementreference", "callmacro", "loop", "for each",
-                "spawn", "displace", "teleportTo", "remove", "spawned", "end", "stop", "macro", "newopcodenewopcodenewopcode", "moverelative", "if", "slidevalue"
+                "scriptcolorinfo", "slider", "scriptcontroller", "valueinfo", "light", "struct", "variable", "placementreference", "callmacro", "loop", "foreach",
+                "spawn", "displace", "teleportTo", "remove", "spawned", "end", "stop", "macro", "newopcodenewopcodenewopcode", "moverelative", "if", "slidevalue",
+                "start", "elseif"
             },
             Identifiers = new[]
             {
-                "random", "round", "sin", "cos", "tan", "arcsin", "arccos", "arctan", "sqrt", "abs", "myself", "at", "facing",
-                "length", "heading", "Add", "Remove"
+                "random", "round", "sin", "cos", "tan", "arcsin", "arccos", "arctan", "sqrt", "abs", "myself", "Add", "Remove"
             }
         };
 
