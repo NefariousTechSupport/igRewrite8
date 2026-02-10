@@ -794,7 +794,7 @@ namespace igCauldron3.Frames
                             { //screen measurement is 2 ushorts, 1st half is X, second half is Y
                               //theyre multiplied by 16 ingame
                               //this is broken somehow, the values become astronomically high
-                                sb.Append("(" + (rhsValueS._value & 0xFFFF0000) * 16 + ", " + (rhsValueS._value & 0x0000FFFF) * 16 + ")");
+                                sb.Append("(x: " + (rhsValueS._value & 0xFFFF0000) * 16 + ", y: " + (rhsValueS._value & 0x0000FFFF) * 16 + ")");
                             }
                             else
                             {
@@ -894,7 +894,7 @@ namespace igCauldron3.Frames
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "macro (" + defmacro._name + ")");
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "(");
                     indentCount++;
-                    if (codeList[i + defmacro._branchPC + 1] is OpFlowBuiltInBehavior flow)
+                    if (codeList[i + defmacro._branchPC] is OpFlowBuiltInBehavior flow)
                     {
                         int parameterCount = 0;
                         if (codeList[i + 1] is OpMacroInterface macinterface)
