@@ -32,15 +32,4 @@
 		<ProjectReference Include="..\igLibrary\igLibrary.csproj" />
 	</ItemGroup>
 
-	<!--==================-->
-	<!-- Post Build Tasks -->
-	<!--==================-->
-
-	<ItemGroup>
-		<ArkFiles Include="../Resources/ArkCore/**"/>
-	</ItemGroup>
-
-	<Target Name="Debug|Release" AfterTargets="AfterBuild">
-		<Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/ArkCore/%(RecursiveDir)" SkipUnchangedFiles="true"/>
-	</Target>
 </Project>

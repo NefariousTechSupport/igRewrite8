@@ -80,13 +80,4 @@
     <DefineConstants>$(PlatformConstant);$(FeatureConstants)</DefineConstants>
   </PropertyGroup>
 
-  <!--==================-->
-  <!-- Post Build Tasks -->
-  <!--==================-->
-
-  <ItemGroup>
-    <ArkFiles Include="../Resources/ArkCore/**"/>
-    <DefaultImGuiIni Include="../Resources/defaultimgui.ini"/>
-  </ItemGroup>
-
 </Project>
