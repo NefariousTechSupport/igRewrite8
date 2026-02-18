@@ -11,6 +11,7 @@ using igCauldron3.Frames;
 using igLibrary.Core;
 using igLibrary.DotNet;
 using igLibrary.Math;
+using igLibrary.Tfb.Game;
 using igLibrary.Tfb.Script;
 using igLibrary.Vfx;
 using ImGuiNET;
@@ -437,10 +438,19 @@ namespace igCauldron3
                 bool editscript = ImGui.Button("edit script");
                 if (editscript)
                 {
-                    OpCodeList codeList = ts._opList;
+					OpCodeList codeList = ts._opList;
                     OpCreateVariableList varList = ts._masterVarList;
 					igObjectDirectory capturedDir = DirectoryManagerFrame._instance.CurrentDir!;
-                    Window._instance._frames.Add(new TfbScriptEditor(Window._instance, capturedDir, codeList, varList));
+                    var scriptDependencies = new Dictionary<List<OpAbstractCreateVariable>, string>(StreamContext.globalScriptDependencies);
+					if (capturedDir._name._string != "app:/permanent/global.bld (level bld)")
+					{
+                        Dictionary<List<OpAbstractCreateVariable>, string>? localScriptVariables = ScriptParser.ReadDependencies(capturedDir);
+                        foreach (var kv in localScriptVariables)
+                        {
+                            scriptDependencies.Add(kv.Key, kv.Value);
+                        }
+                    }
+                    Window._instance._frames.Add(new TfbScriptEditor(Window._instance, capturedDir, codeList, varList, scriptDependencies));
 
                 }
                 ImGui.PopID();

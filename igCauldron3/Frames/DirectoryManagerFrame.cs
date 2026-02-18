@@ -28,7 +28,6 @@ namespace igCauldron3
 		private int _dirIndex = 0;
 		public igObjectDirectory? CurrentDir => _dirIndex < _dirs._count ? _dirs[_dirIndex] : null;
 
-
 		/// <summary>
 		/// Constructor
 		/// </summary>

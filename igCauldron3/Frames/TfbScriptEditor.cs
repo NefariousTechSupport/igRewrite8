@@ -24,6 +24,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
 using Vulkan;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 namespace igCauldron3.Frames
 {
 
@@ -68,7 +69,7 @@ namespace igCauldron3.Frames
         private Dictionary<string, string> localvarstrings = new Dictionary<string, string>();
         private Dictionary<OpFlowBuiltInBehavior, string> branchTargets = new Dictionary<OpFlowBuiltInBehavior, string>(); // for OpAbstractFlow
         string script = "tfbscript test";
-        public TfbScriptEditor(Window wnd, igObjectDirectory currentdir2, OpCodeList codeList2, OpCreateVariableList varList2) : base(wnd)
+        public TfbScriptEditor(Window wnd, igObjectDirectory currentdir2, OpCodeList codeList2, OpCreateVariableList varList2, Dictionary<List<OpAbstractCreateVariable>, string> dependencies) : base(wnd)
         {
             codeList = codeList2;
             varList = varList2;
@@ -85,7 +86,7 @@ namespace igCauldron3.Frames
                 foreach (var kvp in localvariables)
                 {
                     scriptbuilder.AppendLine(kvp.Value + " [" + kvp.Key._varName + "]");
-                    localvarstrings.Add("[" + kvp.Key._varName + "]", kvp.Value);
+                    localvarstrings.TryAdd("[" + kvp.Key._varName + "]", kvp.Value);
                 }
             }
             scriptbuilder.AppendLine("Script Section");
@@ -142,16 +143,16 @@ namespace igCauldron3.Frames
             for (int i = 0; i < varList._count; i++)
             {
                 linecount++;
-                if (varList[i]._varContentsType is OpDefineStructure)
+                if (varList[i]._varContentsType is OpDefineStructure defineStructure)
                 {
-                    localvariables.Add(varList[i], "struct");
-                    externalsb.AppendLine("// variable type: OpDefineStructure not implemented (idk how it works)");
+                    localvariables.TryAdd(varList[i], "struct " + defineStructure._name);
+                    externalsb.AppendLine("struct " + defineStructure._name + " [" + varList[i]._varName + "]");
                     continue;
                 }
-                else if (varList[i]._varContentsType is OpDefineMacro)
+                else if (varList[i]._varContentsType is OpDefineMacro defineMacro)
                 {
-                    localvariables.Add(varList[i], "macro");
-                    externalsb.AppendLine("// variable type: OpDefineMacro not implemented (works uniquely)");
+                    localvariables.TryAdd(varList[i], "macro " + defineMacro._name);
+                    externalsb.AppendLine("macro " + defineMacro._name + " [" + varList[i]._varName + "]");
                     continue;
                 }
                 igExternalReferenceSystem.Singleton._globalSet.MakeReference((igMetaObject)varList[i]._varContentsType, null, out igHandleName varContentsName);
@@ -392,6 +393,9 @@ namespace igCauldron3.Frames
             {
                 switch (rh[i])
                 {
+                    case OpSlideValue:
+                        sb.Append("[^slider]");
+                        break;
                     case OpLoopValue:
                         sb.Append("[loop index]");
                         break;
@@ -402,7 +406,7 @@ namespace igCauldron3.Frames
                         sb.Append(spawnedobjects[spawn1]);
                         break;
                     case OpForEach:
-                        sb.Append("[foreach]");
+                        sb.Append("[^for each]");
                         break;
                     case OpFindSubSet:
                         sb.Append("[^subset]");
@@ -411,6 +415,23 @@ namespace igCauldron3.Frames
                         sb.Append("[" + opvar._varName + "]");
                         break;
                     case ValueInfo valinfo:
+                        string valueinfoval = "";
+                        igExternalReferenceSystem.Singleton._globalSet.MakeReference(valinfo._type, null, out igHandleName name);
+                        igObject? valueinfo2 = igExternalReferenceSystem.Singleton._globalSet.ResolveReference(name, null);
+                        if (valueinfo2 is igMetaObject type)
+                        {
+                            switch (type._name)
+                            {
+                                case "FloatMeasurement":
+                                    valueinfoval = BitConverter.Int32BitsToSingle(valinfo._value).ToString();
+                                    localvarstrings.TryAdd(valinfo._name, valueinfoval);
+                                    break;
+                                case "IntMeasurement":
+                                    valueinfoval = valinfo._value.ToString();
+                                    localvarstrings.TryAdd(valinfo._name, valueinfoval);
+                                    break;
+                            }
+                        }
                         sb.Append("'" + valinfo._name + "'");
                         break;
                     case ScriptReference sref:
@@ -437,6 +458,12 @@ namespace igCauldron3.Frames
                 {
                     case null:
                         continue;
+                    case OpControl:
+                        sb.Append("[^controlled]");
+                        break;
+                    case OpFindVariable:
+                        sb.Append("[^found]");
+                        break;
                     case OpLoopValue:
                         sb.Append("[loop index]");
                         break;
@@ -444,7 +471,7 @@ namespace igCauldron3.Frames
                         sb.Append("[" + opvar._varName + "]"); // variables should be written in brackets or other separator
                         break;
                     case OpForEach:
-                        sb.Append("[for each]");
+                        sb.Append("[^for each]");
                         break;
                     case OpFindSubSet:
                         sb.Append("[^subset]");
@@ -452,19 +479,14 @@ namespace igCauldron3.Frames
                     case OpStartSequence:
                         sb.Append("[^sequence]");
                         break;
+                    case OpSlideValue:
+                        sb.Append("[^slider]");
+                        break;
                     case OpSpawn spawn1:
                         sb.Append(spawnedobjects[spawn1]);
                         break;
                     case ScriptSetReference scriptsetref:
-                        switch (scriptsetref._name)
-                        {
-                            case "OpTopLevelBehavior.my":
-                                sb.Append("myself");
-                                break;
-                            default:
-                                sb.Append("(" + scriptsetref._name.ToString().Split('.').Last() + ")");
-                                break;
-                        }
+                        sb.Append("(" + scriptsetref._name.ToString().Split('.').Last() + ")");
                         break;
                     case ScriptReference scriptref:
                         switch (scriptref._name)
@@ -576,7 +598,26 @@ namespace igCauldron3.Frames
                         sb.Append(LeftHandStack);
                         break;
                     case tfbScriptObject so:
-                        sb.Append("(" + so._name.ToString().Split('.').Last() + ")");
+                        // if StreamContext.globalObjects.Contains(so)
+                        // {
+                        //     sb.Append("global::");
+                        // }
+                        // elseif (languagepak).Contains(so)
+                        // {
+                        //     sb.Append("lang::");
+                        // }
+                        // else
+                        // {
+                        //     sb.Append("local::");
+                        // }
+                        if (so._name.ToString().Split('.').Last().Contains(' '))
+                        {
+                            sb.Append('(' + so._name.ToString().Split('.').Last() + ')');
+                        }
+                        else
+                        {
+                            sb.Append(so._name.ToString().Split('.').Last());
+                        }
                         break;
                     default:
                         sb.Append(LHS[j].ToString().Split('.').Last() + "::'" + LHS[j]._name + "'"); // never use this.
@@ -596,6 +637,10 @@ namespace igCauldron3.Frames
             {
                 CodeCount = codeList._count;
             }
+            else if (CodeCount == 1)
+            {
+                CodeCount = startOffset + 1;
+            }
             else
             {
                 CodeCount += startOffset;
@@ -603,7 +648,6 @@ namespace igCauldron3.Frames
             StringBuilder sb = new StringBuilder();
             for (int i = startOffset; i < CodeCount; i++)
             {
-
                 if (codeList[i] is OpSetValue setv)
                 {
                     int rhscount = 1;
@@ -708,6 +752,9 @@ namespace igCauldron3.Frames
                             case RHSValueStack.enumRHSfunc.kRHSfuncInteger:
                                 sb.Append("(int)");
                                 break;
+                            case RHSValueStack.enumRHSfunc.kRHSfuncCeiling:
+                                sb.Append("ceiling");
+                                break;
                             case RHSValueStack.enumRHSfunc.kRHSfuncNone:
                                 // intentionally nothing
                                 break;
@@ -749,6 +796,7 @@ namespace igCauldron3.Frames
                         RHSValueStack rhsValueS; // bad code to handle which of the RHSValueStacks is currently parsed
                         if (r == 0 && !changeVal) rhsValueS = setv._RHS._varOp1;
                         else rhsValueS = setv._RHS._varOp2;
+                        bool hasRhsObjects = false;
                         if (rhsValueS._count != 0 && rhsValueS._value == 0)
                         {
                             string rhsobjects = ReadRHSObjects(rhsValueS);
@@ -763,12 +811,12 @@ namespace igCauldron3.Frames
                                 }
                             }
                             sb.Append(rhsobjects);
-                            continue;
+                            hasRhsObjects = true;
                         }
                         igExternalReferenceSystem.Singleton._globalSet.MakeReference(rhsValueS._type, null, out igHandleName name);
                         igObject? EXNMTest = igExternalReferenceSystem.Singleton._globalSet.ResolveReference(name, null);
                         if (EXNMTest == null) continue;
-                        if (EXNMTest is igMetaObject ex)
+                        if (EXNMTest is igMetaObject ex && !hasRhsObjects)
                         {
                             if (ex._name == "FloatMeasurement")
                             {
@@ -782,13 +830,13 @@ namespace igCauldron3.Frames
                                         }
                                     }
                                 }
-                                sb.Append("(" + BitConverter.Int32BitsToSingle(rhsValueS._value) + ")");
+                                sb.Append(+BitConverter.Int32BitsToSingle(rhsValueS._value));
                             }
                             else if (ex._name == "IntMeasurement")
-                                sb.Append("(" + rhsValueS._value + ")");
+                                sb.Append(rhsValueS._value);
                             else if (ex._name == "ColorMeasurement")
                             {
-                                sb.Append("(" + rhsValueS._value.ToString("X8") + ")"); // todo: eventually maybe add way to view color?
+                                sb.Append("0x" + rhsValueS._value.ToString("X8")); // todo: eventually maybe add way to view color?
                             }
                             else if (ex._name == "ScreenMeasurement")
                             { //screen measurement is 2 ushorts, 1st half is X, second half is Y
@@ -834,6 +882,14 @@ namespace igCauldron3.Frames
                     sb.Clear();
 
                 }
+                else if (codeList[i] is OpPreScript)
+                {
+
+                }
+                else if (codeList[i] is OpStartUp)
+                {
+
+                }
                 else if (codeList[i] is OpStartSequence opstart)
                 {
                     string lhs = SetupLHS(opstart._LHS, codeList, i);
@@ -848,33 +904,96 @@ namespace igCauldron3.Frames
                     }
                     if (opstart._branchPC != 0)
                     {
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
-                        indentCount++;
-                        sb.Clear();
-                        if ((i + opstart._branchPC + 1) < codeList._count)
+                        if (codeList[i + 1] is not OpFlowBuiltInBehavior)
                         {
-                            ParseScriptObjects(codeList, i + 1, opstart._branchPC);
+                            returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
+                            indentCount++;
+                            sb.Clear();
+                            if ((i + opstart._branchPC + 1) < codeList._count)
+                            {
+                                ParseScriptObjects(codeList, i + 1, opstart._branchPC);
+                                i += opstart._branchPC;
+                                if (indentCount != 0) indentCount--;
+                            }
+                            returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
+                        }
+                        else
+                        {
                             i += opstart._branchPC;
+                        }
+                    }
+                }
+                else if (codeList[i] is OpCheckMembership checkm)
+                {
+                    string rhs = SetupLHS(checkm._RHS, codeList, i);
+                    string lhs = SetupLHS(checkm._LHS, codeList, i);
+                    switch (checkm._membershipOp)
+                    {
+                        case membershipTest.includes:
+                            sb.Append("if (" + rhs + " in " + lhs + ")");
+                            break;
+                        case membershipTest.excludes:
+                            sb.Append("if (" + rhs + " not in " + lhs + ")");
+                            break;
+                        case membershipTest.intersects_with:
+                            sb.Append("if (" + rhs + " intersects with " + lhs + ")");
+                            break;
+                        case membershipTest.includes_all:
+                            sb.Append("if (" + rhs + " all in " + lhs + ")");
+                            break;
+                    }
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + sb.ToString());
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
+                    sb.Clear();
+                    if (checkm._branchPC != 0)
+                    {
+                        indentCount++;
+                        if ((i + checkm._branchPC + 1) < codeList._count)
+                        {
+                            ParseScriptObjects(codeList, i + 1, checkm._branchPC);
+                            i += checkm._branchPC;
                             if (indentCount != 0) indentCount--;
                         }
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
+                        else
+                        {
+                            returnedstring.AppendLine(new string(' ', indentCount * 3) + "end");
+                            if (indentCount != 0) indentCount--;
+                        }
                     }
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
+                    // enum membershipTest: includes, excludes, intersects_with, includes_all
+                    // includes: "if RHS in LHS"
+                    // excludes: "if RHS not in LHS"
+                    // intersects_with: ???
+                    // includes_all: "if RHS in LHS"
                 }
                 else if (codeList[i] is OpDefineMacroSpecialization macrospec)
                 {
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "macro (" + macrospec._name + ") : (" + macrospec._NP[0]._name + ")");
-                    int parameterCount = 0;
+                    bool noparameters = (codeList[i + 2]._name == "flow macro");
+                    if (noparameters && codeList[i + 3] is OpFlowBuiltInBehavior)
+                    {
+                        i += macrospec._branchPC;
+                        continue;
+                    }
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "(");
+                    indentCount++;
                     if (codeList[i + macrospec._branchPC] is OpFlowBuiltInBehavior flow)
                     {
-                        if (codeList[i + 1] is OpMacroInterface macinterface)
+                        int parameterCount = 0;
+                        if (codeList[i + 1] is OpMacroInterface macinterface && !noparameters)
                         {
+
                             parameterCount = macinterface._branchPC - 1;
+                            branchTargets.TryAdd(flow, "return");
+                            ParseScriptObjects(codeList, i + 2, parameterCount); // skip the OpMacroInterface
+                            i += (parameterCount + 3);
                         }
-                        branchTargets.Add(flow, "return");
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "(");
-                        indentCount++;
-                        ParseScriptObjects(codeList, i + 2, parameterCount); // skip the OpMacroInterface
-                        i += (parameterCount + 3);
+                        else
+                        {
+                            branchTargets.TryAdd(flow, "return");
+                            i += 3;
+                        }
                         if (codeList[i] is not OpFlowBuiltInBehavior) // aka if there's more than just parameters
                         {
                             returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
@@ -892,18 +1011,31 @@ namespace igCauldron3.Frames
                 else if (codeList[i] is OpDefineMacro defmacro)
                 {
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "macro (" + defmacro._name + ")");
+                    bool noparameters = (codeList[i + 2]._name == "flow macro");
+                    if (noparameters && codeList[i + 3] is OpFlowBuiltInBehavior)
+                    {
+                        i += defmacro._branchPC;
+                        continue;
+                    }
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "(");
                     indentCount++;
                     if (codeList[i + defmacro._branchPC] is OpFlowBuiltInBehavior flow)
                     {
                         int parameterCount = 0;
-                        if (codeList[i + 1] is OpMacroInterface macinterface)
+                        if (codeList[i + 1] is OpMacroInterface macinterface && !noparameters)
                         {
                             parameterCount = macinterface._branchPC - 1;
+                            branchTargets.TryAdd(flow, "return");
+                            ParseScriptObjects(codeList, i + 2, parameterCount); // skip the OpMacroInterface
+                            i += (parameterCount + 3);
+
                         }
-                        branchTargets.Add(flow, "return");
-                        ParseScriptObjects(codeList, i + 2, parameterCount); // skip the OpMacroInterface
-                        i += (parameterCount + 3);
+                        else
+                        {
+                            branchTargets.TryAdd(flow, "return");
+                            i += 3;
+                        }
+                        branchTargets.TryAdd(flow, "return");
                         if (codeList[i] is not OpFlowBuiltInBehavior) // aka if there's more than just parameters
                         {
                             returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
@@ -980,6 +1112,8 @@ namespace igCauldron3.Frames
                         case "ScriptController":
                             sb.Append("scriptcontroller");
                             break;
+                        case "AbstractScriptGroup":
+                            break;
                         case "tfbLightInfo":
                             sb.Append("light");
                             break;
@@ -1004,14 +1138,13 @@ namespace igCauldron3.Frames
                     string spawnname;
                     if (spawn._LHS is not null)
                     {
-                        switch (spawn._LHS[0])
+                        if (spawn._LHS[0]._name.Split('.').Last() == "my")
                         {
-                            case OpCreateVariable opcvar:
-                                spawnname = opcvar._varName;
-                                break;
-                            default:
-                                spawnname = spawn._LHS[spawn._LHS._count - 1]._name;
-                                break;
+                            spawnname = "myself";
+                        }
+                        else
+                        {
+                            spawnname = SetupLHS(spawn._LHS, codeList, i);
                         }
                     }
                     else
@@ -1024,27 +1157,27 @@ namespace igCauldron3.Frames
                     {
                         if (spawn._RHS._count != 0)
                         {
-                            switch (spawn._RHS[0]) // at position
+                            if (spawn._RHS[0]._name.Split('.').Last() == "my")
                             {
-                                case ScriptReference scriptreference:
-                                    if (scriptreference._name == "OpTopLevelBehavior.my") spawnpos = "myself";
-                                    else spawnpos = scriptreference._name.ToString().Split('.').Last();
-                                    break;
-                                case OpSpawn spawn1:
-                                    spawnpos = spawnedobjects[spawn1];
-                                    break;
-                                case OpCreateVariable opvar:
-                                    spawnpos = opvar._varName;
-                                    break;
-                                case AbstractScriptVariant absvar:
-                                    spawnpos = absvar._name;
-                                    break;
-                                default:
-                                    spawnpos = spawn._RHS[0]._name;
-                                    break;
+                                spawnpos = "my.position";
+                            }
+                            else
+                            {
+                                spawnpos = SetupLHS(spawn._RHS, codeList, i);
                             }
                         }
-                        string spawnfacing = SetupRHS(spawn._facingRHS);
+                        string spawnfacing = "";
+                        if (spawn._facingRHS._varOp1._count != 0)
+                        {
+                            if (spawn._facingRHS._varOp1[0]._name.Split('.').Last() == "my")
+                            {
+                                spawnfacing = "my.facing";
+                            }
+                        }
+                        else
+                        {
+                            spawnfacing = SetupRHS(spawn._facingRHS);
+                        }
                         amountOfSpawns++;
                         returnedstring.AppendLine(new string(' ', indentCount * 3) + "spawned spawnedObj" + amountOfSpawns + " = spawn(" + spawndatatype + "." + spawnname + ", " + spawnpos + ", " + spawnfacing + ")");
                     }
@@ -1053,7 +1186,7 @@ namespace igCauldron3.Frames
                         amountOfSpawns++;
                         returnedstring.AppendLine(new string(' ', indentCount * 3) + "spawned spawnedObj" + amountOfSpawns + " = spawn(" + spawndatatype + "." + spawnname + ")");
                     }
-                    spawnedobjects.Add(spawn, "spawnedObj" + amountOfSpawns);
+                    spawnedobjects.TryAdd(spawn, "spawnedObj" + amountOfSpawns); // add
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
                     indentCount++;
                     if (spawn._branchPC != 0)
@@ -1247,7 +1380,7 @@ namespace igCauldron3.Frames
                                         sb.Append("[foreach]");
                                         break;
                                     case OpSlideValue:
-                                        sb.Append("[slideval]");
+                                        sb.Append("[^slider]");
                                         break;
                                     case OpCreateVariable opv:
                                         sb.Append("[" + opv._varName + "]");
@@ -1276,6 +1409,15 @@ namespace igCauldron3.Frames
                         {
                             switch (rhsref[0])
                             {
+                                case OpFindSubSet:
+                                    sb.Append("[^subset]");
+                                    break;
+                                case OpForEach:
+                                    sb.Append("[foreach]");
+                                    break;
+                                case OpSlideValue:
+                                    sb.Append("[^slider]");
+                                    break;
                                 case OpAbstractCreateVariable opv:
                                     sb.Append("[" + opv._varName + "]");
                                     break;
@@ -1304,10 +1446,12 @@ namespace igCauldron3.Frames
                         else
                         {
                             string rhsrefvalue = SetupRHS(rhsref);
+                            sb.Append(rhsrefvalue);
                         }
                     }
                     else if (macropar._RHS is ScriptGroupStack sgs)
                     {
+                        sb.Append(" = ");
                         string sgsString = SetupLHS(sgs, codeList, i);
                         sb.Append(sgsString);
                     }
@@ -1349,14 +1493,44 @@ namespace igCauldron3.Frames
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + sb.ToString());
                     sb.Clear();
                 }
+                else if (codeList[i] is OpControl control)
+                {
+                    string lhs = SetupLHS(control._LHS, codeList, i);
+                    if (control._indexRHS != null)
+                    {
+                        string indexrhs = SetupRHS(control._indexRHS);
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "control (" + lhs + "[" + indexrhs + "]" + ")");
+                    }
+                    else
+                    {
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "control (" + lhs + ")");
+                    }
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
+                    sb.Clear();
+                    if (control._branchPC != 0)
+                    {
+                        indentCount++;
+                        if ((i + control._branchPC + 1) < codeList._count)
+                        {
+                            ParseScriptObjects(codeList, i + 1, control._branchPC);
+                            i += control._branchPC;
+                        }
+                        if (indentCount != 0) indentCount--;
+                    }
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
+
+                }
                 else if (codeList[i] is OpCheckFOV checkfov)
                 {   // to find it easily (placeholder)
+
+                    // if (distance (in a cone of sight) from _fromlhs, facing _RHSfacing, angle fov, to LHS is (RelOp comparing) to RHS
+                    // (ignoring or considering obstructions)
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "newopcodenewopcodenewopcode");
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "newopcodenewopcodenewopcode");
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "newopcodenewopcodenewopcode");
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "newopcodenewopcodenewopcode");
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "newopcodenewopcodenewopcode");
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "//OpCheckFOV:"); // check "fov"
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "//OpCheckFOV (unimplemented):"); // check "fov"
                     string fromlhs = SetupLHS(checkfov._fromLHS, codeList, i);//from position
                     string facing = SetupRHS(checkfov._RHSfacing);
                     string fov = SetupRHS(checkfov._RHSfov);
@@ -1452,29 +1626,7 @@ namespace igCauldron3.Frames
                     }
                     if (checkref._RHS._count != 0)
                     {
-                        switch (checkref._RHS[0])
-                        {
-                            case OpMacroParameter macro:
-                                sb.Append("[" + macro._varName + "]");
-                                break;
-                            case OpUserBehavior:
-                                sb.Append("OpUserBehavior");
-                                break;
-                            case AbstractScriptVariant absvar:
-                                switch (absvar._name)
-                                {
-                                    case "OpTopLevelBehavior.my":
-                                        sb.Append("my");
-                                        break;
-                                    default:
-                                        sb.Append(checkref._RHS[0]._name.ToString().Split('.').Last());
-                                        break;
-                                }
-                                break;
-                            default:
-                                sb.Append(checkref._RHS[0]._name.ToString().Split('.').Last());
-                                break;
-                        }
+                        sb.Append(SetupRHS(checkref._RHS));
                     }
                     if (checkref._indexRHS != null)
                     {
@@ -1583,7 +1735,7 @@ namespace igCauldron3.Frames
                             filter = "count_typed_tags";
                             break;
                     }
-                    sb.Append(" [" + findvariable._varName + "]");
+                    sb.Append("[" + findvariable._varName + "]");
                     if (findvariable._indexRHS != null)
                     {
                         sb.Append("[" + findvariable._indexRHS + "]");
@@ -1637,7 +1789,7 @@ namespace igCauldron3.Frames
                             break;
                     }
                     string offsetby = SetupRHS(opforeach._RHS);
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "foreach (placeholder in" + lhs + ", " + direction + " " + offsetby + ")");
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "foreach (placeholder in " + lhs + ", " + direction + " " + offsetby + ")");
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
                     indentCount++;
                     if (opforeach._branchPC != 0)
@@ -1792,10 +1944,12 @@ namespace igCauldron3.Frames
                     {
                         sb.Append("struct " + defineStructure._name + " [");
                         sb.Append(opCreateVar._varName + "]");
+                        localvariables.TryAdd(opCreateVar, "struct " + defineStructure._name);
                     }
-                    else if (opCreateVar._varContentsType is OpDefineMacro)
+                    else if (opCreateVar._varContentsType is OpDefineMacro defineMacro)
                     {
-                        sb.Append("macro " + opCreateVar._varName);
+                        sb.Append("macro " + defineMacro._name + " [" + opCreateVar._varName + "]");
+                        localvariables.TryAdd(opCreateVar, "macro " + defineMacro._name);
                     }
                     else
                     {
@@ -1806,48 +1960,63 @@ namespace igCauldron3.Frames
                             switch (contents._name)
                             {
                                 case "IntMeasurement":
+                                    localvariables.TryAdd(opCreateVar, "int");
                                     sb.Append("int [" + opCreateVar._varName + "]");
                                     break;
                                 case "FloatMeasurement":
+                                    localvariables.TryAdd(opCreateVar, "float");
                                     sb.Append("float [" + opCreateVar._varName + "]");
                                     break;
                                 case "ColorMeasurement":
+                                    localvariables.TryAdd(opCreateVar, "color");
                                     sb.Append("color [" + opCreateVar._varName + "]");
                                     break;
                                 case "ValueInfo":
+                                    localvariables.TryAdd(opCreateVar, "valueinfo");
                                     sb.Append("valueinfo [" + opCreateVar._varName + "]");
                                     break;
                                 case "tfbActorInfo":
+                                    localvariables.TryAdd(opCreateVar, "actor");
                                     sb.Append("actor [" + opCreateVar._varName + "]");
                                     break;
                                 case "ActorWaypoint":
+                                    localvariables.TryAdd(opCreateVar, "actorwaypoint");
                                     sb.Append("actorwaypoint [" + opCreateVar._varName + "]");
                                     break;
                                 case "tfbSoundInfo":
+                                    localvariables.TryAdd(opCreateVar, "sound");
                                     sb.Append("sound [" + opCreateVar._varName + "]");
                                     break;
                                 case "tfbSpriteInfo":
+                                    localvariables.TryAdd(opCreateVar, "sprite");
                                     sb.Append("sprite [" + opCreateVar._varName + "]");
                                     break;
                                 case "tfbParticleInfo":
+                                    localvariables.TryAdd(opCreateVar, "particle");
                                     sb.Append("particle [" + opCreateVar._varName + "]");
                                     break;
                                 case "AnimationInfo":
+                                    localvariables.TryAdd(opCreateVar, "animation");
                                     sb.Append("animation [" + opCreateVar._varName + "]");
                                     break;
                                 case "ScriptColorInfo":
+                                    localvariables.TryAdd(opCreateVar, "scriptcolorinfo");
                                     sb.Append("scriptcolorinfo [" + opCreateVar._varName + "]");
                                     break;
                                 case "Slider":
+                                    localvariables.TryAdd(opCreateVar, "slider");
                                     sb.Append("slider [" + opCreateVar._varName + "]");
                                     break;
                                 case "ScriptController":
+                                    localvariables.TryAdd(opCreateVar, "scriptcontroller");
                                     sb.Append("scriptcontroller [" + opCreateVar._varName + "]");
                                     break;
                                 case "tfbLightInfo":
+                                    localvariables.TryAdd(opCreateVar, "light");
                                     sb.Append("light [" + opCreateVar._varName + "]");
                                     break;
                                 case "StringInfo":
+                                    localvariables.TryAdd(opCreateVar, "string");
                                     sb.Append("string [" + opCreateVar._varName + "]");
                                     break;
                                 default:
