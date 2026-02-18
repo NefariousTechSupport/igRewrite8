@@ -119,7 +119,7 @@ namespace igLibrary.Tfb.Game
             }
             else
             {
-                hasLanguagePak = streamable._bundleArchive.HasFile("SWEDISH.pak");
+                hasLanguagePak = streamable._bundleArchive.HasFile("ENGLISH.pak");
             }
 
             if (hasLanguagePak)
