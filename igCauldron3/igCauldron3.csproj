@@ -89,12 +89,4 @@
     <DefaultImGuiIni Include="../Resources/defaultimgui.ini"/>
   </ItemGroup>
 
-  <Target Name="Debug|Release" AfterTargets="AfterBuild">
-    <Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/ArkCore/%(RecursiveDir)" SkipUnchangedFiles="true"/>
-    <Copy SourceFiles="@(DefaultImGuiIni)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
-  </Target>
-  <Target Name="Debug|Release" AfterTargets="Publish">
-    <Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/publish/ArkCore/%(RecursiveDir)" SkipUnchangedFiles="true"/>
-    <Copy SourceFiles="@(DefaultImGuiIni)" DestinationFolder="$(OutDir)/publish" SkipUnchangedFiles="true"/>
-  </Target>
 </Project>
