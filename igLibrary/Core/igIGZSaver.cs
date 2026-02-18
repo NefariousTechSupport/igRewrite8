@@ -8,6 +8,7 @@
 
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace igLibrary.Core
@@ -86,7 +87,7 @@ namespace igLibrary.Core
             switch (igArkCore.Game)
             {
                 case igArkCore.EGame.EV_SkylandersSpyrosAdventure:
-                    _version = 0x04;
+                    _version = 0x05;
                     break;
                 case igArkCore.EGame.EV_SkylandersTrapTeam:
                     _version = 0x08;
@@ -108,13 +109,34 @@ namespace igLibrary.Core
             if (igRegistry.GetRegistry()._engineType == EngineType.TfbTool)
             {
                 Func<string, igMemoryPool?> dumb = igMemoryContext.Singleton.GetMemoryPoolByName;
-                GetSaverSection(dumb("Default")!);
-                GetSaverSection(dumb("Image")!);
-                GetSaverSection(dumb("Vertex")!);
-                GetSaverSection(dumb("Audio")!);
-                GetSaverSection(dumb("AnimationData")!);
-                GetSaverSection(dumb("VertexObject")!);
-                GetSaverSection(dumb("String")!);
+                if (_version < 0x7)
+                {   // true for SSA, not sure about other versions
+
+                    // very bad basically hardcoded way to check if collision chunk exists
+                    // workaround for the problems caused by GetSaverSection
+                    bool hascollision = (dir._objectList[0].ToString().Split('.').Last() == "tfbPhysicsWorld");
+                    GetSaverSection(dumb("Default")!);
+                    GetSaverSection(dumb("String")!);
+                    if (hascollision)
+                    {
+                        GetSaverSection(dumb("Collision")!);
+                    }
+                    GetSaverSection(dumb("Image")!);
+                    GetSaverSection(dumb("VertexObject")!);
+                    GetSaverSection(dumb("Vertex")!);
+                    GetSaverSection(dumb("AnimationData")!);
+                    GetSaverSection(dumb("Audio")!);
+                }
+                else
+                {
+                    GetSaverSection(dumb("Default")!);
+                    GetSaverSection(dumb("Image")!);
+                    GetSaverSection(dumb("Vertex")!);
+                    GetSaverSection(dumb("Audio")!);
+                    GetSaverSection(dumb("AnimationData")!);
+                    GetSaverSection(dumb("VertexObject")!);
+                    GetSaverSection(dumb("String")!);
+                }
             }
 
             SaverSection rootSection = GetSaverSection(dir._objectList.internalMemoryPool);
@@ -166,14 +188,12 @@ namespace igLibrary.Core
                 needsDeep = false;
                 return 0;
             }
-
             SaverSection section = GetSaverSection(obj.internalMemoryPool);
-
             bool previouslyWritten = section._objectOffsetList.TryGetValue(obj, out ulong offset);
             if (previouslyWritten)
             {
                 needsDeep = false;
-                return offset;
+                return offset | (section._index << (_version >= 7 ? 0x1B : 0x18));
             }
 
             igMetaObject meta = obj.GetMeta();
@@ -284,9 +304,11 @@ namespace igLibrary.Core
                 // Dumb thing where they write 0xFFFFFFFF insted of the real size
                 // if it's 4 since it cannot be addressed by R fixups
                 bool realSection = _version >= 9 || sectionSize > 4;
+                uint alignment = _sections[i]._alignment;
+
+
                 _stream.WriteUInt32(realSection ? sectionSize : 0xFFFFFFFF);
 
-                uint alignment = _sections[i]._alignment;
                 if (realSection && alignment == 0)
                 {
                     Logging.Warn("The alignment of section {0} in file {1} has an alignment of 0, this is bad, forcing the alignment to 0x10 to prevent game crashes", i, _dir._path);
@@ -297,6 +319,7 @@ namespace igLibrary.Core
                 _stream.Seek(memoryOffset);
                 _sections[i]._sh.BaseStream.Flush();
                 _sections[i]._sh.Seek(0);
+
                 _sections[i]._sh.BaseStream.CopyTo(_stream.BaseStream);
 
                 memPoolNameOffset += _sections[i]._pool._name.Length + 1;   //Don't forget the null byte!
@@ -307,7 +330,7 @@ namespace igLibrary.Core
 
             if (_version < 0x7)
             {
-                _stream.Seek(0x1C + 0x10 * 0x20); // First chunk after the fixup chunk starts at 0x1C. Every chunk header is 0x10 bytes long, you can have a total of 0x55 chunks (in ssa).
+                _stream.Seek(0x1C + 0x10 * 0x55); // First chunk after the fixup chunk starts at 0x1C. Every chunk header is 0x10 bytes long, you can have a total of 0x55 chunks (in ssa).
             }
             else
             {
@@ -399,7 +422,7 @@ namespace igLibrary.Core
         }
         public void WriteFixupSections(igObjectDirectory dir)
         {
-            ulong endOffset = 0x800;
+            ulong endOffset = (_version < 0x7) ? 0x81Cul : 0x800ul;
             ulong startOffset = 0x800;
             _stream.Seek(startOffset);
 
@@ -413,9 +436,10 @@ namespace igLibrary.Core
             {
                 _stream.WriteUInt32(igIGZLoader._littleMagicCookie);
                 _stream.WriteUInt32(_version);
-                _stream.WriteUInt16((ushort)_platform);
+                _stream.WriteUInt16((ushort)igArkCore.GetMetaEnum("IG_CORE_PLATFORM").GetValueFromEnum(_platform));
                 _stream.WriteUInt16(0);
-                _stream.WriteUInt32(_fixupCount);
+                _stream.WriteUInt32(0x1C);
+                _stream.WriteUInt32(0x0E); // fixup count for all .blds, I wish I didnt have to hardcode this
                 _stream.WriteUInt32(0x1C);
                 _stream.WriteUInt32(0);
 
@@ -515,6 +539,48 @@ namespace igLibrary.Core
 				dependancyStartOffset = endOffset;
 			}*/
 
+            // setup _stringList from EXNM (because for whatever reason the code is written like this)
+            if (_namedList.Count > 0)
+            {
+                for (int j = 0; j < _namedList.Count; j++)
+                {
+                    AddString(_namedList[j].Item1._namespace._string);
+                    AddString(_namedList[j].Item1._alias._string);
+                }
+            }
+            //TSTR
+            if (_stringList.Count > 0)
+            {
+                startOffset = endOffset;
+                _stream.Seek(startOffset);
+                if (_version < 0x7)
+                {
+                    _stream.WriteUInt32(0x01);
+                    _stream.WriteInt64(0);
+                }
+                else
+                {
+                    _stream.WriteUInt32(0x52545354);
+                }
+                _stream.WriteInt32(_stringList.Count);
+                _stream.WriteInt32(0);
+                _stream.WriteInt32(defaultFixupSize);
+                for (int j = 0; j < _stringList.Count; j++)
+                {
+                    long basePos = _stream.BaseStream.Position;
+                    _stream.WriteString(_stringList[j]);
+
+                    int bits = (_version > 7) ? 2 : 1;
+                    _stream.Seek(basePos + bits + (_stringList[j].Length & (uint)(-bits)));
+                }
+                ulong tempEndOffset = Align(_stream.Tell(), 4);
+                _stream.Seek(startOffset + fixupSizeOffset);
+                _stream.WriteUInt32((uint)(tempEndOffset - startOffset));
+                _stream.Seek(tempEndOffset);
+                endOffset = (ulong)_stream.BaseStream.Position;
+                //_stream.Seek(endOffset + tempEndOffset - 0x800);
+                _fixupCount++;
+            }
             //TMET
             if (_vTableList.Count > 0)
             {
@@ -522,7 +588,8 @@ namespace igLibrary.Core
                 if (_version < 0x7)
                 {
                     _stream.WriteUInt32(0x00);
-                    _stream.WriteInt64(0);
+                    _stream.WriteUInt32(0x00);
+                    _stream.WriteUInt32(0x00);
                 }
                 else
                 {
@@ -579,13 +646,14 @@ namespace igLibrary.Core
                     _stream.WriteUInt32(0x44495845); // EXID
                 }
                 _stream.WriteInt32(_externalList.Count);
-                _stream.WriteUInt32((uint)_externalList.Count * 8 + 0x10);
-                if ((_stream.BaseStream.Position + 0x4) % 8 == 0)
+                if ((_stream.BaseStream.Position + 0x8) % 8 == 0)
                 {
+                    _stream.WriteUInt32((uint)_externalList.Count * 8 + ((_version < 0x7) ? 0x18u : 0x10u));
                     _stream.WriteInt32(defaultFixupSize);
                 }
                 else
                 {
+                    _stream.WriteUInt32((uint)_externalList.Count * 8 + ((_version < 0x7) ? 0x1Cu : 0x14u));
                     _stream.WriteInt32(defaultFixupSize + 0x4);
                     _stream.WriteInt32(0);
                 }
@@ -603,7 +671,15 @@ namespace igLibrary.Core
             {
                 startOffset = endOffset;
                 int externalCount = _namedList.Count;
-                _stream.WriteUInt32(0x4D4E5845); // EXNM
+                if (_version < 0x7)
+                {
+                    _stream.WriteUInt32(0x03);
+                    _stream.WriteInt64(0x00);
+                }
+                else
+                {
+                    _stream.WriteUInt32(0x4D4E5845); // EXNM
+                }
                 _stream.WriteInt32(externalCount);
                 uint alignedDataStart = (uint)Align(_stream.Tell() + 8 - (uint)startOffset, igAlchemyCore.GetPointerSize(_platform));
                 _stream.WriteUInt32((uint)externalCount * igAlchemyCore.GetPointerSize(_platform) * 2u + alignedDataStart);
@@ -621,50 +697,6 @@ namespace igLibrary.Core
                 _fixupCount += 1;
             }
 
-            //TSTR
-            if (_stringList.Count > 0)
-            {
-                startOffset = (_version < 0x7) ? dependancyStartOffset + 0x1C: dependancyStartOffset;
-                _stream.Seek(startOffset);
-                byte[] otherFixups = new byte[endOffset - startOffset];
-                _stream.Read(otherFixups);
-                _stream.Seek(startOffset);
-                for (int i = 0; i < otherFixups.Length; i++)
-                {
-                    _stream.WriteByte(0);
-                }
-                _stream.Seek(startOffset);
-
-                if (_version < 0x7)
-                {
-                    _stream.WriteUInt32(0x01);
-                    _stream.WriteInt64(0);
-                }
-                else
-                {
-                    _stream.WriteUInt32(0x52545354);
-                }
-                _stream.WriteInt32(_stringList.Count);
-                _stream.WriteInt32(0);
-                _stream.WriteInt32(defaultFixupSize);
-                for (int j = 0; j < _stringList.Count; j++)
-                {
-                    long basePos = _stream.BaseStream.Position;
-                    _stream.WriteString(_stringList[j]);
-
-                    int bits = (_version > 7) ? 2 : 1;
-                    _stream.Seek(basePos + bits + (_stringList[j].Length & (uint)(-bits)));
-                }
-                ulong tempEndOffset = Align(_stream.Tell(), 4);
-                _stream.Seek(startOffset + fixupSizeOffset);
-                _stream.WriteUInt32((uint)(tempEndOffset - startOffset));
-                _stream.Seek(tempEndOffset);
-                _stream.BaseStream.Write(otherFixups);
-                endOffset = _stream.Tell64();
-                //_stream.Seek(endOffset + tempEndOffset - 0x800);
-                _fixupCount++;
-            }
-
             if (_thumbnails.Count > 0)
             {
                 startOffset = endOffset;
@@ -675,12 +707,20 @@ namespace igLibrary.Core
                 }
                 else
                 {
-                    _stream.WriteUInt32(0x4E484D54);
+                    _stream.WriteUInt32(0x4E484D54); // TMHN
                 }
                 _stream.WriteInt32(_thumbnails.Count);
-                uint alignedDataStart = (uint)Align(_stream.Tell() + 8 - (uint)startOffset, igAlchemyCore.GetPointerSize(_platform));
-                _stream.WriteUInt32((uint)_thumbnails.Count * igAlchemyCore.GetPointerSize(_platform) * 2u + alignedDataStart);
-                _stream.WriteUInt32(alignedDataStart);
+                if ((_stream.BaseStream.Position + 0x8) % 8 == 0)
+                {
+                    _stream.WriteUInt32((uint)_thumbnails.Count * igAlchemyCore.GetPointerSize(_platform) * 2u + ((_version < 0x7) ? 0x18u : 0x10u));
+                    _stream.WriteInt32(defaultFixupSize);
+                }
+                else
+                {
+                    _stream.WriteUInt32((uint)_thumbnails.Count * igAlchemyCore.GetPointerSize(_platform) * 2u + ((_version < 0x7) ? 0x1Cu : 0x14u));
+                    _stream.WriteInt32(defaultFixupSize + 0x4);
+                    _stream.WriteInt32(0);
+                }
                 for (int j = 0; j < _thumbnails.Count; j++)
                 {
                     if (igAlchemyCore.isPlatform64Bit(_platform))

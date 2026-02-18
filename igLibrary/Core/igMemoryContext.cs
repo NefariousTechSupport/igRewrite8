@@ -44,7 +44,8 @@ namespace igLibrary.Core
 			_pools.Add("Vertex", 				new igMemoryPool("Vertex"));
 			_pools.Add("VertexEdge", 			new igMemoryPool("VertexEdge"));
 			_pools.Add("VertexObject", 			new igMemoryPool("VertexObject"));
-			_pools.Add("Image", 				new igMemoryPool("Image"));
+            _pools.Add("Collision",             new igMemoryPool("Collision"));
+            _pools.Add("Image", 				new igMemoryPool("Image"));
 			_pools.Add("ImageObject", 			new igMemoryPool("ImageObject"));
 			_pools.Add("Attribute", 			new igMemoryPool("Attribute"));
 			_pools.Add("Node", 					new igMemoryPool("Node"));
