@@ -23,7 +23,6 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
-using Vulkan;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 namespace igCauldron3.Frames
 {
