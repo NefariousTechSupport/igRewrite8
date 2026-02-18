@@ -137,7 +137,7 @@ namespace igLibrary.Tfb.Game
                 }
                 else
                 {//change for other regions
-                    streamable._bundleArchive.Decompress("SWEDISH.pak", languagePakStream);
+                    streamable._bundleArchive.Decompress("ENGLISH.pak", languagePakStream);
                 }
 
                 igIGZLoader languageLoader = new igIGZLoader(streamable._languagePak, languagePakStream, false);
