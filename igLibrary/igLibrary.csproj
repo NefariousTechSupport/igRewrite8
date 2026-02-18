@@ -25,4 +25,17 @@
 											OutputItemType="Analyzer"
 											ReferenceOutputAssembly="false" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="..\Resources\ArkCore\**\*.*">
+			<Link>ArkCore\%(RecursiveDir)%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Include="..\Resources\defaultimgui.ini">
+			<Link>defaultimgui.ini</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
 </Project>
