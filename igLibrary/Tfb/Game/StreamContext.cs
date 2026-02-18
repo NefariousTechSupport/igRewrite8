@@ -9,6 +9,7 @@
 
 using igLibrary.Sg;
 using igLibrary.Tfb.Attrs;
+using igLibrary.Tfb.Script;
 
 namespace igLibrary.Tfb.Game
 {
@@ -56,6 +57,7 @@ namespace igLibrary.Tfb.Game
         /// </summary>
         private uint _globalBldCounter = 0;
 
+        public static Dictionary<List<OpAbstractCreateVariable>, string> globalScriptDependencies = new Dictionary<List<OpAbstractCreateVariable>, string>();
 
 
         /// <summary>
@@ -321,16 +323,22 @@ namespace igLibrary.Tfb.Game
         /// <param name="globalBld">the global.bld level.bld directory</param>
         public void HandleGlobalBld(igObjectDirectory globalBld)
         {
+            if (globalBld._name._string == "app:/permanent/global.bld (level bld)")
+            {
+                globalScriptDependencies = ScriptParser.ReadDependencies(globalBld);
+            }
             igHandleName name = new igHandleName();
             name._ns = new igName("global.bld");
 
             for (int g = 0; g < globalBld._objectList._count; g++)
             {
                 igObject obj = globalBld._objectList[g];
+                // globalObjects.Add(obj)
                 name._name._hash = ++_globalBldCounter;
 
                 igObjectHandleManager.Singleton.AddObject(obj, name);
             }
+            // globalScriptDependencies = ScriptParser.ReadDependencies(globalObjects);
         }
     }
 }
