@@ -63,6 +63,7 @@ namespace igCauldron3.Frames
         private Vector4 Blue = new Vector4(0f, 0f, 1f, 1f);
         private Dictionary<OpSpawn, string> spawnedobjects = new Dictionary<OpSpawn, string>(); // for opspawn
         private int amountOfSpawns = 0; // for opspawn
+        private string callordefinemacro = "define";
         private Dictionary<OpAbstractCreateVariable, string> localvariables = new Dictionary<OpAbstractCreateVariable, string>(); // to fix float variables by turning ints into floats
                                                                                                                                   // if the variable ever gets assigned with a float value
         private Dictionary<string, string> localvarstrings = new Dictionary<string, string>();
@@ -470,8 +471,9 @@ namespace igCauldron3.Frames
                     case OpCreateVariable opvar:
                         sb.Append("[" + opvar._varName + "]"); // variables should be written in brackets or other separator
                         break;
-                    case OpForEach:
-                        sb.Append("[^for each]");
+                    case OpForEach opf:
+                        string each = SetupLHS(opf._LHS, codeList, pc);
+                        sb.Append(each + "_current");
                         break;
                     case OpFindSubSet:
                         sb.Append("[^subset]");
@@ -592,6 +594,10 @@ namespace igCauldron3.Frames
                         break;
                     case OpMacroParameter macro:
                         sb.Append("[" + macro._varName + "]");
+                        break;
+                    case OpCheckReference opcr:
+                        string lhs = SetupLHS(opcr._LHS, codeList, pc);
+                        sb.Append(lhs);
                         break;
                     case OpCheckValue opc:
                         string LeftHandStack = SetupLHS(opc._LHS, codeList, pc);
@@ -969,21 +975,22 @@ namespace igCauldron3.Frames
                 }
                 else if (codeList[i] is OpDefineMacroSpecialization macrospec)
                 {
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "macro (" + macrospec._name + ") : (" + macrospec._NP[0]._name + ")");
+                    string cachedMode = callordefinemacro;
+                    callordefinemacro = "define";
+                    returnedstring.Append(new string(' ', indentCount * 3) + "macro (" + macrospec._name + ") : (" + macrospec._NP[0]._name + ") ");
                     bool noparameters = (codeList[i + 2]._name == "flow macro");
                     if (noparameters && codeList[i + 3] is OpFlowBuiltInBehavior)
                     {
+                        returnedstring.AppendLine();
                         i += macrospec._branchPC;
                         continue;
                     }
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "(");
-                    indentCount++;
                     if (codeList[i + macrospec._branchPC] is OpFlowBuiltInBehavior flow)
                     {
                         int parameterCount = 0;
                         if (codeList[i + 1] is OpMacroInterface macinterface && !noparameters)
                         {
-
+                            returnedstring.Append("(");
                             parameterCount = macinterface._branchPC - 1;
                             branchTargets.TryAdd(flow, "return");
                             ParseScriptObjects(codeList, i + 2, parameterCount); // skip the OpMacroInterface
@@ -991,6 +998,7 @@ namespace igCauldron3.Frames
                         }
                         else
                         {
+                            returnedstring.AppendLine("()");
                             branchTargets.TryAdd(flow, "return");
                             i += 3;
                         }
@@ -1003,27 +1011,29 @@ namespace igCauldron3.Frames
                             if (indentCount != 0) indentCount--;
                             returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
                         }
-                        if (indentCount != 0) indentCount--;
                         branchTargets.Remove(flow);
                     }
+                    callordefinemacro = cachedMode;
 
                 }
                 else if (codeList[i] is OpDefineMacro defmacro)
                 {
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "macro (" + defmacro._name + ")");
+                    string cachedMode = callordefinemacro;
+                    callordefinemacro = "define";
+                    returnedstring.Append(new string(' ', indentCount * 3) + "macro " + defmacro._name + " ");
                     bool noparameters = (codeList[i + 2]._name == "flow macro");
                     if (noparameters && codeList[i + 3] is OpFlowBuiltInBehavior)
                     {
+                        returnedstring.AppendLine();
                         i += defmacro._branchPC;
                         continue;
                     }
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "(");
-                    indentCount++;
                     if (codeList[i + defmacro._branchPC] is OpFlowBuiltInBehavior flow)
                     {
                         int parameterCount = 0;
                         if (codeList[i + 1] is OpMacroInterface macinterface && !noparameters)
                         {
+                            returnedstring.Append("(");
                             parameterCount = macinterface._branchPC - 1;
                             branchTargets.TryAdd(flow, "return");
                             ParseScriptObjects(codeList, i + 2, parameterCount); // skip the OpMacroInterface
@@ -1032,6 +1042,7 @@ namespace igCauldron3.Frames
                         }
                         else
                         {
+                            returnedstring.AppendLine("()");
                             branchTargets.TryAdd(flow, "return");
                             i += 3;
                         }
@@ -1048,7 +1059,7 @@ namespace igCauldron3.Frames
                         }
                         branchTargets.Remove(flow);
                     }
-                    if (indentCount != 0) indentCount--;
+                    callordefinemacro = cachedMode;
 
                 }
                 else if (codeList[i] is OpRemove remove)
@@ -1358,17 +1369,17 @@ namespace igCauldron3.Frames
                             sb.Append(" [" + macropar._varName + "]");
                         }
                     }
+                    string paramdefinition = sb.ToString();
+                    sb.Clear();
                     if (macropar._RHS is ValueRHSVariant valueR)
                     {
                         if (valueR._varOp1._count == 0)
                         {
-                            sb.Append(" = ");
                             string RHSCalc = SetupRHS(valueR);
                             sb.Append(RHSCalc);
                         }
                         else
                         {
-                            sb.Append(" = ");
                             for (int ii = 0; ii < valueR._varOp1._count; ii++)
                             {
                                 switch (valueR._varOp1[ii])
@@ -1376,8 +1387,9 @@ namespace igCauldron3.Frames
                                     case OpFindSubSet:
                                         sb.Append("[^subset]");
                                         break;
-                                    case OpForEach:
-                                        sb.Append("[foreach]");
+                                    case OpForEach opf:
+                                        string each = SetupLHS(opf._LHS, codeList, i);
+                                        sb.Append(each + "_current");
                                         break;
                                     case OpSlideValue:
                                         sb.Append("[^slider]");
@@ -1395,7 +1407,14 @@ namespace igCauldron3.Frames
                                         if (valueR._varOp1[ii]._name == "my") sb.Append("myself");
                                         break;
                                     default:
-                                        sb.Append("(" + valueR._varOp1[ii]._name.ToString().Split('.').Last() + ")");
+                                        if (valueR._varOp1[ii]._name.Split('.').Last().Contains(' '))
+                                        {
+                                            sb.Append("(" + valueR._varOp1[ii]._name.ToString().Split('.').Last() + ")");
+                                        }
+                                        else
+                                        {
+                                            sb.Append(valueR._varOp1[ii]._name.Split('.').Last());
+                                        }
                                         break;
                                 }
                                 if (ii != (valueR._varOp1._count - 1)) sb.Append(".");
@@ -1404,43 +1423,47 @@ namespace igCauldron3.Frames
                     }
                     else if (macropar._RHS is RHSReferenceStack rhsref)
                     {
-                        sb.Append(" = ");
                         if (rhsref._count != 0)
                         {
-                            switch (rhsref[0])
+                            for (int o = 0; o < rhsref._count; o++)
                             {
-                                case OpFindSubSet:
-                                    sb.Append("[^subset]");
-                                    break;
-                                case OpForEach:
-                                    sb.Append("[foreach]");
-                                    break;
-                                case OpSlideValue:
-                                    sb.Append("[^slider]");
-                                    break;
-                                case OpAbstractCreateVariable opv:
-                                    sb.Append("[" + opv._varName + "]");
-                                    break;
-                                case OpSpawn spawn1:
-                                    sb.Append(spawnedobjects[spawn1]);
-                                    break;
-                                case AbstractScriptVariant absvar:
-                                    switch (absvar._name)
-                                    {
-                                        case "OpTopLevelBehavior.my":
-                                            sb.Append("myself");
-                                            break;
-                                        case null:
-                                            sb.Append(absvar.ToString().Split('.').Last());
-                                            break;
-                                        default:
-                                            sb.Append(absvar._name.ToString().Split('.').Last());
-                                            break;
-                                    }
-                                    break;
-                                default:
-                                    sb.Append(rhsref[0]._name.ToString().Split('.').Last());
-                                    break;
+                                switch (rhsref[o])
+                                {
+                                    case OpFindSubSet:
+                                        sb.Append("[^subset]");
+                                        break;
+                                    case OpForEach opf:
+                                        string each = SetupLHS(opf._LHS, codeList, i);
+                                        sb.Append(each + "_current");
+                                        break;
+                                    case OpSlideValue:
+                                        sb.Append("[^slider]");
+                                        break;
+                                    case OpAbstractCreateVariable opv:
+                                        sb.Append("[" + opv._varName + "]");
+                                        break;
+                                    case OpSpawn spawn1:
+                                        sb.Append(spawnedobjects[spawn1]);
+                                        break;
+                                    case AbstractScriptVariant absvar:
+                                        switch (absvar._name)
+                                        {
+                                            case "OpTopLevelBehavior.my":
+                                                sb.Append("myself");
+                                                break;
+                                            case null:
+                                                sb.Append(absvar.ToString().Split('.').Last());
+                                                break;
+                                            default:
+                                                sb.Append(absvar._name.ToString().Split('.').Last());
+                                                break;
+                                        }
+                                        break;
+                                    default:
+                                        sb.Append(rhsref[o]._name.ToString().Split('.').Last());
+                                        break;
+                                }
+                                if (o != (rhsref._count - 1)) sb.Append(".");
                             }
                         }
                         else
@@ -1451,7 +1474,7 @@ namespace igCauldron3.Frames
                     }
                     else if (macropar._RHS is ScriptGroupStack sgs)
                     {
-                        sb.Append(" = ");
+                        //sb.Append(" = ");
                         string sgsString = SetupLHS(sgs, codeList, i);
                         sb.Append(sgsString);
                     }
@@ -1464,34 +1487,63 @@ namespace igCauldron3.Frames
                         string indexrhs = SetupRHS(macropar._indexRHS);
                         sb.Append("[" + indexrhs + "]");
                     }
+                    string paramvalue = sb.ToString();
+                    sb.Clear();
                     if (macropar._combineOp is not Combiner.include)
                     {
-                        switch (macropar._combineOp)
+                        //switch (macropar._combineOp)
+                        //{
+                        //    case Combiner.exclude:
+                        //        sb.Append("// exclude");
+                        //        break;
+                        //    case Combiner.be_replaced_by:
+                        //        sb.Append("// be replaced by");
+                        //        break;
+                        //    case Combiner.intersect_with:
+                        //        sb.Append("// intersect with");
+                        //        break;
+                        //    case Combiner.exclude_all:
+                        //        sb.Append("// exclude all");
+                        //        break;
+                        //    case Combiner.add:
+                        //        sb.Append("// add");
+                        //        break;
+                        //}
+                    }
+                    if (callordefinemacro == "call")
+                    {
+                        if (paramvalue == "null")
                         {
-                            case Combiner.exclude:
-                                sb.Append("// exclude");
-                                break;
-                            case Combiner.be_replaced_by:
-                                sb.Append("// be replaced by");
-                                break;
-                            case Combiner.intersect_with:
-                                sb.Append("// intersect with");
-                                break;
-                            case Combiner.exclude_all:
-                                sb.Append("// exclude all");
-                                break;
-                            case Combiner.add:
-                                sb.Append("// add");
-                                break;
+                            sb.Append("out " + paramdefinition);
+                        }
+                        else
+                        {
+                            sb.Append(paramvalue);
                         }
                     }
-                    if (codeList[i + 1] is OpMacroParameter) sb.Append(","); //if this isnt the last param
+                    else
+                    {
+                        if (paramvalue == "null")
+                        {
+                            sb.Append(paramdefinition);
+                        }
+                        else
+                        {
+                            sb.Append(paramdefinition + " = " + paramvalue);
+                        }
+                    }
+                    if (codeList[i + 1] is OpMacroParameter)
+                    {
+                        sb.Append(", "); //if this isnt the last param
+                        returnedstring.Append(sb.ToString());
+                        sb.Clear();
+                    }
                     else
                     {
                         sb.Append(")"); // closing the UseMacro
+                        returnedstring.AppendLine(sb.ToString());
+                        sb.Clear();
                     }
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) + sb.ToString());
-                    sb.Clear();
                 }
                 else if (codeList[i] is OpControl control)
                 {
@@ -1887,12 +1939,14 @@ namespace igCauldron3.Frames
                 }
                 else if (codeList[i] is OpUseMacro opuse)
                 {   //todo: i think this can work in more ways than I've implemented
-                    if (opuse._NP._editType is OpDefineMacro opdefmac) returnedstring.Append(new string(' ', indentCount * 3) + "callmacro " + opdefmac._name);
+                    string cachedMode = callordefinemacro;
+                    callordefinemacro = "call";
+                    if (opuse._NP._editType is OpDefineMacro opdefmac) returnedstring.Append(new string(' ', indentCount * 3) + "callmacro " + opdefmac._name + " ");
                     if (opuse._branchPC != 0)
                     {
                         if (codeList[i + 1] is OpMacroInterface macrointerface)
                         {
-                            if (opuse._branchPC == 3) //if this macro doesnt have input variables
+                            if (opuse._branchPC == 3) //if this macro doesnt have input/output and does nothing
                             {
                                 returnedstring.AppendLine("()");
                                 i += opuse._branchPC;
@@ -1900,12 +1954,17 @@ namespace igCauldron3.Frames
                             }
                             else
                             {
-                                returnedstring.AppendLine();
                                 int parameterCount = macrointerface._branchPC - 1;
-                                returnedstring.AppendLine(new string(' ', indentCount * 3) + "(");
-                                indentCount++;
-                                ParseScriptObjects(codeList, i + 2, parameterCount); // skip the OpMacroInterface
-                                i += (parameterCount + 3);
+                                if (parameterCount == 0)
+                                {
+                                    returnedstring.AppendLine("()");
+                                }
+                                else
+                                {
+                                    returnedstring.Append("(");
+                                    ParseScriptObjects(codeList, i + 2, parameterCount); // skip the OpMacroInterface
+                                }
+                                i += (parameterCount + 3); //jump over macrointerface and both flowbuiltinbehaviors
                                 if (codeList[i] is not OpFlowBuiltInBehavior) // aka if there's more than just parameters
                                 {
                                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
@@ -1915,11 +1974,10 @@ namespace igCauldron3.Frames
                                     if (indentCount != 0) indentCount--;
                                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
                                 }
-                                if (indentCount != 0) indentCount--;
                             }
                         }
                     }
-
+                    callordefinemacro = cachedMode;
                 }
                 else if (codeList[i] is OpDefineStructure opDefStruct)
                 {
