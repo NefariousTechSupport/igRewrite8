@@ -404,8 +404,9 @@ namespace igCauldron3.Frames
                     case OpSpawn spawn1:
                         sb.Append(spawnedobjects[spawn1]);
                         break;
-                    case OpForEach:
-                        sb.Append("[^for each]");
+                    case OpForEach opf:
+                        string each = SetupLHS(opf._LHS, codeList, i);
+                        sb.Append(each + "_current");
                         break;
                     case OpFindSubSet:
                         sb.Append("[^subset]");
@@ -1788,7 +1789,7 @@ namespace igCauldron3.Frames
                             break;
                     }
                     string offsetby = SetupRHS(opforeach._RHS);
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "foreach (placeholder in " + lhs + ", " + direction + " " + offsetby + ")");
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "foreach (current in " + lhs + ", " + direction + ", " + offsetby + ")");
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
                     indentCount++;
                     if (opforeach._branchPC != 0)
