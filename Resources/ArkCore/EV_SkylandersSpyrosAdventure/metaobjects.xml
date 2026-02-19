@@ -4288,7 +4288,25 @@
 			</metafield>
 		</overriddenmetafields>
 	</metaobject>
+	<metaobject type="igMetaObject" refname="igVertexBlenderWii" basetype="igVertexBlender">
+	</metaobject>
+	<metaobject type="igMetaObject" refname="igVertexBlenderWiiIndexed" basetype="igVertexBlender">
+	</metaobject>
+	<metaobject type="igMetaObject" refname="igVertexBlenderWiiIndexed_P32N16W16" basetype="igVertexBlender">
+	</metaobject>
+	<metaobject type="igMetaObject" refname="igVertexBlenderWiiIndexed_P16N16W16" basetype="igVertexBlender">
+	</metaobject>
 	<metaobject type="igMetaObject" refname="igVertexBlenderWiiIndexed_P16N8W8" basetype="igVertexBlender">
+	</metaobject>
+	<metaobject type="igMetaObject" refname="igVertexBlenderCustom_P32" basetype="igVertexBlender">
+	</metaobject>
+	<metaobject type="igMetaObject" refname="igVertexBlenderCustom_P32N32" basetype="igVertexBlender">
+	</metaobject>
+	<metaobject type="igMetaObject" refname="igVertexBlenderCustom_P32N32B32T32" basetype="igVertexBlender">
+	</metaobject>
+	<metaobject type="igMetaObject" refname="igVertexBlenderCustom_P32NCompressed" basetype="igVertexBlender">
+	</metaobject>
+	<metaobject type="igMetaObject" refname="igVertexBlenderCustom_P32NBTCompressed" basetype="igVertexBlender">
 	</metaobject>
 	<metaobject type="igMetaObject" refname="tfbWorldInfo" basetype="tfbBuildDataInfo">
 		<metafields>
