@@ -8006,6 +8006,11 @@
 		</metafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igImage2ConvertFunctionList" basetype="igDataList">
+			<overriddenmetafields>
+			<metafield type="igMemoryRefMetaField" offset="0x0010" name="_data" resetMethod="none" construct="false" destruct="true" reconstruct="false" refCounted="true" memType="f0">
+				<metafield type="igStructMetaField" offset="0x0000" implicitAlignment="false" requiredAlignment="0" typeSize="0x01" align="0x00"/>
+			</metafield>
+		</overriddenmetafields>
 	</metaobject>
 	<metaobject type="igMetaObject" refname="igUnsignedIntStringHashTable" basetype="igHashTable">
 		<overriddenmetafields>
