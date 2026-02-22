@@ -125,6 +125,7 @@ namespace igLibrary.Core
                     GetSaverSection(dumb("VertexObject")!);
                     GetSaverSection(dumb("Vertex")!);
                     GetSaverSection(dumb("AnimationData")!);
+                    GetSaverSection(dumb("Text")!);
                     GetSaverSection(dumb("Audio")!);
                 }
                 else
