@@ -49,7 +49,8 @@ namespace igLibrary.Core
 			_pools.Add("ImageObject", 			new igMemoryPool("ImageObject"));
 			_pools.Add("Attribute", 			new igMemoryPool("Attribute"));
 			_pools.Add("Node", 					new igMemoryPool("Node"));
-			_pools.Add("Audio", 				new igMemoryPool("Audio"));
+            _pools.Add("Text",                  new igMemoryPool("Text"));
+            _pools.Add("Audio", 				new igMemoryPool("Audio"));
 			_pools.Add("AudioDsp", 				new igMemoryPool("AudioDsp"));
 			_pools.Add("AudioSample", 			new igMemoryPool("AudioSample"));
 			_pools.Add("AudioSampleSecondary", 	new igMemoryPool("AudioSampleSecondary"));
