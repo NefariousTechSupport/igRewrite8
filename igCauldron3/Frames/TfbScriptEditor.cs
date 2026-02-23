@@ -257,7 +257,7 @@ namespace igCauldron3.Frames
                 }
                 else if (ex._name == "ScreenMeasurement")
                 {
-                    sb.Append("(x: " + (RHS._value & 0xFFFF0000) * 16 + ", y: " + (RHS._value & 0x0000FFFF) * 16 + ")");
+                    sb.Append("(x: " + (RHS._value & 0xFFFF0000) * 16 + " y: " + (RHS._value & 0x0000FFFF) * 16 + ")");
                 }
                 else
                 {
@@ -349,7 +349,7 @@ namespace igCauldron3.Frames
                     }
                     else if (ex._name == "ScreenMeasurement")
                     {
-                        sb.Append("(x: " + (rhsValueS._value & 0xFFFF0000) * 16 + ", y: " + (rhsValueS._value & 0x0000FFFF) * 16 + ")");
+                        sb.Append("(x: " + (rhsValueS._value & 0xFFFF0000) * 16 + " y: " + (rhsValueS._value & 0x0000FFFF) * 16 + ")");
                     }
                     else
                     {
@@ -409,6 +409,12 @@ namespace igCauldron3.Frames
                         string each = SetupLHS(opf._LHS, codeList, i);
                         sb.Append(each + "_current");
                         break;
+                    case OpFindVariable:
+                        sb.Append("[^found]");
+                        break;
+                    case OpStartSequence:
+                        sb.Append("[^sequence]");
+                        break;
                     case OpFindSubSet:
                         sb.Append("[^subset]");
                         break;
@@ -441,6 +447,9 @@ namespace igCauldron3.Frames
                         break;
                     case OpUserBehavior:
                         sb.Append("opuserbehavior //unimplemented");
+                        break;
+                    case ReferenceVariant refvar:
+                        sb.Append(refvar._name.Split('.').Last());
                         break;
                     default:
                         sb.Append("(" + rh[i]._name.Split('.').Last() + ")");
@@ -654,6 +663,12 @@ namespace igCauldron3.Frames
             StringBuilder sb = new StringBuilder();
             for (int i = startOffset; i < CodeCount; i++)
             {
+                /// Unimplemented Opcodes (from 3DS)
+                /// OpPrint (kind of exists on wii but never used)
+                /// OpPlayInstance
+                /// OpHudApplyDamage
+                /// OpHudDisplayString
+                /// 
                 if (codeList[i] is OpSetValue setv)
                 {
                     int rhscount = 1;
@@ -848,7 +863,7 @@ namespace igCauldron3.Frames
                             { //screen measurement is 2 ushorts, 1st half is X, second half is Y
                               //theyre multiplied by 16 ingame
                               //this is broken somehow, the values become astronomically high
-                                sb.Append("(x: " + (rhsValueS._value & 0xFFFF0000) * 16 + ", y: " + (rhsValueS._value & 0x0000FFFF) * 16 + ")");
+                                sb.Append("(x: " + (rhsValueS._value & 0xFFFF0000) * 16 + " y: " + (rhsValueS._value & 0x0000FFFF) * 16 + ")");
                             }
                             else
                             {
@@ -895,6 +910,71 @@ namespace igCauldron3.Frames
                 else if (codeList[i] is OpStartUp)
                 {
 
+                }
+                else if (codeList[i] is OpMoveTo moveto)
+                {
+                    string destination = SetupLHS(moveto._LHS, codeList, i);
+                    string untilRhs = SetupRHS(moveto._RHS);
+                    string animation = SetupLHS(moveto._NP, codeList, i);
+                    string dir = "";
+                    switch (moveto._dir)
+                    {
+                        case SetDirection.forward:
+                            dir = "forward";
+                            break;
+                        case SetDirection.backward:
+                            dir = "backward";
+                            break;
+                        case SetDirection.randomly:
+                            dir = "randomly";
+                            break;
+                    }
+                    if (moveto._indexRHS != null)
+                    {
+                        string indexrhs = SetupRHS(moveto._indexRHS);
+                        if (indexrhs.Contains('[') || indexrhs.Contains(']')) ;
+                        else
+                        {
+                            indexrhs = "[" + indexrhs + "]";
+                        }
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveTo(" + destination + ", " + dir + ", until within: " + untilRhs + ", playing: " + animation + indexrhs + ")");
+                    }
+                    else
+                    {
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveTo(" + destination + ", " + dir + ", until within: " + untilRhs + ", playing: " + animation + ")");
+                    }
+
+
+                    // move X to Y anim: Z
+                }
+                else if (codeList[i] is OpMoveFrom movefrom)
+                {   // move from||working|until beyond|with anim
+                    // "move A from B dir: C until beyond D with anim: E
+                    string lhs = SetupLHS(movefrom._LHS, codeList, i);
+                    string dir = "";
+                    switch (movefrom._dir)
+                    {
+                        case SetDirection.forward:
+                            dir = "forward";
+                            break;
+                        case SetDirection.backward:
+                            dir = "backward";
+                            break;
+                        case SetDirection.randomly:
+                            dir = "randomly";
+                            break;
+                    }
+                    string np = SetupLHS(movefrom._NP, codeList, i);
+                    string rhs = SetupRHS(movefrom._RHS);
+                    string indexrhs = SetupRHS(movefrom._indexRHS);
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "OpMoveFrom: " +
+                        "lhs: " + lhs +
+                        " rhs: " + rhs +
+                        " np: " + np +
+                        " dir: " + dir +
+                        " indexrhs: " + indexrhs);
+
+                    // move X to Y until etc
                 }
                 else if (codeList[i] is OpStartSequence opstart)
                 {
@@ -1611,23 +1691,36 @@ namespace igCauldron3.Frames
                     }
                     string rhs = SetupRHS(checkfov._RHS);
                     string mode = "";
+                    //switch (checkfov._mode)
+                    //{
+                    //    case obstructMode.ignore_obstructions:
+                    //        mode = "ignore_obstructions";
+                    //        break;
+                    //    case obstructMode.consider_obstructions:
+                    //        mode = "consider_obstructions";
+                    //        break;
+                    //}
                     switch (checkfov._mode)
                     {
                         case obstructMode.ignore_obstructions:
-                            mode = "ignore_obstructions";
+                            mode = "false";
                             break;
                         case obstructMode.consider_obstructions:
-                            mode = "consider_obstructions";
+                            mode = "true";
                             break;
                     }
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) +
-                        "from: " + fromlhs +
-                        " facing: " + facing +
-                        " fov: " + fov +
-                        " lhs: " + lhs +
-                        " " + relop +
-                        " rhs: " + rhs +
-                        " " + mode);
+                    //returnedstring.AppendLine(new string(' ', indentCount * 3) +
+                    //    "from: " + fromlhs +
+                    //    " facing: " + facing +
+                    //    " fov: " + fov +
+                    //    " lhs: " + lhs +
+                    //    " " + relop +
+                    //    " rhs: " + rhs +
+                    //    " " + mode);
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "checkFOV(" + fromlhs + ", " + lhs);
+                    indentCount++;
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + relop + "cone(" + fov + "°, " + rhs + ", " + facing + "), " + mode + ")");
+                    indentCount--;
                 }
                 else if (codeList[i] is OpSlideValue opslide)
                 {
@@ -1649,7 +1742,7 @@ namespace igCauldron3.Frames
                     {
                         indexrhs = "[" + SetupRHS(setref._indexRHS) + "]";
                     }
-                    sb.Append("*" + lhs + " = " + rhs + indexrhs);
+                    sb.Append(lhs + " = " + rhs + indexrhs);
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + sb.ToString());
                     sb.Clear();
                 }
@@ -1677,6 +1770,10 @@ namespace igCauldron3.Frames
                             break;
                     }
                     if (checkref._RHS._count != 0)
+                    {
+                        sb.Append(ReadRHSObjects(checkref._RHS));
+                    }
+                    else
                     {
                         sb.Append(SetupRHS(checkref._RHS));
                     }
