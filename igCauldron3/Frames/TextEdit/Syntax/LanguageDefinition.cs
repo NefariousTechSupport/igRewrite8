@@ -191,11 +191,11 @@ public class LanguageDefinition
                 "int", "float", "screenmeasurement", "color", "string", "actor", "actorwaypoint", "sound", "sprite", "particle", "animationinfo",
                 "scriptcolorinfo", "slider", "scriptcontroller", "valueinfo", "light", "struct", "variable", "placementreference", "callmacro", "loop", "foreach",
                 "spawn", "displace", "teleportTo", "remove", "spawned", "end", "stop", "macro", "newopcodenewopcodenewopcode", "moverelative", "if", "slidevalue",
-                "start", "elseif", "find", "moveTo", "moveFrom", "turnTo"
+                "start", "elseif", "find", "moveTo", "moveFrom", "turnTo", "checkFOV", "setBehavior"
             },
             Identifiers = new[]
             {
-                "random", "round", "sin", "cos", "tan", "arcsin", "arccos", "arctan", "sqrt", "abs", "myself", "Add", "Remove"
+                "random", "round", "sin", "cos", "tan", "arcsin", "arccos", "arctan", "sqrt", "abs", "myself", "my", "Add", "Remove", "ReplaceWith", "current"
             }
         };
 

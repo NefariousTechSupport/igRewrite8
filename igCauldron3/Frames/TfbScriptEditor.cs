@@ -6,6 +6,7 @@ using igLibrary.Tfb.Script;
 using ImGuiNET;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.Devices;
+using Newtonsoft.Json.Serialization;
 using OpenTK.Audio.OpenAL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Common.Input;
@@ -16,6 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
+using System.Dynamic;
 using System.Linq;
 using System.Numerics;
 using System.Reflection.Metadata.Ecma335;
@@ -66,7 +68,10 @@ namespace igCauldron3.Frames
         private string callordefinemacro = "define";
         private Dictionary<OpAbstractCreateVariable, string> localvariables = new Dictionary<OpAbstractCreateVariable, string>(); // to fix float variables by turning ints into floats
                                                                                                                                   // if the variable ever gets assigned with a float value
+        private Dictionary<List<OpAbstractCreateVariable>, string> scriptDependencies = new Dictionary<List<OpAbstractCreateVariable>, string>();
         private Dictionary<string, string> localvarstrings = new Dictionary<string, string>();
+        private Dictionary<OpUserBehavior, string> behaviors = new Dictionary<OpUserBehavior, string>();
+        private int amountOfBehaviors = 0;
         private Dictionary<OpFlowBuiltInBehavior, string> branchTargets = new Dictionary<OpFlowBuiltInBehavior, string>(); // for OpAbstractFlow
         string script = "tfbscript test";
         public TfbScriptEditor(Window wnd, igObjectDirectory currentdir2, OpCodeList codeList2, OpCreateVariableList varList2, Dictionary<List<OpAbstractCreateVariable>, string> dependencies) : base(wnd)
@@ -74,6 +79,7 @@ namespace igCauldron3.Frames
             codeList = codeList2;
             varList = varList2;
             currentdir = currentdir2;
+            scriptDependencies = dependencies;
             StringBuilder scriptbuilder = new StringBuilder();
             if (varList != null)
             {
@@ -391,10 +397,37 @@ namespace igCauldron3.Frames
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < rh._count; i++)
             {
+                if (rh[i] != null && rh[i] is AbstractPlacement || rh[i] is ScriptStructure)
+                {
+                    igNamedObject named = rh[i];
+                    string name = "";
+                    if (rh[i] is ScriptStructure || named._name.Contains(' '))
+                    {
+                        name = "'" + named._name + "'";
+                    }
+                    else
+                    {
+                        name = named._name;
+                    }
+                    if (currentdir._objectList.Contains(rh[i]))
+                    {
+                        sb.Append(name);
+                    }
+                    else
+                    {
+                        sb.Append("global::" + name);
+                    }
+                    if (i != (rh._count - 1)) sb.Append(".");
+                    continue;
+                }
                 switch (rh[i])
                 {
                     case OpSlideValue:
                         sb.Append("[^slider]");
+                        break;
+                    case OpCheckFOV checkfov:
+                        string fovlhs = SetupLHS(checkfov._LHS, codeList, i);
+                        sb.Append(fovlhs + ".filtered");
                         break;
                     case OpLoopValue:
                         sb.Append("[loop index]");
@@ -422,6 +455,13 @@ namespace igCauldron3.Frames
                         sb.Append("[" + opvar._varName + "]");
                         break;
                     case ValueInfo valinfo:
+                        if (currentdir._objectList.Contains(valinfo))
+                        {
+                        }
+                        else
+                        {
+                            sb.Append("global::");
+                        }
                         string valueinfoval = "";
                         igExternalReferenceSystem.Singleton._globalSet.MakeReference(valinfo._type, null, out igHandleName name);
                         igObject? valueinfo2 = igExternalReferenceSystem.Singleton._globalSet.ResolveReference(name, null);
@@ -441,12 +481,114 @@ namespace igCauldron3.Frames
                         }
                         sb.Append("'" + valinfo._name + "'");
                         break;
-                    case ScriptReference sref:
-                        if (sref._name.Split('.').Last() == "my") sb.Append("myself");
-                        else sb.Append(sref._name.Split('.').Last());
+                    case ScriptReference scriptref:
+                        if (scriptref._type != null)
+                        {
+                            string reftype = "";
+                            if (scriptref._type is OpDefineStructure defs)
+                            {
+                                reftype = "struct " + defs._name;
+                            }
+                            else if (scriptref._type is OpDefineMacro defm)
+                            {
+                                reftype = "macro " + defm._name;
+                            }
+                            else
+                            {
+                                igExternalReferenceSystem.Singleton._globalSet.MakeReference(scriptref._type, null, out igHandleName name2);
+                                igObject? scriptref2 = igExternalReferenceSystem.Singleton._globalSet.ResolveReference(name2, null);
+                                if (scriptref2 is igMetaObject met)
+                                {
+                                    switch (met._name)
+                                    {
+                                        case "IntMeasurement": // floats are stored as IntMeasurements with _RHS._varOp1._type = float
+                                            sb.Append("int");
+                                            break;
+                                        case "FloatMeasurement":
+                                            sb.Append("float");
+                                            break;
+                                        case "ColorMeasurement":
+                                            sb.Append("color");
+                                            break;
+                                        case "ScreenMeasurement":
+                                            sb.Append("screenmeasurement");
+                                            break;
+                                        case "ValueInfo":
+                                            sb.Append("valueinfo");
+                                            break;
+                                        case "tfbActorInfo":
+                                            sb.Append("actor");
+                                            break;
+                                        case "ActorWaypoint":
+                                            sb.Append("actorwaypoint");
+                                            break;
+                                        case "tfbSoundInfo":
+                                            sb.Append("sound");
+                                            break;
+                                        case "tfbSpriteInfo":
+                                            sb.Append("sprite");
+                                            break;
+                                        case "tfbParticleInfo":
+                                            sb.Append("particle");
+                                            break;
+                                        case "AnimationInfo":
+                                            sb.Append("animation");
+                                            break;
+                                        case "ScriptColorInfo":
+                                            sb.Append("scriptcolorinfo");
+                                            break;
+                                        case "Slider":
+                                            sb.Append("slider");
+                                            break;
+                                        case "ScriptController":
+                                            sb.Append("scriptcontroller");
+                                            break;
+                                        case "tfbLightInfo":
+                                            sb.Append("light");
+                                            break;
+                                        case "StringInfo":
+                                            sb.Append("string");
+                                            break;
+                                    }
+                                }
+                                reftype = sb.ToString(); //ändra
+                            }
+                            localvarstrings.TryAdd("[" + scriptref._name + "]", reftype);
+                            sb.Clear();
+                            if (currentdir._objectList.Contains(scriptref))
+                            {
+                                sb.Append("local::");
+                            }
+                            else
+                            {
+                                sb.Append("global::");
+                            }
+                            sb.Append("[" + scriptref._name + "]");
+                        }
+                        else
+                        {
+                            switch (scriptref._name)
+                            {
+                                case "OpTopLevelBehavior.my":
+                                    sb.Append("myself");
+                                    break;
+                                default:
+                                    sb.Append("(" + scriptref._name.ToString().Split('.').Last() + ")");
+                                    break;
+                            }
+                        }
                         break;
-                    case OpUserBehavior:
-                        sb.Append("opuserbehavior //unimplemented");
+                    case OpUserBehavior opuser:
+                        if (behaviors.ContainsKey(opuser))
+                        {
+                            sb.Append(behaviors[opuser]);
+                        }
+                        else
+                        {
+                            amountOfBehaviors++;
+                            behaviors.Add(opuser, "behavior" + amountOfBehaviors);
+                            sb.Append(behaviors[opuser]);
+                        }
                         break;
                     case ReferenceVariant refvar:
                         sb.Append(refvar._name.Split('.').Last());
@@ -462,14 +604,42 @@ namespace igCauldron3.Frames
         private string SetupLHS(ScriptObjectList LHS, OpCodeList codeList, int pc)
         {
             StringBuilder sb = new StringBuilder();
+            bool useParenthesis = (LHS._count == 1);
             for (int j = 0; j < LHS._count; j++)
             {
+                if (LHS[j] != null && LHS[j] is AbstractPlacement || LHS[j] is ScriptStructure)
+                {
+                    igNamedObject named = LHS[j];
+                    string name = "";
+                    if (LHS[j] is ScriptStructure || named._name.Contains(' ')) 
+                    {
+                        name = "'" + named._name + "'";
+                    }
+                    else
+                    {
+                        name = named._name;
+                    }
+                    if (currentdir._objectList.Contains(LHS[j]))
+                    {
+                        sb.Append(name);
+                    }
+                    else
+                    {
+                        sb.Append("global::" + name);
+                    }
+                    if (j != (LHS._count - 1)) sb.Append(".");
+                    continue;
+                }
                 switch (LHS[j]) // some script objects use different fields for their actual names.
                 {
                     case null:
                         continue;
                     case OpControl:
                         sb.Append("[^controlled]");
+                        break;
+                    case OpCheckFOV checkfov:
+                        string fovlhs = SetupLHS(checkfov._LHS, codeList, pc);
+                        sb.Append(fovlhs + ".filtered");
                         break;
                     case OpFindVariable:
                         sb.Append("[^found]");
@@ -482,7 +652,7 @@ namespace igCauldron3.Frames
                         break;
                     case OpForEach opf:
                         string each = SetupLHS(opf._LHS, codeList, pc);
-                        sb.Append(each + "_current");
+                        sb.Append(each + ".current");
                         break;
                     case OpFindSubSet:
                         sb.Append("[^subset]");
@@ -497,17 +667,141 @@ namespace igCauldron3.Frames
                         sb.Append(spawnedobjects[spawn1]);
                         break;
                     case ScriptSetReference scriptsetref:
-                        sb.Append("(" + scriptsetref._name.ToString().Split('.').Last() + ")");
+                        if (scriptsetref._name.Split('.').Last().Contains(' '))
+                        {
+                            sb.Append(ToCamelCase(scriptsetref._name.Split('.').Last()));
+                        }
+                        else
+                        {
+                            sb.Append(scriptsetref._name.Split('.').Last());
+                        }
+                        break;
+                    case ValueInfo valinfo:
+                        if (currentdir._objectList.Contains(valinfo))
+                        {
+                        }
+                        else
+                        {
+                            sb.Append("global::");
+                        }
+                        string valueinfoval = "";
+                        igExternalReferenceSystem.Singleton._globalSet.MakeReference(valinfo._type, null, out igHandleName name);
+                        igObject? valueinfo2 = igExternalReferenceSystem.Singleton._globalSet.ResolveReference(name, null);
+                        if (valueinfo2 is igMetaObject type)
+                        {
+                            switch (type._name)
+                            {
+                                case "FloatMeasurement":
+                                    valueinfoval = BitConverter.Int32BitsToSingle(valinfo._value).ToString();
+                                    localvarstrings.TryAdd(valinfo._name, valueinfoval);
+                                    break;
+                                case "IntMeasurement":
+                                    valueinfoval = valinfo._value.ToString();
+                                    localvarstrings.TryAdd(valinfo._name, valueinfoval);
+                                    break;
+                            }
+                        }
+                        sb.Append("'" + valinfo._name + "'");
                         break;
                     case ScriptReference scriptref:
-                        switch (scriptref._name)
+                        if (scriptref._type != null)
                         {
-                            case "OpTopLevelBehavior.my":
-                                sb.Append("myself");
-                                break;
-                            default:
-                                sb.Append("(" + scriptref._name.ToString().Split('.').Last() + ")");
-                                break;
+                            string reftype = "";
+                            if (scriptref._type is OpDefineStructure defs)
+                            {
+                                reftype = "struct " + defs._name;
+                            }
+                            else if (scriptref._type is OpDefineMacro defm)
+                            {
+                                reftype = "macro " + defm._name;
+                            }
+                            else
+                            {
+                                igExternalReferenceSystem.Singleton._globalSet.MakeReference(scriptref._type, null, out igHandleName name2);
+                                igObject? scriptref2 = igExternalReferenceSystem.Singleton._globalSet.ResolveReference(name2, null);
+                                if (scriptref2 is igMetaObject met)
+                                {
+                                    switch (met._name)
+                                    {
+                                        case "IntMeasurement": // floats are stored as IntMeasurements with _RHS._varOp1._type = float
+                                            sb.Append("int");
+                                            break;
+                                        case "FloatMeasurement":
+                                            sb.Append("float");
+                                            break;
+                                        case "ColorMeasurement":
+                                            sb.Append("color");
+                                            break;
+                                        case "ScreenMeasurement":
+                                            sb.Append("screenmeasurement");
+                                            break;
+                                        case "ValueInfo":
+                                            sb.Append("valueinfo");
+                                            break;
+                                        case "tfbActorInfo":
+                                            sb.Append("actor");
+                                            break;
+                                        case "ActorWaypoint":
+                                            sb.Append("actorwaypoint");
+                                            break;
+                                        case "tfbSoundInfo":
+                                            sb.Append("sound");
+                                            break;
+                                        case "tfbSpriteInfo":
+                                            sb.Append("sprite");
+                                            break;
+                                        case "tfbParticleInfo":
+                                            sb.Append("particle");
+                                            break;
+                                        case "AnimationInfo":
+                                            sb.Append("animation");
+                                            break;
+                                        case "ScriptColorInfo":
+                                            sb.Append("scriptcolorinfo");
+                                            break;
+                                        case "Slider":
+                                            sb.Append("slider");
+                                            break;
+                                        case "ScriptController":
+                                            sb.Append("scriptcontroller");
+                                            break;
+                                        case "tfbLightInfo":
+                                            sb.Append("light");
+                                            break;
+                                        case "StringInfo":
+                                            sb.Append("string");
+                                            break;
+                                    }
+                                }
+                                reftype = sb.ToString(); //ändra
+                            }
+                            localvarstrings.TryAdd("[" + scriptref._name + "]", reftype);
+                            sb.Clear();
+                            if (currentdir._objectList.Contains(scriptref))
+                            {
+                                sb.Append("local::");
+                            }
+                            else
+                            {
+                                sb.Append("global::");
+                            }
+                            sb.Append("[" + scriptref._name + "]");
+                        }
+                        else
+                        {
+                            switch (scriptref._name)
+                            {
+                                default:
+                                    if (scriptref._name.Split('.').Last().Contains(' '))
+                                    {
+                                        sb.Append(ToCamelCase(scriptref._name.Split('.').Last()));
+                                    }
+                                    else
+                                    {
+                                        sb.Append(scriptref._name.Split('.').Last());
+                                    }
+                                    break;
+                            }
                         }
                         break;
                     case ColorMeasurement cm:
@@ -517,18 +811,29 @@ namespace igCauldron3.Frames
                                 sb.Append("tint");
                                 break;
                             default:
-                                sb.Append("(" + cm._name.ToString().Split('.').Last() + ")");
+                                if (cm._name.Split('.').Last().Contains(' '))
+                                {
+                                    sb.Append(ToCamelCase(cm._name.Split('.').Last()));
+                                }
+                                else
+                                {
+                                    sb.Append(cm._name.Split('.').Last());
+                                }
                                 break;
                         }
                         break;
                     case OrientationMeasurement om:
                         switch (om._name)
                         {
-                            case "MatrixMeasurement.orientation":
-                                sb.Append("orientation");
-                                break;
                             default:
-                                sb.Append("(" + om._name.ToString().Split('.').Last() + ")");
+                                if (om._name.Split('.').Last().Contains(' '))
+                                {
+                                    sb.Append(ToCamelCase(om._name.Split('.').Last()));
+                                }
+                                else
+                                {
+                                    sb.Append(om._name.Split('.').Last());
+                                }
                                 break;
                         }
                         break;
@@ -536,12 +841,6 @@ namespace igCauldron3.Frames
                     case FloatMeasurement fl:
                         switch (fl._name)
                         {
-                            case "ActorPhysics.gravity max speed":
-                                sb.Append("(gravity max speed)");
-                                break;
-                            case "ScaleMeasurement.uniform":
-                                sb.Append("uniform");
-                                break;
                             case "ScaleMeasurement.X":
                                 sb.Append("x");
                                 break;
@@ -552,33 +851,28 @@ namespace igCauldron3.Frames
                                 sb.Append("z");
                                 break;
                             default:
-                                sb.Append("(" + fl._name.ToString().Split('.').Last() + ")");
+                                if (fl._name.Split('.').Last().Contains(' '))
+                                {
+                                    sb.Append(ToCamelCase(fl._name.Split('.').Last()));
+                                }
+                                else
+                                {
+                                    sb.Append(fl._name.Split('.').Last());
+                                }
                                 break;
                         }
                         break;
                     case IntMeasurement im:
                         switch (im._name)
                         {
-                            case "Sequence.playback mode":
-                                sb.Append("(playback mode)");
-                                break;
-                            case "ColorMeasurement.alpha":
-                                sb.Append("alpha");
-                                break;
-                            case "SetVariant.count":
-                                sb.Append("count");
-                                break;
-                            case "CollisionInfo.interacts with level mesh":
-                                sb.Append("(interacts with level mesh)");
-                                break;
                             default:
-                                if (im._name.ToString().Split('.').Last().Contains(' '))
+                                if (im._name.Split('.').Last().Contains(' '))
                                 {
-                                    sb.Append('(' + im._name.ToString().Split('.').Last() + ')');
+                                    sb.Append(ToCamelCase(im._name.Split('.').Last()));
                                 }
                                 else
                                 {
-                                    sb.Append(im._name.ToString().Split('.').Last());
+                                    sb.Append(im._name.Split('.').Last());
                                 }
                                 break;
                         }
@@ -586,13 +880,10 @@ namespace igCauldron3.Frames
                     case ScaleMeasurement sm:
                         switch (sm._name)
                         {
-                            case "Placement.scale":
-                                sb.Append("scale");
-                                break;
                             default:
                                 if (sm._name.ToString().Split('.').Last().Contains(' '))
                                 {
-                                    sb.Append('(' + sm._name.ToString().Split('.').Last() + ')');
+                                    sb.Append(ToCamelCase(sm._name.Split('.').Last()));
                                 }
                                 else
                                 {
@@ -613,21 +904,13 @@ namespace igCauldron3.Frames
                         sb.Append(LeftHandStack);
                         break;
                     case tfbScriptObject so:
-                        // if StreamContext.globalObjects.Contains(so)
-                        // {
-                        //     sb.Append("global::");
-                        // }
-                        // else
-                        // {
-                        //     sb.Append("local::");
-                        // }
-                        if (so._name.ToString().Split('.').Last().Contains(' '))
+                        if (so._name.Split('.').Last().Contains(' '))
                         {
-                            sb.Append('(' + so._name.ToString().Split('.').Last() + ')');
+                            sb.Append(ToCamelCase(so._name.Split('.').Last()));
                         }
                         else
                         {
-                            sb.Append(so._name.ToString().Split('.').Last());
+                            sb.Append(so._name.Split('.').Last());
                         }
                         break;
                     default:
@@ -638,6 +921,25 @@ namespace igCauldron3.Frames
                 if (j != (LHS._count - 1)) sb.Append(".");
             }
             return sb.ToString();
+        }
+        public string ToCamelCase(string input)
+        {
+            StringBuilder sb = new StringBuilder();
+            string[] array = input.Split(' ');
+            string toCamel = "";
+            foreach(var s in array)
+            {
+                if (s == array[0])
+                {
+                    sb.Append(s);
+                }
+                else
+                {
+                    sb.Append(s[0].ToString().ToUpper() + s.Substring(1));
+                }
+            }
+            toCamel = sb.ToString();
+            return toCamel;
         }
         int indentCount = 0;
 
@@ -908,6 +1210,25 @@ namespace igCauldron3.Frames
                 {
 
                 }
+                else if (codeList[i] is OpTurnTo turnto)
+                { // turn to||with anim
+                    string facing = SetupRHS(turnto._facingRHS);
+                    string animation = SetupLHS(turnto._NP, codeList, i);
+                    if (turnto._indexRHS != null)
+                    {
+                        string indexrhs = SetupRHS(turnto._indexRHS);
+                        if (indexrhs.Contains('[') || indexrhs.Contains(']')) ;
+                        else
+                        {
+                            indexrhs = "[" + indexrhs + "]";
+                        }
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "turnTo(" + facing + ", playing: " + animation + indexrhs + ")");
+                    }
+                    else
+                    {
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "turnTo(" + facing + ", playing: " + animation + ")");
+                    }
+                }
                 else if (codeList[i] is OpMoveTo moveto)
                 {
                     string destination = SetupLHS(moveto._LHS, codeList, i);
@@ -934,11 +1255,11 @@ namespace igCauldron3.Frames
                         {
                             indexrhs = "[" + indexrhs + "]";
                         }
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveTo(" + destination + ", " + dir + ", until within: " + untilRhs + ", playing: " + animation + indexrhs + ") // movetomovetomovetomoveto");
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveTo(" + destination + ", " + dir + ", until within: " + untilRhs + ", playing: " + animation + indexrhs + ")");
                     }
                     else
                     {
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveTo(" + destination + ", " + dir + ", until within: " + untilRhs + ", playing: " + animation + ") // movetomovetomovetomoveto");
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveTo(" + destination + ", " + dir + ", until within: " + untilRhs + ", playing: " + animation + ")");
                     }
 
 
@@ -971,11 +1292,11 @@ namespace igCauldron3.Frames
                         {
                             indexrhs = "[" + indexrhs + "]";
                         }
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveFrom(" + destination + ", " + dir + ", until beyond: " + untilRhs + ", playing: " + animation + indexrhs + ") // movetomovetomovetomoveto");
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveFrom(" + destination + ", " + dir + ", until beyond: " + untilRhs + ", playing: " + animation + indexrhs + ")");
                     }
                     else
                     {
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveFrom(" + destination + ", " + dir + ", until beyond: " + untilRhs + ", playing: " + animation + ") // movetomovetomovetomoveto");
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveFrom(" + destination + ", " + dir + ", until beyond: " + untilRhs + ", playing: " + animation + ")");
                     }
                 }
                 else if (codeList[i] is OpStartSequence opstart)
@@ -984,7 +1305,12 @@ namespace igCauldron3.Frames
                     if (opstart._indexRHS != null)
                     {
                         string indexrhs = SetupRHS(opstart._indexRHS);
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "start " + lhs + "[" + indexrhs + "]");
+                        if (indexrhs.Contains('[') || indexrhs.Contains(']')) ;
+                        else
+                        {
+                            indexrhs = "[" + indexrhs + "]";
+                        }
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "start " + lhs + indexrhs);
                     }
                     else
                     {
@@ -1260,12 +1586,9 @@ namespace igCauldron3.Frames
                             }
                         }
                         string spawnfacing = "";
-                        if (spawn._facingRHS._varOp1._count != 0)
+                        if (spawn._facingRHS._varOp1._count == 1 && spawn._facingRHS._varOp1[0]._name.Split('.').Last() == "my")
                         {
-                            if (spawn._facingRHS._varOp1[0]._name.Split('.').Last() == "my")
-                            {
                                 spawnfacing = "my.facing";
-                            }
                         }
                         else
                         {
@@ -1330,9 +1653,9 @@ namespace igCauldron3.Frames
                     }
                     else if (changeme._combineOp is Combiner.be_replaced_by)
                     {
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + lhs + ".ReplaceWith(" + rhs + ") // (testing be_replaced_by)");
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + lhs + ".ReplaceWith(" + rhs + ")");
                     }
-                    else
+                    else // ik i've seen "Combiner.add" used once
                     {
                         returnedstring.AppendLine(new string(' ', indentCount * 3) + "//changemembership has unimplemented CombineOp (" + combineop + ") LHS:" + lhs + " RHS: " + rhs);
                     }
@@ -1471,7 +1794,7 @@ namespace igCauldron3.Frames
                                         break;
                                     case OpForEach opf:
                                         string each = SetupLHS(opf._LHS, codeList, i);
-                                        sb.Append(each + "_current");
+                                        sb.Append(each + ".current");
                                         break;
                                     case OpSlideValue:
                                         sb.Append("[^slider]");
@@ -1567,7 +1890,12 @@ namespace igCauldron3.Frames
                     if (macropar._indexRHS != null)
                     {
                         string indexrhs = SetupRHS(macropar._indexRHS);
-                        sb.Append("[" + indexrhs + "]");
+                        if (indexrhs.Contains('[') || indexrhs.Contains(']')) ;
+                        else
+                        {
+                            indexrhs = "[" + indexrhs + "]";
+                        }
+                        sb.Append(indexrhs);
                     }
                     string paramvalue = sb.ToString();
                     sb.Clear();
@@ -1627,13 +1955,54 @@ namespace igCauldron3.Frames
                         sb.Clear();
                     }
                 }
+                else if (codeList[i] is OpSetBehavior setbehavior) 
+                {
+                    if (setbehavior._NP[0] is OpUserBehavior behavior)
+                    {
+                        if (behaviors.ContainsKey(behavior))
+                        {
+                            returnedstring.AppendLine(new string(' ', indentCount * 3) + "setBehavior(" + behaviors[behavior] + ")");
+                        }
+                        else
+                        {
+                            amountOfBehaviors++;
+                            behaviors.Add(behavior, "behavior" + amountOfBehaviors);
+                            returnedstring.AppendLine(new string(' ', indentCount * 3) + "setBehavior(" + behaviors[behavior] + ")");
+                        }
+                    }
+
+                }
+                else if (codeList[i] is OpUserBehavior behavior)
+                {
+                    if (behaviors.ContainsKey(behavior))
+                    {
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "#" + behaviors[behavior]);
+                    }
+                    else
+                    {
+                        amountOfBehaviors++;
+                        behaviors.Add(behavior, "behavior" + amountOfBehaviors);
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "#" + behaviors[behavior]);
+                    }
+                    if (behavior._branchPC != 0)
+                    {
+                        ParseScriptObjects(codeList, i + 1, behavior._branchPC);
+                        i += behavior._branchPC;
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "#end" + behaviors[behavior]);
+                    }
+                }
                 else if (codeList[i] is OpControl control)
                 {
                     string lhs = SetupLHS(control._LHS, codeList, i);
                     if (control._indexRHS != null)
                     {
                         string indexrhs = SetupRHS(control._indexRHS);
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "control (" + lhs + "[" + indexrhs + "]" + ")");
+                        if (indexrhs.Contains('[') || indexrhs.Contains(']')) ;
+                        else
+                        {
+                            indexrhs = "[" + indexrhs + "]";
+                        }
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "control (" + lhs + indexrhs + ")");
                     }
                     else
                     {
@@ -1711,14 +2080,6 @@ namespace igCauldron3.Frames
                             mode = "true";
                             break;
                     }
-                    //returnedstring.AppendLine(new string(' ', indentCount * 3) +
-                    //    "from: " + fromlhs +
-                    //    " facing: " + facing +
-                    //    " fov: " + fov +
-                    //    " lhs: " + lhs +
-                    //    " " + relop +
-                    //    " rhs: " + rhs +
-                    //    " " + mode);
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "checkFOV(" + fromlhs + ", " + lhs);
                     indentCount++;
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + relop + "cone(" + fov + "°, " + rhs + ", " + facing + "), " + mode + ")");
@@ -1739,14 +2100,20 @@ namespace igCauldron3.Frames
                 {
                     string lhs = SetupLHS(setref._LHS, codeList, i);
                     string rhs = ReadRHSObjects(setref._RHS);
-                    string indexrhs = "";
                     if (setref._indexRHS != null)
                     {
-                        indexrhs = "[" + SetupRHS(setref._indexRHS) + "]";
+                        string indexrhs = SetupRHS(setref._indexRHS);
+                        if (indexrhs.Contains('[') || indexrhs.Contains(']')) ;
+                        else
+                        {
+                            indexrhs = "[" + indexrhs + "]";
+                        }
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + lhs + " = " + rhs + indexrhs);
                     }
-                    sb.Append(lhs + " = " + rhs + indexrhs);
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) + sb.ToString());
-                    sb.Clear();
+                    else
+                    {
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + lhs + " = " + rhs);
+                    }
                 }
                 else if (codeList[i] is OpCheckReference checkref)
                 {
@@ -1781,11 +2148,16 @@ namespace igCauldron3.Frames
                     }
                     if (checkref._indexRHS != null)
                     {
-                        sb.Append("[" + SetupRHS(checkref._indexRHS) + "]");
+                        string indexrhs = SetupRHS(checkref._indexRHS);
+                        if (indexrhs.Contains('[') || indexrhs.Contains(']')) ;
+                        else
+                        {
+                            indexrhs = "[" + indexrhs + "]";
+                        }
+                        sb.Append(indexrhs);
                     }
                     sb.Append(")");
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + sb.ToString());
-
                     sb.Clear();
                     if (checkref._branchPC != 0)
                     {
@@ -1844,10 +2216,10 @@ namespace igCauldron3.Frames
                     sb.Append(RightHandStack + ")");
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + sb.ToString());
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
-                    indentCount++;
                     sb.Clear();
                     if (check._branchPC != 0)
                     {
+                        indentCount++;
                         if ((i + check._branchPC + 1) < codeList._count)
                         {
                             ParseScriptObjects(codeList, i + 1, check._branchPC);
@@ -1889,7 +2261,13 @@ namespace igCauldron3.Frames
                     sb.Append("[" + findvariable._varName + "]");
                     if (findvariable._indexRHS != null)
                     {
-                        sb.Append("[" + findvariable._indexRHS + "]");
+                        string indexrhs = SetupRHS(findvariable._indexRHS);
+                        if (indexrhs.Contains('[') || indexrhs.Contains(']')) ;
+                        else
+                        {
+                            indexrhs = "[" + indexrhs + "]";
+                        }
+                        sb.Append(indexrhs);
                     }
                     string variable = sb.ToString();
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "find " + variable + " in " + owner + " // filter: " + filter);
