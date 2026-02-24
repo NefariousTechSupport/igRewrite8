@@ -257,7 +257,7 @@ namespace igCauldron3.Frames
                 }
                 else if (ex._name == "ScreenMeasurement")
                 {
-                    sb.Append("(x: " + (RHS._value & 0xFFFF0000) * 16 + " y: " + (RHS._value & 0x0000FFFF) * 16 + ")");
+                    sb.Append("(x: " + ((uint)(RHS._value) >> 16) + " y: " + ((uint)(RHS._value) & 0xFFFF) + ")");
                 }
                 else
                 {
@@ -349,7 +349,7 @@ namespace igCauldron3.Frames
                     }
                     else if (ex._name == "ScreenMeasurement")
                     {
-                        sb.Append("(x: " + (rhsValueS._value & 0xFFFF0000) * 16 + " y: " + (rhsValueS._value & 0x0000FFFF) * 16 + ")");
+                        sb.Append("(x: " + ((uint)(rhsValueS._value) >> 16) + " y: " + ((uint)(rhsValueS._value) & 0xFFFF) + ")");
                     }
                     else
                     {
@@ -617,10 +617,6 @@ namespace igCauldron3.Frames
                         // {
                         //     sb.Append("global::");
                         // }
-                        // elseif (languagepak).Contains(so)
-                        // {
-                        //     sb.Append("lang::");
-                        // }
                         // else
                         // {
                         //     sb.Append("local::");
@@ -863,7 +859,8 @@ namespace igCauldron3.Frames
                             { //screen measurement is 2 ushorts, 1st half is X, second half is Y
                               //theyre multiplied by 16 ingame
                               //this is broken somehow, the values become astronomically high
-                                sb.Append("(x: " + (rhsValueS._value & 0xFFFF0000) * 16 + " y: " + (rhsValueS._value & 0x0000FFFF) * 16 + ")");
+
+                                sb.Append("(x: " + ((uint)(rhsValueS._value) >> 16) + " y: " + ((uint)(rhsValueS._value) & 0xFFFF) + ")");
                             }
                             else
                             {
@@ -937,11 +934,11 @@ namespace igCauldron3.Frames
                         {
                             indexrhs = "[" + indexrhs + "]";
                         }
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveTo(" + destination + ", " + dir + ", until within: " + untilRhs + ", playing: " + animation + indexrhs + ")");
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveTo(" + destination + ", " + dir + ", until within: " + untilRhs + ", playing: " + animation + indexrhs + ") // movetomovetomovetomoveto");
                     }
                     else
                     {
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveTo(" + destination + ", " + dir + ", until within: " + untilRhs + ", playing: " + animation + ")");
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveTo(" + destination + ", " + dir + ", until within: " + untilRhs + ", playing: " + animation + ") // movetomovetomovetomoveto");
                     }
 
 
@@ -950,7 +947,9 @@ namespace igCauldron3.Frames
                 else if (codeList[i] is OpMoveFrom movefrom)
                 {   // move from||working|until beyond|with anim
                     // "move A from B dir: C until beyond D with anim: E
-                    string lhs = SetupLHS(movefrom._LHS, codeList, i);
+                    string destination = SetupLHS(movefrom._LHS, codeList, i);
+                    string untilRhs = SetupRHS(movefrom._RHS);
+                    string animation = SetupLHS(movefrom._NP, codeList, i);
                     string dir = "";
                     switch (movefrom._dir)
                     {
@@ -964,17 +963,20 @@ namespace igCauldron3.Frames
                             dir = "randomly";
                             break;
                     }
-                    string np = SetupLHS(movefrom._NP, codeList, i);
-                    string rhs = SetupRHS(movefrom._RHS);
-                    string indexrhs = SetupRHS(movefrom._indexRHS);
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "OpMoveFrom: " +
-                        "lhs: " + lhs +
-                        " rhs: " + rhs +
-                        " np: " + np +
-                        " dir: " + dir +
-                        " indexrhs: " + indexrhs);
-
-                    // move X to Y until etc
+                    if (movefrom._indexRHS != null)
+                    {
+                        string indexrhs = SetupRHS(movefrom._indexRHS);
+                        if (indexrhs.Contains('[') || indexrhs.Contains(']')) ;
+                        else
+                        {
+                            indexrhs = "[" + indexrhs + "]";
+                        }
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveFrom(" + destination + ", " + dir + ", until beyond: " + untilRhs + ", playing: " + animation + indexrhs + ") // movetomovetomovetomoveto");
+                    }
+                    else
+                    {
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "moveFrom(" + destination + ", " + dir + ", until beyond: " + untilRhs + ", playing: " + animation + ") // movetomovetomovetomoveto");
+                    }
                 }
                 else if (codeList[i] is OpStartSequence opstart)
                 {
@@ -2092,6 +2094,11 @@ namespace igCauldron3.Frames
                         returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
                     }
                 }
+                else if (codeList[i] is OpReset reset)
+                {
+                    string np = SetupLHS(reset._NP, codeList, i);
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "reset " + np);
+                }
                 else if (codeList[i] is OpCreateVariable opCreateVar)
                 {
 
@@ -2169,6 +2176,10 @@ namespace igCauldron3.Frames
                                 case "tfbLightInfo":
                                     localvariables.TryAdd(opCreateVar, "light");
                                     sb.Append("light [" + opCreateVar._varName + "]");
+                                    break;
+                                case "ScreenMeasurement":
+                                    localvariables.TryAdd(opCreateVar, "screenmeasurement");
+                                    sb.Append("screenmeasurement [" + opCreateVar._varName + "]");
                                     break;
                                 case "StringInfo":
                                     localvariables.TryAdd(opCreateVar, "string");
