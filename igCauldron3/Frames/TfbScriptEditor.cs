@@ -24,6 +24,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 namespace igCauldron3.Frames
@@ -606,6 +607,9 @@ namespace igCauldron3.Frames
                     case OpDefineMacro defmac:
                         sb.Append(defmac._name);
                         break;
+                    case ScriptSet sset:
+                        sb.Append(sset._name);
+                        break;
                     case tfbScriptObject so:
                         if (so._name.Split('.').Last().Contains(' '))
                         {
@@ -925,6 +929,9 @@ namespace igCauldron3.Frames
                     case OpCheckValue opc:
                         string LeftHandStack = SetupLHS(opc._LHS, codeList, pc);
                         sb.Append(LeftHandStack);
+                        break;
+                    case ScriptSet sset:
+                        sb.Append(sset._name);
                         break;
                     case tfbScriptObject so:
                         if (so._name.Split('.').Last().Contains(' '))
@@ -1794,53 +1801,57 @@ namespace igCauldron3.Frames
                     sb.Clear();
                     if (macropar._RHS is ValueRHSVariant valueR)
                     {
-                        if (valueR._varOp1._count == 0)
-                        {
-                            string RHSCalc = SetupRHS(valueR);
-                            sb.Append(RHSCalc);
-                        }
-                        else
-                        {
-                            for (int ii = 0; ii < valueR._varOp1._count; ii++)
-                            {
-                                switch (valueR._varOp1[ii])
-                                {
-                                    case OpFindSubSet:
-                                        sb.Append("[^subset]");
-                                        break;
-                                    case OpForEach opf:
-                                        string each = SetupLHS(opf._LHS, codeList, i);
-                                        sb.Append(each + ".current");
-                                        break;
-                                    case OpSlideValue:
-                                        sb.Append("[^slider]");
-                                        break;
-                                    case OpCreateVariable opv:
-                                        sb.Append("[" + opv._varName + "]");
-                                        break;
-                                    case OpMacroParameter opmacropar:
-                                        sb.Append("[" + opmacropar._varName + "]");
-                                        break;
-                                    case OpSpawn spawn1:
-                                        sb.Append(spawnedobjects[spawn1]);
-                                        break;
-                                    case ScriptSetReference: // "my" would look better as "myself"
-                                        if (valueR._varOp1[ii]._name == "my") sb.Append("myself");
-                                        break;
-                                    default:
-                                        if (valueR._varOp1[ii]._name.Split('.').Last().Contains(' '))
-                                        {
-                                            sb.Append("(" + valueR._varOp1[ii]._name.ToString().Split('.').Last() + ")");
-                                        }
-                                        else
-                                        {
-                                            sb.Append(valueR._varOp1[ii]._name.Split('.').Last());
-                                        }
-                                        break;
-                                }
-                                if (ii != (valueR._varOp1._count - 1)) sb.Append(".");
-                            }
-                        }
+                        sb.Append(SetupRHS(valueR));
+                        //if (valueR._varOp1._count == 0)
+                        //{
+                        //    string RHSCalc = SetupRHS(valueR);
+                        //    sb.Append(RHSCalc);
+                        //}
+                        //else
+                        //{
+                        //    for (int ii = 0; ii < valueR._varOp1._count; ii++)
+                        //    {
+                        //        switch (valueR._varOp1[ii])
+                        //        {
+                        //            case OpControl:
+                        //                sb.Append("[^controlled]");
+                        //                break;
+                        //            case OpFindSubSet:
+                        //                sb.Append("[^subset]");
+                        //                break;
+                        //            case OpForEach opf:
+                        //                string each = SetupLHS(opf._LHS, codeList, i);
+                        //                sb.Append(each + ".current");
+                        //                break;
+                        //            case OpSlideValue:
+                        //                sb.Append("[^slider]");
+                        //                break;
+                        //            case OpCreateVariable opv:
+                        //                sb.Append("[" + opv._varName + "]");
+                        //                break;
+                        //            case OpMacroParameter opmacropar:
+                        //                sb.Append("[" + opmacropar._varName + "]");
+                        //                break;
+                        //            case OpSpawn spawn1:
+                        //                sb.Append(spawnedobjects[spawn1]);
+                        //                break;
+                        //            case ScriptSetReference: // "my" would look better as "myself"
+                        //                if (valueR._varOp1[ii]._name == "my") sb.Append("myself");
+                        //                break;
+                        //            default:
+                        //                if (valueR._varOp1[ii]._name.Split('.').Last().Contains(' '))
+                        //                {
+                        //                    sb.Append("(" + valueR._varOp1[ii]._name.ToString().Split('.').Last() + ")");
+                        //                }
+                        //                else
+                        //                {
+                        //                    sb.Append(valueR._varOp1[ii]._name.Split('.').Last());
+                        //                }
+                        //                break;
+                        //        }
+                        //        if (ii != (valueR._varOp1._count - 1)) sb.Append(".");
+                        //    }
+                        //}
                     }
                     else if (macropar._RHS is RHSReferenceStack rhsref)
                     {
@@ -1850,6 +1861,9 @@ namespace igCauldron3.Frames
                             {
                                 switch (rhsref[o])
                                 {
+                                    case OpControl:
+                                        sb.Append("[^controlled]");
+                                        break;
                                     case OpFindSubSet:
                                         sb.Append("[^subset]");
                                         break;
@@ -2361,15 +2375,38 @@ namespace igCauldron3.Frames
                     if (opfindsubset._LHS._otherPoint != null)
                     {
                         otherpoint = SetupLHS(opfindsubset._LHS._otherPoint, codeList, i);
-                        if (opfindsubset._LHS.Last() is PairedFloatMeasurement paired)
+                        if (opfindsubset._LHS[opfindsubset._LHS._count - 1] is PairedEnumMeasurement || opfindsubset._LHS[opfindsubset._LHS._count - 1] is PairedFloatMeasurement)
                         {
+                            igNamedObject paired = opfindsubset._LHS[opfindsubset._LHS._count - 1] as igNamedObject;
+                            string condition = "";
                             switch (paired._name.Split('.').Last())
                             {
                                 case "collision":
-                                    condLHSstring = condLHSstring.Except(condLHSstring.Split('.').Last()) + ".CollidesWith(" + otherpoint + "==" + ((int.Parse(rhs) == 1) ? "true" : "false");
-                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "condition: " + condLHSstring + ")");
+                                    if (condLHSstring == "collision")
+                                    {
+                                        condition = ((int.Parse(rhs) == 1) ? "CollidesWith(" : "!CollidesWith(") + otherpoint + ")";
+                                    }
+                                    else
+                                    {
+                                        condition = condLHSstring.Substring(0, condLHSstring.LastIndexOf('.')) + ((int.Parse(rhs) == 1) ? ".CollidesWith(" : ".!CollidesWith(") + otherpoint + ")";
+                                    }
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "condition: " + condition + ")");
                                     indentCount--;
                                     continue;
+                                case "distance":
+                                    if (condLHSstring == "distance")
+                                    {
+                                        condition = "DistanceTo(" + otherpoint + ")";
+                                    }
+                                    else
+                                    {
+                                        condition = condLHSstring.Substring(0, condLHSstring.LastIndexOf('.')) + "DistanceTo(" + otherpoint + ")";
+                                    }
+                                    indentCount--;
+                                    continue;
+                                default:
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "condition:) // unimplemented condition (paired): " + condLHSstring);
+                                    break;
                             }
                         }
                         returnedstring.AppendLine(new string(' ', indentCount * 3) + "condition: " + condLHSstring + " " + relop + " " + rhs + ") // otherpoint: " + otherpoint);
@@ -2577,7 +2614,7 @@ namespace igCauldron3.Frames
                         }
                         else
                         {
-                            sb.Append("struct" + defineStructure._name + " [" + opCreateVar._varName + "]");
+                            sb.Append("struct " + defineStructure._name + " [" + opCreateVar._varName + "]");
                             localvariables.TryAdd(opCreateVar, "struct " + defineStructure._name);
                         }
                     }
