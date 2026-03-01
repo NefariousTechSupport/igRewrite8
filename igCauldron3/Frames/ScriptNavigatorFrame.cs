@@ -24,11 +24,12 @@ namespace igCauldron3.Frames
         public override void Render()
         {
             ImGui.Begin("Local scripts");
-            foreach(var script in scripts)
+            for (int i = 0; i < scripts.Count; i++)
             {
+                ImGui.PushID(i);
                 if (ImGui.Button("Open"))
                 {
-                    _selectedscript.Invoke(script);
+                    _selectedscript.Invoke(scripts[i]);
                     Close();
                     //OpCodeList codeList = script._opList;
                     //OpCreateVariableList varList = script._masterVarList;
@@ -46,7 +47,8 @@ namespace igCauldron3.Frames
                     //Close();
                 }
                 ImGui.SameLine();
-                ImGui.Text(script._name.Split('/').Last());
+                ImGui.Text(scripts[i]._name.Split('/').Last());
+                ImGui.PopID();
             }
             if (ImGui.Button("Close")) Close();
             ImGui.End();
