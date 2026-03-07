@@ -89,6 +89,9 @@ namespace igLibrary.Core
                 case igArkCore.EGame.EV_SkylandersSpyrosAdventure:
                     _version = 0x05;
                     break;
+                case igArkCore.EGame.EV_SkylandersGiantsB1:
+                    _version = 0x05;
+                    break;
                 case igArkCore.EGame.EV_SkylandersTrapTeam:
                     _version = 0x08;
                     break;

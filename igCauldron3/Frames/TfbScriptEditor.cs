@@ -18,6 +18,7 @@ using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Reflection.Metadata.Ecma335;
@@ -255,7 +256,7 @@ namespace igCauldron3.Frames
             if (EXNMTest is igMetaObject ex)
             {
                 if (ex._name == "FloatMeasurement")
-                    sb.Append(BitConverter.Int32BitsToSingle(RHS._value));
+                    sb.Append(BitConverter.Int32BitsToSingle(RHS._value).ToString(CultureInfo.InvariantCulture));
                 else if (ex._name == "IntMeasurement")
                     sb.Append(RHS._value);
                 else if (ex._name == "ColorMeasurement")
@@ -346,7 +347,7 @@ namespace igCauldron3.Frames
                 {
                     if (ex._name == "FloatMeasurement")
                         if (changeVal && r == 1) ;
-                        else sb.Append(BitConverter.Int32BitsToSingle(rhsValueS._value));
+                        else sb.Append(BitConverter.Int32BitsToSingle(rhsValueS._value).ToString(CultureInfo.InvariantCulture));
                     else if (ex._name == "IntMeasurement")
                         if (changeVal && r == 1) ;
                         else sb.Append(rhsValueS._value);
@@ -474,7 +475,7 @@ namespace igCauldron3.Frames
                             switch (type._name)
                             {
                                 case "FloatMeasurement":
-                                    valueinfoval = BitConverter.Int32BitsToSingle(valinfo._value).ToString();
+                                    valueinfoval = BitConverter.Int32BitsToSingle(valinfo._value).ToString((CultureInfo.InvariantCulture));
                                     localvarstrings.TryAdd(valinfo._name, valueinfoval);
                                     break;
                                 case "IntMeasurement":
@@ -483,7 +484,14 @@ namespace igCauldron3.Frames
                                     break;
                             }
                         }
-                        sb.Append("'" + valinfo._name + "'");
+                        if (valinfo._name.Contains(' '))
+                        {
+                            sb.Append("'" + valinfo._name + "'");
+                        }
+                        else
+                        {
+                            sb.Append(valinfo._name);
+                        }
                         break;
                     case ScriptReference scriptref:
                         if (scriptref._type != null)
@@ -605,7 +613,7 @@ namespace igCauldron3.Frames
                         sb.Append(refvar._name.Split('.').Last());
                         break;
                     case OpDefineMacro defmac:
-                        sb.Append(defmac._name);
+                        sb.Append("(" + defmac._name + ")");
                         break;
                     case ScriptSet sset:
                         sb.Append(sset._name);
@@ -716,7 +724,7 @@ namespace igCauldron3.Frames
                             switch (type._name)
                             {
                                 case "FloatMeasurement":
-                                    valueinfoval = BitConverter.Int32BitsToSingle(valinfo._value).ToString();
+                                    valueinfoval = BitConverter.Int32BitsToSingle(valinfo._value).ToString((CultureInfo.InvariantCulture));
                                     localvarstrings.TryAdd(valinfo._name, valueinfoval);
                                     break;
                                 case "IntMeasurement":
@@ -725,7 +733,14 @@ namespace igCauldron3.Frames
                                     break;
                             }
                         }
-                        sb.Append("'" + valinfo._name + "'");
+                        if (valinfo._name.Contains(' '))
+                        {
+                            sb.Append("'" + valinfo._name + "'");
+                        }
+                        else
+                        {
+                            sb.Append(valinfo._name);
+                        }
                         break;
                     case ScriptReference scriptref:
                         if (scriptref._type != null)
@@ -925,6 +940,9 @@ namespace igCauldron3.Frames
                     case OpCheckReference opcr:
                         string lhs = SetupLHS(opcr._LHS, codeList, pc);
                         sb.Append(lhs);
+                        break;
+                    case OpDefineMacro opmac:
+                        sb.Append("(" + opmac._name + ")");
                         break;
                     case OpCheckValue opc:
                         string LeftHandStack = SetupLHS(opc._LHS, codeList, pc);
@@ -1195,7 +1213,7 @@ namespace igCauldron3.Frames
                                         }
                                     }
                                 }
-                                sb.Append(+BitConverter.Int32BitsToSingle(rhsValueS._value));
+                                sb.Append(BitConverter.Int32BitsToSingle(rhsValueS._value).ToString((CultureInfo.InvariantCulture)));
                             }
                             else if (ex._name == "IntMeasurement")
                                 sb.Append(rhsValueS._value);
@@ -1545,62 +1563,69 @@ namespace igCauldron3.Frames
                 }
                 else if (codeList[i] is OpSpawn spawn)
                 {
-                    switch (spawn._LHS[0].ToString().Split('.').Last())
+                    if (spawn._LHS[0] is null)
                     {
-                        case "ValueInfo":
-                            sb.Append("valueinfo");
-                            break;
-                        case "tfbActorInfo":
-                            sb.Append("actor");
-                            break;
-                        case "ActorWaypoint":
-                            sb.Append("actorwaypoint");
-                            break;
-                        case "tfbSoundInfo":
-                            sb.Append("sound");
-                            break;
-                        case "tfbSpriteInfo":
-                            sb.Append("sprite");
-                            break;
-                        case "tfbParticleInfo":
-                            sb.Append("particle");
-                            break;
-                        case "AnimationInfo":
-                            sb.Append("animation");
-                            break;
-                        case "ScriptColorInfo":
-                            sb.Append("scriptcolorinfo");
-                            break;
-                        case "Slider":
-                            sb.Append("slider");
-                            break;
-                        case "ScriptController":
-                            sb.Append("scriptcontroller");
-                            break;
-                        case "AbstractScriptGroup":
-                            break;
-                        case "ScriptStructure":
-                            sb.Append("struct");
-                            break;
-                        case "tfbLightInfo":
-                            sb.Append("light");
-                            break;
-                        case "OpCreateVariable":
-                            sb.Append("variable");
-                            break;
-                        case "PlacementReference":
-                            if (spawn._LHS[0] is PlacementReference placref)
-                            {
-                                igExternalReferenceSystem.Singleton._globalSet.MakeReference(placref._type, null, out igHandleName name);
-                                igObject? EXNMTest = igExternalReferenceSystem.Singleton._globalSet.ResolveReference(name, null);
-                                if (EXNMTest == null) break;
-                                if (EXNMTest is igMetaObject ex)
-                                    sb.Append("placementreference(" + ex._name + ")");
-                            }
-                            break;
-                        default:
-                            sb.Append("UNIMP:" + spawn._LHS[0].ToString().Split('.').Last());
-                            break;
+                        sb.Append("(broken)");
+                    }
+                    else
+                    {
+                        switch (spawn._LHS[0].ToString().Split('.').Last())
+                        {
+                            case "ValueInfo":
+                                sb.Append("valueinfo");
+                                break;
+                            case "tfbActorInfo":
+                                sb.Append("actor");
+                                break;
+                            case "ActorWaypoint":
+                                sb.Append("actorwaypoint");
+                                break;
+                            case "tfbSoundInfo":
+                                sb.Append("sound");
+                                break;
+                            case "tfbSpriteInfo":
+                                sb.Append("sprite");
+                                break;
+                            case "tfbParticleInfo":
+                                sb.Append("particle");
+                                break;
+                            case "AnimationInfo":
+                                sb.Append("animation");
+                                break;
+                            case "ScriptColorInfo":
+                                sb.Append("scriptcolorinfo");
+                                break;
+                            case "Slider":
+                                sb.Append("slider");
+                                break;
+                            case "ScriptController":
+                                sb.Append("scriptcontroller");
+                                break;
+                            case "AbstractScriptGroup":
+                                break;
+                            case "ScriptStructure":
+                                sb.Append("struct");
+                                break;
+                            case "tfbLightInfo":
+                                sb.Append("light");
+                                break;
+                            case "OpCreateVariable":
+                                sb.Append("variable");
+                                break;
+                            case "PlacementReference":
+                                if (spawn._LHS[0] is PlacementReference placref)
+                                {
+                                    igExternalReferenceSystem.Singleton._globalSet.MakeReference(placref._type, null, out igHandleName name);
+                                    igObject? EXNMTest = igExternalReferenceSystem.Singleton._globalSet.ResolveReference(name, null);
+                                    if (EXNMTest == null) break;
+                                    if (EXNMTest is igMetaObject ex)
+                                        sb.Append("placementreference(" + ex._name + ")");
+                                }
+                                break;
+                            default:
+                                sb.Append("UNIMP:" + spawn._LHS[0].ToString().Split('.').Last());
+                                break;
+                        }
                     }
                     string spawndatatype = sb.ToString();
                     string spawnname = "";
@@ -1610,7 +1635,7 @@ namespace igCauldron3.Frames
                     }
                     sb.Clear();
                     string spawnpos = ""; // at:
-                    if (spawn._LHS[0] is AbstractPlacement) // only spawned AbstractPlacements set a position/facing
+                    if (spawn._LHS._count != 0 && spawn._LHS[0] != null && spawn._LHS[0] is AbstractPlacement) // only spawned AbstractPlacements set a position/facing
                     {
                         if (spawn._RHS._count != 0)
                         {
@@ -1861,6 +1886,9 @@ namespace igCauldron3.Frames
                             {
                                 switch (rhsref[o])
                                 {
+                                    case null:
+                                        sb.Append("<actually_null>");
+                                        break;
                                     case OpControl:
                                         sb.Append("[^controlled]");
                                         break;

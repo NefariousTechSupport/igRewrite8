@@ -7,6 +7,8 @@
 */
 
 
+using igLibrary.Tfb.Attrs;
+using igLibrary.Tfb.Game;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 
@@ -288,7 +290,14 @@ namespace igLibrary.Core
                                 if (reference == null)
                                 {
                                     igHandle hnd = igObjectHandleManager.Singleton.LookupHandle(depHandleName);
-                                    reference = hnd.GetObjectAlias<igObject>();
+                                    if (nsStrIndex != 0)
+                                    {
+                                        reference = hnd._object;
+                                    }
+                                    else
+                                    {
+                                        reference = hnd.GetObjectAlias<igObject>();
+                                    }
                                 }
                                 _namedExternalList.Append(reference);
                             }

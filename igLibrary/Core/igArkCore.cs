@@ -66,6 +66,7 @@ namespace igLibrary.Core
 			EV_SkylandersBattlegrounds,
 			EV_SkylandersCloudPatrol,
 			EV_SkylandersGiants,
+			EV_SkylandersGiantsB1,
 			EV_SkylandersGiants_3DS,
 			EV_SkylandersLostIslands,
 			EV_SkylandersSwapForce,
