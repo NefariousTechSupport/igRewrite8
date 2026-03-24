@@ -1258,14 +1258,37 @@ namespace igCauldron3.Frames
                     sb.Clear();
 
                 }
-                else if (codeList[i] is OpPreScript)
+                else if (codeList[i] is OpPreScript preScript)
                 {
-
+                    returnedstring.AppendLine("#prescript");
+                    if (preScript._branchPC != 0)
+                    {
+                        ParseScriptObjects(codeList, i + 1, preScript._branchPC);
+                        i += preScript._branchPC;
+                    }
+                    returnedstring.AppendLine("#prescript-end");
                 }
-                else if (codeList[i] is OpStartUp)
+                else if (codeList[i] is OpStartUp startUp)
                 {
-
+                    returnedstring.AppendLine("#startup");
+                    if (startUp._branchPC != 0)
+                    {
+                        ParseScriptObjects(codeList, i + 1, startUp._branchPC);
+                        i += startUp._branchPC;
+                    }
+                    returnedstring.AppendLine("#startup-end");
                 }
+                else if (codeList[i] is OpShutDown shutDown)
+                {
+                    returnedstring.AppendLine("#shutdown");
+                    if (shutDown._branchPC != 0)
+                    {
+                        ParseScriptObjects(codeList, i + 1, shutDown._branchPC);
+                        i += shutDown._branchPC;
+                    }
+                    returnedstring.AppendLine("#shutdown-end");
+                }
+
                 else if (codeList[i] is OpTurnTo turnto)
                 { // turn to||with anim
                     string facing = SetupRHS(turnto._facingRHS);
@@ -1441,7 +1464,14 @@ namespace igCauldron3.Frames
                 {
                     string cachedMode = callordefinemacro;
                     callordefinemacro = "define";
-                    returnedstring.Append(new string(' ', indentCount * 3) + "macro (" + macrospec._name + ") : (" + macrospec._NP[0]._name + ") ");
+                    if (macrospec._publicity == OpAbstractDefinition.Publicity.published)
+                    {
+                        returnedstring.Append(new string(' ', indentCount * 3) + "public macro (" + macrospec._name + ") : (" + macrospec._NP[0]._name + ") ");
+                    }
+                    else
+                    {
+                        returnedstring.Append(new string(' ', indentCount * 3) + "macro (" + macrospec._name + ") : (" + macrospec._NP[0]._name + ") ");
+                    }
                     bool noparameters = (codeList[i + 2]._name == "flow macro");
                     if (noparameters && codeList[i + 3] is OpFlowBuiltInBehavior)
                     {
@@ -1484,7 +1514,14 @@ namespace igCauldron3.Frames
                 {
                     string cachedMode = callordefinemacro;
                     callordefinemacro = "define";
-                    returnedstring.Append(new string(' ', indentCount * 3) + "macro " + defmacro._name + " ");
+                    if (defmacro._publicity == OpAbstractDefinition.Publicity.published)
+                    {
+                        returnedstring.Append(new string(' ', indentCount * 3) + "public macro " + defmacro._name + " ");
+                    }
+                    else
+                    {
+                        returnedstring.Append(new string(' ', indentCount * 3) + "macro " + defmacro._name + " ");
+                    }
                     bool noparameters = (codeList[i + 2]._name == "flow macro");
                     if (noparameters && codeList[i + 3] is OpFlowBuiltInBehavior)
                     {
@@ -1615,7 +1652,6 @@ namespace igCauldron3.Frames
                                 }
                                 break;
                             default:
-                                sb.Append("UNIMP:" + spawn._LHS[0].ToString().Split('.').Last());
                                 break;
                         }
                     }
@@ -1685,7 +1721,7 @@ namespace igCauldron3.Frames
                     }
                     if (changeme._combineOp is Combiner.include)
                     {
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + lhs + ".Add(" + rhs + ")");
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + lhs + ".Include(" + rhs + ")");
                     }
                     else if (changeme._combineOp is Combiner.exclude)
                     {
@@ -1695,7 +1731,15 @@ namespace igCauldron3.Frames
                     {
                         returnedstring.AppendLine(new string(' ', indentCount * 3) + lhs + ".ReplaceWith(" + rhs + ")");
                     }
-                    else // ik i've seen "Combiner.add" used once
+                    else if (changeme._combineOp is Combiner.add)
+                    {
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + lhs + ".Add(" + rhs + ")");
+                    }
+                    else if (changeme._combineOp is Combiner.exclude_all)
+                    {
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + lhs + ".RemoveAll(" + rhs + ")");
+                    }
+                    else
                     {
                         returnedstring.AppendLine(new string(' ', indentCount * 3) + "//changemembership has unimplemented CombineOp (" + combineop + ") LHS:" + lhs + " RHS: " + rhs);
                     }
@@ -1801,6 +1845,9 @@ namespace igCauldron3.Frames
                                     break;
                                 case "StringInfo":
                                     sb.Append("string");
+                                    break;
+                                case "OpUserBehavior":
+                                    sb.Append("behavior");
                                     break;
                                 default:
                                     sb.Append("UNIMP_MACROPAR::" + macropar.ToString().Split('.').Last() + " " + contents._name);
@@ -2422,6 +2469,19 @@ namespace igCauldron3.Frames
                                     {
                                         condition = condLHSstring.Substring(0, condLHSstring.LastIndexOf('.')) + "DistanceTo(" + otherpoint + ")";
                                     }
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "condition: " + condition + ")");
+                                    indentCount--;
+                                    continue;
+                                case "separation":
+                                    if (condLHSstring == "separation")
+                                    {
+                                        condition = "SeparationTo(" + otherpoint + ")";
+                                    }
+                                    else
+                                    {
+                                        condition = condLHSstring.Substring(0, condLHSstring.LastIndexOf('.')) + "SeparationTo(" + otherpoint + ")";
+                                    }
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "condition: " + condition + ")");
                                     indentCount--;
                                     continue;
                                 default:
@@ -2597,7 +2657,14 @@ namespace igCauldron3.Frames
                 }
                 else if (codeList[i] is OpDefineStructure opDefStruct)
                 {
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "struct " + opDefStruct._name);
+                    if (opDefStruct._publicity == OpAbstractDefinition.Publicity.published)
+                    {
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "public struct " + opDefStruct._name);
+                    }
+                    else
+                    {
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "struct " + opDefStruct._name);
+                    }
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
                     if (opDefStruct._branchPC != 0)
                     {
