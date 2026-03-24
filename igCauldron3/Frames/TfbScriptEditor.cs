@@ -54,12 +54,14 @@ namespace igCauldron3.Frames
     public class TfbScriptEditor : Frame
     {
         private OpCodeList codeList;
-        private OpCreateVariableList varList;
+        private OpCreateVariableList? varList;
         private igObjectDirectory currentdir;
+        private string scriptName;
         private int linecount = 0;
         private TextEditor editor;
         /// <summary>
         /// colors used for colorcoding i guess :)
+        /// colors used for colorcoding
         /// </summary>
         private Vector4 Grey = new Vector4(255f, 255f, 255f, 0.5f);
         private Vector4 Red = new Vector4(1f, 0f, 0f, 1f);
@@ -68,6 +70,8 @@ namespace igCauldron3.Frames
         private Dictionary<OpSpawn, string> spawnedobjects = new Dictionary<OpSpawn, string>(); // for opspawn
         private int amountOfSpawns = 0; // for opspawn
         private string callordefinemacro = "define";
+        private string? variablessection;
+        private string scriptsection;
         private Dictionary<OpAbstractCreateVariable, string> localvariables = new Dictionary<OpAbstractCreateVariable, string>(); // to fix float variables by turning ints into floats
                                                                                                                                   // if the variable ever gets assigned with a float value
         private Dictionary<List<OpAbstractCreateVariable>, string> scriptDependencies = new Dictionary<List<OpAbstractCreateVariable>, string>();
@@ -76,19 +80,20 @@ namespace igCauldron3.Frames
         private int amountOfBehaviors = 0;
         private Dictionary<OpFlowBuiltInBehavior, string> branchTargets = new Dictionary<OpFlowBuiltInBehavior, string>(); // for OpAbstractFlow
         string script = "tfbscript test";
-        public TfbScriptEditor(Window wnd, igObjectDirectory currentdir2, OpCodeList codeList2, OpCreateVariableList varList2, Dictionary<List<OpAbstractCreateVariable>, string> dependencies) : base(wnd)
+        public TfbScriptEditor(Window wnd, igObjectDirectory currentdir2, tfbScriptInfo inputscript, Dictionary<List<OpAbstractCreateVariable>, string> dependencies) : base(wnd)
         {
-            codeList = codeList2;
-            varList = varList2;
+            codeList = inputscript._opList;
+            varList = inputscript._masterVarList;
+            scriptName = inputscript._name.Split('/').Last();
             currentdir = currentdir2;
             scriptDependencies = dependencies;
             StringBuilder scriptbuilder = new StringBuilder();
             if (varList != null)
             {
                 scriptbuilder.AppendLine("Variables Section");
-                string variablessection = ParseVariables(varList);
+                variablessection = ParseVariables(varList);
             }
-            string scriptsection = ParseScriptObjects(codeList);
+            scriptsection = ParseScriptObjects(codeList);
             if (varList != null)
             {
                 foreach (var kvp in localvariables)
@@ -114,31 +119,18 @@ namespace igCauldron3.Frames
         }
         public override void Render()
         {
-            ImGui.Begin("Demo");
+            ImGui.Begin(scriptName);
             if (ImGui.Button("Reset"))
             {
                 editor.AllText = script;
             }
             ImGui.SameLine();
-            if (ImGui.Button("err line"))
-                editor.AppendLine("Some error text", PaletteIndex.Custom);
-
             ImGui.SameLine();
-            if (ImGui.Button("warn line"))
-                editor.AppendLine("Some warning text", PaletteIndex.Custom + 1);
-
-            ImGui.SameLine();
-            if (ImGui.Button("info line"))
-                editor.AppendLine("Some info text", PaletteIndex.Custom + 2);
-
-            ImGui.SameLine();
-            if (ImGui.Button("verbose line"))
-                editor.AppendLine("Some debug text", PaletteIndex.Custom + 3);
+            if (ImGui.Button("Close")) Close();
             ImGui.Text(
                 $"Cur:{editor.CursorPosition} SEL: {editor.Selection.Start} - {editor.Selection.End}"
             );
             editor.Render("EditWindow");
-            if (ImGui.Button("Close")) Close();
             ImGui.End();
         }
 

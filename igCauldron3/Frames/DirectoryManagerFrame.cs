@@ -146,7 +146,7 @@ namespace igCauldron3
 									scriptDependencies.Add(kv.Key, kv.Value);
 								}
 							}
-							_wnd._frames.Add(new TfbScriptEditor(_wnd, capturedDir, codeList, varList, scriptDependencies));
+							_wnd._frames.Add(new TfbScriptEditor(_wnd, capturedDir, selected, scriptDependencies));
 						}
                     }));
                 }
