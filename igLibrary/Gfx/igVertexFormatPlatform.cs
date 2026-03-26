@@ -19,7 +19,6 @@ namespace igLibrary.Gfx
 		public bool _disableSoftwareBlending;
 	}
 	public class igVertexFormatAspen : igVertexFormatPlatform {}
-	public class igVertexFormatCafe : igVertexFormatPlatform {}
 	public class igVertexFormatDurango : igVertexFormatPlatform {}
 	public class igVertexFormatDX : igVertexFormatPlatform {}
 	public class igVertexFormatMetal : igVertexFormatPlatform {}
