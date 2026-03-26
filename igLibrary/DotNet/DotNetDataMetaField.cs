@@ -20,7 +20,7 @@ namespace igLibrary.DotNet
 			DotNetData data = new DotNetData();
 
 			loader._stream.Seek(baseOffset + 0x08);
-			data._type._baseMeta = (igBaseMeta?)igObjectRefMetaField.GetMetaField().ReadIGZField(loader);
+			data._type._baseMeta = (igBaseMeta?)igObjectRefMetaField._MetaField.ReadIGZField(loader);
 			data._type._flags = loader._stream.ReadUInt32();
 			if(igAlchemyCore.isPlatform64Bit(loader._platform))
 			{
@@ -73,14 +73,14 @@ namespace igLibrary.DotNet
 					data._data = loader._stream.ReadSingle();
 					break;
 				case ElementType.kElementTypeString:
-					data._data = igStringMetaField.GetMetaField().ReadIGZField(loader);
+					data._data = igStringMetaField._MetaField.ReadIGZField(loader);
 					break;
 				case ElementType.kElementTypeValueType:
 				case ElementType.kElementTypeClass:
 				case ElementType.kElementTypeObject:
 					if(data._type._baseMeta is igMetaEnum metaEnum)
 					{
-						igEnumMetaField enumField = igEnumMetaField.GetMetaField();
+						igEnumMetaField enumField = igEnumMetaField._MetaField;
 						enumField._metaEnum = metaEnum;
 						data._data = enumField.ReadIGZField(loader);
 #pragma warning disable CS8625
@@ -89,7 +89,7 @@ namespace igLibrary.DotNet
 					}
 					else
 					{
-						data._data = igObjectRefMetaField.GetMetaField().ReadIGZField(loader);
+						data._data = igObjectRefMetaField._MetaField.ReadIGZField(loader);
 					}
 					break;
 			}
@@ -105,7 +105,7 @@ namespace igLibrary.DotNet
 
 			ulong baseOffset = section._sh.Tell64();
 			section._sh.Seek(baseOffset + 0x08);
-			igObjectRefMetaField metaWriter = igObjectRefMetaField.GetMetaField();
+			igObjectRefMetaField metaWriter = igObjectRefMetaField._MetaField;
 			metaWriter._refCounted = false;
 			metaWriter.WriteIGZField(saver, section, data._type._baseMeta);
 			metaWriter._refCounted = true;
@@ -162,21 +162,21 @@ namespace igLibrary.DotNet
 					section._sh.WriteSingle((float)data._data);
 					break;
 				case ElementType.kElementTypeString:
-					igStringMetaField.GetMetaField().WriteIGZField(saver, section, data._data);
+					igStringMetaField._MetaField.WriteIGZField(saver, section, data._data);
 					break;
 				case ElementType.kElementTypeValueType:
 				case ElementType.kElementTypeClass:
 				case ElementType.kElementTypeObject:
 					if(data._type._baseMeta is igMetaEnum metaEnum)
 					{
-						igEnumMetaField enumField = igEnumMetaField.GetMetaField();
+						igEnumMetaField enumField = igEnumMetaField._MetaField;
 						enumField._metaEnum = metaEnum;
 						enumField.WriteIGZField(saver, section, data._data);
 						enumField._metaEnum = null;
 					}
 					else
 					{
-						igObjectRefMetaField.GetMetaField().WriteIGZField(saver, section, data._data);
+						igObjectRefMetaField._MetaField.WriteIGZField(saver, section, data._data);
 					}
 					break;
 			}

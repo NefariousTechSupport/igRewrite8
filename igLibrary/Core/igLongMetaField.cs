@@ -11,6 +11,7 @@ namespace igLibrary.Core
 {
 	public class igLongMetaField : igMetaField
 	{
+		public static igLongMetaField _MetaField { get; private set; } = new igLongMetaField();
 		public override object? ReadIGZField(igIGZLoader loader) => loader._stream.ReadInt64();
 		public override void WriteIGZField(igIGZSaver saver, igIGZSaver.SaverSection section, object? value) => section._sh.WriteInt64((long)value);
 		public override uint GetAlignment(IG_CORE_PLATFORM platform)

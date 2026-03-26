@@ -18,7 +18,7 @@ namespace igLibrary.Utils
 			ulong baseOffset = loader._stream.Tell64();
 			igVariant data = new igVariant();
 			loader._stream.Seek(baseOffset + 0x10);
-			object? storageField = igObjectRefMetaField.GetMetaField().ReadIGZField(loader);
+			object? storageField = igObjectRefMetaField._MetaField.ReadIGZField(loader);
 			if (storageField == null || !storageField.GetType().IsAssignableTo(typeof(igMetaField)))
 			{
 				Logging.Warn("Got igVariantMetaField that references _storageField that isn't an igMetaField. {0} @ byte 0x{1}", loader._dir._path, baseOffset.ToString("X08"));
@@ -36,7 +36,7 @@ namespace igLibrary.Utils
 			ulong baseOffset = section._sh.Tell64();
 			igVariant data = (igVariant)value!;
 			section._sh.Seek(baseOffset + 0x10);
-			igObjectRefMetaField.GetMetaField().WriteIGZField(saver, section, data._storageField);
+			igObjectRefMetaField._MetaField.WriteIGZField(saver, section, data._storageField);
 			if (data._storageField != null)
 			{
 				section._sh.Seek(baseOffset);

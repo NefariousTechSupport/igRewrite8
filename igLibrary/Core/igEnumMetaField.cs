@@ -14,8 +14,7 @@ namespace igLibrary.Core
 	//Should define DotNet::igDotNetEnumMetaField but it's not too important as it doesn't appear in igzs
 	public class igEnumMetaField : igMetaField
 	{
-		private static igEnumMetaField _MetaField = new igEnumMetaField();
-		public static igEnumMetaField GetMetaField() => _MetaField;
+		public static igEnumMetaField _MetaField { get; private set; } = new igEnumMetaField();
 		[Obsolete("This exists for the reflection system, do not use.")] public object? _getMetaEnumFunction;
 
 		public igMetaEnum _metaEnum;
