@@ -48,7 +48,7 @@ namespace igRewrite8
 
 #if MODEL_IMPORTS
 			AssimpContext ctx = new AssimpContext();
-			Scene scene = ctx.ImportFile("C:/Users/neffy/Documents/MikuSupercharger.obj", PostProcessSteps.Triangulate | PostProcessSteps.GenerateSmoothNormals | PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateBoundingBoxes);
+			Scene scene = ctx.ImportFile(args[2], PostProcessSteps.Triangulate | PostProcessSteps.GenerateSmoothNormals | PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateBoundingBoxes);
 
 			SuperChargersModel sscmodel = new SuperChargersModel();
 			igModelInfo modelInfo = sscmodel.ImportModel(scene);
@@ -58,7 +58,7 @@ namespace igRewrite8
 			igStringInsensitiveStringHashTable hashTable = igMetaObject.ConstructInstance<igStringInsensitiveStringHashTable>();
 			materialHandleTableInfoMeta.GetFieldByName("_handleTable")!._fieldHandle!.SetValue(materialHandleTableInfo, hashTable);
 
-			igObjectDirectory dir = new igObjectDirectory("models/jasleencube.igz");
+			igObjectDirectory dir = new igObjectDirectory(args[3]);
 			dir._useNameList = true;
 			dir._nameList = igMetaObject.ConstructInstance<igNameList>();
 			dir._type = igObjectDirectory.FileType.kIGZ;
@@ -72,7 +72,7 @@ namespace igRewrite8
 #if ACTOR_IMPORTS
 			AssimpContext ctx = new AssimpContext();
 			ctx.SetConfig(new ColladaUseColladaNamesConfig(true));
-			Scene scene = ctx.ImportFile("C:/Users/neffy/Documents/GenshinImpact_Layla/Avatar_Girl_Sword_Layla_noMorphs.dae");
+			Scene scene = ctx.ImportFile(args[2], PostProcessSteps.JoinIdenticalVertices);
 
 			SuperChargersModel sscmodel = new SuperChargersModel();
 			CGraphicsSkinInfo skinInfo = sscmodel.ImportActor(scene);
@@ -82,7 +82,7 @@ namespace igRewrite8
 			igStringInsensitiveStringHashTable hashTable = igMetaObject.ConstructInstance<igStringInsensitiveStringHashTable>();
 			materialHandleTableInfoMeta.GetFieldByName("_handleTable")!._fieldHandle!.SetValue(materialHandleTableInfo, hashTable);
 
-			igObjectDirectory dir = new igObjectDirectory("actors/layla.igz");
+			igObjectDirectory dir = new igObjectDirectory(args[3]);
 			dir._useNameList = true;
 			dir._nameList = igMetaObject.ConstructInstance<igNameList>();
 			dir._type = igObjectDirectory.FileType.kIGZ;
