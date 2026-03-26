@@ -64,23 +64,29 @@ namespace igLibrary.Gfx
 
 			// Select destination
 			ref igMemory<byte> streamDescMemory = ref _spuInputStreamDescs0;
+			ref ushort streamDescMemorySize = ref _spuInputStreamDescSizes[0];
 			switch (streamDesc)
 			{
 				case EPS3StreamDesc.Spu0:
 					streamDescMemory = ref _spuInputStreamDescs0;
+					streamDescMemorySize = ref _spuInputStreamDescSizes[0];
 					break;
 				case EPS3StreamDesc.Spu1:
 					streamDescMemory = ref _spuInputStreamDescs1;
+					streamDescMemorySize = ref _spuInputStreamDescSizes[1];
 					break;
 				case EPS3StreamDesc.SpuOut:
 					streamDescMemory = ref _spuOutputStreamDesc;
+					streamDescMemorySize = ref _spuOutputStreamDescSize;
 					break;
 				case EPS3StreamDesc.RsxOnly:
 					streamDescMemory = ref _rsxOnlyStreamDesc;
+					streamDescMemorySize = ref _rsxOnlyStreamDescSize;
 					break;
 			}
 
 			streamDescMemory.Alloc(kStreamDescSize + desc.stride * desc.numAttributes);
+			streamDescMemorySize = (ushort)streamDescMemory.Length;
 
 			// Copy data to destination, it's all single byte fields so no need to
 			// endian swap
