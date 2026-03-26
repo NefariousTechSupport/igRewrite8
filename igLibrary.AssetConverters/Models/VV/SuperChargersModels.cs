@@ -293,7 +293,17 @@ namespace igLibrary.AssetConversion.Models
 			vertexFormat._elements[index] = AllocateElement(IG_VERTEX_USAGE.IG_VERTEX_USAGE_UNUSED_0, IG_VERTEX_TYPE.IG_VERTEX_TYPE_UNUSED, true, ref offset, ref index);
 
 			vertexFormat._vertexSize = offset;
-			vertexFormat._platformData = igVertexFormatPS3.GeneratePlatformData(vertexFormat._elements);
+			switch (igRegistry.GetRegistry()._gfxPlatform)
+			{
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_PS3:
+					vertexFormat._platformData = igVertexFormatPS3.GeneratePlatformData(vertexFormat._elements);
+					break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_CAFE:
+					vertexFormat._platformData = igVertexFormatCafe.GeneratePlatformData(vertexFormat._elements);
+					break;
+				default:
+					throw new NotImplementedException($"Platform {igRegistry.GetRegistry()._gfxPlatform} unimplemented");
+			}
 
 			indexBuffer._vertexFormat = vertexFormat;
 
