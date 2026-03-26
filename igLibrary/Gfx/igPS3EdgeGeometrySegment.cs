@@ -16,6 +16,7 @@ namespace igLibrary.Gfx
 	{
 		public byte SpuVertexes0Stride => _spuInputStreamDescs0[1];
 		public byte SpuVertexes1Stride => _spuInputStreamDescs1[1];
+		public byte SpuVertexesOutStride => _spuOutputStreamDesc[1];
 		public byte RsxVertexesStride  => _rsxOnlyStreamDesc[1];
 
 		public igMemory<byte> _spuConfigInfo;
@@ -71,6 +72,9 @@ namespace igLibrary.Gfx
 				case EPS3StreamDesc.Spu1:
 					streamDescMemory = ref _spuInputStreamDescs1;
 					break;
+				case EPS3StreamDesc.SpuOut:
+					streamDescMemory = ref _spuOutputStreamDesc;
+					break;
 				case EPS3StreamDesc.RsxOnly:
 					streamDescMemory = ref _rsxOnlyStreamDesc;
 					break;
@@ -94,6 +98,7 @@ namespace igLibrary.Gfx
 	{
 		Spu0,
 		Spu1,
+		SpuOut,
 		RsxOnly
 	}
 }
