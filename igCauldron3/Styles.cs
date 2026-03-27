@@ -8,6 +8,7 @@
 
 
 using System.Numerics;
+using ImGuiNET;
 
 namespace igCauldron3
 {
@@ -18,5 +19,12 @@ namespace igCauldron3
 	{
 		public static readonly Vector4 _errorBg = new Vector4(0.325f, 0.0784f, 0.0784f, 1f);
 		public static readonly Vector4 _errorTxt = new Vector4(1f, 0f, 0f, 1f);
+		public static ImFontPtr _dyslexicFont = null;
+		public static ImFontPtr _arialFont = null;
+		public static ImFontPtr _comicSansFont = null;
+		public static ImFontPtr _consolasFont = null;
+		public static ImFontPtr _verdanaFont = null;
+		public static ImFontPtr _proggyCleanFont = null;
+		public static ImFontPtr _currentFont = null;
 	}
 }

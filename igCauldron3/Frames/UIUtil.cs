@@ -88,7 +88,7 @@ namespace igCauldron3
 		/// Renders a combo box of enums with reThe label to display</param>
 		/// <param name="names">The lookup table of names</param>
 		/// <param name="value">the value</param>
-		public static void EnumComboBox<T>(string label, (T, string)[] names, ref T value) where T : Enum
+		public static bool EnumComboBox<T>(string label, (T, string)[] names, ref T value) where T : Enum
 		{
 			string preview = string.Empty;
 			for (int i = 0; i < names.Length; i++)
@@ -102,6 +102,8 @@ namespace igCauldron3
 			ImGui.Text(label);
 			ImGui.SameLine();
 
+			bool changed = false;
+
 			if (ImGui.BeginCombo($"##{label}", preview))
 			{
 				for (int p = 0; p < names.Length; p++)
@@ -110,6 +112,7 @@ namespace igCauldron3
 					if (ImGui.Selectable(names[p].Item2, names[p].Item1.Equals(value)))
 					{
 						value = names[p].Item1;
+						changed = true;
 					}
 					if (names[p].Item1.Equals(value))
 					{
@@ -119,6 +122,8 @@ namespace igCauldron3
 				}
 				ImGui.EndCombo();
 			}
+
+			return changed;
 		}
 
 
@@ -156,6 +161,42 @@ namespace igCauldron3
 		}
 
 
+		/// <summary>
+		/// Render a number input field
+		/// </summary>
+		/// <param name="label">The text to show</param>
+		/// <param name="id">The id to use</param>
+		/// <param name="val">The integer value for the user to edit</param>
+		private static bool RenderPrimitiveNumber<T>(string label, string id, ref T val, T min, T max, Func<string, T> convertFunc) where T : IComparable<T>
+		{
+			string text = val.ToString()!;
+			ImGui.Text(label);
+			ImGui.SameLine();
+			ImGui.PushID(id);
+			bool changed = ImGui.InputText(string.Empty, ref text, 128);
+			ImGui.PopID();
+
+			try
+			{
+				val = convertFunc(text);
+			}
+			catch (Exception)
+			{
+				changed = false;
+			}
+
+			if (val.CompareTo(min) < 0)
+			{
+				val = min;
+			}
+			else if (val.CompareTo(max) > 0)
+			{
+				val = max;
+			}
+
+			return changed;
+		}
+
 
 		/// <summary>
 		/// Render a number input field
@@ -163,22 +204,33 @@ namespace igCauldron3
 		/// <param name="label">The text to show</param>
 		/// <param name="id">The id to use</param>
 		/// <param name="val">The integer value for the user to edit</param>
-		public static void RenderIntField(string label, string id, ref int val, int min, int max)
+		public static bool RenderIntField(string label, string id, ref int val, int min, int max)
 		{
-			ImGui.Text(label);
-			ImGui.SameLine();
-			ImGui.PushID(id);
-			ImGui.InputInt(string.Empty, ref val);
-			ImGui.PopID();
+			return RenderPrimitiveNumber<int>(label, id, ref val, min, max, Convert.ToInt32);
+		}
 
-			if (val > max)
-			{
-				val = max;
-			}
-			else if (val < min)
-			{
-				val = min;
-			}
+
+		/// <summary>
+		/// Render an unsigned number input field
+		/// </summary>
+		/// <param name="label">The text to show</param>
+		/// <param name="id">The id to use</param>
+		/// <param name="val">The unsigned integer value for the user to edit</param>
+		public static bool RenderUIntField(string label, string id, ref uint val, uint min, uint max)
+		{
+			return RenderPrimitiveNumber<uint>(label, id, ref val, min, max, Convert.ToUInt32);
+		}
+
+
+		/// <summary>
+		/// Render an unsigned number input field
+		/// </summary>
+		/// <param name="label">The text to show</param>
+		/// <param name="id">The id to use</param>
+		/// <param name="val">The unsigned integer value for the user to edit</param>
+		public static bool RenderFloatField(string label, string id, ref float val, float min, float max)
+		{
+			return RenderPrimitiveNumber<float>(label, id, ref val, min, max, Convert.ToSingle);
 		}
 	}
 }
