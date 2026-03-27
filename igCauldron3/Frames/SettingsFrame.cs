@@ -37,14 +37,22 @@ namespace igCauldron3
 			}
 
 			bool fontChanged = false;
+			bool anyChanged = false;
 
 			fontChanged |= UIUtil.EnumComboBox("Font", sFontNames, ref CauldronConfig._config._preferences._fontName);
 			fontChanged |= UIUtil.RenderFloatField("Font Scale", "fontScale", ref CauldronConfig._config._preferences._fontScale, 0.5f, 5);
-			UIUtil.RenderUIntField("Line Spacing", "lineSpacing", ref CauldronConfig._config._preferences._lineSpacing, 1, 50);
+			anyChanged  |= UIUtil.RenderFloatField("Line Spacing", "lineSpacing", ref CauldronConfig._config._preferences._lineSpacing, 0, 50);
+
+			anyChanged |= fontChanged;
 
 			if (fontChanged)
 			{
 				CauldronConfig.ReloadFont();
+			}
+
+			if (anyChanged)
+			{
+				CauldronConfig.WriteConfig();
 			}
 
 			ImGui.End();
