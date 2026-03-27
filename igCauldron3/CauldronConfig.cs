@@ -57,11 +57,11 @@ namespace igCauldron3
 		public class Preferences
 		{
 			[JsonConverter(typeof(StringEnumConverter))]
-			public EFontType _fontName;
+			public EFontType _fontName = EFontType.kProggyClean;
 
 			public float _fontScale = 2;
 
-			public uint _lineSpacing;
+			public float _lineSpacing; // default set from imgui's default
 		}
 
 		public enum EFontType
@@ -109,6 +109,11 @@ namespace igCauldron3
 				if(_config._preferences == null) throw new ApplicationException($"Failed to load preferences. Try deleting \"{PrefsFilePath}\" and try again.");
 
 				ReloadFont();
+			}
+			else
+			{
+				ImGuiStylePtr style = ImGui.GetStyle();
+				_config._preferences._lineSpacing = style.ItemSpacing.Y;
 			}
 		}
 
