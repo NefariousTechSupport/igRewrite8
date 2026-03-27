@@ -92,7 +92,7 @@ namespace igLibrary.Core
 			/// <returns>The block type</returns>
 			public EBlockType GetBlockType(uint sectorSize)
 			{
-				if(_blocks == null) return EBlockType.kNone;
+				if(_blockIndex == 0xFFFFFFFF) return EBlockType.kNone;
 				if(0x7F * sectorSize < _length)
 				{
 					if(0x7FFF * sectorSize < _length)
@@ -659,6 +659,7 @@ namespace igLibrary.Core
 			 && type != CompressionType.kUncompressed)
 			{
 				fileInfo._blockIndex = 0xFFFFFFFF;
+				fileInfo._blocks = null;
 			}
 
 			//Add in setting the modification time for the funny
