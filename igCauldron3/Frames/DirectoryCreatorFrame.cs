@@ -37,7 +37,7 @@ namespace igCauldron3
 			newDir._fd = new igFileDescriptor();
 			newDir._fd._device = igFileContext.Singleton._archiveManager._patchArchives[0];
 
-            igObjectStreamManager.Singleton.AddObjectDirectory(newDir, _path);
+			igObjectStreamManager.Singleton.AddObjectDirectory(newDir, _path);
 
 			DirectoryManagerFrame._instance.AddDirectory(newDir);
 
