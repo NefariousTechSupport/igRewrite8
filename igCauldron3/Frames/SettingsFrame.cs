@@ -28,7 +28,13 @@ namespace igCauldron3
 
 		public override void Render()
 		{
-			ImGui.Begin("Settings");
+			bool windowOpen = true;
+			ImGui.Begin("Settings", ref windowOpen);
+
+			if (!windowOpen)
+			{
+				Close();
+			}
 
 			bool fontChanged = false;
 

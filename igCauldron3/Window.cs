@@ -58,8 +58,8 @@ namespace igCauldron3
 			controller = new ImGuiController(ClientSize.X, ClientSize.Y);
 			igTContext<igBaseGraphicsDevice>._instance = new igOpenGLGraphicsDevice();
 
+			_frames.Add(new MenuBarFrame(this));
 			_frames.Add(new ConfigFrame(this));
-			_frames.Add(new SettingsFrame(this));
 		}
 
 

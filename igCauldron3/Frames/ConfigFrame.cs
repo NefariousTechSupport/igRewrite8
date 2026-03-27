@@ -83,7 +83,6 @@ namespace igCauldron3
 						_wnd._frames.Remove(this);
 						_wnd._frames.Add(new DirectoryManagerFrame(_wnd));
 						_wnd._frames.Add(new ArchiveFrame(_wnd));
-						_wnd._frames.Add(new MenuBarFrame(_wnd));
 
 						timer.Stop();
 						Logging.Info("Loaded game in {0}", timer.Elapsed.TotalSeconds);
