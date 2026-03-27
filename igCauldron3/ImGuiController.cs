@@ -74,8 +74,19 @@ namespace igCauldron3
 			Styles._consolasFont = io.Fonts.AddFontFromFileTTF(Path.Combine(fontPath, "consola.ttf"), kFontSize);
 			Styles._verdanaFont = io.Fonts.AddFontFromFileTTF(Path.Combine(fontPath, "verdana.ttf"), kFontSize);
 			Styles._dyslexicFont = io.Fonts.AddFontFromFileTTF("Fonts/OpenDyslexic3-Regular.ttf", kFontSize);
+			Styles._proggyCleanFont = io.Fonts.AddFontDefault();
 
-			Styles._currentFont = Styles._dyslexicFont;
+#if DEBUG // other operating systems might not work here
+			Debug.Assert(Styles._arialFont.NativePtr       != null);
+			Debug.Assert(Styles._comicSansFont.NativePtr   != null);
+			Debug.Assert(Styles._consolasFont.NativePtr    != null);
+			Debug.Assert(Styles._verdanaFont.NativePtr     != null);
+			Debug.Assert(Styles._dyslexicFont.NativePtr    != null);
+			Debug.Assert(Styles._proggyCleanFont.NativePtr != null);
+#endif // DEBUG
+
+			Styles._currentFont = Styles._proggyCleanFont;
+
 
 			//Set the config filepath to something in AppData
 			//The following does not feel like the intended way, but it's the only way that I saw

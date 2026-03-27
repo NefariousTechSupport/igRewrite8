@@ -19,7 +19,8 @@ namespace igCauldron3
 			(CauldronConfig.EFontType.kVerdana,       "Verdana"),
 			(CauldronConfig.EFontType.kConsolas,      "Consolas"),
 			(CauldronConfig.EFontType.kOpenDyslexic,  "OpenDyslexic3"),
-			(CauldronConfig.EFontType.kComicSans,     "Comic Sans")
+			(CauldronConfig.EFontType.kComicSans,     "Comic Sans"),
+			(CauldronConfig.EFontType.kProggyClean,   "ProggyClean")
 		};
 
 		public SettingsFrame(Window wnd) : base(wnd)
