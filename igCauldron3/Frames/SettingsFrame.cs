@@ -40,7 +40,7 @@ namespace igCauldron3
 
 			fontChanged |= UIUtil.EnumComboBox("Font", sFontNames, ref CauldronConfig._config._preferences._fontName);
 			fontChanged |= UIUtil.RenderFloatField("Font Scale", "fontScale", ref CauldronConfig._config._preferences._fontScale, 0.5f, 5);
-			UIUtil.RenderUIntField("Line Spacing", "lineSpacing", ref CauldronConfig._config._preferences._lineSpacing, 1, 5);
+			UIUtil.RenderUIntField("Line Spacing", "lineSpacing", ref CauldronConfig._config._preferences._lineSpacing, 1, 50);
 
 			if (fontChanged)
 			{

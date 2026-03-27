@@ -139,7 +139,8 @@ namespace igCauldron3
 			controller.Update(this, (float)e.Time);
 
 			ImGui.PushFont(Styles._currentFont);
-			ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, CauldronConfig._config._preferences._lineSpacing);
+			ImGuiStylePtr style = ImGui.GetStyle();
+			ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new System.Numerics.Vector2(style.ItemSpacing.X, CauldronConfig._config._preferences._lineSpacing));
 	
 			ImGui.DockSpaceOverViewport(ImGui.GetMainViewport());
 
