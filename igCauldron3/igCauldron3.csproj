@@ -80,6 +80,16 @@
 		<DefineConstants>$(PlatformConstant);$(FeatureConstants)</DefineConstants>
 	</PropertyGroup>
 
+	<!--==================-->
+	<!-- Post Build Tasks -->
+	<!--==================-->
 
+	<ItemGroup>
+		<Content Include="..\Resources\Fonts\**\*.*">
+			<Link>Fonts\%(RecursiveDir)%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
 
 </Project>
