@@ -130,7 +130,7 @@ namespace igCauldron3
 							ImGui.Text("Element " + i.ToString());
 							ImGui.SameLine();
 							int capturedI = i;
-							renderFunc.Invoke(i.ToString("%08X"), arrValue.GetValue(i), field, (newValue) => {
+							renderFunc.Invoke(i.ToString("08X"), arrValue.GetValue(i), field, (newValue) => {
 								arrValue.SetValue(newValue, capturedI);
 								cb.Invoke(arrValue);
 							});
