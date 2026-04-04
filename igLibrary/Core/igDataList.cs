@@ -8,15 +8,20 @@
 
 
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace igLibrary.Core
 {
-	public class igTDataList<T> : igContainer, IEnumerable<T>, IigDataList
+	public class igTDataList<T> : igContainer, IEnumerable<T>, IigDataList, IList<T>
 	{
 		//TODO: Modify the reflection system so we can put proper access modifiers on these
 		public int _count;
 		public int _capacity;
 		public igMemory<T> _data = new igMemory<T>();
+
+		public int Count => _count;
+
+		public bool IsReadOnly => false;
 
 		public T this[int index]
 		{
@@ -65,6 +70,13 @@ namespace igLibrary.Core
 			return this[index];
 		}
 
+		public void Clear()
+		{
+			_data.Realloc(0);
+			_capacity = 0;
+			_count = 0;
+		}
+
 		public void SetCapacity(int capacity)
 		{
 			_data.Realloc(capacity);
@@ -90,10 +102,83 @@ namespace igLibrary.Core
 			}
 		}
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+		public int IndexOf(T item)
+		{
+			return Array.IndexOf(_data.Buffer, item);
+		}
+
+		public void Insert(int index, T item)
+		{
+			if (_count == _capacity)
+			{
+				SetCapacity(_capacity + 4);
+			}
+
+			Array.Copy(_data.Buffer, index, _data.Buffer, index+1, _count - index);
+			_data.Buffer[index] = item;
+		}
+
+		public void RemoveAt(int index)
+		{
+			Array.Copy(_data.Buffer, index+1, _data.Buffer, index, _count - index);
+		}
+
+		public void Add(T item)
+		{
+			Append(item);
+		}
+
+		public void AddRange(IEnumerable<T> collection)
+		{
+			int theCount = collection.Count();
+			if ((_capacity - _count) < theCount)
+			{
+				SetCapacity(_capacity + theCount);
+			}
+
+			int destIndex = _count;
+			foreach (T item in collection)
+			{
+				_data.Buffer[destIndex] = item;
+			}
+		}
+
+		public bool Contains(T item)
+		{
+			for (int i = 0; i < _count; i++)
+			{
+				T? cur = _data[i];
+				if ((cur != null && cur.Equals(item)) || (cur == null && item == null))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public void CopyTo(T[] array, int arrayIndex)
+		{
+			Array.Copy(_data.Buffer, 0, array, arrayIndex, _count);
+		}
+
+		public bool Remove(T item)
+		{
+			int index = IndexOf(item);
+
+			if (index >= 0)
+			{
+				RemoveAt(index);
+			}
+
+			return index >= 0;
+		}
 	}
 
 	public interface IigDataList
 	{
+		public void Clear();
 		public int GetCount();
 		public void SetCount(int count);
 		public int GetCapacity();
