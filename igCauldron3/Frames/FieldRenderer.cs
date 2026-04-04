@@ -94,7 +94,7 @@ namespace igCauldron3
 			if(field is igPropertyFieldMetaField) return;
 			ImGui.Text(label);
 			ImGui.SameLine();
-			RenderFieldNoLabel(id + label, value, field, cb);
+			RenderFieldNoLabel(id, value, field, cb);
 		}
 
 
