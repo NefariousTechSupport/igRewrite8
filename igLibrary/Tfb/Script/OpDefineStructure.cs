@@ -8,5 +8,6 @@ namespace igLibrary.Tfb.Script
 {
     public class OpDefineStructure : OpAbstractDefinition
     {
+        public Dictionary<string, OpAbstractCreateVariable> structVars = new Dictionary<string, OpAbstractCreateVariable>(); // for the tfbScriptEditor
     }
 }

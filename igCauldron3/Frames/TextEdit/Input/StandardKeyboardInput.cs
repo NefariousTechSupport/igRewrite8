@@ -25,7 +25,7 @@ public class StandardKeyboardInput : ITextEditorKeyboardInput
         AddReadOnlyBinding("Enter", e => TextEditorModify.EnterCharacter(e, '\n'));
         AddReadOnlyBinding("Tab", e => Indent(false, e));
         AddReadOnlyBinding("Shift + Tab", e => Indent(true, e));
-
+        AddReadOnlyBinding("Ctrl + F", e => e.searching = true);
         AddBinding(
             "CapsLock",
             (e, _) =>

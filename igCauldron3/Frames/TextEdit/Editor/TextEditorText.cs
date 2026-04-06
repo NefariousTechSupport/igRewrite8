@@ -9,7 +9,7 @@ namespace igCauldron3.Frames.TextEdit.Editor;
 internal class TextEditorText
 {
     readonly TextEditorOptions _options;
-    readonly List<Line> _lines = new();
+    public readonly List<Line> _lines = new();
 
     internal long Version { get; private set; }
 

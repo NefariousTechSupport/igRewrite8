@@ -2,12 +2,14 @@
 using igCauldron3.Frames.TextEdit.Syntax;
 using igCauldron3.Utils;
 using igLibrary.Core;
+using igLibrary.Gfx.GX2Utils;
 using igLibrary.Tfb.Script;
 using ImGuiNET;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.Devices;
 using Newtonsoft.Json.Serialization;
 using OpenTK.Audio.OpenAL;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Common.Input;
 using SixLabors.ImageSharp.ColorSpaces;
@@ -26,6 +28,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.Design.Behavior;
 using System.Windows.Forms.VisualStyles;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 namespace igCauldron3.Frames
@@ -608,7 +611,15 @@ namespace igCauldron3.Frames
                         sb.Append("(" + defmac._name + ")");
                         break;
                     case ScriptSet sset:
-                        sb.Append(sset._name);
+                        if (sset._name.Contains(' '))
+                        {
+                            sb.Append("'" + sset._name + "'");
+
+                        }
+                        else
+                        {
+                            sb.Append(sset._name);
+                        }
                         break;
                     case tfbScriptObject so:
                         if (so._name.Split('.').Last().Contains(' '))
@@ -941,7 +952,14 @@ namespace igCauldron3.Frames
                         sb.Append(LeftHandStack);
                         break;
                     case ScriptSet sset:
-                        sb.Append(sset._name);
+                        if (sset._name.Split('.').Last().Contains(' '))
+                        {
+                            sb.Append("'" + sset._name + "'");
+                        }
+                        else
+                        {
+                            sb.Append(sset._name);
+                        }
                         break;
                     case tfbScriptObject so:
                         if (so._name.Split('.').Last().Contains(' '))

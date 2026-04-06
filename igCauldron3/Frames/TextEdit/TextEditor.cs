@@ -1,10 +1,11 @@
+using igCauldron3.Frames.TextEdit.Editor;
+using igCauldron3.Frames.TextEdit.Input;
+using igCauldron3.Frames.TextEdit.Syntax;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text.Json;
-using igCauldron3.Frames.TextEdit.Editor;
-using igCauldron3.Frames.TextEdit.Input;
-using igCauldron3.Frames.TextEdit.Syntax;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
@@ -73,6 +74,130 @@ public class TextEditor
         set => Text.TextLines = value;
     }
 
+    public bool searching = false;
+    private int savedPos = 0;
+    private string searchQuery = "";
+    private bool hasAResult = false;
+    private int skipIndex = 0;
+    private bool lastSearchWasForward = true;
+    public class OtherSelection
+    {
+        public Coordinates Start;
+        public Coordinates End;
+        public bool searching = false;
+    }
+    public void SearchQuery()
+    {
+        TextEditor editor = this;
+        ImGui.InputText(string.Empty, ref searchQuery, 0x100, ImGuiInputTextFlags.EnterReturnsTrue);
+        ImGui.SameLine();
+        if (ImGui.Button("Cancel"))
+        {
+            OtherSelection cancelSel = new OtherSelection();
+            cancelSel.searching = false;
+            Renderer._query = cancelSel;
+            searching = false;
+            savedPos = 0;
+            searchQuery = "";
+            hasAResult = false;
+            return;
+        }
+        bool f3pressed = ImGui.IsKeyPressed(ImGuiKey.F3);
+        if (searchQuery != string.Empty && ImGui.IsKeyDown(ImGuiKey.LeftShift) && ImGui.IsKeyPressed(ImGuiKey.F3))
+        {
+            if (lastSearchWasForward)
+            {
+                skipIndex -= searchQuery.Length;
+            }
+            lastSearchWasForward = false;
+            if (savedPos < 0) savedPos = editor.Text._lines.Count - 1;
+            for (int j = savedPos; j >= 0; j--)
+            {
+                int scrollTo = -1;
+                string curLine = editor.Text.GetLineText(j);
+                if (skipIndex > curLine.Length) skipIndex = curLine.Length;
+                string curLineSkipped = curLine.Substring(0, skipIndex);
+                if (curLineSkipped.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+                {
+                    Coordinates qStart = new Coordinates();
+                    OtherSelection querySel = new OtherSelection();
+                    qStart.Line = j;
+                    qStart.Column = curLine.LastIndexOf(searchQuery, skipIndex, StringComparison.OrdinalIgnoreCase);
+                    skipIndex = qStart.Column;
+                    querySel.Start = qStart;
+                    Coordinates qEnd = new Coordinates();
+                    qEnd.Line = j;
+                    qEnd.Column = qStart.Column + searchQuery.Length;
+                    querySel.End = qEnd;
+                    hasAResult = true;
+                    savedPos = j;
+                    scrollTo = j;
+                    editor.ScrollToLine(scrollTo);
+                    Renderer._query = querySel;
+                    break;
+                }
+                else
+                {
+                    skipIndex = int.MaxValue;
+                    savedPos = j - 1;
+                }
+                if (hasAResult && savedPos < 0)
+                {
+                    skipIndex = int.MaxValue;
+                    savedPos = editor.Text._lines.Count - 1;
+                    j = savedPos + 1;
+                }
+            }
+        }
+        else if (searchQuery != string.Empty && ImGui.IsKeyPressed(ImGuiKey.F3))
+        {
+            if (!lastSearchWasForward)
+            {
+                skipIndex += searchQuery.Length;
+            }
+            lastSearchWasForward = true;
+            if (savedPos == editor.Text._lines.Count && hasAResult) savedPos = 0;
+            for (int j = savedPos; j < editor.Text._lines.Count; j++)
+            {
+                int scrollTo = -1;
+                string curLine = editor.Text.GetLineText(j);
+                if (skipIndex > curLine.Length) skipIndex = 0;
+                string curLineSkipped = curLine.Substring(skipIndex);
+                if (curLineSkipped.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+                {
+                    Coordinates qStart = new Coordinates();
+                    OtherSelection querySel = new OtherSelection();
+                    qStart.Line = j;
+                    qStart.Column = curLine.IndexOf(searchQuery, skipIndex, StringComparison.OrdinalIgnoreCase);
+                    skipIndex = qStart.Column + searchQuery.Length;
+                    querySel.Start = qStart;
+                    Coordinates qEnd = new Coordinates();
+                    qEnd.Line = j;
+                    qEnd.Column = qStart.Column + searchQuery.Length;
+                    querySel.End = qEnd;
+                    string testString = curLine.Substring(qStart.Column, searchQuery.Length);
+                    hasAResult = true;
+                    savedPos = j;
+                    scrollTo = j;
+                    editor.ScrollToLine(scrollTo);
+                    Renderer._query = querySel;
+                    break;
+                }
+                else
+                {
+                    skipIndex = 0;
+                    savedPos = j + 1;
+                }
+                if (hasAResult && savedPos >= editor.Text._lines.Count)
+                {
+                    skipIndex = 0;
+                    savedPos = 0;
+                    j = savedPos - 1;
+                }
+            }
+        }
+    }
+
     /// <summary>Appends a line of text to the end of the editor.</summary>
     public void AppendLine(string text)
     {
@@ -132,6 +257,7 @@ public class TextEditor
     /// <summary>Renders the text editor with the specified title and size. Returns true if the text has changed.</summary>
     public bool Render(string title, Vector2 size = new())
     {
+        if (searching) SearchQuery();
         long initialVersion = Text.Version;
         Renderer.Render(title, size);
         return initialVersion != Text.Version;

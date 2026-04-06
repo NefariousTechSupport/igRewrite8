@@ -30,6 +30,7 @@ public class TextEditorRenderer
 
     readonly SimpleCache<int, string> _lineNumberCache = new("line numbers", x => $"{x} ");
     readonly TextEditorSelection _selection;
+    public TextEditor.OtherSelection _query;
     readonly TextEditorText _text;
     readonly TextEditorColor _color;
     readonly TextEditorOptions _options;
@@ -288,15 +289,12 @@ public class TextEditorRenderer
         if (_selection.Start <= lineEndCoord)
         {
             selectionStart =
-                _selection.Start > lineStartCoord
-                    ? TextDistanceToLineStart(_selection.Start)
-                    : 0.0f;
+                _selection.Start > lineStartCoord? TextDistanceToLineStart(_selection.Start) : 0.0f;
         }
 
         if (_selection.End > lineStartCoord)
         {
-            selectionEnd = TextDistanceToLineStart(
-                _selection.End < lineEndCoord ? _selection.End : lineEndCoord
+            selectionEnd = TextDistanceToLineStart(_selection.End < lineEndCoord ? _selection.End : lineEndCoord
             );
         }
 
@@ -322,6 +320,40 @@ public class TextEditorRenderer
             drawList.AddRectFilled(vstart, vend, ColorUInt(PaletteIndex.Selection));
         }
 
+        // draw CTRL-F highlight
+        if (_query != null && _query.Start != null && _query.End != null)
+        {
+            Vector2 queryStartScreenPos = cursorScreenPos with
+            {
+                Y = cursorScreenPos.Y + lineNo * _charAdvance.Y,
+            };
+            Coordinates queryLineStartCoord = new(_query.Start.Line, 0);
+            Coordinates queryLineEndCoord = new(_query.End.Line, _text.GetLineMaxColumn(_query.End.Line));
+            Util.Assert(_query.Start <= _query.End);
+            float queryStart = float.NegativeInfinity;
+            float queryEnd = float.NegativeInfinity;
+            if (_query.Start <= queryLineEndCoord) queryStart = TextDistanceToLineStart(_query.Start);
+            if (_query.End > queryLineStartCoord) queryEnd = TextDistanceToLineStart(_query.End);
+
+            if (_query.Start.Line != lineNo) queryStart = float.NegativeInfinity;
+            if (
+                !float.IsNegativeInfinity(queryStart)
+                && !float.IsNegativeInfinity(queryEnd)
+                && queryStart < queryEnd
+            )
+            {
+                Vector2 vstart2 = new(
+                    queryStartScreenPos.X + _textStart + queryStart,
+                    110 + _query.Start.Line * _charAdvance.Y - ImGui.GetScrollY()
+                );
+
+                Vector2 vend2 = new(
+                    vstart2.X + (_query.End.Column - _query.Start.Column) * _charAdvance.X,
+                    vstart2.Y + _charAdvance.Y);
+
+                drawList.AddRectFilled(vstart2, vend2, ColorUInt(PaletteIndex.Selection));
+            }
+        }
         // Draw breakpoints
         var scrollX = ImGui.GetScrollX();
         var start = lineStartScreenPos with { X = lineStartScreenPos.X + scrollX };
