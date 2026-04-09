@@ -1461,9 +1461,46 @@ namespace igCauldron3.Frames
                         indentCount++;
                         if ((i + checkm._branchPC + 1) < codeList._count)
                         {
-                            ParseScriptObjects(codeList, i + 1, checkm._branchPC);
-                            i += checkm._branchPC;
-                            if (indentCount != 0) indentCount--;
+                            if (checkm._internalFlagsStorage == 0x9 && codeList[i + checkm._branchPC].GetType() == typeof(OpAbstractFlow) && codeList[i + checkm._branchPC] is OpAbstractFlow fl)
+                            {
+                                if (codeList[i + checkm._branchPC + 1] is OpCheckMembership c && c._LHS[0].GetType() == typeof(OpCheckMembership))
+                                {
+                                    if (checkm._branchPC > 1)
+                                    {
+                                        ParseScriptObjects(codeList, i + 1, checkm._branchPC - 1);
+                                    }
+                                    i += checkm._branchPC;
+                                    if (indentCount != 0) indentCount--;
+                                }
+                                else
+                                {
+                                    if (checkm._branchPC > 1)
+                                    {
+                                        ParseScriptObjects(codeList, i + 1, checkm._branchPC - 1);
+                                    }
+                                    i += checkm._branchPC;
+                                    if (indentCount > 0) indentCount--;
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "else");
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
+                                    indentCount++;
+                                    if (fl._branchPC != 0)
+                                    {
+                                        if ((i + fl._branchPC + 1) < codeList._count)
+                                        {
+                                            ParseScriptObjects(codeList, i + 1, fl._branchPC);
+                                            i += fl._branchPC;
+                                        }
+                                    }
+                                    if (indentCount > 0) indentCount--;
+                                }
+                            }
+                            else
+                            {
+                                ParseScriptObjects(codeList, i + 1, checkm._branchPC);
+                                i += checkm._branchPC;
+                                if (indentCount != 0) indentCount--;
+                            }
                         }
                         else
                         {
@@ -2130,8 +2167,30 @@ namespace igCauldron3.Frames
                         indentCount++;
                         if ((i + control._branchPC + 1) < codeList._count)
                         {
-                            ParseScriptObjects(codeList, i + 1, control._branchPC);
-                            i += control._branchPC;
+                            if (control._internalFlagsStorage == 0x9 && codeList[i + control._branchPC].GetType() == typeof(OpAbstractFlow) && codeList[i + control._branchPC] is OpAbstractFlow fl)
+                            {
+                                ParseScriptObjects(codeList, i + 1, control._branchPC - 1);
+                                i += control._branchPC;
+                                if (indentCount > 0) indentCount--;
+                                returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
+                                returnedstring.AppendLine(new string(' ', indentCount * 3) + "else");
+                                returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
+                                indentCount++;
+                                if (fl._branchPC != 0)
+                                {
+                                    if ((i + fl._branchPC + 1) < codeList._count)
+                                    {
+                                        ParseScriptObjects(codeList, i + 1, fl._branchPC);
+                                        i += fl._branchPC;
+                                    }
+                                }
+                                if (indentCount > 0) indentCount--;
+                            }
+                            else
+                            {
+                                ParseScriptObjects(codeList, i + 1, control._branchPC);
+                                i += control._branchPC;
+                            }
                         }
                         if (indentCount != 0) indentCount--;
                     }
@@ -2279,9 +2338,46 @@ namespace igCauldron3.Frames
                         indentCount++;
                         if ((i + checkref._branchPC + 1) < codeList._count)
                         {
-                            ParseScriptObjects(codeList, i + 1, checkref._branchPC);
-                            i += checkref._branchPC;
-                            if (indentCount != 0) indentCount--;
+                            if (checkref._internalFlagsStorage == 0x9 && codeList[i + checkref._branchPC].GetType() == typeof(OpAbstractFlow) && codeList[i + checkref._branchPC] is OpAbstractFlow fl)
+                            {
+                                if (codeList[i + checkref._branchPC + 1] is OpCheckReference c && c._LHS[0].GetType() == typeof(OpCheckReference))
+                                {
+                                    if (checkref._branchPC > 1)
+                                    {
+                                        ParseScriptObjects(codeList, i + 1, checkref._branchPC - 1);
+                                    }
+                                    i += checkref._branchPC;
+                                    if (indentCount != 0) indentCount--;
+                                }
+                                else
+                                {
+                                    if (checkref._branchPC > 1)
+                                    {
+                                        ParseScriptObjects(codeList, i + 1, checkref._branchPC - 1);
+                                    }
+                                    i += checkref._branchPC;
+                                    if (indentCount > 0) indentCount--;
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "else");
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
+                                    indentCount++;
+                                    if (fl._branchPC != 0)
+                                    {
+                                        if ((i + fl._branchPC + 1) < codeList._count)
+                                        {
+                                            ParseScriptObjects(codeList, i + 1, fl._branchPC);
+                                            i += fl._branchPC;
+                                        }
+                                    }
+                                    if (indentCount > 0) indentCount--;
+                                }
+                            }
+                            else
+                            {
+                                ParseScriptObjects(codeList, i + 1, checkref._branchPC);
+                                i += checkref._branchPC;
+                                if (indentCount != 0) indentCount--;
+                            }
                         }
                         else
                         { // dont I need to write "else { end }"
@@ -2295,7 +2391,7 @@ namespace igCauldron3.Frames
 
                 else if (codeList[i] is OpCheckValue check)
                 {
-                    if (codeList[i - 1].ToString().Split('.').Last() == "OpAbstractFlow")
+                    if (check._LHS[0] is OpAbstractCheckValue || check._LHS[0] is OpControl)
                     {
                         sb.Append("elseif (");
                     }
@@ -2339,6 +2435,51 @@ namespace igCauldron3.Frames
                             ParseScriptObjects(codeList, i + 1, check._branchPC);
                             i += check._branchPC;
                             if (indentCount != 0) indentCount--;
+                                 && codeList[i + check._branchPC] is OpAbstractFlow fl)
+                            {
+                                // whether to make an else, or elseif
+                                if (codeList[i + check._branchPC + 1] is OpCheckValue c && c._LHS[0].GetType() == typeof(OpCheckValue))
+                                {
+                                    if (check._branchPC > 1)
+                                    {
+                                        ParseScriptObjects(codeList, i + 1, check._branchPC - 1);
+                                    }
+                                    i += check._branchPC;
+                                    if (indentCount != 0) indentCount--;
+                                }
+                                else
+                                {
+                                    if (check._branchPC > 1)
+                                    {
+                                        ParseScriptObjects(codeList, i + 1, check._branchPC - 1);
+                                    }
+                                    i += check._branchPC;
+                                    if (indentCount > 0) indentCount--;
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "else");
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
+                                    indentCount++;
+                                    if (fl._branchPC != 0)
+                                    {
+                                        if ((i + fl._branchPC + 1) < codeList._count)
+                                        {
+                                            ParseScriptObjects(codeList, i + 1, fl._branchPC);
+                                            i += fl._branchPC;
+                                        }
+                                        else
+                                        {
+                                            returnedstring.AppendLine(new string(' ', indentCount * 3) + "end");
+                                        }
+                                    }
+                                    if (indentCount > 0) indentCount--;
+                                }
+                            }
+                            else
+                            {
+                                ParseScriptObjects(codeList, i + 1, check._branchPC);
+                                i += check._branchPC;
+                                if (indentCount != 0) indentCount--;
+                            }
                         }
                         else
                         {
@@ -2454,8 +2595,7 @@ namespace igCauldron3.Frames
                     string listLHSstring = SetupLHS(listLHS, codeList, i);
                     string condLHSstring = SetupLHS(conditionLHS, codeList, i);
                     string rhs = SetupRHS(opfindsubset._RHS);
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "filterList(" + listLHSstring + ",");
-                    indentCount++;
+                    sb.Append("filterList(" + listLHSstring + ",");
                     string otherpoint = "";
                     if (opfindsubset._LHS._otherPoint != null)
                     {
@@ -2475,9 +2615,8 @@ namespace igCauldron3.Frames
                                     {
                                         condition = condLHSstring.Substring(0, condLHSstring.LastIndexOf('.')) + ((int.Parse(rhs) == 1) ? ".CollidesWith(" : ".!CollidesWith(") + otherpoint + ")";
                                     }
-                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "condition: " + condition + ")");
-                                    indentCount--;
-                                    continue;
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + sb.ToString() + "condition: " + condition + ")");
+                                    break;
                                 case "distance":
                                     if (condLHSstring == "distance")
                                     {
@@ -2487,9 +2626,8 @@ namespace igCauldron3.Frames
                                     {
                                         condition = condLHSstring.Substring(0, condLHSstring.LastIndexOf('.')) + "DistanceTo(" + otherpoint + ")";
                                     }
-                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "condition: " + condition + ")");
-                                    indentCount--;
-                                    continue;
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + sb.ToString() + "condition: " + condition + ")");
+                                    break;
                                 case "separation":
                                     if (condLHSstring == "separation")
                                     {
@@ -2499,20 +2637,54 @@ namespace igCauldron3.Frames
                                     {
                                         condition = condLHSstring.Substring(0, condLHSstring.LastIndexOf('.')) + "SeparationTo(" + otherpoint + ")";
                                     }
-                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "condition: " + condition + ")");
-                                    indentCount--;
-                                    continue;
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + sb.ToString() + "condition: " + condition + ")");
+                                    break;
                                 default:
-                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "condition:) // unimplemented condition (paired): " + condLHSstring);
+                                    returnedstring.AppendLine(new string(' ', indentCount * 3) + sb.ToString() + "condition:) // unimplemented condition (paired): " + condLHSstring);
                                     break;
                             }
                         }
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "condition: " + condLHSstring + " " + relop + " " + rhs + ") // otherpoint: " + otherpoint);
-                        indentCount--;
-                        continue;
+                        else
+                        {
+                            returnedstring.AppendLine(new string(' ', indentCount * 3) + sb.ToString() + "condition: " + condLHSstring + " " + relop + " " + rhs + ") // otherpoint: " + otherpoint);
+                        }
                     }
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "condition: " + condLHSstring + " " + relop + " " + rhs + ")");
-                    indentCount--;
+                    else
+                    {
+                        returnedstring.AppendLine(new string(' ', indentCount * 3) + sb.ToString() + "condition: " + condLHSstring + " " + relop + " " + rhs + ")");
+                    }
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
+                    if (opfindsubset._branchPC != 0)
+                    {
+                        indentCount++;
+                        if (opfindsubset._internalFlagsStorage == 0x9 && codeList[i + opfindsubset._branchPC].GetType() == typeof(OpAbstractFlow) && codeList[i + opfindsubset._branchPC] is OpAbstractFlow fl)
+                        {
+                            ParseScriptObjects(codeList, i + 1, opfindsubset._branchPC - 1);
+                            i += opfindsubset._branchPC;
+                            if (indentCount > 0) indentCount--;
+                            returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
+                            returnedstring.AppendLine(new string(' ', indentCount * 3) + "else");
+                            returnedstring.AppendLine(new string(' ', indentCount * 3) + "{");
+                            indentCount++;
+                            if (fl._branchPC != 0)
+                            {
+                                if ((i + fl._branchPC + 1) < codeList._count)
+                                {
+                                    ParseScriptObjects(codeList, i + 1, fl._branchPC);
+                                    i += fl._branchPC;
+                                }
+                            }
+                            if (indentCount > 0) indentCount--;
+                        }
+                        else
+                        {
+
+                            ParseScriptObjects(codeList, i + 1, opfindsubset._branchPC);
+                            i += opfindsubset._branchPC;
+                            if (indentCount != 0) indentCount--;
+                        }
+                    }
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
                 }
                 else if (codeList[i] is OpFlowBehavior endflow)
                 {
@@ -2587,7 +2759,7 @@ namespace igCauldron3.Frames
                     {
                         opdisppitch = ReadRHSObjects(opdisp._pitchNP._varOp1);
                     }
-                    returnedstring.AppendLine(new string(' ', indentCount * 3) + displaced + ".moverelative(" + opdisplength + ", " + opdispheading + ", " + opdisppitch + ")");
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + displaced + ".moveRelative(" + opdisplength + ", " + opdispheading + ", " + opdisppitch + ")");
                     sb.Clear();
                 }
                 else if (codeList[i] is OpIncValue opinc)
@@ -2600,10 +2772,9 @@ namespace igCauldron3.Frames
                     string lhs = SetupLHS(opdec._LHS, codeList, i);
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + lhs + "--");
                 }
-                else if (codeList[i] is OpAbstractFlow absflow && codeList[i].ToString().Split('.').Last() == "OpAbstractFlow")
-                { // if i only check the type (not string), all things with basetype OpAbstractFlow will pass the check
+                else if (codeList[i].GetType() == typeof(OpAbstractFlow) && codeList[i] is OpAbstractFlow absflow)
+                {
                   // todo: completely rework this (see notes)
-
                     if ((i + absflow._branchPC + 1) > codeList._count)
                     {
                         sb.Append("end");
@@ -2619,13 +2790,8 @@ namespace igCauldron3.Frames
                         {
                             sb.Append(branchTargets[flow]);
                         }
-                        else if (codeList[i + 1] is OpCheckValue || codeList[i + 1] is OpCheckReference)
-                        {
-                            continue;
-                        }
                         else
                         {
-                            sb.Append("(unimpl.) goto");
                         }
                     }
                     returnedstring.AppendLine(new string(' ', indentCount * 3) + sb.ToString());
@@ -2693,8 +2859,8 @@ namespace igCauldron3.Frames
                             i += opDefStruct._branchPC;
                             if (indentCount != 0) indentCount--;
                         }
-                        returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
                     }
+                    returnedstring.AppendLine(new string(' ', indentCount * 3) + "}");
                 }
                 else if (codeList[i] is OpReset reset)
                 {

@@ -9,5 +9,6 @@ namespace igLibrary.Tfb.Script
     public class OpBranch : OpCode
     {
         public static igVectorMetaField _contextStack; // branchContextMetaField
+        public OpCode? branchTarget; // for the tfbScriptEditor
     }
 }

@@ -190,7 +190,7 @@ public class LanguageDefinition
             {
                 "int", "float", "screenmeasurement", "color", "string", "actor", "actorwaypoint", "sound", "sprite", "particle", "animationinfo",
                 "scriptcolorinfo", "slider", "scriptcontroller", "valueinfo", "light", "struct", "variable", "placementreference", "callmacro", "loop", "foreach",
-                "spawn", "displace", "teleportTo", "remove", "spawned", "end", "stop", "macro", "newopcodenewopcodenewopcode", "moverelative", "if", "slidevalue",
+                "spawn", "displace", "teleportTo", "remove", "spawned", "end", "stop", "macro", "newopcodenewopcodenewopcode", "moveRelative", "if", "slidevalue",
                 "start", "elseif", "find", "moveTo", "moveFrom", "turnTo", "checkFOV", "setBehavior", "reset", "control", "filterList"
             },
             Identifiers = new[]
