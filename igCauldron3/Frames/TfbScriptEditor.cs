@@ -2432,9 +2432,7 @@ namespace igCauldron3.Frames
                         indentCount++;
                         if ((i + check._branchPC + 1) < codeList._count)
                         {
-                            ParseScriptObjects(codeList, i + 1, check._branchPC);
-                            i += check._branchPC;
-                            if (indentCount != 0) indentCount--;
+                            if (check._internalFlagsStorage == 0x9 && codeList[i + check._branchPC].GetType() == typeof(OpAbstractFlow)
                                  && codeList[i + check._branchPC] is OpAbstractFlow fl)
                             {
                                 // whether to make an else, or elseif
