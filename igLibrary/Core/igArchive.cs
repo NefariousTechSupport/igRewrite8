@@ -1011,6 +1011,17 @@ namespace igLibrary.Core
 
 
 		/// <summary>
+		/// Unlinks (deletes) a file
+		/// </summary>
+		/// <param name="fileInfo">the file info</param>
+		public void Unlink(FileInfo fileInfo)
+		{
+			_files.Remove(fileInfo);
+			CalculateHashSearchProperties();
+		}
+
+
+		/// <summary>
 		/// Renames a file (for the work item processor)
 		/// </summary>
 		/// <param name="workItem">The work item</param>
