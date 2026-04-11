@@ -771,7 +771,8 @@ namespace igLibrary.Core
 		/// </summary>
 		private void CalculateHashSearchProperties()
 		{
-			_archiveHeader._hashSearchDivider = uint.MaxValue / _archiveHeader._numFiles;
+			_archiveHeader._numFiles = (uint)_files.Count;
+			_archiveHeader._hashSearchDivider = uint.MaxValue / (_archiveHeader._numFiles == 0 ? 1 : _archiveHeader._numFiles);
 
 			int TopMatchIndex = 0;
 			for (int i = 0x0; i < _files.Count; i++)
