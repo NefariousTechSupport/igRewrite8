@@ -84,6 +84,17 @@ namespace igLibrary.Core
 			public uint[]? _blocks;        // The block information
 			public byte[] _compressedData; // The actual compressed data
 
+			public DateTime FriendlyModTime
+			{
+				get => new DateTime(2000, 1, 1).AddSeconds(_modificationTime);
+				set
+				{
+					_modificationTime = (uint)(value - new DateTime(2000, 1, 1)).TotalSeconds;
+				}
+			}
+
+			public bool HasModTime => _modificationTime != 0;
+
 
 			/// <summary>
 			/// Determines the size of the blocks
