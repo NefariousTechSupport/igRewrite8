@@ -83,7 +83,7 @@ namespace igCauldron3
 						_wnd._frames.Remove(this);
 						_wnd._frames.Add(new DirectoryManagerFrame(_wnd));
 						_wnd._frames.Add(new ArchiveFrame(_wnd));
-						_wnd._frames.Add(new ArchiveEditorFrame(_wnd, igFileContext.Singleton.LoadArchive("archives:/loosefiles.pak")));
+						_wnd._frames.Add(new ArchiveEditorFrame(_wnd));
 
 						timer.Stop();
 						Logging.Info("Loaded game in {0}", timer.Elapsed.TotalSeconds);

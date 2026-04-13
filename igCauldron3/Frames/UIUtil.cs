@@ -135,13 +135,14 @@ namespace igCauldron3
 		/// <param name="id">The id to use</param>
 		/// <param name="val">The string value for the user to edit</param>
 		/// <param name="preview">The preview value for the user when the input is empty</param>
-		public static void RenderTextField(string label, string id, ref string val, string preview = "")
+		public static bool RenderTextField(string label, string id, ref string val, string preview = "")
 		{
 			ImGui.Text(label);
 			ImGui.SameLine();
 			ImGui.PushID(id);
-			ImGui.InputTextWithHint(string.Empty, preview, ref val, 512);
+			bool changed = ImGui.InputTextWithHint(string.Empty, preview, ref val, 512);
 			ImGui.PopID();
+			return changed;
 		}
 
 

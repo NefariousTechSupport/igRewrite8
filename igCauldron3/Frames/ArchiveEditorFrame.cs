@@ -9,10 +9,7 @@
 
 using ImGuiNET;
 using igLibrary.Core;
-using igLibrary;
 using igCauldron3.Utils;
-using System.Xml;
-using System.Configuration.Provider;
 
 namespace igCauldron3
 {
@@ -21,13 +18,16 @@ namespace igCauldron3
 	/// </summary>
 	public sealed class ArchiveEditorFrame : Frame
 	{
-		private igArchive _target;
+		private igArchive? _target;
 		private FileUiNode _rootNode;
 		private FileUiNode? _renamingNode;
 		private FileUiNode? _selectedNode;
 		private FileUiNode? _deletionNode;
 		private string? _loadErrorText;
 		private string _renameBuffer;
+		private uint _tfbToolHashBuffer;
+		private string _tfbToolRenameBuffer;
+		private EngineType _engineType;
 
 
 		/// <summary>
@@ -48,11 +48,12 @@ namespace igCauldron3
 			/// Constructor for a file (not folder) node
 			/// </summary>
 			/// <param name="fileInfo">the igArchive file information</param>
+			/// <param name="engineType">The engine type of the archive</param>
 			/// <param name="parent">The parent node</param>
-			public FileUiNode(igArchive.FileInfo fileInfo, FileUiNode? parent)
+			public FileUiNode(igArchive.FileInfo fileInfo, EngineType engineType, FileUiNode? parent)
 			{
 				_children = new SortedSet<FileUiNode>(new FileUiNodeComparer());
-				_name = Path.GetFileName(fileInfo._logicalName);
+				_name = Path.GetFileName(GetGoodNameRef(fileInfo, engineType));
 				_displayName = _name;
 				_archiveFileInfo = fileInfo;
 				_parent = parent;
@@ -194,17 +195,12 @@ namespace igCauldron3
 		/// </summary>
 		/// <param name="wnd">Reference to the main window object</param>
 		/// <param name="target">The igArchive to experiment on</param>
-		public ArchiveEditorFrame(Window wnd, igArchive target) : base(wnd)
+		public ArchiveEditorFrame(Window wnd) : base(wnd)
 		{
-			_target = target;
+			_target = null;
 
 			_rootNode = new FileUiNode("$root$", null);
 			_rootNode._displayName = "/";
-
-			for (int f = 0; f < _target._files.Count; f++)
-			{
-				AddNode(_target._files[f]);
-			}
 
 			_renameBuffer = string.Empty;
 			_renamingNode = null;
@@ -217,7 +213,9 @@ namespace igCauldron3
 		/// <param name="file">The file to construct a node for</param>
 		private FileUiNode AddNode(igArchive.FileInfo file)
 		{
-			string[] parts = file._logicalName.Split('/', '\\');
+			string nameToUse = GetGoodNameRef(file, _engineType);
+
+			string[] parts = nameToUse.Split('/', '\\');
 			FileUiNode node = _rootNode;
 			for (int p = 0; p < parts.Length - 1; p++)
 			{
@@ -230,7 +228,7 @@ namespace igCauldron3
 				node = child!;
 			}
 
-			return node.AddChild(new FileUiNode(file, node));
+			return node.AddChild(new FileUiNode(file, _engineType, node));
 		}
 
 
@@ -267,33 +265,17 @@ namespace igCauldron3
 			{
 				if (ImGui.BeginMenu("File"))
 				{
-					if (ImGui.MenuItem("Open..."))
+					if (ImGui.BeginMenu("Open..."))
 					{
-						string input = CrossFileDialog.OpenFile("Open Archive", ".pak;.bld;.arc");
-						if (!string.IsNullOrEmpty(input))
+						if (ImGui.MenuItem("Tfb Tool"))
 						{
-							bool success = false;
-							try
-							{
-								igArchive archive = igFileContext.Singleton.LoadArchive(input);
-								_target = archive;
-								success = true;
-							}
-							catch (Exception e)
-							{
-								_loadErrorText = "Failed to load igArchive with the following error:\n\n" + e.Message;
-							}
-
-							if (success)
-							{
-								// repopulate ui
-								ClearNodes();
-								for (int f = 0; f < _target._files.Count; f++)
-								{
-									AddNode(_target._files[f]);
-								}
-							}
+							OpenFile(EngineType.TfbTool);
 						}
+						if (ImGui.MenuItem("Alchemy Laboratory"))
+						{
+							OpenFile(EngineType.AlchemyLaboratory);
+						}
+						ImGui.EndMenu();
 					}
 					if (ImGui.MenuItem("Save as..."))
 					{
@@ -334,7 +316,7 @@ namespace igCauldron3
 			ImGui.SameLine();
 
 			ImGui.BeginChild("Selected", System.Numerics.Vector2.Zero, true, ImGuiWindowFlags.HorizontalScrollbar);
-			if (_selectedNode != null && _selectedNode._archiveFileInfo != null)
+			if (_target != null && _selectedNode != null && _selectedNode._archiveFileInfo != null)
 			{
 				igArchive.FileInfo fileInfo = _selectedNode._archiveFileInfo;
 				ImGui.Text("Name:");
@@ -344,8 +326,54 @@ namespace igCauldron3
 				ImGui.Text(fileInfo._length.ToString());
 				ImGui.NewLine();
 				ImGui.Text("Hash:");
-				ImGui.Text(fileInfo._hash.ToString("X08"));
+				if (_engineType == EngineType.TfbTool && _target._archiveHeader._version <= 0x08)
+				{
+					igArchive.FileInfo? query = _target.GetFile(_tfbToolHashBuffer);
+					bool initialValidity = query == null || query == fileInfo;
+					if (!initialValidity)
+					{
+						ImGui.PushStyleColor(ImGuiCol.FrameBg, Styles._errorBg);
+					}
+					bool changed = UIUtil.RenderUIntField(string.Empty, "$hash$", ref _tfbToolHashBuffer, uint.MinValue+1, uint.MaxValue);
+					if (!initialValidity)
+					{
+						ImGui.PopStyleColor();
+					}
+					if (changed && !_target.HasFile(_tfbToolHashBuffer))
+					{
+						fileInfo._hash = _tfbToolHashBuffer;
+						_target.UpdateFileHashes();
+					}
+				}
+				else
+				{
+					ImGui.Text(fileInfo._hash.ToString("X08"));
+				}
 				ImGui.NewLine();
+				if (_engineType == EngineType.TfbTool && _target._archiveHeader._version >= 0x0B)
+				{
+					ImGui.Text("Logical Name:");
+					igArchive.FileInfo? query = _target.GetFile(_tfbToolRenameBuffer);
+					bool initialValidity = _tfbToolRenameBuffer.Length > 0 && (query == null || query == fileInfo);
+					if (!initialValidity)
+					{
+						ImGui.PushStyleColor(ImGuiCol.FrameBg, Styles._errorBg);
+					}
+					bool changed = UIUtil.RenderTextField(string.Empty, "$logical name$", ref _tfbToolRenameBuffer);
+					if (!initialValidity)
+					{
+						ImGui.PopStyleColor();
+					}
+					if (changed && _tfbToolRenameBuffer.Length > 0)
+					{
+						if (!_target.HasFile(_tfbToolRenameBuffer))
+						{
+							fileInfo._logicalName = _tfbToolRenameBuffer;
+							_target.UpdateFileHashes();
+						}
+					}
+					ImGui.NewLine();
+				}
 				ImGui.Text("Ordinal:");
 				ImGui.Text(fileInfo._ordinal.ToString());
 				ImGui.NewLine();
@@ -359,7 +387,7 @@ namespace igCauldron3
 				bool replace = ImGui.Button("Replace", System.Numerics.Vector2.UnitX * ImGui.GetContentRegionAvail().X);
 				if (extract)
 				{
-					string output = CrossFileDialog.SaveFile("Save To", string.Empty, Path.GetFileName(fileInfo._logicalName));
+					string output = CrossFileDialog.SaveFile("Save To", string.Empty, Path.GetFileName(GetGoodNameRef(fileInfo, _engineType)));
 					if (!string.IsNullOrEmpty(output))
 					{
 						FileStream ofs = File.Create(output, 0x8000);
@@ -369,7 +397,7 @@ namespace igCauldron3
 				}
 				if (replace)
 				{
-					string input = CrossFileDialog.OpenFile("Choose File", string.Empty, Path.GetFileName(fileInfo._logicalName));
+					string input = CrossFileDialog.OpenFile("Choose File", string.Empty, Path.GetFileName(GetGoodNameRef(fileInfo, _engineType)));
 					if (!string.IsNullOrEmpty(input))
 					{
 						FileStream ifs = File.OpenRead(input);
@@ -381,7 +409,7 @@ namespace igCauldron3
 			}
 			ImGui.EndChild();
 
-			if (_deletionNode != null)
+			if (_target != null && _deletionNode != null)
 			{
 				ImGui.OpenPopup("Delete?");
 
@@ -446,6 +474,54 @@ namespace igCauldron3
 
 
 		/// <summary>
+		/// Prompt the user to open a file
+		/// </summary>
+		/// <param name="engineType">The engine type of this file</param>
+		private void OpenFile(EngineType engineType)
+		{
+			string filter;
+			switch (engineType)
+			{
+				case EngineType.AlchemyLaboratory:
+					filter = ".pak";
+					break;
+				case EngineType.TfbTool:
+					filter = ".bld;.arc";
+					break;
+				default:
+					return;
+			}
+
+			string input = CrossFileDialog.OpenFile("Open Archive", filter);
+			if (!string.IsNullOrEmpty(input))
+			{
+				bool success = false;
+				try
+				{
+					igArchive archive = igFileContext.Singleton.LoadArchive(input);
+					_target = archive;
+					_engineType = engineType;
+					success = true;
+				}
+				catch (Exception e)
+				{
+					_loadErrorText = "Failed to load igArchive with the following error:\n\n" + e.Message;
+				}
+
+				if (success && _target != null)
+				{
+					// repopulate ui
+					ClearNodes();
+					for (int f = 0; f < _target._files.Count; f++)
+					{
+						AddNode(_target._files[f]);
+					}
+				}
+			}
+		}
+
+
+		/// <summary>
 		/// Render a node
 		/// </summary>
 		/// <param name="node">The node to render</param>
@@ -484,15 +560,17 @@ namespace igCauldron3
 
 			// selection logic
 
-			if (node.IsFile && ImGui.IsItemClicked())
+			if (node.IsFile && node._archiveFileInfo != null && ImGui.IsItemClicked())
 			{
 				_selectedNode = node;
+				_tfbToolHashBuffer   = node._archiveFileInfo._hash;
+				_tfbToolRenameBuffer = node._archiveFileInfo._logicalName;
 			}
 
 
 			// renaming logic
 
-			if (beingRenamed)
+			if (_target != null && beingRenamed)
 			{
 				// position textbox correctly
 				ImGui.SameLine();
@@ -535,7 +613,8 @@ namespace igCauldron3
 					node._displayName = node._name + (node.IsFile ? string.Empty : "/");
 					_renamingNode = null;
 
-					RepopulateArchive(_target, _rootNode, string.Empty);
+					RepopulateArchive(_target, _engineType, _rootNode, string.Empty);
+					_target.UpdateFileHashes();
 				}
 				// escape logic
 				if (ImGui.IsKeyPressed(ImGuiKey.Escape))
@@ -560,7 +639,7 @@ namespace igCauldron3
 				}
 
 				// folder only options
-				if (!node.IsFile)
+				if (_target != null && !node.IsFile)
 				{
 					// create a file
 					if (ImGui.Selectable("Create File"))
@@ -621,7 +700,12 @@ namespace igCauldron3
 		/// <param name="filePath">The file path to save to</param>
 		private void SaveAs(string filePath)
 		{
-			RepopulateArchive(_target, _rootNode, string.Empty);
+			if (_target == null)
+			{
+				return;
+			}
+
+			RepopulateArchive(_target, _engineType, _rootNode, string.Empty);
 
 			_target.Save(filePath);
 		}
@@ -629,23 +713,28 @@ namespace igCauldron3
 
 		/// <summary>
 		/// Repopulate the archive's file listing
+		/// call _target.UpdateFileHashes() afterwards
 		/// </summary>
 		/// <param name="target">The target igArchive</param>
+		/// <param name="engineType">The engine type for the archive</param>
 		/// <param name="node">The node we're currently processing</param>
 		/// <param name="nodepath">The current path of the node</param>
-		private static void RepopulateArchive(igArchive target, FileUiNode node, string nodepath)
+		private static void RepopulateArchive(igArchive target, EngineType engineType, FileUiNode node, string nodepath)
 		{
 			if (node._archiveFileInfo != null)
 			{
-				node._archiveFileInfo._logicalName = nodepath.Replace('\\', '/');
-				node._archiveFileInfo._name = $"Temporary/BuildServer/{igAlchemyCore.GetPlatformString(igRegistry.GetRegistry()._platform)}/Output/{node._archiveFileInfo._logicalName}";
+				GetGoodNameRef(node._archiveFileInfo, engineType) = nodepath.Replace('\\', '/');
+				if (engineType == EngineType.AlchemyLaboratory)
+				{
+					node._archiveFileInfo._name = $"Temporary/BuildServer/{igAlchemyCore.GetPlatformString(igRegistry.GetRegistry()._platform)}/Output/{node._archiveFileInfo._logicalName}";
+				}
 
 				node._archiveFileInfo._hash = igHash.Hash((target._archiveHeader._flags & 1) != 0 ? node._archiveFileInfo._logicalName.ToLower() : node._archiveFileInfo._logicalName);
 			}
 
 			foreach (FileUiNode child in node._children)
 			{
-				RepopulateArchive(target, child, Path.Combine(nodepath, child._name));
+				RepopulateArchive(target, engineType, child, Path.Combine(nodepath, child._name));
 			}
 		}
 
@@ -697,6 +786,19 @@ namespace igCauldron3
 			}
 
 			node._children.Clear();
+		}
+
+
+		private static ref string GetGoodNameRef(igArchive.FileInfo fileInfo, EngineType engineType)
+		{
+			switch (engineType)
+			{
+				case EngineType.AlchemyLaboratory:
+				default:
+					return ref fileInfo._logicalName;
+				case EngineType.TfbTool:
+					return ref fileInfo._name;
+			}
 		}
 	}
 }

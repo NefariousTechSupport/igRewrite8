@@ -436,7 +436,7 @@ namespace igLibrary.Core
 		/// <summary>
 		/// Go through and update all the file hashes
 		/// </summary>
-		private void UpdateFileHashes()
+		public void UpdateFileHashes()
 		{
 			for(int i = 0; i < _files.Count; i++)
 			{
@@ -723,6 +723,32 @@ namespace igLibrary.Core
 			dst.Flush();
 			Array.Copy(dst.GetBuffer(), fileInfo._compressedData, fileInfo._compressedData.Length);
 			File.WriteAllBytes("debugiga.dat", dst.GetBuffer());
+		}
+
+
+		/// <summary>
+		/// Get a file
+		/// </summary>
+		/// <param name="filePath">the logical path of the file</param>
+		/// <returns>The <c>FileInfo</c> or null if it doesn't exist</returns>
+		public FileInfo? GetFile(string filePath)
+		{
+			return GetFile(HashFilePath(filePath));
+		}
+
+
+		/// <summary>
+		/// Get a file
+		/// </summary>
+		/// <param name="hash">the logical name hash of the file</param>
+		/// <returns>The <c>FileInfo</c> or null if it doesn't exist</returns>
+		public FileInfo? GetFile(uint hash)
+		{
+			//check if the file already exists, return it if so
+			int index = HashSearch(_files, _archiveHeader._numFiles, _archiveHeader._hashSearchDivider, _archiveHeader._hashSearchSlop, hash);
+			if(index >= 0) return _files[index];
+
+			return null;
 		}
 
 
