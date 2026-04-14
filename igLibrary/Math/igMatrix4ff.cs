@@ -11,6 +11,9 @@ namespace igLibrary.Math
 {
 	public struct igMatrix44f
 	{
+		/// <summary>
+		/// Identity Matrix
+		/// </summary>
 		public igMatrix44f Identity => new igMatrix44f()
 		{
 			_m11 = 1f, _m12 = 0f, _m13 = 0f, _m14 = 0f,
@@ -36,6 +39,26 @@ namespace igLibrary.Math
 		public float _m43;
 		public float _m44;
 
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="m11">Matrix value in column 1 and row 1</param>
+		/// <param name="m12">Matrix value in column 2 and row 1</param>
+		/// <param name="m13">Matrix value in column 3 and row 1</param>
+		/// <param name="m14">Matrix value in column 4 and row 1</param>
+		/// <param name="m21">Matrix value in column 1 and row 2</param>
+		/// <param name="m22">Matrix value in column 2 and row 2</param>
+		/// <param name="m23">Matrix value in column 3 and row 2</param>
+		/// <param name="m24">Matrix value in column 4 and row 2</param>
+		/// <param name="m31">Matrix value in column 1 and row 3</param>
+		/// <param name="m32">Matrix value in column 2 and row 3</param>
+		/// <param name="m33">Matrix value in column 3 and row 3</param>
+		/// <param name="m34">Matrix value in column 4 and row 3</param>
+		/// <param name="m41">Matrix value in column 1 and row 4</param>
+		/// <param name="m42">Matrix value in column 2 and row 4</param>
+		/// <param name="m43">Matrix value in column 3 and row 4</param>
+		/// <param name="m44">Matrix value in column 4 and row 4</param>
 		public igMatrix44f(
 			float m11, float m12, float m13, float m14,
 			float m21, float m22, float m23, float m24,
@@ -61,7 +84,12 @@ namespace igLibrary.Math
 			_m44 = m14;
 		}
 
-		public unsafe igMatrix44f(float[] mat)
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="mat">16 length float array containing matrix values</param>
+		public igMatrix44f(float[] mat)
 		{
 			if(mat.Length != 16) throw new ArgumentException("4x4 Matrix array must be of length 16");
 
