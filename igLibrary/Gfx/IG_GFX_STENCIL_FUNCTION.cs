@@ -9,7 +9,7 @@
 
 namespace igLibrary.Gfx
 {
-	public enum IG_GFX_STENCIL_FUNCTION : uint
+	public enum IG_GFX_STENCIL_FUNCTION : int
 	{
 		IG_GFX_STENCIL_FUNCTION_NEVER,
 		IG_GFX_STENCIL_FUNCTION_LESS,
