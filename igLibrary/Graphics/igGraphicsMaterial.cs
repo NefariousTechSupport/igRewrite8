@@ -16,11 +16,35 @@ namespace igLibrary.Graphics
 		public float _sortDepthOffset;
 		public igHandle _effectHandle;
 		public igMemoryCommandStream _commonState;
-		public igVector<igMemoryCommandStream> _techniques;
+		public igVector<igMemoryCommandStream?> _techniques;
 		public igGraphicsMaterialAnimationList _animations;
 		public igGraphicsObjectSet _graphicsObjects;
 		public byte _sortKey;
 		public igDrawType _drawType;
 		public igGraphicsMaterialAnimationTimeSource _timeSource;
+
+
+		/// <summary>
+		/// Handle igMemoryCommandStream
+		/// </summary>
+		public override void PostFileRead()
+		{
+			if (_graphicsObjects != null)
+			{
+				if (_commonState != null)
+				{
+					_commonState.Decode(_graphicsObjects);
+				}
+
+				for (int t = 0; t < _techniques._count; t++)
+				{
+					igMemoryCommandStream? technique = _techniques[t];
+					if (technique != null)
+					{
+						technique.Decode(_graphicsObjects);
+					}
+				}
+			}
+		}
 	}
 }

@@ -15,12 +15,15 @@ namespace igLibrary.Graphics
 		public uint _bytesWritten;
 
 
-		public override void ReadIGZFields(igIGZLoader loader)
+		/// <summary>
+		/// Decode the command stream with the graphics objects
+		/// </summary>
+		/// <param name="graphicsObjects">The graphics objects</param>
+		public void Decode(igGraphicsObjectSet graphicsObjects)
 		{
-			base.ReadIGZFields(loader);
-
-			StreamHelper stream = new StreamHelper(_memory.Buffer, loader._stream._endianness);
-			DecodeIGZ(loader._platform, stream);
+			IG_CORE_PLATFORM platform = igRegistry.GetRegistry()._platform;
+			StreamHelper stream = new StreamHelper(_memory.Buffer, igAlchemyCore.isPlatformBigEndian(platform) ? StreamHelper.Endianness.Big : StreamHelper.Endianness.Little);
+			DecodeIGZ(platform, stream, graphicsObjects);
 		}
 
 

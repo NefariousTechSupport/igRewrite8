@@ -8,6 +8,7 @@
 
 
 using System.Reflection;
+using igLibrary.Gfx;
 
 namespace igLibrary.Graphics
 {
@@ -60,7 +61,8 @@ namespace igLibrary.Graphics
 		/// </summary>
 		/// <param name="platform">The platform</param>
 		/// <param name="stream">The stream</param>
-		protected void DecodeIGZ(IG_CORE_PLATFORM platform, StreamHelper stream)
+		/// <param name="graphicsObjects">The graphics object list</param>
+		protected void DecodeIGZ(IG_CORE_PLATFORM platform, StreamHelper stream, igGraphicsObjectSet graphicsObjects)
 		{
 			_commands.Clear();
 
@@ -74,116 +76,567 @@ namespace igLibrary.Graphics
 			uint pointerSize = igAlchemyCore.GetPointerSize(platform);
 			bool is64Bit     = igAlchemyCore.isPlatform64Bit(platform);
 
+			igMetaEnum gfxDrawEnum       = igArkCore.GetMetaEnum(nameof(IG_GFX_DRAW))!;
+			igMetaEnum indexTypeEnum     = igArkCore.GetMetaEnum(nameof(IG_INDEX_TYPE))!;
+			igMetaEnum histencilFuncEnum = igArkCore.GetMetaEnum(nameof(IG_GFX_HISTENCIL_FUNCTION))!;
+			igMetaEnum stencilFuncEnum   = igArkCore.GetMetaEnum(nameof(IG_GFX_STENCIL_FUNCTION))!;
+
 			while (stream.Tell() < stream.BaseStream.Length)
 			{
 				igCommand command = new igCommand();
-				stream.Align(sizeof(int));
 				command._commandId = (igCommandId)commandIdEnum.GetEnumFromValue(stream.ReadInt32());
 
-				if (command._commandId != igCommandId.kNoop)
+				switch (command._commandId)
 				{
-					igCompoundMetaFieldInfo? decoderField = QueryForCommandField(command._commandId);
-					if (decoderField == null)
+					case igCommandId.kSetPrimitiveType:
 					{
-						continue;
+						igCommandSetPrimitiveTypeParameters parameters = new igCommandSetPrimitiveTypeParameters();
+						parameters._type = DecodeEnum<IG_GFX_DRAW>(stream, gfxDrawEnum);
+						command._parameters = parameters;
+						break;
 					}
-
-					stream.Align(decoderField._platformInfo._alignments[platform]);
-
-					// had to reimplement reading, sorry
-					command._parameters = decoderField.ConstructInstance(decoderField._vTablePointer);
-					for (int f = 0; f < decoderField._fieldList.Count; f++)
+					case igCommandId.kSetVertexBuffer:
 					{
-						igMetaField field = decoderField._fieldList[f];
-
-						Array? arrayValue = field.IsArray ? Array.CreateInstance(field.GetOutputType(), field.ArrayNum) : null;
-						object itemValue = null;
-
-						for (int a = 0; a < (field.IsArray ? field.ArrayNum : 1); a++)
-						{
-							stream.Align(field.GetAlignment(platform));
-
-							if (field is igSizeTypeMetaField)
-							{
-								if (is64Bit)
-								{
-									itemValue = stream.ReadUInt64();
-								}
-								else
-								{
-									itemValue = stream.ReadUInt32();
-								}
-							}
-							else if (field is igIntMetaField)
-							{
-								itemValue = stream.ReadInt32();
-							}
-							else if (field is igUnsignedIntMetaField)
-							{
-								itemValue = stream.ReadUInt32();
-							}
-							else if (field is igUnsignedShortMetaField)
-							{
-								itemValue = stream.ReadUInt16();
-							}
-							else if (field is igFloatMetaField)
-							{
-								itemValue = stream.ReadSingle();
-							}
-							else if (field is igVec4fMetaField)
-							{
-								itemValue = new igVec4f(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
-							}
-							else if (field is igMatrix44fMetaField)
-							{
-								itemValue = new igMatrix44f(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
-							}
-							else if (field is igCompoundMetaField compoundField && compoundField._compoundFieldInfo._name == nameof(igCopyTextureParameters))
-							{
-								igCopyTextureParameters ctParams = new igCopyTextureParameters();
-								ctParams._sourceX             = stream.ReadInt32();
-								ctParams._sourceY             = stream.ReadInt32();
-								ctParams._destinationX        = stream.ReadInt32();
-								ctParams._destinationY        = stream.ReadInt32();
-								ctParams._width               = stream.ReadInt32();
-								ctParams._height              = stream.ReadInt32();
-								ctParams._sourceMipLevel      = stream.ReadInt32();
-								ctParams._destinationMipLevel = stream.ReadInt32();
-								itemValue = ctParams;
-							}
-							else if (field is igUnsignedCharMetaField)
-							{
-								itemValue = stream.ReadByte();
-							}
-							else if (field is igBoolMetaField)
-							{
-								itemValue = stream.ReadBoolean();
-							}
-							else if (field is igEnumMetaField enumMetaField)
-							{
-								itemValue = enumMetaField._metaEnum.GetEnumFromValue(stream.ReadInt32());
-							}
-							else
-							{
-								Logging.Warn("Unimplemented metafield type {0}", field.GetType().Name);
-							}
-
-							if (arrayValue != null)
-							{
-								arrayValue.SetValue(itemValue, a);
-							}
-						}
-
-						field._fieldHandle!.SetValue(command._parameters, field.IsArray ? arrayValue : itemValue);
+						igCommandSetVertexBufferParameters parameters = new igCommandSetVertexBufferParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._format   = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
 					}
-
-					if (command._parameters == null)
+					case igCommandId.kSetIndexBuffer:
 					{
-						Logging.Warn("Command parameters for command id {0} returned null, pretending this didn't happen...", command._commandId);
+						igCommandSetIndexBufferParameters parameters = new igCommandSetIndexBufferParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._format   = DecodeEnum<IG_INDEX_TYPE>(stream, indexTypeEnum);
+						parameters._offset   = DecodeInt32(stream);
+						command._parameters = parameters;
+						break;
 					}
+					case igCommandId.kSetVertexShader:
+					{
+						igCommandSetVertexShaderParameters parameters = new igCommandSetVertexShaderParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetVertexShaderVariant:
+					{
+						igCommandSetVertexShaderVariantParameters parameters = new igCommandSetVertexShaderVariantParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetVertexShaderTexture:
+					{
+						igCommandSetVertexShaderTextureParameters parameters = new igCommandSetVertexShaderTextureParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._register = stream.ReadByte();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetVertexShaderSampler:
+					{
+						igCommandSetVertexShaderSamplerParameters parameters = new igCommandSetVertexShaderSamplerParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._register = stream.ReadByte();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetViewport:
+					{
+						igCommandSetViewportParameters parameters = new igCommandSetViewportParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._register = stream.ReadByte();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetScissor:
+					{
+						igCommandSetScissorParameters parameters = new igCommandSetScissorParameters();
+						parameters._x = DecodeInt32(stream);
+						parameters._y = DecodeInt32(stream);
+						parameters._w = DecodeInt32(stream);
+						parameters._h = DecodeInt32(stream);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetScissorEnabled:
+					{
+						igCommandSetScissorEnabledParameters parameters = new igCommandSetScissorEnabledParameters();
+						parameters._enabled = stream.ReadBoolean();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetRasterizeStateBundle:
+					{
+						igCommandSetRasterizeStateBundleParameters parameters = new igCommandSetRasterizeStateBundleParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetPixelShader:
+					{
+						igCommandSetPixelShaderParameters parameters = new igCommandSetPixelShaderParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetPixelShaderVariant:
+					{
+						igCommandSetPixelShaderVariantParameters parameters = new igCommandSetPixelShaderVariantParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetPixelShaderTexture:
+					{
+						igCommandSetPixelShaderTextureParameters parameters = new igCommandSetPixelShaderTextureParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._register = stream.ReadByte();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetPixelShaderSampler:
+					{
+						igCommandSetPixelShaderSamplerParameters parameters = new igCommandSetPixelShaderSamplerParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._register = stream.ReadByte();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetAlphaTestStateBundle:
+					{
+						igCommandSetAlphaTestStateBundleParameters parameters = new igCommandSetAlphaTestStateBundleParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetBlendStateBundle:
+					{
+						igCommandSetBlendStateBundleParameters parameters = new igCommandSetBlendStateBundleParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetDepthStateBundle:
+					{
+						igCommandSetDepthStateBundleParameters parameters = new igCommandSetDepthStateBundleParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetStencilStateBundle:
+					{
+						igCommandSetStencilStateBundleParameters parameters = new igCommandSetStencilStateBundleParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetStencilRef:
+					{
+						igCommandSetStencilRefParameters parameters = new igCommandSetStencilRefParameters();
+						parameters._stencilRef = DecodeUInt32(stream);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetRenderTargets:
+					{
+						igCommandSetRenderTargetsParameters parameters = new igCommandSetRenderTargetsParameters();
+						parameters._colorTargets = new ulong[8];
+						parameters._colorTargets[0] = DecodeSizeT(stream, platform);
+						parameters._colorTargets[1] = DecodeSizeT(stream, platform);
+						parameters._colorTargets[2] = DecodeSizeT(stream, platform);
+						parameters._colorTargets[3] = DecodeSizeT(stream, platform);
+						parameters._colorTargets[4] = DecodeSizeT(stream, platform);
+						parameters._colorTargets[5] = DecodeSizeT(stream, platform);
+						parameters._colorTargets[6] = DecodeSizeT(stream, platform);
+						parameters._colorTargets[7] = DecodeSizeT(stream, platform);
+						parameters._colorCount = DecodeUInt32(stream);
+						parameters._depthTarget = DecodeSizeT(stream, platform);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetRenderTargetMask:
+					{
+						igCommandSetRenderTargetMaskParameters parameters = new igCommandSetRenderTargetMaskParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kXenonSetHiStencil:
+					{
+						igCommandXenonSetHiStencilParameters parameters = new igCommandXenonSetHiStencilParameters();
+						parameters._state      = stream.ReadBoolean();
+						parameters._writeState = stream.ReadBoolean();
+						parameters._func       = DecodeEnum<IG_GFX_HISTENCIL_FUNCTION>(stream, histencilFuncEnum);
+						parameters._refValue   = DecodeUInt32(stream);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kXenonFlushHiZStencil:
+					{
+						igCommandXenonSetFlushHiZStencilParameters parameters = new igCommandXenonSetFlushHiZStencilParameters();
+						parameters._async      = stream.ReadBoolean();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kXenonSetGprCounts:
+					{
+						igCommandXenonSetGprCountsParameters parameters = new igCommandXenonSetGprCountsParameters();
+						parameters._vertex = DecodeUInt32(stream);
+						parameters._pixel  = DecodeUInt32(stream);
+						command._parameters = parameters;
+						break;
+					}
+					/*case igCommandId.kPS3DrawEdgeGeometry:
+					{
+						igCommandDrawEdgeGeometryParameters parameters = new igCommandDrawEdgeGeometryParameters();
+						parameters._edgeGeometry              = DecodeResource(stream, platform, graphicsObjects);
+						parameters._modelMatrix               = DecodeSizeT(stream, platform);
+						parameters._morphTargetWeights        = DecodeSizeT(stream, platform);
+						parameters._morphTargetCount          = stream.ReadByte();
+						parameters._blendVectors              = DecodeSizeT(stream, platform);
+						parameters._blendVectorCount          = DecodeInt32(stream);
+						parameters._ignoreNearPlaneForCulling = stream.ReadBoolean();
+						parameters._cacheId                   = DecodeUInt32(stream);
+						parameters._cacheResults              = stream.ReadBoolean();
+						command._parameters = parameters;
+						break;
+					}*/
+					case igCommandId.kPS3SetSCull:
+					{
+						igCommandPS3SetSCullParameters parameters = new igCommandPS3SetSCullParameters();
+						parameters._function = DecodeEnum<IG_GFX_STENCIL_FUNCTION>(stream, stencilFuncEnum);
+						parameters._refValue = DecodeUInt32(stream);
+						parameters._mask     = DecodeUInt32(stream);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetConstantBool:
+					{
+						igCommandSetConstantBoolParameters parameters = new igCommandSetConstantBoolParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._value    = stream.ReadBoolean();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetConstantInt:
+					{
+						igCommandSetConstantIntParameters parameters = new igCommandSetConstantIntParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._value    = DecodeInt32(stream);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetConstantFloat:
+					{
+						igCommandSetConstantFloatParameters parameters = new igCommandSetConstantFloatParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._value    = DecodeFloat(stream);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetConstantVec4f:
+					{
+						stream.Align(0x10); // Align of igVec4f
+						igCommandSetConstantVec4fParameters parameters = new igCommandSetConstantVec4fParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						stream.Align(0x10); // Align of igVec4f
+						parameters._value    = new igVec4f(DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream));
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetConstantMatrix44f:
+					{
+						stream.Align(0x10); // Align of igMatrix44f
+						igCommandSetConstantMatrix44fParameters parameters = new igCommandSetConstantMatrix44fParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						stream.Align(0x10); // Align of igVec4f
+						parameters._value    = new igMatrix44f(DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream), DecodeFloat(stream));
+						command._parameters = parameters;
+						break;
+					}
+					/*case igCommandId.kSetConstantArrayInt:
+					{
+						igCommandSetConstantArrayIntParameters parameters = new igCommandSetConstantArrayIntParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._value    = DecodeSizeT(stream, platform);
+						parameters._count    = DecodeInt32(stream);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetConstantArrayFloat:
+					{
+						igCommandSetConstantArrayFloatParameters parameters = new igCommandSetConstantArrayFloatParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._value    = DecodeSizeT(stream, platform);
+						parameters._count    = DecodeInt32(stream);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetConstantArrayVec4f:
+					{
+						igCommandSetConstantArrayVec4fParameters parameters = new igCommandSetConstantArrayVec4fParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._value    = DecodeSizeT(stream, platform);
+						parameters._count    = DecodeInt32(stream);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetConstantArrayMatrix44f:
+					{
+						igCommandSetConstantArrayMatrix44fParameters parameters = new igCommandSetConstantArrayMatrix44fParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._value    = DecodeSizeT(stream, platform);
+						parameters._count    = DecodeInt32(stream);
+						command._parameters = parameters;
+						break;
+					}*/
+					case igCommandId.kApplyConstantBundle:
+					{
+						igCommandApplyConstantBundleParameters parameters = new igCommandApplyConstantBundleParameters();
+						parameters._bundle = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kApplyConstantValueList:
+					{
+						igCommandApplyConstantValueListParameters parameters = new igCommandApplyConstantValueListParameters();
+						parameters._bundle = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetPixelShaderTextureEnabledConstant:
+					{
+						igCommandSetPixelShaderTextureEnabledConstantParameters parameters = new igCommandSetPixelShaderTextureEnabledConstantParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._register = stream.ReadByte();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetVertexShaderTextureEnabledConstant:
+					{
+						igCommandSetVertexShaderTextureEnabledConstantParameters parameters = new igCommandSetVertexShaderTextureEnabledConstantParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._register = stream.ReadByte();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetPixelShaderTextureSizeConstant:
+					{
+						igCommandSetPixelShaderTextureSizeConstantParameters parameters = new igCommandSetPixelShaderTextureSizeConstantParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._register = stream.ReadByte();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetVertexShaderTextureSizeConstant:
+					{
+						igCommandSetVertexShaderTextureSizeConstantParameters parameters = new igCommandSetVertexShaderTextureSizeConstantParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._register = stream.ReadByte();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kClearRenderTarget:
+					{
+						igCommandClearRenderTargetParameters parameters = new igCommandClearRenderTargetParameters();
+						parameters._resource = DecodeResource(stream, platform, graphicsObjects);
+						parameters._register = stream.ReadByte();
+						command._parameters = parameters;
+						break;
+					}
+					/*case igCommandId.kDraw:
+					{
+						// Nothing?
+						break;
+					}*/
+					case igCommandId.kDrawPrimitives:
+					{
+						igCommandDrawPrimitivesParameters parameters = new igCommandDrawPrimitivesParameters();
+						parameters._primitive     = DecodeEnum<IG_GFX_DRAW>(stream, gfxDrawEnum);
+						parameters._numPrimitives = DecodeInt32(stream);
+						parameters._numPrimitives = DecodeInt32(stream);
+						break;
+					}
+					/*case igCommandId.kFlush:
+					{
+						// Nothing?
+						break;
+					}
+					case igCommandId.kResetState:
+					{
+						// Nothing?
+						break;
+					}
+					case igCommandId.kDecodeMemoryCommandStream:
+					{
+						igCommandDecodeMemoryCommandStreamParameters parameters = new igCommandDecodeMemoryCommandStreamParameters();
+						parameters._stream = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kCopyTexture:
+					{
+						igCommandCopyTextureParameters parameters = new igCommandCopyTextureParameters();
+						parameters._source      = DecodeResource(stream, platform, graphicsObjects);
+						parameters._destination = DecodeResource(stream, platform, graphicsObjects);
+						parameters._params._sourceX             = DecodeInt32(stream);
+						parameters._params._sourceY             = DecodeInt32(stream);
+						parameters._params._destinationX        = DecodeInt32(stream);
+						parameters._params._destinationY        = DecodeInt32(stream);
+						parameters._params._width               = DecodeInt32(stream);
+						parameters._params._height              = DecodeInt32(stream);
+						parameters._params._sourceMipLevel      = DecodeInt32(stream);
+						parameters._params._destinationMipLevel = DecodeInt32(stream);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kUpdateTexture:
+					{
+						igCommandUpdateTextureParameters parameters = new igCommandUpdateTextureParameters();
+						parameters._texture
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kExecuteCallback:
+					{
+						igCommandExecuteCallbackParameters parameters = new igCommandExecuteCallbackParameters();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kSetCameraMatrices:
+					{
+						igCommandSetCameraMatricesParameters parameters = new igCommandSetCameraMatricesParameters();
+						parameters._cameraIndex        = stream.ReadByte();
+						parameters._viewMatrix         = stream.ReadByte();
+						parameters._previousViewMatrix = stream.ReadByte();
+						parameters._projMatrix         = stream.ReadByte();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kComputeAndSetInstanceMatrices:
+					{
+						igCommandComputeAndSetInstanceMatricesParameters parameters = new igCommandComputeAndSetInstanceMatricesParameters();
+						parameters._modelMatrix     = DecodeSizeT(stream, platform);
+						parameters._prevModelMatrix = DecodeSizeT(stream, platform);
+						parameters._matrixConstants = DecodeUInt16(stream);
+						parameters._cameraIndex     = stream.ReadByte();
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kComputeAndSetInstanceConstants:
+					{
+						igCommandComputeAndSetInstanceConstantsParameters parameters = new igCommandComputeAndSetInstanceConstantsParameters();
+						parameters._effectFlags   = stream.ReadByte();
+						parameters._geometryFlags = stream.ReadByte();
+						command._parameters = parameters;
+						break;
+					}*/
+					case igCommandId.kSetCommonRenderState:
+					{
+						igCommandSetCommonRenderStateParameters parameters = new igCommandSetCommonRenderStateParameters();
+						parameters._commonRenderState = DecodeUInt16(stream);
+						command._parameters = parameters;
+						break;
+					}
+					/*case igCommandId.kSetDitherState:
+					{
+						igCommandSetDitherStateParameters parameters = new igCommandSetDitherStateParameters();
+						parameters._enabled       = stream.ReadBoolean();
+						parameters._ditherOpacity = DecodeFloat(stream);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kBeginNamedEvent:
+					{
+						igCommandBeginNamedEventParameters parameters = new igCommandBeginNamedEventParameters();
+						parameters._name = "Idk how to read the name :(";
+						DecodeSizeT(stream, platform);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kEndNamedEvent:
+					{
+						igCommandEndNamedEventParameters parameters = new igCommandEndNamedEventParameters();
+						parameters._count = DecodeInt32(stream);
+						command._parameters = parameters;
+						break;
+					}
+					case igCommandId.kIssueBufferedGpuTimestamp:
+					{
+						igCommandIssueBufferedGpuTimestampParameters parameters = new igCommandIssueBufferedGpuTimestampParameters();
+						parameters._timestamp = DecodeResource(stream, platform, graphicsObjects);
+						command._parameters = parameters;
+						break;
+					}*/
+					default:
+						throw new NotImplementedException($"Command id {command._commandId} is not implemented");
 				}
 
 				_commands.Add(command);
+
+				stream.Align(sizeof(int));
+			}
+		}
+
+
+		private ushort DecodeUInt16(StreamHelper stream)
+		{
+			stream.Align(sizeof(ushort));
+			return stream.ReadUInt16();
+		}
+
+		private int DecodeInt32(StreamHelper stream)
+		{
+			stream.Align(sizeof(int));
+			return stream.ReadInt32();
+		}
+
+		private float DecodeFloat(StreamHelper stream)
+		{
+			stream.Align(sizeof(float));
+			return stream.ReadSingle();
+		}
+
+		private uint DecodeUInt32(StreamHelper stream)
+		{
+			stream.Align(sizeof(uint));
+			return stream.ReadUInt32();
+		}
+
+		private T DecodeEnum<T>(StreamHelper stream, igMetaEnum metaEnum) where T : Enum
+		{
+			return (T)metaEnum.GetEnumFromValue(DecodeInt32(stream));
+		}
+
+		private ulong DecodeSizeT(StreamHelper stream, IG_CORE_PLATFORM platform)
+		{
+			uint pointerSize = igAlchemyCore.GetPointerSize(platform);
+			stream.Align(pointerSize);
+			ulong value = 0;
+			if (pointerSize == 4)
+			{
+				value = stream.ReadUInt32();
+			}
+			else
+			{
+				value = stream.ReadUInt64();
+			}
+			return value;
+		}
+
+		private igGraphicsObject? DecodeResource(StreamHelper stream, IG_CORE_PLATFORM platform, igGraphicsObjectSet graphicsObjects)
+		{
+			ulong index = DecodeSizeT(stream, platform);
+
+			if (index >= 0 && index < (ulong)graphicsObjects._objects._count)
+			{
+				return graphicsObjects._objects[(int)index];
+			}
+			else
+			{
+				return null;
 			}
 		}
 

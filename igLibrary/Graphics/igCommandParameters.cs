@@ -20,39 +20,39 @@ namespace igLibrary.Graphics
 	}
 	public struct igCommandSetVertexBufferParameters
 	{
-		public ulong _resource;
-		public ulong _format;
+		public igGraphicsObject? _resource;
+		public igGraphicsObject? _format;
 		public int _offset;
 		public byte _register;
 	}
 	public struct igCommandSetIndexBufferParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public IG_INDEX_TYPE _format;
 		public int _offset;
 	}
 	public struct igCommandSetVertexShaderParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 	}
 
 	public struct igCommandSetVertexShaderVariantParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 	}
 	public struct igCommandSetVertexShaderTextureParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public byte _register;
 	}
 	public struct igCommandSetVertexShaderSamplerParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public byte _register;
 	}
 	public struct igCommandSetViewportParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public byte _register;
 	}
 	public struct igCommandSetScissorParameters
@@ -68,41 +68,41 @@ namespace igLibrary.Graphics
 	}
 	public struct igCommandSetRasterizeStateBundleParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 	}
 	public struct igCommandSetPixelShaderParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 	}
 	public struct igCommandSetPixelShaderVariantParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 	}
 	public struct igCommandSetPixelShaderTextureParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public byte _register;
 	}
 	public struct igCommandSetPixelShaderSamplerParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public byte _register;
 	}
 	public struct igCommandSetAlphaTestStateBundleParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 	}
 	public struct igCommandSetBlendStateBundleParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 	}
 	public struct igCommandSetDepthStateBundleParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 	}
 	public struct igCommandSetStencilStateBundleParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 	}
 	public struct igCommandSetStencilRefParameters
 	{
@@ -116,7 +116,7 @@ namespace igLibrary.Graphics
 	}
 	public struct igCommandSetRenderTargetMaskParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 	}
 	public struct igCommandXenonSetHiStencilParameters
 	{
@@ -134,6 +134,18 @@ namespace igLibrary.Graphics
 		public uint _vertex;
 		public uint _pixel;
 	}
+	public struct igCommandDrawEdgeGeometryParameters
+	{
+		public igGraphicsObject? _edgeGeometry;
+		public ulong _modelMatrix;
+		public ulong _morphTargetWeights;
+		public byte _morphTargetCount;
+		public ulong _blendVectors;
+		public int _blendVectorCount;
+		public bool _ignoreNearPlaneForCulling;
+		public uint _cacheId;
+		public bool _cacheResults;
+	}
 	public struct igCommandPS3SetSCullParameters
 	{
 		public IG_GFX_STENCIL_FUNCTION _function;
@@ -142,84 +154,84 @@ namespace igLibrary.Graphics
 	}
 	public struct igCommandSetConstantBoolParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public bool _value;
 	}
 	public struct igCommandSetConstantIntParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public int _value;
 	}
 	public struct igCommandSetConstantFloatParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public float _value;
 	}
 	public struct igCommandSetConstantVec4fParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public igVec4f _value;
 	}
 	public struct igCommandSetConstantMatrix44fParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public igMatrix44f _value;
 	}
 	public struct igCommandSetConstantArrayIntParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public ulong _value;
 		public int _count;
 	}
 	public struct igCommandSetConstantArrayFloatParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public ulong _value;
 		public int _count;
 	}
 	public struct igCommandSetConstantArrayVec4fParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public ulong _value;
 		public int _count;
 	}
 	public struct igCommandSetConstantArrayMatrix44fParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public ulong _value;
 		public int _count;
 	}
 	public struct igCommandApplyConstantBundleParameters
 	{
-		public ulong _bundle;
+		public igGraphicsObject? _bundle;
 	}
 	public struct igCommandApplyConstantValueListParameters
 	{
-		public ulong _bundle;
+		public igGraphicsObject? _bundle;
 	}
 	public struct igCommandSetPixelShaderTextureEnabledConstantParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public byte _register;
 	}
 	public struct igCommandSetVertexShaderTextureEnabledConstantParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public byte _register;
 	}
 	public struct igCommandSetPixelShaderTextureSizeConstantParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public byte _register;
 	}
 	public struct igCommandSetVertexShaderTextureSizeConstantParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public byte _register;
 	}
 	public struct igCommandClearRenderTargetParameters
 	{
-		public ulong _resource;
+		public igGraphicsObject? _resource;
 		public byte _register;
 	}
 	public struct igCommandDrawPrimitivesParameters
@@ -230,13 +242,12 @@ namespace igLibrary.Graphics
 	}
 	public struct igCommandDecodeMemoryCommandStreamParameters
 	{
-		//public igMemoryCommandStream _stream;
-		public ulong _stream;
+		public igGraphicsObject? _stream;
 	}
 	public struct igCommandCopyTextureParameters
 	{
-		public ulong _source;
-		public ulong _destination;
+		public igGraphicsObject? _source;
+		public igGraphicsObject? _destination;
 		public igCopyTextureParameters _params;
 	}
 	public struct igCommandUpdateTextureParameters
@@ -290,6 +301,6 @@ namespace igLibrary.Graphics
 	}
 	public struct igCommandIssueBufferedGpuTimestampParameters
 	{
-		public ulong _timestamp;
+		public igGraphicsObject? _timestamp;
 	}
 }
