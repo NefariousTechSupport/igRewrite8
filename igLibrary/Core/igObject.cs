@@ -116,6 +116,7 @@ namespace igLibrary.Core
 				metaFields[i].WriteIGZField(saver, section, data);
 			}
 		}
+		public virtual void PostFileRead() {}
 		public virtual void ResetFields() => ResetFields(GetMeta());
 		public virtual void ResetFields(igMetaObject meta)
 		{

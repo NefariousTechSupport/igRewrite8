@@ -78,6 +78,11 @@ namespace igLibrary.Core
 				_stream.Seek(DeserializeOffset(offsetObject.Key));
 				offsetObject.Value.ReadIGZFields(this);
 			}
+
+			foreach(KeyValuePair<ulong, igObject> offsetObject in _offsetObjectList)
+			{
+				offsetObject.Value.PostFileRead();
+			}
 		}
 
 		public void ParseSections()
