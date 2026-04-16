@@ -11,6 +11,12 @@ namespace igLibrary.Core
 {
 	public abstract class igPhysicalStorageDevice : igStorageDevice
 	{
+		public object _scheduler;                                    // igFileScheduler                            // igFileWorkItemList
+		public uint _optimalTransferSize;
+		//public bool _removableMedia;
+		public igFileWorkItem _bufferItem;
+		public uint _bufferSize;
+		public bool _paused;
 		public int _maxOperationsInFlight;
 		public int _threadStackSize;
 		public bool _scheduleReads;

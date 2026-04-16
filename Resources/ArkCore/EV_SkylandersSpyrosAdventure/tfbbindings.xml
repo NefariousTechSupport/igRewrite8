@@ -1,0 +1,962 @@
+<tfbbindings>
+	<binding type="SetVariant" name="SpriteMatrixMeasurement.clones"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.dof start depth enabled"/>
+	<binding type="EnumMeasurement" name="RedOctanePeripheralScriptObject.device presence"/>
+	<binding type="IntMeasurement" name="RedOctanePeripheralScriptObject.audio modulation level"/>
+	<binding type="EnumMeasurement" name="System.Pause State"/>
+	<binding type="EnumMeasurement" name="System.Save Slot"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.influence mode"/>
+	<binding type="FloatMeasurement" name="VectorMeasurement.length"/>
+	<binding type="SpriteMatrixMeasurement" name="SpriteInfo.origin"/>
+	<binding type="FloatMeasurement" name="WiiController.nunchuk X acceleration"/>
+	<binding type="tfbOnlineScriptObject" name="System.Online"/>
+	<binding type="SetVariant" name="LightInfo.removed lights"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.action 2 / shake"/>
+	<binding type="SetVariant" name="ActorInfo.removed"/>
+	<binding type="PositionMeasurement" name="OnlineEventReporter.tower position"/>
+	<binding type="IntMeasurement" name="SoundInfo.global limit"/>
+	<binding type="ReferenceVariant" name="SpriteInfo.Virtual - left analog center sprite"/>
+	<binding type="IntMeasurement" name="ActorInfo.replace color percentage"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Shadow Intensity enabled"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.dof end depth enabled"/>
+	<binding type="EnumMeasurement" name="System.Console Language"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.bloom inner scale enabled"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 Shadow Intensity"/>
+	<binding type="tfbPS3Controller" name="ScriptController.physical controller 1"/>
+	<binding type="ColorMeasurement" name="GeneratorAppearanceFields.mid color"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.initial speed randomness"/>
+	<binding type="EnumMeasurement" name="GeneratorMovementFields.spawn volume type"/>
+	<binding type="FloatMeasurement" name="ViewportInfo.far clip"/>
+	<binding type="ReferenceVariant" name="System.Stress Test Command"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.action2 / shake / snap"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.start drag"/>
+	<binding type="FloatMeasurement" name="WiiController.nunchuk Z acceleration"/>
+	<binding type="FloatMeasurement" name="VectorMeasurement.vertical difference"/>
+	<binding type="ScreenMeasurement" name="SpriteInfo.screen location"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.saturation"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.action power meter"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.wind gust strength min enabled"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.tire friction"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.box priority"/>
+	<binding type="FloatMeasurement" name="GestureStickMeasurement.X"/>
+	<binding type="FloatMeasurement" name="CollisionInfo.local Y offset"/>
+	<binding type="PairedFloatMeasurement" name="SpritePositionMeasurement.heading"/>
+	<binding type="ReferenceVariant" name="SpriteMatrixMeasurement.activator"/>
+	<binding type="EnumMeasurement" name="GestureMeasurement.pressure state"/>
+	<binding type="EnumMeasurement" name="LightningFields.constrained"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.ao bias enabled"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.shadow range"/>
+	<binding type="FloatMeasurement" name="ViewportFogEffectInfo.fog min"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.Virtual - display context button"/>
+	<binding type="FloatMeasurement" name="WiiController.pointer Z acceleration"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.wind gust direction adjustment enabled"/>
+	<binding type="IntMeasurement" name="OnlineEventReporter.player 2 health"/>
+	<binding type="FloatMeasurement" name="SoundInfo.attenuation distance full"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.blur effect"/>
+	<binding type="FloatMeasurement" name="ActorPhysics.ground max speed"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.suspension length"/>
+	<binding type="PositionMeasurement" name="OnlineEventReporter.player 2 position"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.box transition size (-x)"/>
+	<binding type="FloatMeasurement" name="OrientationMeasurement.facing"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.shadow split distribution"/>
+	<binding type="IntMeasurement" name="OnlineScriptObject.online id low"/>
+	<binding type="FloatMeasurement" name="ParticleInfo.remove time"/>
+	<binding type="EnumMeasurement" name="ViewportDepthOfFieldEffectInfo.Focus Mapper mode"/>
+	<binding type="FloatMeasurement" name="LightInfo.boxMaxZ"/>
+	<binding type="IntMeasurement" name="DateTime.month"/>
+	<binding type="VfxManager" name="System.VFXManager"/>
+	<binding type="ReferenceVariant" name="TextColorConverter.text sprite"/>
+	<binding type="ScriptSetReference" name="OnlineEventReporter.player 1 bottom data"/>
+	<binding type="EnumMeasurement" name="OnlineScriptObject.MOTD - is available"/>
+	<binding type="SetVariant" name="ParticleInfo.active particles"/>
+	<binding type="ButtonMeasurement" name="ScriptController.cancel button"/>
+	<binding type="SetVariant" name="ParticleInfo.removed particles"/>
+	<binding type="EnumMeasurement" name="ViewportDepthOfFieldEffectInfo.enabled"/>
+	<binding type="FloatMeasurement" name="ViewportFogEffectInfo.fog start"/>
+	<binding type="FloatMeasurement" name="ActorPhysics.ground acceleration"/>
+	<binding type="EnumMeasurement" name="ViewportDepthOfFieldEffectInfo.near enabled"/>
+	<binding type="FloatMeasurement" name="GeneratorAppearanceFields.mid rotation speed randomness"/>
+	<binding type="ReferenceVariant" name="LightInfo.directional light 3"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 light 3 angles enabled"/>
+	<binding type="IntMeasurement" name="SpriteInfo.bloom intensity"/>
+	<binding type="EnumMeasurement" name="StringConverter.use comma"/>
+	<binding type="ReferenceVariant" name="AbstractPlacement.attach node"/>
+	<binding type="EnumMeasurement" name="System.Device Locale"/>
+	<binding type="SpriteValueMeasurement" name="SpriteInfo.numeric value"/>
+	<binding type="FloatMeasurement" name="System.Normalized Angle"/>
+	<binding type="FloatMeasurement" name="ViewportDepthOfFieldEffectInfo.near focus width"/>
+	<binding type="IntMeasurement" name="ColorMeasurement.alpha"/>
+	<binding type="EnumMeasurement" name="ViewportInfo.viewport clone TV(DRC only)"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.box transition size (+z)"/>
+	<binding type="EnumMeasurement" name="JoystickMeasurement.connection"/>
+	<binding type="FloatMeasurement" name="ScaleMeasurement.Z"/>
+	<binding type="ColorMeasurement" name="DirectionalLightInfo.specular color"/>
+	<binding type="EnumMeasurement" name="System.CPU/GPU Boundness"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.wind gust primary distance enabled"/>
+	<binding type="IntMeasurement" name="VfxManager.vfx report usage"/>
+	<binding type="EnumMeasurement" name="GeneratorAppearanceFields.view alignment"/>
+	<binding type="FloatMeasurement" name="LightInfo.multiplier"/>
+	<binding type="EnumMeasurement" name="ActorPhysics.tilts with ground"/>
+	<binding type="EnumMeasurement" name="ScriptController.bound to in game actor"/>
+	<binding type="ColorMeasurement" name="GeneratorAppearanceFields.start color randomness"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.rear tire friction"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.haze near sky amount"/>
+	<binding type="IntMeasurement" name="SegmentGenerator.segment count"/>
+	<binding type="EnumMeasurement" name="ScriptController.erreula error result type"/>
+	<binding type="NameExtractor" name="System.Object Namer"/>
+	<binding type="ScriptSetReference" name="RedOctanePeripheralScriptObject.trading card code set"/>
+	<binding type="EnumMeasurement" name="SoundInfo.designer category"/>
+	<binding type="EnumMeasurement" name="ViewportFogEffectInfo.Fog type"/>
+	<binding type="IntMeasurement" name="ViewportTitleSafeInfo.right margin"/>
+	<binding type="ReferenceVariant" name="GeneratorInfo.vfx"/>
+	<binding type="EnumMeasurement" name="SoundInfo.attenuates"/>
+	<binding type="FloatMeasurement" name="SoundInfo.reverb amount"/>
+	<binding type="ColorMeasurement" name="ViewportFogEffectInfo.fog color of yon ignore"/>
+	<binding type="FloatMeasurement" name="LightInfo.boxMaxX"/>
+	<binding type="AbstractScriptVariant" name="AbstractScriptGroup.null"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.alignment"/>
+	<binding type="PositionMeasurement" name="OnlineEventReporter.respawn location"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.align to parent"/>
+	<binding type="OrientationMeasurement" name="SpriteMatrixMeasurement.orientation"/>
+	<binding type="FloatMeasurement" name="WiiController.pointer distance"/>
+	<binding type="ReferenceVariant" name="SpriteInfo.Virtual - button Y sprite"/>
+	<binding type="SetVariant" name="ParticleInfo.generators"/>
+	<binding type="ColorMeasurement" name="LightInfo.diffuse color"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Fog Near enabled"/>
+	<binding type="EnumMeasurement" name="OnlineEventReporter.ally assignment"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.ambient specular scale enabled"/>
+	<binding type="IntMeasurement" name="System.Save Files Available"/>
+	<binding type="ReferenceVariant" name="LightInfo.caustic light"/>
+	<binding type="FloatMeasurement" name="ViewportFilterEffectInfo.non-sprite percentage"/>
+	<binding type="IntMeasurement" name="AnimationInfo.material slot"/>
+	<binding type="ScriptSetReference" name="OnlineScriptObject.leaderboard save index"/>
+	<binding type="FloatMeasurement" name="GeneratorAppearanceFields.bloom intensity"/>
+	<binding type="SetVariant" name="CollisionInfo.object collisions"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.bloom outer scale enabled"/>
+	<binding type="ColorMeasurement" name="ViewportFadeEffectInfo.fade color"/>
+	<binding type="EnumMeasurement" name="RedOctanePeripheralScriptObject.debug mode"/>
+	<binding type="ScaleMeasurement" name="GeneratorAppearanceFields.end size randomness"/>
+	<binding type="IntMeasurement" name="DateTime.second"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.cutscene"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.text visual type"/>
+	<binding type="ReferenceVariant" name="GeneratorInfo.lightning"/>
+	<binding type="OpDefineStructure" name="ScriptStructure.untyped structure"/>
+	<binding type="EnumMeasurement" name="SoundInfo.ignores time scales"/>
+	<binding type="FloatMeasurement" name="GeneratorGenerationFields.midpoint percent"/>
+	<binding type="EnumMeasurement" name="RayContact.has contact"/>
+	<binding type="FloatMeasurement" name="ViewportShadowsControlInfo.focus distance from game camera"/>
+	<binding type="FloatMeasurement" name="Sequence.time remaining"/>
+	<binding type="EnumMeasurement" name="System.Game Language"/>
+	<binding type="FloatMeasurement" name="SoundInfo.streams master volume"/>
+	<binding type="ReferenceVariant" name="ScriptController.controller 1"/>
+	<binding type="VectorMeasurement" name="GeneratorMovementFields.mid accel direction"/>
+	<binding type="IntMeasurement" name="ActorInfo.bloom intensity"/>
+	<binding type="FloatMeasurement" name="JoystickMeasurement.heading"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.wind gust scale"/>
+	<binding type="IntMeasurement" name="RedOctanePeripheralScriptObject.size of region 2"/>
+	<binding type="FloatMeasurement" name="SoundInfo.music volume 1"/>
+	<binding type="EnumMeasurement" name="OnlineScriptObject.online status"/>
+	<binding type="IntMeasurement" name="ScriptController.erreula error"/>
+	<binding type="FloatMeasurement" name="SpriteInfo.screen height"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 Fog Far Sky Amount"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.ambient specular scale"/>
+	<binding type="FloatMeasurement" name="ActorInfo.script load"/>
+	<binding type="ColorMeasurement" name="ActorInfo.replace color"/>
+	<binding type="FloatMeasurement" name="GeneratorInfo.start delay"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.text type"/>
+	<binding type="EnumMeasurement" name="OnlineScriptObject.Primary User Type"/>
+	<binding type="FloatMeasurement" name="LightInfo.boxNearAttenuation"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.audio attenuator"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.bloom outer scale"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.haze end depth"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.audio listener"/>
+	<binding type="ButtonMeasurement" name="ScriptController.DPad left"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.brightness enabled"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.box transition size (+y)"/>
+	<binding type="IntMeasurement" name="NameExtractor.type count"/>
+	<binding type="ColorMeasurement" name="MoodBoxInfo.Target_1 Fog Near Sky Color"/>
+	<binding type="FloatMeasurement" name="CollisionInfo.length"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.wind strength"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.hue"/>
+	<binding type="EnumMeasurement" name="ScriptController.display console menu"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Mobile small object culling size enabled"/>
+	<binding type="SetVariant" name="SpriteInfo.generators"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.dof skybox amount"/>
+	<binding type="FloatMeasurement" name="System.Game Time Scale"/>
+	<binding type="ReferenceVariant" name="OnlineEventReporter.game area"/>
+	<binding type="FloatMeasurement" name="ParticleInfo.disable time"/>
+	<binding type="SetVariant" name="SoundInfo.active sound effects"/>
+	<binding type="IntMeasurement" name="SetVariant.count"/>
+	<binding type="SetVariant" name="SoundInfo.active controller rumbles"/>
+	<binding type="EnumMeasurement" name="ScriptController.erreula error button selected"/>
+	<binding type="ColorMeasurement" name="GeneratorAppearanceFields.mid color randomness"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.wind strength enabled"/>
+	<binding type="FloatMeasurement" name="SegmentGenerator.segment width"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.haze far sky amount enabled"/>
+	<binding type="ScriptSetReference" name="OnlineEventReporter.trap data"/>
+	<binding type="FloatMeasurement" name="SoundInfo.volume randomness"/>
+	<binding type="FloatMeasurement" name="ScriptController.analog button dead zone"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.dof near end depth"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.start accel"/>
+	<binding type="SetVariant" name="ActorInfo.playing sounds"/>
+	<binding type="EnumMeasurement" name="OnlineScriptObject.connection state"/>
+	<binding type="MatrixMeasurement" name="AbstractPlacement.origin"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.alternate viewport"/>
+	<binding type="FloatMeasurement" name="LightInfo.boxFalloffX"/>
+	<binding type="FloatMeasurement" name="ViewportDepthOfFieldEffectInfo.near focus distance"/>
+	<binding type="ReferenceVariant" name="AbstractPlacement.activator"/>
+	<binding type="EnumMeasurement" name="Sequence.playback mode"/>
+	<binding type="FloatMeasurement" name="OrientationMeasurement.tilt"/>
+	<binding type="FloatMeasurement" name="CollisionInfo.width"/>
+	<binding type="SetVariant" name="SoundInfo.category templates"/>
+	<binding type="FloatMeasurement" name="LightInfo.linear attenuation factor"/>
+	<binding type="EnumMeasurement" name="Placement.near/far alpha fade"/>
+	<binding type="EnumMeasurement" name="System.Show Help"/>
+	<binding type="EnumMeasurement" name="SetVariant.allow random next repeats"/>
+	<binding type="FloatMeasurement" name="ViewportInfo.field of view"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.current influence (debug)"/>
+	<binding type="EnumMeasurement" name="ViewConverter.lock type"/>
+	<binding type="SetVariant" name="SoundInfo.active movies"/>
+	<binding type="ScreenMeasurement" name="SpriteInfo.natural size"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.shadow split distribution enabled"/>
+	<binding type="FloatMeasurement" name="SpriteInfo.Z Depth"/>
+	<binding type="ColorMeasurement" name="LightInfo.ambient color"/>
+	<binding type="ButtonMeasurement" name="ScriptController.action 3"/>
+	<binding type="EnumMeasurement" name="ViewportInfo.water effect disabled"/>
+	<binding type="IntMeasurement" name="OnlineScriptObject.online id high"/>
+	<binding type="ReferenceVariant" name="StringConverter.text"/>
+	<binding type="ReferenceVariant" name="OnlineEventReporter.game level"/>
+	<binding type="ReferenceVariant" name="System.Save Name"/>
+	<binding type="EnumMeasurement" name="RedOctanePeripheralScriptObject.audio enabled"/>
+	<binding type="FloatMeasurement" name="LightningFields.chaos"/>
+	<binding type="FloatMeasurement" name="SpriteInfo.height"/>
+	<binding type="PositionMeasurement" name="MoodBoxInfo.point of interest"/>
+	<binding type="EnumMeasurement" name="ViewportInfo.horizon disabled"/>
+	<binding type="EnumMeasurement" name="SoundInfo.actor limit behavior"/>
+	<binding type="ButtonMeasurement" name="WiiController.button 1"/>
+	<binding type="RayEndPoint" name="RayContact.end"/>
+	<binding type="FloatMeasurement" name="SoundInfo.rumble duration"/>
+	<binding type="FloatMeasurement" name="ViewportFogEffectInfo.caustic movement Y"/>
+	<binding type="ReferenceVariant" name="SpriteInfo.Virtual - button switch sprite"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.wind gust scale enabled"/>
+	<binding type="PairedFloatMeasurement" name="PositionMeasurement.horizontal distance"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.shadow range enabled"/>
+	<binding type="EnumMeasurement" name="SoundInfo.from DRC"/>
+	<binding type="FloatMeasurement" name="DirectionalLightInfo.multiplier"/>
+	<binding type="IntMeasurement" name="OnlineScriptObject.MOTD - message id low"/>
+	<binding type="TextColorConverter" name="SpriteInfo.Text Color Converter"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Shadow Yaw enabled"/>
+	<binding type="FloatMeasurement" name="ViewportBlurEffectInfo.level"/>
+	<binding type="ReferenceVariant" name="LightInfo.sprite light 2"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 DOF Far enabled"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.vehicle top reverse speed"/>
+	<binding type="FloatMeasurement" name="JoystickMeasurement.magnitude"/>
+	<binding type="FloatMeasurement" name="LightInfo.cutoff angle"/>
+	<binding type="SetVariant" name="RedOctanePeripheralScriptObject.tag set"/>
+	<binding type="FloatMeasurement" name="ContactInfo.magnitude"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.texture flip"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.mid accel direction spread"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.wind gust duration min"/>
+	<binding type="ReferenceVariant" name="System.Take Screenshot"/>
+	<binding type="FloatMeasurement" name="VFXGenerator.lifespan"/>
+	<binding type="EnumMeasurement" name="ButtonMeasurement.pressure state"/>
+	<binding type="FloatMeasurement" name="SoundInfo.pitch randomness"/>
+	<binding type="FloatMeasurement" name="OnlineEventReporter.game damage multiplier"/>
+	<binding type="IntMeasurement" name="RedOctanePeripheralScriptObject.checksum length"/>
+	<binding type="SetVariant" name="ActorInfo.inactive"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Bloom Min Limit enabled"/>
+	<binding type="PairedFloatMeasurement" name="SpritePositionMeasurement.Y offset"/>
+	<binding type="FloatMeasurement" name="WiiController.nunchuk Y acceleration"/>
+	<binding type="PairedFloatMeasurement" name="PositionMeasurement.heading"/>
+	<binding type="ColorMeasurement" name="MoodBoxInfo.Target_1 Fog color"/>
+	<binding type="IntMeasurement" name="OnlineScriptObject.MOTD - message id high"/>
+	<binding type="ReferenceVariant" name="AbstractAttachNode.look-at target"/>
+	<binding type="FloatMeasurement" name="ViewportFogEffectInfo.fog range"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.mid accel"/>
+	<binding type="EnumMeasurement" name="pathConnection.traverse hint"/>
+	<binding type="SetVariant" name="AbstractPlacement.clones"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.dof skybox amount enabled"/>
+	<binding type="ReferenceVariant" name="OnlineScriptObject.event reporter"/>
+	<binding type="FloatMeasurement" name="ViewportFogEffectInfo.fog of Sky dome"/>
+	<binding type="ColorMeasurement" name="MoodBoxInfo.sun color"/>
+	<binding type="ColorMeasurement" name="ViewportFogEffectInfo.caustic color"/>
+	<binding type="EnumMeasurement" name="Sequence.condition"/>
+	<binding type="ColorMeasurement" name="MoodBoxInfo.Target_1 ambient"/>
+	<binding type="FloatMeasurement" name="ViewportBlackAndWhiteEffectInfo.level"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.saturation enabled"/>
+	<binding type="EnumMeasurement" name="System.Dvd State"/>
+	<binding type="FloatMeasurement" name="ViewportInfo.screen filter percentage"/>
+	<binding type="IntMeasurement" name="System.Cast to Integer"/>
+	<binding type="EnumMeasurement" name="System.Game Configuration"/>
+	<binding type="ColorMeasurement" name="ViewportInfo.viewport directional light color(DRC only)"/>
+	<binding type="FloatMeasurement" name="sequenceEvent.event length"/>
+	<binding type="PairedEnumMeasurement" name="PositionMeasurement.collision"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.shadow bias enabled"/>
+	<binding type="FloatMeasurement" name="SegmentGenerator.uv scroll"/>
+	<binding type="EnumMeasurement" name="AnimationInfo.type"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.black and white effect"/>
+	<binding type="FloatMeasurement" name="SpriteInfo.width"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.view converter"/>
+	<binding type="IntMeasurement" name="VFXGenerator.currently alive"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.bloom inner scale"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 Fog Near Sky Amount"/>
+	<binding type="ReferenceVariant" name="MoodBoxInfo.critical box"/>
+	<binding type="FloatMeasurement" name="ScriptController.joystick X dead zone"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.motion blur exposure time"/>
+	<binding type="ReferenceVariant" name="ScriptController.controller 2"/>
+	<binding type="ButtonMeasurement" name="WiiController.home button"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.default"/>
+	<binding type="IntMeasurement" name="SoundInfo.diagnostic level"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Fog color enabled"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Fog Near Sky Amount enabled"/>
+	<binding type="FloatMeasurement" name="ScreenMeasurement.Y"/>
+	<binding type="SetVariant" name="ActorInfo.NPCs"/>
+	<binding type="ReferenceVariant" name="SpriteInfo.dialog controller"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.start accel randomness"/>
+	<binding type="ScreenMeasurement" name="WiiController.pointer"/>
+	<binding type="IntMeasurement" name="RedOctanePeripheralScriptObject.firmware version"/>
+	<binding type="FloatMeasurement" name="LightInfo.pointFadeStart"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.box length"/>
+	<binding type="IntMeasurement" name="DateTime.minute"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.clipping"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.master controller"/>
+	<binding type="ButtonMeasurement" name="StandardController.L2 button"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.rear tire compression damper"/>
+	<binding type="IntMeasurement" name="System.Fps"/>
+	<binding type="IntMeasurement" name="DateTime.day"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.main stick / pointer"/>
+	<binding type="SetVariant" name="ActorInfo.waypoints"/>
+	<binding type="FloatMeasurement" name="System.Frame Rate Scale"/>
+	<binding type="SetVariant" name="SpriteInfo.removed"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.suspension strength"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 Fog Far"/>
+	<binding type="EnumMeasurement" name="RedOctanePeripheralScriptObject.auto color cycle"/>
+	<binding type="MatrixMeasurement" name="SpriteMatrixMeasurement.origin"/>
+	<binding type="FloatMeasurement" name="ViewportInfo.viewport aspect ratio override(DRC only)"/>
+	<binding type="IntMeasurement" name="ViewportTitleSafeInfo.lower margin"/>
+	<binding type="ReferenceVariant" name="SetVariant.first"/>
+	<binding type="PairedFloatMeasurement" name="PositionMeasurement.separation"/>
+	<binding type="ReferenceVariant" name="SetVariant.next"/>
+	<binding type="tfbScriptObject" name="AbstractScriptGroup.ValueDereferencer"/>
+	<binding type="ScriptSetReference" name="RedOctanePeripheralScriptObject.update code set"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 DOF Blur Level"/>
+	<binding type="FloatMeasurement" name="GeneratorGenerationFields.spawn rate"/>
+	<binding type="FloatMeasurement" name="LightInfo.constant attenuation factor"/>
+	<binding type="FloatMeasurement" name="ScaleMeasurement.X"/>
+	<binding type="SetVariant" name="ParticleInfo.inactive particles"/>
+	<binding type="EnumMeasurement" name="SegmentGenerator.taper"/>
+	<binding type="EnumMeasurement" name="RedOctanePeripheralScriptObject.connection state"/>
+	<binding type="PairedFloatMeasurement" name="PositionMeasurement.distance"/>
+	<binding type="FloatMeasurement" name="SoundInfo.music master volume"/>
+	<binding type="IntMeasurement" name="OnlineScriptObject.config parameter state"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 light 1 angles enabled"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.text spacing type"/>
+	<binding type="IntMeasurement" name="ColorMeasurement.blue"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.explicit influence"/>
+	<binding type="FloatMeasurement" name="LightInfo.boxAttenuation"/>
+	<binding type="StringConverter" name="StringInfo.String Converter"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.haze near sky amount enabled"/>
+	<binding type="FloatMeasurement" name="ActorPhysics.jump initial speed"/>
+	<binding type="PositionMeasurement" name="ActorInfo.destination"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.end gravity"/>
+	<binding type="FloatMeasurement" name="SegmentGenerator.uv scale"/>
+	<binding type="FloatMeasurement" name="LightInfo.boxFalloffY"/>
+	<binding type="FloatMeasurement" name="ActorPhysics.gravity max speed"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.dof near start depth enabled"/>
+	<binding type="EnumMeasurement" name="System.Console YAxis Inversion"/>
+	<binding type="FloatMeasurement" name="AnimationClip.blend Percent"/>
+	<binding type="ColorMeasurement" name="Placement.tint"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.anti-flip strength"/>
+	<binding type="FloatMeasurement" name="CollisionInfo.weight"/>
+	<binding type="EnumMeasurement" name="ViewportInfo.viewport display scene content(DRC only)"/>
+	<binding type="ReferenceVariant" name="System.Ray Cast"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.end drag"/>
+	<binding type="PositionMeasurement" name="OnlineEventReporter.respawn trigger position"/>
+	<binding type="ColorMeasurement" name="MoodBoxInfo.Target_1 light 1 color"/>
+	<binding type="EnumMeasurement" name="RedOctaneTagScriptObject.tag class"/>
+	<binding type="FloatMeasurement" name="ViewportDepthOfFieldEffectInfo.focus drop at far length"/>
+	<binding type="ScaleMeasurement" name="GeneratorAppearanceFields.start size randomness"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.wind gust frequency enabled"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 light 1 color enabled"/>
+	<binding type="VectorMeasurement" name="ViewportInfo.viewport directional light direction(DRC only)"/>
+	<binding type="PositionMeasurement" name="System.Absolute Zero"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 Shadow FOV"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.sun tilt"/>
+	<binding type="FloatMeasurement" name="CollisionInfo.height"/>
+	<binding type="ReferenceVariant" name="GeneratorInfo.appearance"/>
+	<binding type="EnumMeasurement" name="GeneratorInfo.mute"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 Bloom Level"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.vehicle top speed"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.dof end depth"/>
+	<binding type="FloatMeasurement" name="SoundInfo.streams master rate"/>
+	<binding type="FloatMeasurement" name="ViewportDepthOfFieldEffectInfo.level"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.haze max"/>
+	<binding type="FloatMeasurement" name="WiiController.pointer X acceleration"/>
+	<binding type="EnumMeasurement" name="RedOctanePeripheralScriptObject.battery status"/>
+	<binding type="ButtonMeasurement" name="ScriptController.select button"/>
+	<binding type="IntMeasurement" name="RedOctanePeripheralScriptObject.checksum"/>
+	<binding type="EnumMeasurement" name="Placement.shadow receive"/>
+	<binding type="FloatMeasurement" name="ViewportDepthOfFieldEffectInfo.focus width"/>
+	<binding type="FloatMeasurement" name="SoundInfo.filter attenuation distance maximum"/>
+	<binding type="PairedFloatMeasurement" name="SpritePositionMeasurement.priority offset"/>
+	<binding type="ReferenceVariant" name="System.Browser Open URL"/>
+	<binding type="EnumMeasurement" name="SoundInfo.from controller"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.action 1 / snap"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Bloom Level enabled"/>
+	<binding type="tfbPS3Controller" name="ScriptController.inactive controller"/>
+	<binding type="EnumMeasurement" name="SoundInfo.authored category"/>
+	<binding type="ReferenceVariant" name="SpriteInfo.Virtual - button B sprite"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Shadow FOV enabled"/>
+	<binding type="SetVariant" name="ActorInfo.players"/>
+	<binding type="ReferenceVariant" name="ScriptController.dialog controller"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.engine max RPM"/>
+	<binding type="ButtonMeasurement" name="ScriptController.Pause requested"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Bloom Max Limit enabled"/>
+	<binding type="SetVariant" name="MoodBoxInfo.contributing boxes (debug)"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.point of interest update mode"/>
+	<binding type="ButtonMeasurement" name="StandardController.R1 button"/>
+	<binding type="IntMeasurement" name="ContactInfo.type"/>
+	<binding type="FloatMeasurement" name="GeneratorAppearanceFields.start rotation speed"/>
+	<binding type="ColorMeasurement" name="MoodBoxInfo.haze far sky tint"/>
+	<binding type="PositionMeasurement" name="OnlineEventReporter.player 1 position"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.bloom luminance cutoff"/>
+	<binding type="ReferenceVariant" name="SpriteMatrixMeasurement.parent"/>
+	<binding type="FloatMeasurement" name="GestureMeasurement.pressure value"/>
+	<binding type="ReferenceVariant" name="AnimationInfo.walk"/>
+	<binding type="ReferenceVariant" name="SpriteInfo.Virtual - button start sprite"/>
+	<binding type="ButtonMeasurement" name="ScriptController.pause button"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.box transition size (-y)"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.ao bias"/>
+	<binding type="EnumMeasurement" name="Placement.script suspended"/>
+	<binding type="IntMeasurement" name="RedOctanePeripheralScriptObject.command delay time"/>
+	<binding type="ColorMeasurement" name="SegmentGenerator.tint color"/>
+	<binding type="ReferenceVariant" name="VFXGenerator.Vfx target"/>
+	<binding type="tfbPS3Controller" name="ScriptController.physical controller 2"/>
+	<binding type="IntMeasurement" name="GeneratorGenerationFields.max alive"/>
+	<binding type="ReferenceVariant" name="NameExtractor.Name string"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 light 2 angles enabled"/>
+	<binding type="IntMeasurement" name="GeneratorInfo.sort overlay layer"/>
+	<binding type="IntMeasurement" name="ActorWaypoint.radius"/>
+	<binding type="FloatMeasurement" name="ViewportInfo.frame traversal load"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.chassis restitution"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.front tire relaxation damper"/>
+	<binding type="ColorMeasurement" name="ViewportFogEffectInfo.fog color"/>
+	<binding type="FloatMeasurement" name="SoundInfo.filter percent"/>
+	<binding type="ColorMeasurement" name="MoodBoxInfo.haze near sky tint"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.wind facing enabled"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.Virtual - ignore virtual controller"/>
+	<binding type="EnumMeasurement" name="OnlineEventReporter.event save state"/>
+	<binding type="IntMeasurement" name="SoundInfo.actor limit"/>
+	<binding type="VectorMeasurement" name="GeneratorMovementFields.end accel direction"/>
+	<binding type="IntMeasurement" name="OnlineScriptObject.config parameter value"/>
+	<binding type="DateTime" name="System.Date and time"/>
+	<binding type="FloatMeasurement" name="WiiController.nunchuk tilt"/>
+	<binding type="EnumMeasurement" name="RedOctanePeripheralScriptObject.delay after commands"/>
+	<binding type="FloatMeasurement" name="OrientationMeasurement.relative facing"/>
+	<binding type="FloatMeasurement" name="LightInfo.pointFadeEnd"/>
+	<binding type="ButtonMeasurement" name="ScriptController.action 1"/>
+	<binding type="IntMeasurement" name="OnlineEventReporter.game mode"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.bloom diffuse scale"/>
+	<binding type="EnumMeasurement" name="WiiController.pointer enabled"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Bloom Radius enabled"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.wind facing"/>
+	<binding type="FloatMeasurement" name="OrientationMeasurement.relative tilt"/>
+	<binding type="IntMeasurement" name="System.Game Achievement"/>
+	<binding type="FloatMeasurement" name="GeneratorAppearanceFields.end rotation speed"/>
+	<binding type="IntMeasurement" name="AnimationInfo.glow intensity"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.light fade distance"/>
+	<binding type="FloatMeasurement" name="CollisionInfo.rebound"/>
+	<binding type="PairedFloatMeasurement" name="PositionMeasurement.vertical offset"/>
+	<binding type="FloatMeasurement" name="ScreenMeasurement.X"/>
+	<binding type="ColorMeasurement" name="GeneratorAppearanceFields.end color"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.blend mode"/>
+	<binding type="FloatMeasurement" name="ActorPhysics.air max speed"/>
+	<binding type="FloatMeasurement" name="ViewportBloomEffectInfo.radius"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.box height"/>
+	<binding type="EnumMeasurement" name="System.BLE - Default gamepad favorite"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.sun angles enabled"/>
+	<binding type="ReferenceVariant" name="OnlineScriptObject.MOTD - message"/>
+	<binding type="EnumMeasurement" name="ScriptController.signed out"/>
+	<binding type="IntMeasurement" name="ColorMeasurement.red"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.Virtual - virtual controller visible"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.haze start depth enabled"/>
+	<binding type="EnumMeasurement" name="WiiController.controller type"/>
+	<binding type="VectorMeasurement" name="GeneratorMovementFields.start accel direction"/>
+	<binding type="IntMeasurement" name="VfxManager.vfx debug draws"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.filter effect"/>
+	<binding type="EnumMeasurement" name="CollisionInfo.acts as actor surface"/>
+	<binding type="EnumMeasurement" name="GeneratorMovementFields.inherits translation"/>
+	<binding type="EnumMeasurement" name="RedOctanePeripheralScriptObject.auto read tag level"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.initial speed"/>
+	<binding type="FloatMeasurement" name="ViewportDepthOfFieldEffectInfo.focus drop at near length"/>
+	<binding type="FloatMeasurement" name="VectorMeasurement.horizontal length"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.chassis friction"/>
+	<binding type="ScriptSetReference" name="OnlineEventReporter.item data"/>
+	<binding type="VectorMeasurement" name="ActorInfo.angular velocity"/>
+	<binding type="FloatMeasurement" name="GeneratorGenerationFields.max distance"/>
+	<binding type="EnumMeasurement" name="SoundInfo.reverb setting 2"/>
+	<binding type="ReferenceVariant" name="AnimationInfo.run"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.brightness"/>
+	<binding type="SetVariant" name="SpriteInfo.model attach nodes"/>
+	<binding type="PositionMeasurement" name="ViewConverter.world position"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.sun roll"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.ao scale enabled"/>
+	<binding type="FloatMeasurement" name="GeneratorAppearanceFields.mid rotation speed"/>
+	<binding type="EnumMeasurement" name="AnimationInfo.is layered"/>
+	<binding type="RayEndPoint" name="RayContact.start"/>
+	<binding type="EnumMeasurement" name="ActorInfo.footstep sound enabled"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.bloom skybox amount enabled"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.dof near start depth"/>
+	<binding type="EnumMeasurement" name="WiiController.save state"/>
+	<binding type="EnumMeasurement" name="SoundInfo.filter attenuates"/>
+	<binding type="ColorMeasurement" name="GeneratorAppearanceFields.start color"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.sun facing"/>
+	<binding type="EnumMeasurement" name="System.Console Default Difficulty"/>
+	<binding type="FloatMeasurement" name="LightInfo.boxMaxY"/>
+	<binding type="ColorMeasurement" name="MoodBoxInfo.Target_1 light 3 color"/>
+	<binding type="ScaleMeasurement" name="GeneratorAppearanceFields.end size"/>
+	<binding type="tfbScriptObject" name="MoodBoxInfo.*default"/>
+	<binding type="FloatMeasurement" name="GeneratorAppearanceFields.initial rotation angle"/>
+	<binding type="EnumMeasurement" name="OnlineScriptObject.leaderboard save state"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 Shadow Pitch"/>
+	<binding type="FloatMeasurement" name="RibbonFields.segment granularity"/>
+	<binding type="IntMeasurement" name="System.Save Recorded Video"/>
+	<binding type="EnumMeasurement" name="GestureStickMeasurement.connection"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.wind gust unison enabled"/>
+	<binding type="ReferenceVariant" name="OpTopLevelBehavior.behavior"/>
+	<binding type="IntMeasurement" name="OnlineEventReporter.game initial difficulty"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.haze density enabled"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.wind gust primary distance"/>
+	<binding type="SetVariant" name="AnimationInfo.animation palette"/>
+	<binding type="ReferenceVariant" name="NameExtractor.Object to name"/>
+	<binding type="IntMeasurement" name="OnlineScriptObject.leaderboard save id"/>
+	<binding type="pathConnection" name="ActorWaypoint.forward"/>
+	<binding type="SetVariant" name="RedOctanePeripheralScriptObject.playing sounds"/>
+	<binding type="FloatMeasurement" name="ViewportShadowsControlInfo.field of view"/>
+	<binding type="IntMeasurement" name="sequenceEvent.event number"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Mobile lod 2 distance  enabled"/>
+	<binding type="EnumMeasurement" name="SoundInfo.pan listener mode"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.contrast"/>
+	<binding type="FloatMeasurement" name="ActorPhysics.air acceleration"/>
+	<binding type="EnumMeasurement" name="AnimationClip.type"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.ambient diffuse scale enabled"/>
+	<binding type="EnumMeasurement" name="ViewportInfo.viewport display sprites content(DRC only)"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.sun color enabled"/>
+	<binding type="FloatMeasurement" name="GeneratorAppearanceFields.end rotation speed randomness"/>
+	<binding type="EnumMeasurement" name="System.BLE - Default portal favorite"/>
+	<binding type="PairedFloatMeasurement" name="PositionMeasurement.pitch"/>
+	<binding type="EnumMeasurement" name="CollisionInfo.acts as physics object"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.type"/>
+	<binding type="ScaleMeasurement" name="GeneratorAppearanceFields.start size"/>
+	<binding type="SetVariant" name="CutsceneInfo.active cutscene streams"/>
+	<binding type="FloatMeasurement" name="SoundInfo.volume"/>
+	<binding type="FloatMeasurement" name="ViewportInfo.frame script load"/>
+	<binding type="ButtonMeasurement" name="ScriptController.action 2"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.wind gust strength min"/>
+	<binding type="IntMeasurement" name="StringConverter.integer digits"/>
+	<binding type="EnumMeasurement" name="Placement.shadow cast"/>
+	<binding type="IntMeasurement" name="RedOctanePeripheralScriptObject.size of region 1"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.light fade distance enabled"/>
+	<binding type="FloatMeasurement" name="AnimationInfo.blend Percent"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Shadow Distance enabled"/>
+	<binding type="FloatMeasurement" name="DirectionalLightInfo.ambient specular multiplier"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.end accel randomness"/>
+	<binding type="ColorMeasurement" name="GeneratorAppearanceFields.end color randomness"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.haze far sky amount"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.justify"/>
+	<binding type="FloatMeasurement" name="SoundInfo.attenuation distance silent"/>
+	<binding type="ButtonMeasurement" name="ScriptController.DPad down"/>
+	<binding type="EnumMeasurement" name="ActorPhysics.move type"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.Virtual - display switch button"/>
+	<binding type="IntMeasurement" name="OnlineEventReporter.trap door 2 activated?"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.mid drag"/>
+	<binding type="EnumMeasurement" name="SoundInfo.volume listener mode"/>
+	<binding type="SetVariant" name="ClonedSequence.clones"/>
+	<binding type="IntMeasurement" name="System.Script Ticks"/>
+	<binding type="FloatMeasurement" name="ButtonMeasurement.pressure value"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.start gravity"/>
+	<binding type="AbstractScriptVariant" name="AbstractScriptGroup.its"/>
+	<binding type="ColorMeasurement" name="MoodBoxInfo.tint"/>
+	<binding type="FloatMeasurement" name="WiiController.pointer roll"/>
+	<binding type="FloatMeasurement" name="ActorPhysics.ground deceleration"/>
+	<binding type="FloatMeasurement" name="ScaleMeasurement.uniform"/>
+	<binding type="IntMeasurement" name="System.Video Recorder Buffer Length"/>
+	<binding type="EnumMeasurement" name="Sequence.allow restart"/>
+	<binding type="ColorMeasurement" name="SpriteInfo.color"/>
+	<binding type="FloatMeasurement" name="ViewportBloomEffectInfo.sky level"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.haze min enabled"/>
+	<binding type="JoystickMeasurement" name="ScriptController.alt stick"/>
+	<binding type="FloatMeasurement" name="SoundInfo.reverb amount 1"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.bloom skybox amount"/>
+	<binding type="tfbScriptObject" name="ActorInfo.vehicle"/>
+	<binding type="SetVariant" name="SoundInfo.active sound streams"/>
+	<binding type="EnumMeasurement" name="ActorInfo.ignore player presence"/>
+	<binding type="ButtonMeasurement" name="WiiController.button 2"/>
+	<binding type="ButtonMeasurement" name="ScriptController.Play requested"/>
+	<binding type="FloatMeasurement" name="GeneratorInfo.bloom intensity"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.action flip"/>
+	<binding type="ReferenceVariant" name="ClonedSequence.parent"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Fog Far Sky Color enabled"/>
+	<binding type="FloatMeasurement" name="ActorPhysics.jump acceleration"/>
+	<binding type="FloatMeasurement" name="SoundInfo.pan"/>
+	<binding type="ReferenceVariant" name="GeneratorInfo.generation"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.fade effect"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.spawn volume height"/>
+	<binding type="EnumMeasurement" name="OnlineScriptObject.game event player"/>
+	<binding type="EnumMeasurement" name="RedOctanePeripheralScriptObject.audio LED modulation"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.shadow local influence enabled"/>
+	<binding type="ScriptSetReference" name="OnlineEventReporter.player 2 top data"/>
+	<binding type="IntMeasurement" name="ViewportTitleSafeInfo.upper margin"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.hue enabled"/>
+	<binding type="EnumMeasurement" name="System.Dump Memory"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.end accel direction spread"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.light fade range"/>
+	<binding type="EnumMeasurement" name="ActorInfo.draw behind enabled"/>
+	<binding type="ColorMeasurement" name="MoodBoxInfo.Target_1 light 2 color"/>
+	<binding type="IntMeasurement" name="OnlineEventReporter.player 1 health"/>
+	<binding type="VectorMeasurement" name="ContactInfo.normal"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 light 2 color enabled"/>
+	<binding type="EnumMeasurement" name="Sequence.looping"/>
+	<binding type="FloatMeasurement" name="LightInfo.falloff rate"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.ao radius"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.wind gust direction adjustment"/>
+	<binding type="ColorMeasurement" name="RibbonFields.end color"/>
+	<binding type="EnumMeasurement" name="OnlineScriptObject.game event index"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.front tire compression damper"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.title safe zone"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 DOF Far"/>
+	<binding type="SetVariant" name="AbstractPlacement.attached objects"/>
+	<binding type="ColorMeasurement" name="ViewportFogEffectInfo.fog color of sky dome"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 Bloom Max Limit"/>
+	<binding type="IntMeasurement" name="OnlineScriptObject.config parameter"/>
+	<binding type="FloatMeasurement" name="ViewportFogEffectInfo.caustic speed"/>
+	<binding type="ButtonMeasurement" name="ScriptController.alt button"/>
+	<binding type="EnumMeasurement" name="SoundInfo.reverb setting 1"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.action 3 / snap"/>
+	<binding type="SetVariant" name="RedOctanePeripheralScriptObject.all LED colors"/>
+	<binding type="ReferenceVariant" name="pathConnection.next"/>
+	<binding type="EnumMeasurement" name="Slider.ignores time scales"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.bloom diffuse scale enabled"/>
+	<binding type="EnumMeasurement" name="ScriptController.disable home menu"/>
+	<binding type="IntMeasurement" name="NameExtractor.Name checksum"/>
+	<binding type="EnumMeasurement" name="System.Save State"/>
+	<binding type="FloatMeasurement" name="System.Script Timer"/>
+	<binding type="ReferenceVariant" name="RedOctanePeripheralSystemObject.Portal Set"/>
+	<binding type="ColorMeasurement" name="DirectionalLightInfo.ambient color"/>
+	<binding type="FloatMeasurement" name="VFXGenerator.longest life"/>
+	<binding type="ScaleMeasurement" name="GeneratorAppearanceFields.mid size"/>
+	<binding type="IntMeasurement" name="OnlineEventReporter.game dynamic difficulty"/>
+	<binding type="FloatMeasurement" name="GestureStickMeasurement.magnitude"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.action 1 / flip"/>
+	<binding type="FloatMeasurement" name="WiiController.nunchuk roll"/>
+	<binding type="FloatMeasurement" name="SoundInfo.reverb randomness"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.motion blur exposure time enabled"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.sun intensity enabled"/>
+	<binding type="tfbPS3Controller" name="ScriptController.physical controller 4"/>
+	<binding type="PairedFloatMeasurement" name="SpritePositionMeasurement.screen distance"/>
+	<binding type="FloatMeasurement" name="SoundInfo.effects master rate"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.mid gravity"/>
+	<binding type="EnumMeasurement" name="OnlineScriptObject.MOTD - request download message"/>
+	<binding type="FloatMeasurement" name="OnlineEventReporter.game HP multiplier"/>
+	<binding type="ScriptSetReference" name="System.Save Data"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.ao scale"/>
+	<binding type="OrientationMeasurement" name="DirectionalLightInfo.orientation"/>
+	<binding type="IntMeasurement" name="ColorMeasurement.green"/>
+	<binding type="EnumMeasurement" name="AnimationClip.is layered"/>
+	<binding type="FloatMeasurement" name="ViewportInfo.LOD shift scale"/>
+	<binding type="tfbScriptObject" name="MoodBoxInfo.*master"/>
+	<binding type="FloatMeasurement" name="ViewportFogEffectInfo.caustic movement X"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.initial direction spread"/>
+	<binding type="EnumMeasurement" name="RedOctanePeripheralScriptObject.antenna enable"/>
+	<binding type="FloatMeasurement" name="Sequence.percent remaining"/>
+	<binding type="FloatMeasurement" name="GeneratorGenerationFields.lifespan randomness"/>
+	<binding type="ButtonMeasurement" name="ScriptController.accept button"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.engine max torque"/>
+	<binding type="ButtonMeasurement" name="ScriptController.start button"/>
+	<binding type="FloatMeasurement" name="GestureStickMeasurement.heading"/>
+	<binding type="FloatMeasurement" name="ActorPhysics.gravity acceleration"/>
+	<binding type="ReferenceVariant" name="LightInfo.sprite light 3"/>
+	<binding type="EnumMeasurement" name="Placement.fog enabled"/>
+	<binding type="SetVariant" name="LightInfo.inactive lights"/>
+	<binding type="FloatMeasurement" name="GeneratorGenerationFields.lifespan"/>
+	<binding type="ReferenceVariant" name="GeneratorInfo.ribbon"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.wind gust unison"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.fog/caustic effect"/>
+	<binding type="IntMeasurement" name="StringConverter.decimal digits"/>
+	<binding type="OrientationMeasurement" name="MatrixMeasurement.orientation"/>
+	<binding type="tfbScriptObject" name="AbstractScriptGroup.undefined"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.box transition size (-z)"/>
+	<binding type="EnumMeasurement" name="System.Precompile Effects"/>
+	<binding type="ScriptSetReference" name="TextColorConverter.color set"/>
+	<binding type="FloatMeasurement" name="ViewportFogEffectInfo.fog max"/>
+	<binding type="ReferenceVariant" name="AnimationInfo.jump"/>
+	<binding type="SetVariant" name="GeneratorInfo.affectors"/>
+	<binding type="ScriptSetReference" name="OnlineEventReporter.player 1 top data"/>
+	<binding type="ColorMeasurement" name="SpriteInfo.replace color"/>
+	<binding type="EnumMeasurement" name="SoundInfo.3D"/>
+	<binding type="ReferenceVariant" name="System.Device Name"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Mobile shader lod distance enabled"/>
+	<binding type="FloatMeasurement" name="SoundInfo.effects master volume"/>
+	<binding type="FloatMeasurement" name="VectorMeasurement.heading"/>
+	<binding type="ReferenceVariant" name="LightInfo.directional light 1"/>
+	<binding type="IntMeasurement" name="System.Save Space Available"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.Take a Picture"/>
+	<binding type="IntMeasurement" name="RedOctanePeripheralScriptObject.color slide time"/>
+	<binding type="ReferenceVariant" name="AbstractPlacement.parent"/>
+	<binding type="ReferenceVariant" name="ScriptController.controller 4"/>
+	<binding type="FloatMeasurement" name="Placement.deactivation buffer"/>
+	<binding type="IntMeasurement" name="System.Perf Output Delay"/>
+	<binding type="EnumMeasurement" name="System.Enable Video Recording"/>
+	<binding type="ReferenceVariant" name="SetVariant.random"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.center of mass Y-offset"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.action3 / shake / snap"/>
+	<binding type="FloatMeasurement" name="SpriteInfo.screen width"/>
+	<binding type="EnumMeasurement" name="Placement.bring to front"/>
+	<binding type="IntMeasurement" name="DateTime.year"/>
+	<binding type="IntMeasurement" name="DateTime.hour"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.box enabled"/>
+	<binding type="FloatMeasurement" name="ScriptController.joystick Y dead zone"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Mobile small object culling distance enabled"/>
+	<binding type="ReferenceVariant" name="SetVariant.last"/>
+	<binding type="EnumMeasurement" name="LightInfo.type"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.action nunchuk flip"/>
+	<binding type="ReferenceVariant" name="LightningFields.target"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.ambient diffuse scale"/>
+	<binding type="FloatMeasurement" name="SpriteInfo.text spacing"/>
+	<binding type="ScriptSetReference" name="StringConverter.value set"/>
+	<binding type="EnumMeasurement" name="ContactInfo.is trigger"/>
+	<binding type="FloatMeasurement" name="SoundInfo.filter attenuation distance minimum"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Fog Far Sky Amount enabled"/>
+	<binding type="ColorMeasurement" name="LightInfo.specular color"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.bloom effect"/>
+	<binding type="ScaleMeasurement" name="Placement.scale"/>
+	<binding type="ReferenceVariant" name="SpriteInfo.text"/>
+	<binding type="EnumMeasurement" name="ViewportInfo.near/far alpha fade"/>
+	<binding type="EnumMeasurement" name="PS4Controller.controller connection type"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Shadow Pitch enabled"/>
+	<binding type="IntMeasurement" name="ScriptController.Active Controllers"/>
+	<binding type="ScreenMeasurement" name="SpriteInfo.location"/>
+	<binding type="ButtonMeasurement" name="StandardController.R2 button"/>
+	<binding type="ScriptSetReference" name="OnlineEventReporter.trap global data"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.wind gust strength max enabled"/>
+	<binding type="IntMeasurement" name="System.Stop Profile"/>
+	<binding type="IntMeasurement" name="OnlineEventReporter.game area elemental affinity"/>
+	<binding type="ReferenceVariant" name="System.Level to Install"/>
+	<binding type="ButtonMeasurement" name="StandardController.L1 button"/>
+	<binding type="ReferenceVariant" name="OnlineScriptObject.Primary User Display Name"/>
+	<binding type="IntMeasurement" name="RedOctanePeripheralScriptObject.save offset"/>
+	<binding type="PairedFloatMeasurement" name="SpritePositionMeasurement.X offset"/>
+	<binding type="IntMeasurement" name="MoodBoxInfo.ID"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.light fade range enabled"/>
+	<binding type="FloatMeasurement" name="ActorPhysics.ground turn rate"/>
+	<binding type="FloatMeasurement" name="JoystickMeasurement.X"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.haze far sky tint enabled"/>
+	<binding type="FloatMeasurement" name="SpriteInfo.priority"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.contrast enabled"/>
+	<binding type="EnumMeasurement" name="CollisionInfo.interacts with actors"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.haze near sky tint enabled"/>
+	<binding type="SetVariant" name="AnimationInfo.events"/>
+	<binding type="IntMeasurement" name="System.Start Profile"/>
+	<binding type="FloatMeasurement" name="CollisionInfo.local X offset"/>
+	<binding type="IntMeasurement" name="ScriptController.erreula error result code"/>
+	<binding type="SetVariant" name="ActorInfo.playing animations"/>
+	<binding type="FloatMeasurement" name="ScaleMeasurement.Y"/>
+	<binding type="IntMeasurement" name="OnlineEventReporter.trap door 1 activated?"/>
+	<binding type="ButtonMeasurement" name="ScriptController.action 4"/>
+	<binding type="IntMeasurement" name="ViewportTitleSafeInfo.left margin"/>
+	<binding type="FloatMeasurement" name="sequenceEvent.event time"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 Bloom Radius"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 DOF Near enabled"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 Shadow Distance"/>
+	<binding type="SetVariant" name="ActorInfo.attach nodes"/>
+	<binding type="SetVariant" name="CutsceneInfo.events"/>
+	<binding type="EnumMeasurement" name="System.Hardware Platform"/>
+	<binding type="IntMeasurement" name="RedOctanePeripheralScriptObject.connected count"/>
+	<binding type="FloatMeasurement" name="ViewportInfo.frame render load"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.rear tire relaxation damper"/>
+	<binding type="FloatMeasurement" name="LightInfo.quadratic attenuation factor"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.wind gust duration max"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.shadow local influence"/>
+	<binding type="EnumMeasurement" name="System.BLE - Clear gamepad favorite"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.haze start depth"/>
+	<binding type="FloatMeasurement" name="ActorPhysics.air deceleration"/>
+	<binding type="EnumMeasurement" name="ViewportInfo.3D scene refresh"/>
+	<binding type="EnumMeasurement" name="System.Can Pause Suspended"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 ambient enabled"/>
+	<binding type="ReferenceVariant" name="AbstractAttachNode.root"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Fog Near Sky Color enabled"/>
+	<binding type="FloatMeasurement" name="ViewportShadowsControlInfo.tilt"/>
+	<binding type="ReferenceVariant" name="RedOctanePeripheralSystemObject.Portal"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.wind gust duration min enabled"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.ao radius enabled"/>
+	<binding type="ScaleMeasurement" name="GeneratorAppearanceFields.mid size randomness"/>
+	<binding type="EnumMeasurement" name="System.Render Disabled"/>
+	<binding type="ScriptReference" name="OpTopLevelBehavior.my"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.action snap"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.rear suspension length"/>
+	<binding type="SetVariant" name="SpriteMatrixMeasurement.attached objects"/>
+	<binding type="MatrixMeasurement" name="PlacementReference.remembered"/>
+	<binding type="IntMeasurement" name="OnlineEventReporter.event code"/>
+	<binding type="IntMeasurement" name="NameExtractor.Instantiation size"/>
+	<binding type="FloatMeasurement" name="ActorPhysics.time scale"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.depth of field effect"/>
+	<binding type="IntMeasurement" name="System.Installation Percent"/>
+	<binding type="EnumMeasurement" name="StringConverter.'@' representation"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.steer sensitivity"/>
+	<binding type="EnumMeasurement" name="ViewportFogEffectInfo.turn on caustic effect"/>
+	<binding type="IntMeasurement" name="SpriteMatrixMeasurement.ID"/>
+	<binding type="EnumMeasurement" name="SoundInfo.global limit behavior"/>
+	<binding type="IntMeasurement" name="ScriptController.display no home icon"/>
+	<binding type="EnumMeasurement" name="RedOctaneTagScriptObject.presence"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 Fog Near"/>
+	<binding type="ScaleMeasurement" name="SpriteInfo.scale"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.sun intensity"/>
+	<binding type="IntMeasurement" name="VfxManager.vfx report pool"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 Fog Far enabled"/>
+	<binding type="SetVariant" name="CutsceneInfo.attach nodes"/>
+	<binding type="IntMeasurement" name="CutsceneInfo.active camera"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.haze max enabled"/>
+	<binding type="SetVariant" name="MoodBoxInfo.boxes"/>
+	<binding type="SetVariant" name="CollisionInfo.environment contacts"/>
+	<binding type="IntMeasurement" name="OnlineEventReporter.language"/>
+	<binding type="SetVariant" name="SpriteInfo.active"/>
+	<binding type="ColorMeasurement" name="ViewportInfo.background color"/>
+	<binding type="IntMeasurement" name="RedOctanePeripheralScriptObject.size of magic moment data"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 DOF Blur Level enabled"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.container sprite"/>
+	<binding type="FloatMeasurement" name="SoundInfo.music volume 2"/>
+	<binding type="ReferenceVariant" name="ActorInfo.controller"/>
+	<binding type="IntMeasurement" name="AbstractPlacement.ID"/>
+	<binding type="EnumMeasurement" name="System.Dump Statistics"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.dof near end depth enabled"/>
+	<binding type="FloatMeasurement" name="ViewportInfo.frame logic load"/>
+	<binding type="tfbScriptObject" name="ActorInfo.movement"/>
+	<binding type="EnumMeasurement" name="System.Locale"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 DOF Near"/>
+	<binding type="FloatMeasurement" name="ViewportShadowsControlInfo.intensity"/>
+	<binding type="FloatMeasurement" name="ActorPhysics.jump max speed"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.wind gust duration max enabled"/>
+	<binding type="FloatMeasurement" name="GeneratorAppearanceFields.start rotation speed randomness"/>
+	<binding type="FloatMeasurement" name="GestureStickMeasurement.Y"/>
+	<binding type="FloatMeasurement" name="Sequence.playback rate"/>
+	<binding type="FloatMeasurement" name="SoundInfo.filter maximum percent"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.center of mass X-offset"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Target_1 light 3 color enabled"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.bloom luminance cutoff enabled"/>
+	<binding type="FloatMeasurement" name="OrientationMeasurement.relative roll"/>
+	<binding type="EnumMeasurement" name="LightInfo.visible"/>
+	<binding type="ScriptSetReference" name="OnlineEventReporter.player 1 global data"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.dof start depth"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.action nunchuk shake"/>
+	<binding type="IntMeasurement" name="SpriteInfo.point size"/>
+	<binding type="ReferenceVariant" name="ClonedSequence.activator"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.spawn volume width"/>
+	<binding type="FloatMeasurement" name="DirectionalLightInfo.ambient diffuse multiplier"/>
+	<binding type="FloatMeasurement" name="WiiController.pointer tilt"/>
+	<binding type="ReferenceVariant" name="AbstractPlacement.ground"/>
+	<binding type="ButtonMeasurement" name="ScriptController.DPad right"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.Mobile lod 1 distance enabled"/>
+	<binding type="SetVariant" name="SpriteInfo.playing animations"/>
+	<binding type="FloatMeasurement" name="Placement.activation range"/>
+	<binding type="EnumMeasurement" name="CollisionInfo.interacts with level mesh"/>
+	<binding type="EnumMeasurement" name="ViewportInfo.viewport enabled"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.tint enabled"/>
+	<binding type="EnumMeasurement" name="System.Gather Performance Statistics"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.start accel direction spread"/>
+	<binding type="FloatMeasurement" name="ViewportFogEffectInfo.caustic skin scale"/>
+	<binding type="FloatMeasurement" name="WiiController.pointer Y acceleration"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.box transition size (+x)"/>
+	<binding type="FloatMeasurement" name="ViewportFogEffectInfo.caustic scale"/>
+	<binding type="FloatMeasurement" name="ScriptController.last input time"/>
+	<binding type="ReferenceVariant" name="SpriteInfo.Virtual - left analog base sprite"/>
+	<binding type="ScriptSetReference" name="OnlineEventReporter.player 2 bottom data"/>
+	<binding type="FloatMeasurement" name="JoystickMeasurement.Y"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.wind gust frequency"/>
+	<binding type="FloatMeasurement" name="SoundInfo.filter randomness"/>
+	<binding type="EnumMeasurement" name="ScriptController.force sign in"/>
+	<binding type="IntMeasurement" name="OnlineScriptObject.game event value"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.action nunchuk snap"/>
+	<binding type="EnumMeasurement" name="ScriptController.rich presence"/>
+	<binding type="ReferenceVariant" name="SpriteInfo.Virtual - button select sprite"/>
+	<binding type="ReferenceVariant" name="SpriteMatrixMeasurement.attach node"/>
+	<binding type="EnumMeasurement" name="RedOctanePeripheralScriptObject.save type"/>
+	<binding type="ReferenceVariant" name="OnlineScriptObject.MOTD - campaign id"/>
+	<binding type="ReferenceVariant" name="System.Load Level"/>
+	<binding type="EnumMeasurement" name="SetVariant.choose next randomly"/>
+	<binding type="ReferenceVariant" name="AnimationInfo.ambient"/>
+	<binding type="IntMeasurement" name="System.Load Level Variation"/>
+	<binding type="EnumMeasurement" name="System.Installation Speed"/>
+	<binding type="ButtonMeasurement" name="ScriptController.DPad up"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.spawn volume length"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 Shadow Yaw"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.haze density"/>
+	<binding type="EnumMeasurement" name="GeneratorMovementFields.spawn volume distribution"/>
+	<binding type="FloatMeasurement" name="SpriteInfo.depth"/>
+	<binding type="tfbPS3Controller" name="ScriptController.physical controller 3"/>
+	<binding type="SetVariant" name="CutsceneInfo.actor animations"/>
+	<binding type="StandardController" name="ScriptController.360 / PS"/>
+	<binding type="JoystickMeasurement" name="ScriptController.main stick"/>
+	<binding type="EnumMeasurement" name="RedOctaneTagScriptObject.save state"/>
+	<binding type="EnumMeasurement" name="System.BLE - Clear portal favorite"/>
+	<binding type="FloatMeasurement" name="ViewportFogEffectInfo.fog of yon ignore"/>
+	<binding type="FloatMeasurement" name="ViewportFilterEffectInfo.non-sprite intensity"/>
+	<binding type="ReferenceVariant" name="SpriteInfo.Virtual - button context sprite"/>
+	<binding type="WiiController" name="ScriptController.Wii"/>
+	<binding type="SetVariant" name="CollisionInfo.contacts with me"/>
+	<binding type="SetVariant" name="LightInfo.active lights"/>
+	<binding type="EnumMeasurement" name="SoundInfo.streamed"/>
+	<binding type="EnumMeasurement" name="SpriteInfo.visible"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.Target_1 Bloom Min Limit"/>
+	<binding type="IntMeasurement" name="SpriteInfo.replace color percentage"/>
+	<binding type="EnumMeasurement" name="ScriptController.rumble disabled"/>
+	<binding type="ControllerGestures" name="ScriptController.Gestures"/>
+	<binding type="ReferenceVariant" name="SpriteInfo.Virtual - button A sprite"/>
+	<binding type="pathConnection" name="ActorWaypoint.backward"/>
+	<binding type="PS4Controller" name="ScriptController.PS4"/>
+	<binding type="FloatMeasurement" name="ViewportBloomEffectInfo.level"/>
+	<binding type="VectorMeasurement" name="ActorInfo.velocity"/>
+	<binding type="FloatMeasurement" name="SoundInfo.music volume 3"/>
+	<binding type="ScreenMeasurement" name="ViewConverter.screen location"/>
+	<binding type="FloatMeasurement" name="SoundInfo.reverb amount 2"/>
+	<binding type="EnumMeasurement" name="CollisionInfo.shape"/>
+	<binding type="FloatMeasurement" name="GeneratorAppearanceFields.initial rotation angle randomness"/>
+	<binding type="FloatMeasurement" name="RedOctanePeripheralScriptObject.battery remaining"/>
+	<binding type="FloatMeasurement" name="ViewportDepthOfFieldEffectInfo.focus distance"/>
+	<binding type="ColorMeasurement" name="DirectionalLightInfo.diffuse color"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.haze min"/>
+	<binding type="EnumMeasurement" name="LightningFields.freeze animation"/>
+	<binding type="ReferenceVariant" name="LightInfo.directional light 2"/>
+	<binding type="ScriptSetReference" name="OnlineEventReporter.player 2 global data"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.end accel"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.box width"/>
+	<binding type="FloatMeasurement" name="MoodBoxInfo.wind gust strength max"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.pseudo right stick"/>
+	<binding type="FloatMeasurement" name="VectorMeasurement.pitch"/>
+	<binding type="ReferenceVariant" name="ViewportInfo.shadows control"/>
+	<binding type="tfbScriptObject" name="ActorInfo.collision volume"/>
+	<binding type="EnumMeasurement" name="System.Installation State"/>
+	<binding type="ColorMeasurement" name="MoodBoxInfo.Target_1 Fog Far Sky Color"/>
+	<binding type="GestureMeasurement" name="ControllerGestures.action shake"/>
+	<binding type="ReferenceVariant" name="LightInfo.sprite light 1"/>
+	<binding type="IntMeasurement" name="GeneratorGenerationFields.currently alive"/>
+	<binding type="ReferenceVariant" name="ScriptController.controller 3"/>
+	<binding type="FloatMeasurement" name="ViewportInfo.screen filter intensity"/>
+	<binding type="FloatMeasurement" name="Sequence.raw duration"/>
+	<binding type="EnumMeasurement" name="SoundInfo.category"/>
+	<binding type="FloatMeasurement" name="ViewportFadeEffectInfo.level"/>
+	<binding type="EnumMeasurement" name="GeneratorMovementFields.initial speed direction"/>
+	<binding type="ReferenceVariant" name="GeneratorInfo.movement"/>
+	<binding type="EnumMeasurement" name="MoodBoxInfo.haze end depth enabled"/>
+	<binding type="ColorMeasurement" name="RedOctanePeripheralScriptObject.LED color"/>
+	<binding type="EnumMeasurement" name="SoundInfo.music disabled"/>
+	<binding type="FloatMeasurement" name="ViewportShadowsControlInfo.facing"/>
+	<binding type="FloatMeasurement" name="GeneratorMovementFields.mid accel randomness"/>
+	<binding type="FloatMeasurement" name="VehiclePhysics.max steer angle"/>
+	<binding type="FloatMeasurement" name="OrientationMeasurement.roll"/>
+	<binding type="EnumMeasurement" name="ScriptController.allow multiple BLE gamepads"/>
+	<binding type="FloatMeasurement" name="CollisionInfo.local Z offset"/>
+	<binding type="ReferenceVariant" name="SpriteInfo.Virtual - button X sprite"/>
+	<binding type="IntMeasurement" name="RedOctanePeripheralScriptObject.size of remaining data"/>
+	<binding type="IntMeasurement" name="SoundInfo.priority"/>
+	<binding type="FloatMeasurement" name="ActorPhysics.air turn rate"/>
+</tfbbindings>

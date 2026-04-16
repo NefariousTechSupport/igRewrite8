@@ -9,7 +9,7 @@
 
 namespace igLibrary.Sg
 {
-	public class igObjectAnnotationTable : igObject
+	public class igObjectAnnotationTable : igHashTable
 	{
 		public igObjectList _objects;
 		public igEffectAnnotationListList _annotations;

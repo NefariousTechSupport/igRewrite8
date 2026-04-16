@@ -14,4 +14,15 @@ namespace igLibrary.Gfx
 	}
 
 	public class igVertexBlenderDefault : igVertexBlender {}
+	public class igVertexBlenderWii : igVertexBlender {}
+	public class igVertexBlenderWiiIndexed : igVertexBlender {}
+	public class igVertexBlenderWiiIndexed_P32N16W16 : igVertexBlender {}
+	public class igVertexBlenderWiiIndexed_P16N16W16 : igVertexBlender {}
+	public class igVertexBlenderWiiIndexed_P16N8W8 : igVertexBlender {}
+	public class igVertexBlenderCustom_P32 : igVertexBlender {}
+	public class igVertexBlenderCustom_P32N32 : igVertexBlender {}
+	public class igVertexBlenderCustom_P32N32B32T32 : igVertexBlender {}
+	public class igVertexBlenderCustom_P32NCompressed : igVertexBlender {}
+	public class igVertexBlenderCustom_P32NBTCompressed : igVertexBlender {}
+
 }

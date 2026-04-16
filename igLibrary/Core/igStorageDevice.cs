@@ -13,6 +13,10 @@ namespace igLibrary.Core
 	{
 		public string _name;
 		public string _path;
+		public string _internalNativePath;
+		public string _nativePath;
+		public string _nativeMedia;
+		public int _priority;
 		public uint _readMediaAlignment;
 		public uint _writeMediaAlignment;
 		public uint _memoryAlignment;

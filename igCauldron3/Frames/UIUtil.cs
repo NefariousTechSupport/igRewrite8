@@ -41,6 +41,8 @@ namespace igCauldron3
 		public static readonly (igArkCore.EGame, string)[] sGameNames = new (igArkCore.EGame, string)[]
 		{
 			(igArkCore.EGame.EV_None,                    "Select a Game"),
+			(igArkCore.EGame.EV_SkylandersSpyrosAdventure, "Skylanders: Spyros Adventure"),
+			(igArkCore.EGame.EV_SkylandersGiantsB1, "Skylanders Giants Build 1"),
 			(igArkCore.EGame.EV_SkylandersTrapTeam,      "Skylanders Trap Team 1.1.X"),
 			(igArkCore.EGame.EV_SkylandersSuperchargers, "Skylanders Superchargers 1.6.X"),
 			(igArkCore.EGame.EV_SkylandersImaginators,   "Skylanders Imaginators 1.1.X")

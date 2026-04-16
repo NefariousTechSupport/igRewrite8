@@ -69,11 +69,11 @@ namespace igLibrary.Core
 					if(!saver._stringRefList.TryGetValue((string)value, out uint offset))
 					{
 						igIGZSaver.SaverSection stringSection = saver.GetSaverSection(igMemoryContext.Singleton.GetMemoryPoolByName("String"));
-						stringSection._sh.Seek(stringSection.FindFreeMemory((byte)((saver._version < 7) ? 1u : 2u)));
+						stringSection._sh.Seek(stringSection.FindFreeMemory((byte)((saver._version < 7 && saver._version != 5) ? 1u : 2u)));
 						offset = saver.SerializeOffset(stringSection._sh.Tell(), stringSection);
 						saver._stringRefList.Add((string)value, offset);
 						stringSection._sh.WriteString((string)value);
-						stringSection.PushAlignment((saver._version < 7) ? 1u : 2u);
+						stringSection.PushAlignment((saver._version < 7 && saver._version != 5) ? 1u : 2u);
 					}
 					section._runtimeFields._stringRefs.Add(basePos);
 					section._sh.WriteUInt32(offset);

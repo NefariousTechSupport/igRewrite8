@@ -37,7 +37,8 @@ namespace igCauldron3
 			IigDataList dataList = (IigDataList)obj;
 			IigMemory memValue = dataList.GetData();
 			object? castedObject = memValue;
-			FieldRenderer.RenderField(id, "Data", castedObject, meta._metaFields[2], (value) => {
+			FieldRenderer.RenderField(id, "Data", castedObject, meta._metaFields[2], (value) =>
+			{
 				dataList.SetData(memValue);
 				dataList.SetCount(memValue.GetData().Length);
 				dataList.SetCapacity(memValue.GetData().Length);

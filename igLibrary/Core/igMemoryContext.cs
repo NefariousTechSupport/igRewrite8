@@ -44,11 +44,13 @@ namespace igLibrary.Core
 			_pools.Add("Vertex", 				new igMemoryPool("Vertex"));
 			_pools.Add("VertexEdge", 			new igMemoryPool("VertexEdge"));
 			_pools.Add("VertexObject", 			new igMemoryPool("VertexObject"));
-			_pools.Add("Image", 				new igMemoryPool("Image"));
+            _pools.Add("Collision",             new igMemoryPool("Collision"));
+            _pools.Add("Image", 				new igMemoryPool("Image"));
 			_pools.Add("ImageObject", 			new igMemoryPool("ImageObject"));
 			_pools.Add("Attribute", 			new igMemoryPool("Attribute"));
 			_pools.Add("Node", 					new igMemoryPool("Node"));
-			_pools.Add("Audio", 				new igMemoryPool("Audio"));
+            _pools.Add("Text",                  new igMemoryPool("Text"));
+            _pools.Add("Audio", 				new igMemoryPool("Audio"));
 			_pools.Add("AudioDsp", 				new igMemoryPool("AudioDsp"));
 			_pools.Add("AudioSample", 			new igMemoryPool("AudioSample"));
 			_pools.Add("AudioSampleSecondary", 	new igMemoryPool("AudioSampleSecondary"));

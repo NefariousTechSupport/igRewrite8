@@ -399,6 +399,7 @@ namespace igLibrary.Gfx
 		{
 			InitializeIndexFormats();
 			InitializeVertexFormatPlatforms();
+			InitializeVertexBlenders();
 			InitializeMetaImages();
 		}
 
@@ -452,6 +453,7 @@ namespace igLibrary.Gfx
 			AddVertexFormatPlatform<igVertexFormatMetal>  (vertexformat);
 			AddVertexFormatPlatform<igVertexFormatPS3>    (vertexformat);
 			AddVertexFormatPlatform<igVertexFormatWii>    (vertexformat);
+			AddVertexFormatPlatform<igVertexFormatWiiIndexed>(vertexformat);
 			AddVertexFormatPlatform<igVertexFormatXenon>  (vertexformat);
 			AddVertexFormatPlatform<igVertexFormatOSX>    (vertexformat);
 			AddVertexFormatPlatform<igVertexFormatDX11>   (vertexformat);
@@ -487,8 +489,19 @@ namespace igLibrary.Gfx
 			igObjectStreamManager.Singleton.AddObjectDirectory(vertexblender, vertexblender._name._string);
 			igObjectHandleManager.Singleton.AddSystemNamespace("vertexblender");
 
+
 			AddVertexBlender<igVertexBlenderDefault>(vertexblender);
-		}
+            AddVertexBlender<igVertexBlenderWii>(vertexblender);
+            AddVertexBlender<igVertexBlenderWiiIndexed>(vertexblender);
+            AddVertexBlender<igVertexBlenderWiiIndexed_P32N16W16>(vertexblender);
+            AddVertexBlender<igVertexBlenderWiiIndexed_P16N16W16>(vertexblender);
+            AddVertexBlender<igVertexBlenderWiiIndexed_P16N8W8>(vertexblender);
+            AddVertexBlender<igVertexBlenderCustom_P32>(vertexblender);
+            AddVertexBlender<igVertexBlenderCustom_P32N32>(vertexblender);
+            AddVertexBlender<igVertexBlenderCustom_P32N32B32T32>(vertexblender);
+            AddVertexBlender<igVertexBlenderCustom_P32NCompressed>(vertexblender);
+            AddVertexBlender<igVertexBlenderCustom_P32NBTCompressed>(vertexblender);
+        }
 
 
 		/// <summary>

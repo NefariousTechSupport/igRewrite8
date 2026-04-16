@@ -7,16 +7,22 @@
 */
 
 
+using igLibrary.Core;
+using System.Globalization;
+
 namespace igLibrary.Tfb.Script
 {
 	public class tfbScriptObject : igNamedObject
 	{
-		public ulong _getFunc;
-		public ulong _setFunc;
-		public ulong _resetFunc;
+		public object? _getFunc;
+		public object? _setFunc;
+		public object? _resetFunc;
 		public static tfbScriptObject? _undefinedObject;
-
-		//public static ScriptGroupStack _emptySet;
-		public static igObject? _emptySet;
-	}
+		public static tfbScriptObject? _itsInterface;
+		public static tfbScriptObject? _itsObject;
+		public static StringInfo? _levelLoadRequest;
+		public static float _gameLogicScale;
+		public static float _scriptTime;
+		public static igObject? _emptySet; //public static ScriptGroupStack _emptySet;
+    }
 }	

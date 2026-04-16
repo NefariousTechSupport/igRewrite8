@@ -12,6 +12,12 @@ namespace igLibrary.Gfx
 	public class igPlatformMetaImage : igMetaImage
 	{
 		public IG_GFX_PLATFORM _platform;
+		public IG_GFX_PLATFORM _supportedPlatform;
+		public int _platformEnum;
+		public int _surfaceEnum;
+		public ushort _alignment;
+		public ushort _padding;
+		public string? _canonicalName;
 		public override uint GetPadding(uint width)
 		{
 			switch(_platform)

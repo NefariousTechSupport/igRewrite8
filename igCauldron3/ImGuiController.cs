@@ -339,11 +339,14 @@ void main()
 			io.KeyMap[(int)ImGuiKey.Escape] = (int)OpenTK.Windowing.GraphicsLibraryFramework.Keys.Escape;
 			io.KeyMap[(int)ImGuiKey.A] = (int)OpenTK.Windowing.GraphicsLibraryFramework.Keys.A;
 			io.KeyMap[(int)ImGuiKey.C] = (int)OpenTK.Windowing.GraphicsLibraryFramework.Keys.C;
-			io.KeyMap[(int)ImGuiKey.V] = (int)OpenTK.Windowing.GraphicsLibraryFramework.Keys.V;
+            io.KeyMap[(int)ImGuiKey.F] = (int)OpenTK.Windowing.GraphicsLibraryFramework.Keys.F;
+            io.KeyMap[(int)ImGuiKey.V] = (int)OpenTK.Windowing.GraphicsLibraryFramework.Keys.V;
 			io.KeyMap[(int)ImGuiKey.X] = (int)OpenTK.Windowing.GraphicsLibraryFramework.Keys.X;
 			io.KeyMap[(int)ImGuiKey.Y] = (int)OpenTK.Windowing.GraphicsLibraryFramework.Keys.Y;
 			io.KeyMap[(int)ImGuiKey.Z] = (int)OpenTK.Windowing.GraphicsLibraryFramework.Keys.Z;
-		}
+            io.KeyMap[(int)ImGuiKey.F3] = (int)OpenTK.Windowing.GraphicsLibraryFramework.Keys.F3;
+            io.KeyMap[(int)ImGuiKey.LeftShift] = (int)OpenTK.Windowing.GraphicsLibraryFramework.Keys.LeftShift;
+        }
 
 		private void RenderImDrawData(ImDrawDataPtr draw_data)
 		{

@@ -35,7 +35,7 @@ namespace igLibrary.Core
 				if(metaFields[i] is igPropertyFieldMetaField) continue;
 				if(!metaFields[i].IsApplicableForPlatform(loader._platform)) continue;
 
-				if(!metaFields[i]._properties._persistent) continue;
+				if(loader._version > 5 && !metaFields[i]._properties._persistent) continue;
 
 				loader._stream.Seek(objectOffset + metaFields[i]._offsets[loader._platform]);
 
@@ -65,7 +65,7 @@ namespace igLibrary.Core
 
 				object? data = null;
 
-				if(metaFields[i]._properties._persistent)
+				if(metaFields[i]._properties._persistent || saver._version == 0x5) // dumb hack because SSA metadata has broken "_persistent" values
 				{
 					FieldInfo? field = metaFields[i]._fieldHandle;
 

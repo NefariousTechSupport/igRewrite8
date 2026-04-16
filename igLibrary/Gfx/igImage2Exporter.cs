@@ -114,6 +114,7 @@ namespace igLibrary.Gfx
 				dwABitMask = default;
 			}
 		}
+
 		public static void ExportToDds(igImage2 image, Stream dst)
 		{
 			DdsHeader header = new DdsHeader();
@@ -128,20 +129,20 @@ namespace igLibrary.Gfx
 			header.dwDepth = image._depth;
 			header.dwMipMapCount = image._levelCount;
 
-			if(image._format._isCompressed)
+			if (image._format._isCompressed)
 			{
 				header.ddspf.dwFlags |= DdsPixelFormatFlags.DDPF_FOURCC;
 
-				     if(image._format._name.StartsWith("dxt1")) header.ddspf.dwFourCC = DdsPixelFormat.FourCC_DXT1;
-				else if(image._format._name.StartsWith("dxt3")) header.ddspf.dwFourCC = DdsPixelFormat.FourCC_DXT3;
-				else if(image._format._name.StartsWith("dxt5")) header.ddspf.dwFourCC = DdsPixelFormat.FourCC_DXT5;
+				if (image._format._name.StartsWith("dxt1")) header.ddspf.dwFourCC = DdsPixelFormat.FourCC_DXT1;
+				else if (image._format._name.StartsWith("dxt3")) header.ddspf.dwFourCC = DdsPixelFormat.FourCC_DXT3;
+				else if (image._format._name.StartsWith("dxt5")) header.ddspf.dwFourCC = DdsPixelFormat.FourCC_DXT5;
 				else throw new NotImplementedException($"format {image._format._name} is not supported for export");
 			}
 			else
 			{
-				igVec4uc bits = new igVec4uc(image._format.GetBitsRed(), image._format.GetBitsBlue(), image._format.GetBitsGreen(), image._format.GetBitsAlpha());
-				header.ddspf.dwRGBBitCount = image._format._bitsPerPixel;
-				throw new NotImplementedException("pixel formats aren't supported for export right now");
+                igVec4uc bits = new igVec4uc(image._format.GetBitsRed(), image._format.GetBitsBlue(), image._format.GetBitsGreen(), image._format.GetBitsAlpha());
+                header.ddspf.dwRGBBitCount = image._format._bitsPerPixel;
+                throw new NotImplementedException("pixel formats aren't supported for export right now");
 			}
 
 			byte[] imageData = image._data.Buffer;

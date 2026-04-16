@@ -7,8 +7,12 @@
 */
 
 
+using System.Diagnostics;
 using System.Reflection;
+using igCauldron3.Frames;
 using igLibrary.Core;
+using igLibrary.Tfb.Game;
+using igLibrary.Tfb.Script;
 using ImGuiNET;
 
 namespace igCauldron3
@@ -24,7 +28,6 @@ namespace igCauldron3
 		public igObjectDirectoryList _dirs = new igObjectDirectoryList();
 		private int _dirIndex = 0;
 		public igObjectDirectory? CurrentDir => _dirIndex < _dirs._count ? _dirs[_dirIndex] : null;
-
 
 		/// <summary>
 		/// Constructor
@@ -117,6 +120,37 @@ namespace igCauldron3
 		/// <param name="dir">the directory</param>
 		private void RenderDirectory(igObjectDirectory dir)
 		{
+			// här kanske
+			if(ImGui.Button("View Scripts"))
+			{
+				List<tfbScriptInfo> scripts = new List<tfbScriptInfo>();
+				for(int i = 0; i < dir._objectList._count; i++)
+				{
+					if (dir._objectList[i] is tfbScriptInfo t) scripts.Add(t);
+				}
+				if (scripts != null)
+				{
+                    _wnd._frames.Add(new ScriptNavigatorFrame(_wnd, scripts, selected =>
+					{
+						if (selected != null)
+						{
+							OpCodeList codeList = selected._opList;
+							OpCreateVariableList varList = selected._masterVarList;
+							igObjectDirectory capturedDir = DirectoryManagerFrame._instance.CurrentDir!;
+							var scriptDependencies = new Dictionary<List<OpAbstractCreateVariable>, string>(StreamContext.globalScriptDependencies);
+							if (capturedDir._name._string != "app:/permanent/global.bld (level bld)")
+							{
+								Dictionary<List<OpAbstractCreateVariable>, string>? localScriptVariables = ScriptParser.ReadDependencies(capturedDir);
+								foreach (var kv in localScriptVariables)
+								{
+									scriptDependencies.Add(kv.Key, kv.Value);
+								}
+							}
+							_wnd._frames.Add(new TfbScriptEditor(_wnd, capturedDir, selected, scriptDependencies));
+						}
+                    }));
+                }
+			}
 			if(ImGui.TreeNode("Objects"))
 			{
 				for(int i = 0; i < dir._objectList._count; i++)
@@ -156,7 +190,6 @@ namespace igCauldron3
 				ImGui.Text("null");
 				return;
 			}
-
 			//TODO: add editing for these
 			if(obj is igMetaObject mo)
 			{

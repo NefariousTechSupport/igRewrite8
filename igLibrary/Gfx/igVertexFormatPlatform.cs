@@ -20,6 +20,7 @@ namespace igLibrary.Gfx
 	public class igVertexFormatMetal : igVertexFormatPlatform {}
 	public class igVertexFormatPS3 : igVertexFormatPlatform {}
 	public class igVertexFormatWii : igVertexFormatPlatform {}
+	public class igVertexFormatWiiIndexed : igVertexFormatPlatform {}
 	public class igVertexFormatXenon : igVertexFormatPlatform {}
 	public class igVertexFormatOSX : igVertexFormatPlatform {}
 	public class igVertexFormatDX11 : igVertexFormatPlatform {}

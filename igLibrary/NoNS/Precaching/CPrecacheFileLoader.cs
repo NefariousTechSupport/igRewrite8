@@ -205,6 +205,7 @@ namespace igLibrary
 					break;
 				case LoaderTask.GlobalStreamContextLoad:
 					igObjectDirectory globalBld = Tfb.Game.StreamContext.Singleton.Load(line);
+					// Tfb.Script.ScriptParser.ReadDependencies(globalBld) and (bootstrap.bld) // unfinished
 					Tfb.Game.StreamContext.Singleton.HandleGlobalBld(globalBld);
 					break;
 				case LoaderTask.EngineType:
