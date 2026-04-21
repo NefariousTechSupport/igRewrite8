@@ -233,11 +233,13 @@ namespace igCauldron3
 		{
 			for(int i = 0; i < meta._metaFields.Count; i++)
 			{
-				if(meta._metaFields[i] is igStaticMetaField) continue;
-				if(meta._metaFields[i] is igPropertyFieldMetaField) continue;
-				FieldInfo fi = meta._metaFields[i]._fieldHandle!;
+				igMetaField field = meta._metaFields[i];
+
+				if(field is igStaticMetaField) continue;
+				if(field is igPropertyFieldMetaField) continue;
+				FieldInfo fi = field._fieldHandle!;
 				object? raw = fi.GetValue(obj);
-				FieldRenderer.RenderField(id, meta._metaFields[i]._fieldName!, raw, meta._metaFields[i], (value) => fi.SetValue(obj, value));
+				FieldRenderer.RenderField(field._fieldName!, field._fieldName!, raw, field, (value) => fi.SetValue(obj, value));
 			}
 		}
 	}

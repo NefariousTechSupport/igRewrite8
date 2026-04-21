@@ -107,6 +107,7 @@ namespace igCauldron3
 		/// <param name="cb"></param>
 		private static void RenderFieldNoLabel(string id, object? value, igMetaField field, FieldSetCallback cb)
 		{
+			ImGui.PushID(id);
 			RenderFieldAction? renderFunc;
 			Type queryType = field.GetType();
 
@@ -119,9 +120,7 @@ namespace igCauldron3
 			{
 				if(field.IsArray)
 				{
-					ImGui.PushID(id);
 					bool opened = ImGui.TreeNode("Data");
-					ImGui.PopID();
 					if(opened)
 					{
 						Array arrValue = (Array)value!;
@@ -147,6 +146,7 @@ namespace igCauldron3
 			{
 				ImGui.Text($"{field.GetType().Name} is unimplemented.");
 			}
+			ImGui.PopID();
 		}
 
 
