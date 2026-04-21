@@ -40,4 +40,6 @@ namespace igLibrary.Graphics
 			base.WriteIGZFields(saver, section);
 		}
 	}
+
+	public class igMemoryCommandStreamList : igTObjectList<igMemoryCommandStream>{}
 }
