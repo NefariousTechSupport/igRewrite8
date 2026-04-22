@@ -12,15 +12,15 @@ namespace igLibrary.Gfx
 	[igStruct]
 	public struct igSamplerStateBundleDesc
 	{
-		IG_GFX_TEXTURE_FILTER _minFilter;
-		IG_GFX_TEXTURE_FILTER _magFilter;
-		IG_GFX_TEXTURE_WRAP _addressU;
-		IG_GFX_TEXTURE_WRAP _addressV;
-		IG_GFX_TEXTURE_WRAP _addressW;
-		uint _maxAnisotropy;
-		igComparisonFunction _comparisonFunc;
-		bool _comparisonSampler;
-		uint _hash;
-		bool _hashDirty;
+		public IG_GFX_TEXTURE_FILTER _minFilter;
+		public IG_GFX_TEXTURE_FILTER _magFilter;
+		public IG_GFX_TEXTURE_WRAP _addressU;
+		public IG_GFX_TEXTURE_WRAP _addressV;
+		public IG_GFX_TEXTURE_WRAP _addressW;
+		public uint _maxAnisotropy;
+		public igComparisonFunction _comparisonFunc;
+		public bool _comparisonSampler;
+		public uint _hash;
+		public bool _hashDirty;
 	}
 }
