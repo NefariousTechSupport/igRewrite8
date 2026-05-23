@@ -30,6 +30,17 @@ namespace igCauldron3
 
 		private igMetaField? _primitiveType_typeField;
 
+
+		private readonly (igGraphicsMaterial.ConstantType, string)[] kTypeNames =
+		{
+			(igGraphicsMaterial.ConstantType.Bool,      "bool"),
+			(igGraphicsMaterial.ConstantType.Int,       "int"),
+			(igGraphicsMaterial.ConstantType.Float,     "float"),
+			(igGraphicsMaterial.ConstantType.Vec4f,     "Vector 4"),
+			(igGraphicsMaterial.ConstantType.Matrix44f, "Matrix 4x4")
+		};
+
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -124,6 +135,35 @@ namespace igCauldron3
 						ImGui.TableNextColumn();
 
 						ref object value = ref material._constants[i]._value;
+
+						ImGui.PushID("$type$");
+						ImGui.SetNextItemWidth(ImGui.GetColumnWidth() - paddingX);
+						bool typeChanged = UIUtil.EnumComboBox(string.Empty, kTypeNames, ref material._constants[i]._type);
+						if (typeChanged)
+						{
+							switch (material._constants[i]._type)
+							{
+								case igGraphicsMaterial.ConstantType.Bool:
+									value = default(bool);
+									break;
+								case igGraphicsMaterial.ConstantType.Int:
+									value = default(int);
+									break;
+								case igGraphicsMaterial.ConstantType.Float:
+									value = default(float);
+									break;
+								case igGraphicsMaterial.ConstantType.Vec4f:
+									value = default(igVec4f);
+									break;
+								case igGraphicsMaterial.ConstantType.Matrix44f:
+									value = default(igMatrix44f);
+									break;
+							}
+
+							changed = true;
+						}
+						ImGui.PopID();
+
 						ImGui.PushID("$value$");
 						if (value is int intValue)
 						{
