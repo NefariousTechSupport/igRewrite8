@@ -125,6 +125,14 @@ namespace igCauldron3
 					for (int i = 0; i < material._constants.Count; i++)
 					{
 						ImGui.PushID(i);
+
+						ImGui.PushID("$remove$");
+						if (ImGui.Button("-"))
+						{
+							removeIndex = i;
+						}
+						ImGui.PopID();
+
 						ImGui.SameLine();
 
 						ImGui.PushID("$name$");
@@ -231,6 +239,17 @@ namespace igCauldron3
 					}
 
 					ImGui.EndTable();
+
+					ImGui.PushID("$add$");
+					bool add = ImGui.Button("+");
+					ImGui.PopID();
+					if (add)
+					{
+						material._constants.Add(new igGraphicsMaterial.DecompiledConstant(string.Empty, false));
+					}
+					if (removeIndex >= 0)
+					{
+						material._constants.RemoveAt(removeIndex);
 					}
 
 					ImGui.TreePop();
