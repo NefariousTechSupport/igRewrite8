@@ -28,15 +28,31 @@ namespace igLibrary.Graphics
 
 		private DecompiledMaterial? _decompiledCommonState;
 
+		public enum ConstantType
+		{
+			Bool,
+			Int,
+			Float,
+			Vec4f,
+			Matrix44f
+		}
+
 		public class DecompiledConstant
 		{
 			public string _name;
 			public object _value;
+			public ConstantType _type;
 
 			public DecompiledConstant(string name, object value)
 			{
 				_name = name;
 				_value = value;
+				     if (value is bool)        _type = ConstantType.Bool;
+				else if (value is int)         _type = ConstantType.Int;
+				else if (value is float)       _type = ConstantType.Float;
+				else if (value is igVec4f)     _type = ConstantType.Vec4f;
+				else if (value is igMatrix44f) _type = ConstantType.Matrix44f;
+				else throw new Exception("Invalid constant datatype provided");
 			}
 		}
 		public class DecompiledTexture
