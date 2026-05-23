@@ -98,16 +98,31 @@ namespace igCauldron3
 			{
 				if (ImGui.TreeNode("Constants"))
 				{
-					float halfItemWidth = (ImGui.GetContentRegionAvail().X - ImGui.GetCursorPosX()) / 2;
+					ImGui.BeginTable("constants", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders);
+					ImGui.TableSetupColumn("Names");
+					ImGui.TableSetupColumn("Values");
+					ImGui.TableHeadersRow();
+
+					ImGui.TableNextRow();
+					ImGui.TableSetColumnIndex(0);
+
+					float cellCursorPos = ImGui.GetCursorPosX();
 					float paddingX = ImGui.GetStyle().FramePadding.X;
+
+					int removeIndex = -1;
+
 					for (int i = 0; i < material._constants.Count; i++)
 					{
 						ImGui.PushID(i);
-						ImGui.PushItemWidth(halfItemWidth - paddingX);
+						ImGui.SameLine();
+
+						ImGui.PushID("$name$");
+						ImGui.SetNextItemWidth(ImGui.GetColumnWidth() - paddingX);
 						changed |= ImGui.InputText(string.Empty, ref material._constants[i]._name, byte.MaxValue);
-						ImGui.SameLine();
-						ImGui.Text("|");
-						ImGui.SameLine();
+						ImGui.PopID();
+
+						ImGui.TableNextColumn();
+
 						ref object value = ref material._constants[i]._value;
 						if (value is int intValue)
 						{
@@ -133,8 +148,7 @@ namespace igCauldron3
 							{
 								if (ImGui.CalcItemWidth() > 200)
 								{
-									ImGui.PopItemWidth();
-									ImGui.PushItemWidth(200);
+									ImGui.SetNextItemWidth(200);
 								}
 								changed |= ImGui.ColorPicker4(string.Empty, ref numericsVector);
 							}
@@ -169,8 +183,13 @@ namespace igCauldron3
 
 							value = matrixValue;
 						}
-						ImGui.PopItemWidth();
 						ImGui.PopID();
+
+						ImGui.TableNextColumn();
+						ImGui.PopID();
+					}
+
+					ImGui.EndTable();
 					}
 
 					ImGui.TreePop();
