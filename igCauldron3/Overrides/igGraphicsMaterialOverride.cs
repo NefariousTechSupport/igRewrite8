@@ -124,6 +124,7 @@ namespace igCauldron3
 						ImGui.TableNextColumn();
 
 						ref object value = ref material._constants[i]._value;
+						ImGui.PushID("$value$");
 						if (value is int intValue)
 						{
 							changed |= ImGui.InputInt(string.Empty, ref intValue);
@@ -163,22 +164,22 @@ namespace igCauldron3
 						{
 							float startCursorX = ImGui.GetCursorPosX();
 							System.Numerics.Vector4 matrixRow = new System.Numerics.Vector4(matrixValue._m11, matrixValue._m12, matrixValue._m13, matrixValue._m14);
-							changed |= ImGui.InputFloat4(string.Empty, ref matrixRow);
+							changed |= ImGui.InputFloat4("#m1", ref matrixRow);
 							matrixValue._m11 = matrixRow.X; matrixValue._m12 = matrixRow.Y; matrixValue._m13 = matrixRow.Z; matrixValue._m14 = matrixRow.W;
 
 							ImGui.SetCursorPosX(startCursorX);
 							matrixRow = new System.Numerics.Vector4(matrixValue._m21, matrixValue._m22, matrixValue._m23, matrixValue._m24);
-							changed |= ImGui.InputFloat4(string.Empty, ref matrixRow);
+							changed |= ImGui.InputFloat4("#m2", ref matrixRow);
 							matrixValue._m21 = matrixRow.X; matrixValue._m22 = matrixRow.Y; matrixValue._m23 = matrixRow.Z; matrixValue._m24 = matrixRow.W;
 
 							ImGui.SetCursorPosX(startCursorX);
 							matrixRow = new System.Numerics.Vector4(matrixValue._m31, matrixValue._m32, matrixValue._m33, matrixValue._m34);
-							changed |= ImGui.InputFloat4(string.Empty, ref matrixRow);
+							changed |= ImGui.InputFloat4("#m3", ref matrixRow);
 							matrixValue._m31 = matrixRow.X; matrixValue._m32 = matrixRow.Y; matrixValue._m33 = matrixRow.Z; matrixValue._m34 = matrixRow.W;
 
 							ImGui.SetCursorPosX(startCursorX);
 							matrixRow = new System.Numerics.Vector4(matrixValue._m41, matrixValue._m42, matrixValue._m43, matrixValue._m44);
-							changed |= ImGui.InputFloat4(string.Empty, ref matrixRow);
+							changed |= ImGui.InputFloat4("#m4", ref matrixRow);
 							matrixValue._m41 = matrixRow.X; matrixValue._m42 = matrixRow.Y; matrixValue._m43 = matrixRow.Z; matrixValue._m44 = matrixRow.W;
 
 							value = matrixValue;
