@@ -99,8 +99,11 @@ namespace igCauldron3
 				}
 			}
 
-			ImGui.Text(label);
-			ImGui.SameLine();
+			if (!string.IsNullOrEmpty(label))
+			{
+				ImGui.Text(label);
+				ImGui.SameLine();
+			}
 
 			bool changed = false;
 
