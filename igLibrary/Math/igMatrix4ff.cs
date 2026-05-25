@@ -81,7 +81,7 @@ namespace igLibrary.Math
 			_m41 = m41;
 			_m42 = m42;
 			_m43 = m43;
-			_m44 = m14;
+			_m44 = m44;
 		}
 
 
