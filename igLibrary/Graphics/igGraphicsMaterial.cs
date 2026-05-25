@@ -27,6 +27,7 @@ namespace igLibrary.Graphics
 		public igGraphicsMaterialAnimationTimeSource _timeSource;
 
 		private DecompiledMaterial? _decompiledCommonState;
+		private igVector<DecompiledMaterial?> _decompiledTechniques;
 
 		public enum ConstantType
 		{
@@ -68,8 +69,13 @@ namespace igLibrary.Graphics
 			public List<DecompiledConstant> _constants = new List<DecompiledConstant>();
 			public igShaderConstantBundleList _bundles = new igShaderConstantBundleList();
 			public List<DecompiledTexture> _textures = new List<DecompiledTexture>();
-			public igGraphicsStencilStateBundle? _stencilStateBundle = null; 
+			public igStencilStateBundleDesc? _stencilStateBundle = null; 
 			public uint? _stencilRef = null; 
+			public ushort? _commonRenderState = null; 
+			public igDepthStateBundleDesc? _depthStateBundle = null; 
+			public igBlendStateBundleDesc? _blendStateBundle = null; 
+			public igRasterizerStateBundleDesc? _rasterizerStateBundle = null; 
+			public igRenderTargetMaskDesc? _renderTargetMask = null; 
 
 			public DecompiledTexture GetAddTexture(byte register)
 			{
@@ -94,32 +100,37 @@ namespace igLibrary.Graphics
 				if (_commonState != null)
 				{
 					_commonState.Decode(_graphicsObjects);
+
+					_decompiledCommonState = DecompileMaterial(_commonState);
 				}
 
+				_decompiledTechniques = new igVector<DecompiledMaterial?>();
 				for (int t = 0; t < _techniques._count; t++)
 				{
 					igMemoryCommandStream? technique = _techniques[t];
 					if (technique != null)
 					{
 						technique.Decode(_graphicsObjects);
+
+						_decompiledTechniques.Add(DecompileMaterial(technique));
+					}
+					else
+					{
+						_decompiledTechniques.Add(null);
 					}
 				}
 			}
-
-			GetDecompiledCommonState();
 		}
+
+		{
+			{
+			}
 
 		public DecompiledMaterial GetDecompiledCommonState()
 		{
-			if (_decompiledCommonState != null)
-			{
-				return _decompiledCommonState;
-			}
+			Debug.Assert(_decompiledCommonState != null);
 
-			DecompiledMaterial decompiled = DecompileMaterial(_commonState);
-
-			_decompiledCommonState = decompiled;
-			return decompiled;
+			return _decompiledCommonState;
 		}
 
 		private DecompiledMaterial DecompileMaterial(igMemoryCommandStream? stream)
@@ -131,12 +142,36 @@ namespace igLibrary.Graphics
 				return decompiled;
 			}
 
-		for (int i = 0; i < stream._commands.Count; i++)
+			for (int i = 0; i < stream._commands.Count; i++)
 			{
 				igCommandStream.igCommand command = stream._commands[i];
 
 				switch (command._commandId)
 				{
+					case igCommandId.kSetRasterizeStateBundle:
+					{
+						igCommandSetRasterizeStateBundleParameters parameters = (igCommandSetRasterizeStateBundleParameters)command._parameters!;
+						igGraphicsRasterizerStateBundle? bundle = parameters._resource as igGraphicsRasterizerStateBundle;
+						if (bundle == null)
+						{
+							Logging.Warn("Failed to find the bundle for a {0} command", command._commandId);
+							continue;
+						}
+						decompiled._rasterizerStateBundle = bundle._rasterizerStateBundle;
+						break;
+					}
+					case igCommandId.kSetDepthStateBundle:
+					{
+						igCommandSetDepthStateBundleParameters parameters = (igCommandSetDepthStateBundleParameters)command._parameters!;
+						igGraphicsDepthStateBundle? bundle = parameters._resource as igGraphicsDepthStateBundle;
+						if (bundle == null)
+						{
+							Logging.Warn("Failed to find the depth state bundle for a {0} command", command._commandId);
+							continue;
+						}
+						decompiled._depthStateBundle = bundle._depthStateBundle;
+						break;
+					}
 					case igCommandId.kSetStencilStateBundle:
 					{
 						igCommandSetStencilStateBundleParameters parameters = (igCommandSetStencilStateBundleParameters)command._parameters!;
@@ -146,7 +181,7 @@ namespace igLibrary.Graphics
 							Logging.Warn("Failed to find the bundle for a {0} command", command._commandId);
 							continue;
 						}
-						decompiled._stencilStateBundle = bundle;
+						decompiled._stencilStateBundle = bundle._stencilStateBundle;
 						break;
 					}
 					case igCommandId.kSetStencilRef:
@@ -181,6 +216,18 @@ namespace igLibrary.Graphics
 						}
 						DecompiledTexture dTexture = decompiled.GetAddTexture(parameters._register);
 						dTexture._samplerStateBundle = gSampler._samplerStateBundle;
+						break;
+					}
+					case igCommandId.kSetBlendStateBundle:
+					{
+						igCommandSetBlendStateBundleParameters parameters = (igCommandSetBlendStateBundleParameters)command._parameters!;
+						igGraphicsBlendStateBundle? bundle = parameters._resource as igGraphicsBlendStateBundle;
+						if (bundle == null)
+						{
+							Logging.Warn("Failed to find the bandle for a {0} command", command._commandId);
+							continue;
+						}
+						decompiled._blendStateBundle = bundle._blendStateBundle;
 						break;
 					}
 					case igCommandId.kSetConstantBool:
@@ -258,7 +305,7 @@ namespace igLibrary.Graphics
 					case igCommandId.kApplyConstantValueList:
 					{
 						igCommandApplyConstantValueListParameters parameters = (igCommandApplyConstantValueListParameters)command._parameters!;
-						igShaderConstantValueList? list = parameters._bundle as igShaderConstantValueList;
+						igShaderConstantValueList? list = parameters._list as igShaderConstantValueList;
 						if (list == null)
 						{
 							Logging.Warn("Failed to find the list for a {0} command", command._commandId);
@@ -273,6 +320,24 @@ namespace igLibrary.Graphics
 							}
 							decompiled._constants.Add(new DecompiledConstant(list._values[v]._constant._name, valueField.GetValue(list._values[v])!));
 						}
+						break;
+					}
+					case igCommandId.kSetCommonRenderState:
+					{
+						igCommandSetCommonRenderStateParameters parameters = (igCommandSetCommonRenderStateParameters)command._parameters!;
+						decompiled._commonRenderState = parameters._commonRenderState;
+						break;
+					}
+					case igCommandId.kSetRenderTargetMask:
+					{
+						igCommandSetRenderTargetMaskParameters parameters = (igCommandSetRenderTargetMaskParameters)command._parameters!;
+						igGraphicsRenderTargetMask? mask = parameters._resource as igGraphicsRenderTargetMask;
+						if (mask == null)
+						{
+							Logging.Warn("Failed to find the render target mask for a {0} command", command._commandId);
+							continue;
+						}
+						decompiled._renderTargetMask = mask._renderTargetMask;
 						break;
 					}
 					default:
