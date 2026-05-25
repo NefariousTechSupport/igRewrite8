@@ -184,6 +184,7 @@ namespace igLibrary.Core
 				throw new KeyNotFoundException("Failed to find saved object somehow");
 			}
 			section._sh.Seek(deserialized);
+			obj.PreFileWrite();
 			obj.WriteIGZFields(this, section);
 			return offset;
 		}

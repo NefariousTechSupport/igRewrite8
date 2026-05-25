@@ -117,6 +117,7 @@ namespace igLibrary.Core
 			}
 		}
 		public virtual void PostFileRead() {}
+		public virtual void PreFileWrite() {}
 		public virtual void ResetFields() => ResetFields(GetMeta());
 		public virtual void ResetFields(igMetaObject meta)
 		{
