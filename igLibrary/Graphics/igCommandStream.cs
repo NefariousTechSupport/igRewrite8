@@ -7,6 +7,7 @@
 */
 
 
+using System.Diagnostics;
 using System.Reflection;
 using igLibrary.Gfx;
 
@@ -26,6 +27,18 @@ namespace igLibrary.Graphics
 		{
 			public igCommandId _commandId;
 			public object? _parameters;
+
+
+			/// <summary>
+			/// Constructor
+			/// </summary>
+			/// <param name="commandId">The id of the new command</param>
+			/// <param name="parameters">The parameters for the new command</param>
+			public igCommand(igCommandId commandId, object? parameters)
+			{
+				_commandId = commandId;
+				_parameters = parameters;
+			}
 		}
 
 		public List<igCommand> _commands = new List<igCommand>();
@@ -645,8 +658,9 @@ namespace igLibrary.Graphics
 		/// Encodes a command stream
 		/// </summary>
 		/// <param name="platform">The platform</param>
+		/// <param name="graphicsObjects">The graphics object set for the commands</param>
 		/// <param name="stream">The stream</param>
-		protected void EncodeIGZ(IG_CORE_PLATFORM platform, StreamHelper stream)
+		protected void EncodeIGZ(IG_CORE_PLATFORM platform, igGraphicsObjectSet graphicsObjects, StreamHelper stream)
 		{
 			igMetaEnum? commandIdEnum = igArkCore.GetMetaEnum(nameof(igCommandId));
 			if (commandIdEnum == null)
@@ -672,6 +686,7 @@ namespace igLibrary.Graphics
 						continue;
 					}
 
+					alignment = System.Math.Max(alignment, decoderField._platformInfo._alignments[platform]);
 					stream.Align(decoderField._platformInfo._alignments[platform]);
 
 					// had to reimplement writing, sorry
@@ -691,15 +706,30 @@ namespace igLibrary.Graphics
 
 							stream.Align(field.GetAlignment(platform));
 
-							if (field is igSizeTypeMetaField)
+							if (field is igSizeTypeMetaField || field is igObjectRefMetaField)
 							{
-								if (is64Bit)
+								ulong ulongValue;
+								if (field._fieldName == "_resource" || field is igObjectRefMetaField)
 								{
-									stream.WriteUInt64((ulong)itemValue!);
+									int index = graphicsObjects.FindResourceIndex((igGraphicsObject?)itemValue);
+									if (index < 0)
+									{
+										throw new InvalidDataException("Trying to write a command that wasn't added to the object set");
+									}
+									ulongValue = (ulong)index;
 								}
 								else
 								{
-									stream.WriteUInt32((uint)(ulong)itemValue!);
+									ulongValue = (ulong)itemValue!;
+								}
+
+								if (is64Bit)
+								{
+									stream.WriteUInt64(ulongValue);
+								}
+								else
+								{
+									stream.WriteUInt32((uint)ulongValue);
 								}
 							}
 							else if (field is igIntMetaField)
@@ -778,6 +808,8 @@ namespace igLibrary.Graphics
 					}
 				}
 			}
+
+			stream.BaseStream.Flush();
 		}
 	}
 }

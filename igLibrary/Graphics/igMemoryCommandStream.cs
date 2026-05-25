@@ -27,17 +27,25 @@ namespace igLibrary.Graphics
 		}
 
 
-		public override void WriteIGZFields(igIGZSaver saver, igIGZSaver.SaverSection section)
+		/// <summary>
+		/// Encode the command stream with the graphics objects
+		/// </summary>
+		/// <param name="pool">The memory pool to encode into</param>
+		/// <param name="platform">The platform to encode for</param>
+		/// <param name="graphicsObjects">The graphics objects</param>
+		public void Encode(igMemoryPool pool, IG_CORE_PLATFORM platform, igGraphicsObjectSet graphicsObjects)
 		{
+			StreamHelper.Endianness endianness = igAlchemyCore.isPlatformBigEndian(platform) ? StreamHelper.Endianness.Big : StreamHelper.Endianness.Little;
+
 			MemoryStream ms = new MemoryStream();
-			StreamHelper stream = new StreamHelper(ms);
+			StreamHelper stream = new StreamHelper(ms, endianness);
 
-			EncodeIGZ(saver._platform, stream);
+			EncodeIGZ(platform, graphicsObjects, stream);
 
-			_memory = new igMemory<byte>(section._pool, (uint)ms.Length);
+			_memory = new igMemory<byte>(pool, (uint)ms.Length);
+			_memory._optimalCPUReadWrite = true;
+			_memory._alignmentMultiple = 0x10;
 			Array.Copy(ms.GetBuffer(), _memory.Buffer, (uint)ms.Length);
-
-			base.WriteIGZFields(saver, section);
 		}
 	}
 

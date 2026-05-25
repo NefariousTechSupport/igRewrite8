@@ -7,6 +7,7 @@
 */
 
 
+using System.Diagnostics;
 using System.Reflection;
 using igLibrary.Gfx;
 
@@ -44,6 +45,13 @@ namespace igLibrary.Graphics
 			public object _value;
 			public ConstantType _type;
 
+
+			/// <summary>
+			/// Constructor
+			/// </summary>
+			/// <param name="name">The name of the constant</param>
+			/// <param name="value">The value of the constant</param>
+			/// <exception cref="NotImplementedException">The constant type is not implemented</exception>
 			public DecompiledConstant(string name, object value)
 			{
 				_name = name;
@@ -53,7 +61,45 @@ namespace igLibrary.Graphics
 				else if (value is float)       _type = ConstantType.Float;
 				else if (value is igVec4f)     _type = ConstantType.Vec4f;
 				else if (value is igMatrix44f) _type = ConstantType.Matrix44f;
-				else throw new Exception("Invalid constant datatype provided");
+				else throw new NotImplementedException("Invalid constant datatype provided");
+			}
+
+
+			/// <summary>
+			/// Gets the igShaderConstantValue of a decompiled constant
+			/// </summary>
+			/// <param name="graphicsObjects">The vector of graphics objects</param>
+			/// <returns>the new igShaderConstantValue</returns>
+			/// <exception cref="NotImplementedException">if the constant type isn't implemented</exception>
+			public igShaderConstantValue GetShaderValue(igGraphicsObjectSet graphicsObjects)
+			{
+				igShaderConstantValue value;
+				switch (_type)
+				{
+					case ConstantType.Bool:
+						value = new igShaderConstantValueBool()   { _value =        (bool)this._value };
+						break;
+					case ConstantType.Int:
+						value = new igShaderConstantValueInt()    { _value =         (int)this._value };
+						break;
+					case ConstantType.Float:
+						value = new igShaderConstantValueFloat()  { _value =       (float)this._value };
+						break;
+					case ConstantType.Vec4f:
+						value = new igShaderConstantValueVector() { _value =     (igVec4f)this._value };
+						break;
+					case ConstantType.Matrix44f:
+						value = new igShaderConstantValueMatrix() { _value = (igMatrix44f)this._value };
+						break;
+					default:
+						throw new NotImplementedException("Unimplemented shader constant type");
+				}
+
+				igGraphicsShaderConstant graphicsConstant = new igGraphicsShaderConstant();
+				graphicsConstant._name = _name;
+				value._constant = graphicsObjects.GetOrAddGraphicsObject(graphicsConstant);
+
+				return value;
 			}
 		}
 		public class DecompiledTexture
@@ -122,9 +168,57 @@ namespace igLibrary.Graphics
 			}
 		}
 
+		/// <summary>
+		/// Write the decompiled material back to the igMemoryCommandStream
+		/// </summary>
+		public override void PreFileWrite()
 		{
+			if (_graphicsObjects != null)
 			{
+				int oldCount = _graphicsObjects._objects.Count;
+				_graphicsObjects._objects.Clear();
+
+				igMemoryPool pool = igMemoryContext.Singleton._pools["Default"];
+				IG_CORE_PLATFORM platform = igRegistry.GetRegistry()._platform;
+				igMetaObject? commandStreamMeta = igArkCore.GetObjectMeta(nameof(igMemoryCommandStream));
+				Debug.Assert(commandStreamMeta != null);
+
+				if (_decompiledCommonState != null)
+				{
+					_commonState = _commonState ?? (igMemoryCommandStream)commandStreamMeta.ConstructInstance(pool);
+
+					CompileMaterial(_decompiledCommonState, _commonState);
+
+					_commonState.Encode(pool, platform, _graphicsObjects);
+				}
+
+				List<int> oldTechniqueCommandCounts = new List<int>();
+				for (int t = 0; t < _techniques.Count; t++)
+				{
+					oldTechniqueCommandCounts.Add(_techniques[t] != null ? _techniques[t]!._commands.Count : 0);
+				}
+				_techniques.Clear();
+				for (int t = 0; t < _decompiledTechniques._count; t++)
+				{
+					if (_decompiledTechniques[t] != null)
+					{
+						igMemoryCommandStream technique = (igMemoryCommandStream)commandStreamMeta.ConstructInstance(pool);
+
+						CompileMaterial(_decompiledTechniques[t]!, technique);
+						technique.Encode(pool, platform, _graphicsObjects);
+
+						_techniques.Add(technique);
+						Debug.Assert(oldTechniqueCommandCounts[t] == technique._commands.Count);
+					}
+					else
+					{
+						_techniques.Add(null);
+					}
+				}
+
+				Debug.Assert(oldCount == _graphicsObjects._objects.Count);
 			}
+		}
 
 		public DecompiledMaterial GetDecompiledCommonState()
 		{
@@ -346,6 +440,200 @@ namespace igLibrary.Graphics
 			}
 
 			return decompiled;
+		}
+
+
+		/// <summary>
+		/// Compiles a material to a series of commants
+		/// </summary>
+		/// <param name="material">The material</param>
+		/// <param name="stream">The output stream</param>
+		/// <exception cref="NotImplementedException">If a constant value type is unimplemeted</exception>
+		private void CompileMaterial(DecompiledMaterial material, igMemoryCommandStream stream)
+		{
+			stream._commands.Clear();
+
+			if (material._stencilRef.HasValue)
+			{
+				var stencilRefParams = new igCommandSetStencilRefParameters();
+				stencilRefParams._stencilRef = material._stencilRef.Value;
+				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetStencilRef, stencilRefParams));
+			}
+
+			if (material._stencilStateBundle.HasValue)
+			{
+				var stencilBundleParams = new igCommandSetStencilStateBundleParameters();
+				igGraphicsStencilStateBundle stencilStateBundle = new igGraphicsStencilStateBundle();
+				stencilStateBundle._stencilStateBundle = material._stencilStateBundle.Value;
+				stencilBundleParams._resource = _graphicsObjects.GetOrAddGraphicsObject(stencilStateBundle);
+				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetStencilStateBundle, stencilBundleParams));
+			}
+
+			if (material._blendStateBundle.HasValue)
+			{
+				var blendStateBundleParams = new igCommandSetBlendStateBundleParameters();
+				igGraphicsBlendStateBundle blendStateBundle = new igGraphicsBlendStateBundle();
+				blendStateBundle._blendStateBundle = material._blendStateBundle.Value;
+				blendStateBundleParams._resource = _graphicsObjects.GetOrAddGraphicsObject(blendStateBundle);
+				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetBlendStateBundle, blendStateBundleParams));
+			}
+
+			for (int i = 0; i < material._textures.Count; i++)
+			{
+				DecompiledTexture dTexture = material._textures[i];
+
+				igGraphicsTexture gTexture = new igGraphicsTexture();
+				gTexture._image       = dTexture._image;
+				gTexture._imageHandle = dTexture._imageHandle;
+				gTexture._usage       = dTexture._usage;
+
+				gTexture = _graphicsObjects.GetOrAddGraphicsObject(gTexture);
+
+				var setTextureParams = new igCommandSetPixelShaderTextureParameters();
+				setTextureParams._register = dTexture._register;
+				setTextureParams._resource = gTexture;
+
+				igGraphicsSamplerStateBundle gSampler = new igGraphicsSamplerStateBundle();
+				gSampler._samplerStateBundle = dTexture._samplerStateBundle;
+
+				gSampler = _graphicsObjects.GetOrAddGraphicsObject(gSampler);
+
+				var setSamplerParams = new igCommandSetPixelShaderSamplerParameters();
+				setSamplerParams._register = dTexture._register;
+				setSamplerParams._resource = gSampler;
+
+				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetPixelShaderTexture, setTextureParams));
+				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetPixelShaderSampler, setSamplerParams));
+			}
+
+			igMetaObject? valueListMeta = igArkCore.GetObjectMeta(nameof(igShaderConstantValueList));
+			if (valueListMeta != null)
+			{
+				igShaderConstantValueList valueList = (igShaderConstantValueList)valueListMeta.ConstructInstance(igMemoryContext.Singleton._pools["Default"]);
+				for (int c = 0; c < material._constants.Count; c++)
+				{
+					if (material._constants[c]._name.StartsWith(_effectHandle._namespace._string))
+					{
+						valueList._values.Append(material._constants[c].GetShaderValue(_graphicsObjects));
+					}
+				}
+
+				if (valueList._values._count != 0)
+				{
+					var valueListParams = new igCommandApplyConstantValueListParameters();
+					valueListParams._list = _graphicsObjects.GetOrAddGraphicsObject(valueList);
+
+					stream._commands.Add(new igCommandStream.igCommand(igCommandId.kApplyConstantValueList, valueListParams));
+				}
+			}
+
+
+			for (int b = 0; b < material._bundles.Count; b++)
+			{
+				var applyBundleParameters = new igCommandApplyConstantBundleParameters();
+				applyBundleParameters._bundle = _graphicsObjects.GetOrAddGraphicsObject(material._bundles[b]);
+				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kApplyConstantBundle, applyBundleParameters));
+			}
+
+			for (int c = 0; c < material._constants.Count; c++)
+			{
+				DecompiledConstant constant = material._constants[c];
+
+				if (material._rasterizerStateBundle.HasValue && constant._name == "ig_cullface_enable")
+				{
+					igGraphicsRasterizerStateBundle rasterizerStateBundle = new igGraphicsRasterizerStateBundle();
+					rasterizerStateBundle._rasterizerStateBundle = material._rasterizerStateBundle.Value;
+
+					var rasterizerStateBundleParams = new igCommandSetRasterizeStateBundleParameters();
+					rasterizerStateBundleParams._resource = _graphicsObjects.GetOrAddGraphicsObject(rasterizerStateBundle);
+
+					stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetRasterizeStateBundle, rasterizerStateBundleParams));
+				}
+
+				if (!constant._name.StartsWith(_effectHandle._namespace._string))
+				{
+					igGraphicsShaderConstant shaderConstant = new igGraphicsShaderConstant();
+					shaderConstant._name = constant._name;
+					shaderConstant = _graphicsObjects.GetOrAddGraphicsObject(shaderConstant);
+
+					object setValueParameters;
+					igCommandId setValueType;
+					switch (constant._type)
+					{
+						case ConstantType.Bool:
+							setValueParameters = new igCommandSetConstantBoolParameters()
+							{
+								_resource = shaderConstant,
+								_value = (bool)constant._value
+							};
+							setValueType = igCommandId.kSetConstantBool;
+							break;
+						case ConstantType.Int:
+							setValueParameters = new igCommandSetConstantIntParameters()
+							{
+								_resource = shaderConstant,
+								_value = (int)constant._value
+							};
+							setValueType = igCommandId.kSetConstantInt;
+							break;
+						case ConstantType.Float:
+							setValueParameters = new igCommandSetConstantFloatParameters()
+							{
+								_resource = shaderConstant,
+								_value = (float)constant._value
+							};
+							setValueType = igCommandId.kSetConstantFloat;
+							break;
+						case ConstantType.Vec4f:
+							setValueParameters = new igCommandSetConstantVec4fParameters()
+							{
+								_resource = shaderConstant,
+								_value = (igVec4f)constant._value
+							};
+							setValueType = igCommandId.kSetConstantVec4f;
+							break;
+						case ConstantType.Matrix44f:
+							setValueParameters = new igCommandSetConstantMatrix44fParameters()
+							{
+								_resource = shaderConstant,
+								_value = (igMatrix44f)constant._value
+							};
+							setValueType = igCommandId.kSetConstantMatrix44f;
+							break;
+						default:
+							throw new NotImplementedException("Unimplemented shader constant type");
+					}
+
+					stream._commands.Add(new igCommandStream.igCommand(setValueType, setValueParameters));
+				}
+			}
+
+			if (material._depthStateBundle.HasValue)
+			{
+				igGraphicsDepthStateBundle depthStateBundle = new igGraphicsDepthStateBundle();
+				depthStateBundle._depthStateBundle = material._depthStateBundle.Value;
+
+				var depthStateBundleParams = new igCommandSetDepthStateBundleParameters();
+				depthStateBundleParams._resource = _graphicsObjects.GetOrAddGraphicsObject(depthStateBundle);
+				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetDepthStateBundle, depthStateBundleParams));
+			}
+
+			if (material._commonRenderState.HasValue)
+			{
+				var renderStateParams = new igCommandSetCommonRenderStateParameters();
+				renderStateParams._commonRenderState = material._commonRenderState.Value;
+				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetCommonRenderState, renderStateParams));
+			}
+
+			if (material._renderTargetMask.HasValue)
+			{
+				igGraphicsRenderTargetMask renderTargetMask = new igGraphicsRenderTargetMask();
+				renderTargetMask._renderTargetMask = material._renderTargetMask.Value;
+
+				var renderTargetMaskParams = new igCommandSetRenderTargetMaskParameters();
+				renderTargetMaskParams._resource = _graphicsObjects.GetOrAddGraphicsObject(renderTargetMask);
+				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetRenderTargetMask, renderTargetMaskParams));
+			}
 		}
 	}
 }
