@@ -11,7 +11,7 @@ using System.Collections;
 
 namespace igLibrary.Core
 {
-	public class igVector<T> : igVectorCommon, IEnumerable<T>
+	public class igVector<T> : igVectorCommon, IEnumerable<T>, IList<T>
 	{
 		public long _count;
 		public igMemory<T> _data;
@@ -25,6 +25,10 @@ namespace igLibrary.Core
 			get => _data[index];
 			set => _data[index] = value;
 		}
+
+		public int Count => (int)_count;
+		public bool IsReadOnly => false;
+
 		public void SetCount(uint count)
 		{
 			_count = count;
@@ -48,6 +52,11 @@ namespace igLibrary.Core
 			_data[(int)_count] = data;
 			_count++;
 		}
+		public void Clear()
+		{
+			SetCount(0);
+			SetCapacity(0);
+		}
 		public IigMemory GetData() => _data;
 		public IEnumerator<T> GetEnumerator()
 		{
@@ -63,7 +72,78 @@ namespace igLibrary.Core
 		public void SetItem(int index, object? item) => this[index] = (T)item!;
 
 		public int GetCapacity() => _data.Length;
-	}
+
+		public int IndexOf(T item)
+		{
+			return Array.IndexOf(_data.Buffer, item, 0, (int)_count);
+		}
+
+		public void Insert(int index, T item)
+		{
+			if (_count == _data.Length)
+			{
+				SetCapacity(_data.Length + 4);
+			}
+
+			Array.Copy(_data.Buffer, index, _data.Buffer, index+1, _count - index);
+			_data.Buffer[index] = item;
+		}
+
+		public void RemoveAt(int index)
+		{
+			Array.Copy(_data.Buffer, index+1, _data.Buffer, index, _count - index);
+		}
+
+		public void Add(T item)
+		{
+			Append(item);
+		}
+
+		public void AddRange(IEnumerable<T> collection)
+		{
+			int theCount = collection.Count();
+			if ((_data.Length - _count) < theCount)
+			{
+				SetCapacity(_data.Length + theCount);
+			}
+
+			long destIndex = _count;
+			foreach (T item in collection)
+			{
+				_data.Buffer[destIndex] = item;
+			}
+		}
+
+		public bool Contains(T item)
+		{
+			for (int i = 0; i < _count; i++)
+			{
+				T? cur = _data[i];
+				if ((cur != null && cur.Equals(item)) || (cur == null && item == null))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public void CopyTo(T[] array, int arrayIndex)
+		{
+			Array.Copy(_data.Buffer, 0, array, arrayIndex, _count);
+		}
+
+		public bool Remove(T item)
+		{
+			int index = IndexOf(item);
+
+			if (index >= 0)
+			{
+				RemoveAt(index);
+			}
+
+			return index >= 0;
+		}	}
 	public interface igVectorCommon
 	{
 		public uint GetCount();
