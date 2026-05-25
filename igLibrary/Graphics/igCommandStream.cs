@@ -402,7 +402,7 @@ namespace igLibrary.Graphics
 					case igCommandId.kApplyConstantValueList:
 					{
 						igCommandApplyConstantValueListParameters parameters = new igCommandApplyConstantValueListParameters();
-						parameters._bundle = DecodeResource(stream, platform, graphicsObjects);
+						parameters._list = DecodeResource(stream, platform, graphicsObjects);
 						command._parameters = parameters;
 						break;
 					}

@@ -207,7 +207,7 @@ namespace igLibrary.Graphics
 	}
 	public struct igCommandApplyConstantValueListParameters
 	{
-		public igGraphicsObject? _bundle;
+		public igGraphicsObject? _list;
 	}
 	public struct igCommandSetPixelShaderTextureEnabledConstantParameters
 	{
