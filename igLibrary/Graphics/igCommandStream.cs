@@ -686,7 +686,6 @@ namespace igLibrary.Graphics
 						continue;
 					}
 
-					alignment = System.Math.Max(alignment, decoderField._platformInfo._alignments[platform]);
 					stream.Align(decoderField._platformInfo._alignments[platform]);
 
 					// had to reimplement writing, sorry
