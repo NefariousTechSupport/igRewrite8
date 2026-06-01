@@ -93,6 +93,22 @@ namespace igCauldron3
 			FieldRenderer.RenderField(id, "_effectHandle",    material._effectHandle,    _effectHandleField,    (value) => material._effectHandle    = (igHandle)value!);
 
 			DrawDecompiledMaterial("_commonState", material.GetDecompiledCommonState());
+
+			if (ImGui.TreeNode("Techniques"))
+			{
+				for (int t = 0; t < material.GetDecompiledTechniqueCount(); t++)
+				{
+					igGraphicsMaterial.DecompiledMaterial? technique = material.GetDecompiledTechnique(t);
+					if (technique == null)
+					{
+						ImGui.Text(t.ToString());
+					}
+					else
+					{
+						DrawDecompiledMaterial(t.ToString(), technique);
+					}
+				}
+			}
 		}
 
 
