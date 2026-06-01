@@ -287,18 +287,22 @@ namespace igCauldron3
 		private static void RenderField_Matrix44f(string id, object? raw, igMetaField field, FieldSetCallback cb)
 		{
 			igMatrix44f value = (igMatrix44f)raw!;
+			float startCursorX = ImGui.GetCursorPosX();
 			RenderField_Float(id + " _m11", value._m11, igFloatMetaField._MetaField, (newValue) => { value._m11 = (float)newValue!; cb.Invoke(value); }); ImGui.SameLine();
 			RenderField_Float(id + " _m12", value._m12, igFloatMetaField._MetaField, (newValue) => { value._m12 = (float)newValue!; cb.Invoke(value); }); ImGui.SameLine();
 			RenderField_Float(id + " _m13", value._m13, igFloatMetaField._MetaField, (newValue) => { value._m13 = (float)newValue!; cb.Invoke(value); }); ImGui.SameLine();
 			RenderField_Float(id + " _m14", value._m14, igFloatMetaField._MetaField, (newValue) => { value._m14 = (float)newValue!; cb.Invoke(value); });
+			ImGui.SetCursorPosX(startCursorX);
 			RenderField_Float(id + " _m21", value._m21, igFloatMetaField._MetaField, (newValue) => { value._m21 = (float)newValue!; cb.Invoke(value); }); ImGui.SameLine();
 			RenderField_Float(id + " _m22", value._m22, igFloatMetaField._MetaField, (newValue) => { value._m22 = (float)newValue!; cb.Invoke(value); }); ImGui.SameLine();
 			RenderField_Float(id + " _m23", value._m23, igFloatMetaField._MetaField, (newValue) => { value._m23 = (float)newValue!; cb.Invoke(value); }); ImGui.SameLine();
 			RenderField_Float(id + " _m24", value._m24, igFloatMetaField._MetaField, (newValue) => { value._m24 = (float)newValue!; cb.Invoke(value); });
+			ImGui.SetCursorPosX(startCursorX);
 			RenderField_Float(id + " _m31", value._m31, igFloatMetaField._MetaField, (newValue) => { value._m31 = (float)newValue!; cb.Invoke(value); }); ImGui.SameLine();
 			RenderField_Float(id + " _m32", value._m32, igFloatMetaField._MetaField, (newValue) => { value._m32 = (float)newValue!; cb.Invoke(value); }); ImGui.SameLine();
 			RenderField_Float(id + " _m33", value._m33, igFloatMetaField._MetaField, (newValue) => { value._m33 = (float)newValue!; cb.Invoke(value); }); ImGui.SameLine();
 			RenderField_Float(id + " _m34", value._m34, igFloatMetaField._MetaField, (newValue) => { value._m34 = (float)newValue!; cb.Invoke(value); });
+			ImGui.SetCursorPosX(startCursorX);
 			RenderField_Float(id + " _m41", value._m41, igFloatMetaField._MetaField, (newValue) => { value._m41 = (float)newValue!; cb.Invoke(value); }); ImGui.SameLine();
 			RenderField_Float(id + " _m42", value._m42, igFloatMetaField._MetaField, (newValue) => { value._m42 = (float)newValue!; cb.Invoke(value); }); ImGui.SameLine();
 			RenderField_Float(id + " _m43", value._m43, igFloatMetaField._MetaField, (newValue) => { value._m43 = (float)newValue!; cb.Invoke(value); }); ImGui.SameLine();
