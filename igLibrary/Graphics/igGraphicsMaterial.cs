@@ -225,6 +225,21 @@ namespace igLibrary.Graphics
 			return _decompiledCommonState;
 		}
 
+		public int GetDecompiledTechniqueCount()
+		{
+			Debug.Assert(_decompiledTechniques != null);
+
+			return _decompiledTechniques.Count;
+		}
+
+		public DecompiledMaterial? GetDecompiledTechnique(int index)
+		{
+			Debug.Assert(_decompiledTechniques != null);
+			Debug.Assert(index <= _decompiledTechniques.Count);
+
+			return _decompiledTechniques[index];
+		}
+
 		private DecompiledMaterial DecompileMaterial(igMemoryCommandStream? stream)
 		{
 			DecompiledMaterial decompiled = new DecompiledMaterial();
