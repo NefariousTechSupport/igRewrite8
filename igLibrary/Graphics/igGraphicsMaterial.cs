@@ -68,10 +68,9 @@ namespace igLibrary.Graphics
 			/// <summary>
 			/// Gets the igShaderConstantValue of a decompiled constant
 			/// </summary>
-			/// <param name="graphicsObjects">The vector of graphics objects</param>
 			/// <returns>the new igShaderConstantValue</returns>
 			/// <exception cref="NotImplementedException">if the constant type isn't implemented</exception>
-			public igShaderConstantValue GetShaderValue(igGraphicsObjectSet graphicsObjects)
+			public igShaderConstantValue GetShaderValue()
 			{
 				igShaderConstantValue value;
 				switch (_type)
@@ -97,7 +96,7 @@ namespace igLibrary.Graphics
 
 				igGraphicsShaderConstant graphicsConstant = new igGraphicsShaderConstant();
 				graphicsConstant._name = _name;
-				value._constant = graphicsObjects.GetOrAddGraphicsObject(graphicsConstant);
+				value._constant = graphicsConstant;
 
 				return value;
 			}
@@ -548,7 +547,7 @@ namespace igLibrary.Graphics
 				{
 					if (material._constants[c]._name.StartsWith(_effectHandle._namespace._string))
 					{
-						valueList._values.Append(material._constants[c].GetShaderValue(_graphicsObjects));
+						valueList._values.Append(material._constants[c].GetShaderValue());
 					}
 				}
 
