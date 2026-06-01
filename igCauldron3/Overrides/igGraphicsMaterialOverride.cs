@@ -123,6 +123,20 @@ namespace igCauldron3
 			bool changed = false;
 			if (ImGui.TreeNode(name))
 			{
+				if (ImGui.TreeNode("Textures"))
+				{
+					for (int t = 0; t < material._textures.Count; t++)
+					{
+						igGraphicsMaterial.DecompiledTexture texture = material._textures[t];
+						string displayName = texture._imageHandle == null ? "(null)" : texture._imageHandle.ToString();
+						if (ImGui.TreeNode((IntPtr)t, $"Register {texture._register}: {displayName}"))
+						{
+							ImGui.TreePop();
+						}
+					}
+
+					ImGui.TreePop();
+				}
 				if (ImGui.TreeNode("Constants"))
 				{
 					ImGui.BeginTable("constants", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders);
