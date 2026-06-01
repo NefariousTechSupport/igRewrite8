@@ -11,6 +11,8 @@ namespace igLibrary.Graphics
 {
 	public class igGraphicsObjectSet : igObject
 	{
+		// this global list is a hack to avoid duplicates within a single igz
+		public static igVector<igGraphicsObject> _globalObjects = new igVector<igGraphicsObject>();
 		public igVector<igGraphicsObject> _objects;
 
 
@@ -22,15 +24,26 @@ namespace igLibrary.Graphics
 		/// <returns></returns>
 		public T GetOrAddGraphicsObject<T>(T candidate) where T : igGraphicsObject
 		{
-			for (int i = 0; i < _objects._count; i++)
+			return Internal<T>(_objects, Internal<T>(_globalObjects, candidate));
+		}
+
+		/// <summary>
+		/// Gets or adds a graphics object to the vector, similar to emplace in a c++ set
+		/// </summary>
+		/// <typeparam name="T">The type of object</typeparam>
+		/// <param name="candidate">The object to add or get</param>
+		/// <returns></returns>
+		private static T Internal<T>(igVector<igGraphicsObject> objects, T candidate) where T : igGraphicsObject
+		{
+			for (int i = 0; i < objects._count; i++)
 			{
-				if (candidate.ShallowEquals(_objects[i]))
+				if (candidate.ShallowEquals(objects[i]))
 				{
-					return (T)_objects[i];
+					return (T)objects[i];
 				}
 			}
 
-			_objects.Append(candidate);
+			objects.Append(candidate);
 
 			return candidate;
 		}
