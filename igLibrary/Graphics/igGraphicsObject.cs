@@ -18,7 +18,7 @@ namespace igLibrary.Graphics
 		/// </summary>
 		/// <param name="other">The other object</param>
 		/// <returns>Whether or not the two objects are shallowly equal</returns>
-		public bool ShallowEquals(igGraphicsObject other)
+		public virtual bool ShallowEquals(igGraphicsObject other)
 		{
 			bool equals = other == this;
 
