@@ -187,8 +187,7 @@ namespace igLibrary.Graphics
 				{
 					_commonState = _commonState ?? (igMemoryCommandStream)commandStreamMeta.ConstructInstance(pool);
 
-					CompileMaterial(_decompiledCommonState, _commonState);
-
+					CompileMaterial(_decompiledCommonState, _commonState, false);
 					_commonState.Encode(pool, platform, _graphicsObjects);
 				}
 
@@ -204,7 +203,7 @@ namespace igLibrary.Graphics
 					{
 						igMemoryCommandStream technique = (igMemoryCommandStream)commandStreamMeta.ConstructInstance(pool);
 
-						CompileMaterial(_decompiledTechniques[t]!, technique);
+						CompileMaterial(_decompiledTechniques[t]!, technique, true);
 						technique.Encode(pool, platform, _graphicsObjects);
 
 						_techniques.Add(technique);
@@ -449,17 +448,43 @@ namespace igLibrary.Graphics
 		/// <param name="material">The material</param>
 		/// <param name="stream">The output stream</param>
 		/// <exception cref="NotImplementedException">If a constant value type is unimplemeted</exception>
-		private void CompileMaterial(DecompiledMaterial material, igMemoryCommandStream stream)
+		private void CompileMaterial(DecompiledMaterial material, igMemoryCommandStream stream, bool isTechnique)
 		{
 			stream._commands.Clear();
 
+			if (!isTechnique)
+			{
+				CompileStencilRef(material, stream);
+				CompileStencilStateBundle(material, stream);
+				CompileBlendStateBundle(material, stream);
+				CompileTextures(material, stream);
+				CompileValueList(material, stream);
+				CompileBundles(material, stream);
+				CompileConstants(material, stream);
+				CompileDepthStateBundle(material, stream);
+				CompileCommonRenderState(material, stream);
+				CompileRenderTargetMask(material, stream);
+			}
+			else
+			{
+				CompileConstants(material, stream);
+				CompileCommonRenderState(material, stream);
+				CompileTextures(material, stream);
+			}
+		}
+
+		private void CompileStencilRef(DecompiledMaterial material, igMemoryCommandStream stream)
+		{
 			if (material._stencilRef.HasValue)
 			{
 				var stencilRefParams = new igCommandSetStencilRefParameters();
 				stencilRefParams._stencilRef = material._stencilRef.Value;
 				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetStencilRef, stencilRefParams));
 			}
+		}
 
+		private void CompileStencilStateBundle(DecompiledMaterial material, igMemoryCommandStream stream)
+		{
 			if (material._stencilStateBundle.HasValue)
 			{
 				var stencilBundleParams = new igCommandSetStencilStateBundleParameters();
@@ -468,7 +493,10 @@ namespace igLibrary.Graphics
 				stencilBundleParams._resource = _graphicsObjects.GetOrAddGraphicsObject(stencilStateBundle);
 				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetStencilStateBundle, stencilBundleParams));
 			}
+		}
 
+		private void CompileBlendStateBundle(DecompiledMaterial material, igMemoryCommandStream stream)
+		{
 			if (material._blendStateBundle.HasValue)
 			{
 				var blendStateBundleParams = new igCommandSetBlendStateBundleParameters();
@@ -477,7 +505,10 @@ namespace igLibrary.Graphics
 				blendStateBundleParams._resource = _graphicsObjects.GetOrAddGraphicsObject(blendStateBundle);
 				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetBlendStateBundle, blendStateBundleParams));
 			}
+		}
 
+		private void CompileTextures(DecompiledMaterial material, igMemoryCommandStream stream)
+		{
 			for (int i = 0; i < material._textures.Count; i++)
 			{
 				DecompiledTexture dTexture = material._textures[i];
@@ -505,7 +536,10 @@ namespace igLibrary.Graphics
 				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetPixelShaderTexture, setTextureParams));
 				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetPixelShaderSampler, setSamplerParams));
 			}
+		}
 
+		private void CompileValueList(DecompiledMaterial material, igMemoryCommandStream stream)
+		{
 			igMetaObject? valueListMeta = igArkCore.GetObjectMeta(nameof(igShaderConstantValueList));
 			if (valueListMeta != null)
 			{
@@ -523,18 +557,28 @@ namespace igLibrary.Graphics
 					var valueListParams = new igCommandApplyConstantValueListParameters();
 					valueListParams._list = _graphicsObjects.GetOrAddGraphicsObject(valueList);
 
+					for (int v = 0; v < valueList._values.Count; v++)
+					{
+						valueList._values[v]._constant = _graphicsObjects.GetOrAddGraphicsObject(valueList._values[v]._constant);
+					}
+
 					stream._commands.Add(new igCommandStream.igCommand(igCommandId.kApplyConstantValueList, valueListParams));
 				}
 			}
+		}
 
-
+		private void CompileBundles(DecompiledMaterial material, igMemoryCommandStream stream)
+		{
 			for (int b = 0; b < material._bundles.Count; b++)
 			{
 				var applyBundleParameters = new igCommandApplyConstantBundleParameters();
 				applyBundleParameters._bundle = _graphicsObjects.GetOrAddGraphicsObject(material._bundles[b]);
 				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kApplyConstantBundle, applyBundleParameters));
 			}
+		}
 
+		private void CompileConstants(DecompiledMaterial material, igMemoryCommandStream stream)
+		{
 			for (int c = 0; c < material._constants.Count; c++)
 			{
 				DecompiledConstant constant = material._constants[c];
@@ -607,7 +651,10 @@ namespace igLibrary.Graphics
 					stream._commands.Add(new igCommandStream.igCommand(setValueType, setValueParameters));
 				}
 			}
+		}
 
+		private void CompileDepthStateBundle(DecompiledMaterial material, igMemoryCommandStream stream)
+		{
 			if (material._depthStateBundle.HasValue)
 			{
 				igGraphicsDepthStateBundle depthStateBundle = new igGraphicsDepthStateBundle();
@@ -617,14 +664,18 @@ namespace igLibrary.Graphics
 				depthStateBundleParams._resource = _graphicsObjects.GetOrAddGraphicsObject(depthStateBundle);
 				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetDepthStateBundle, depthStateBundleParams));
 			}
-
+		}
+		private void CompileCommonRenderState(DecompiledMaterial material, igMemoryCommandStream stream)
+		{
 			if (material._commonRenderState.HasValue)
 			{
 				var renderStateParams = new igCommandSetCommonRenderStateParameters();
 				renderStateParams._commonRenderState = material._commonRenderState.Value;
 				stream._commands.Add(new igCommandStream.igCommand(igCommandId.kSetCommonRenderState, renderStateParams));
 			}
-
+		}
+		private void CompileRenderTargetMask(DecompiledMaterial material, igMemoryCommandStream stream)
+		{
 			if (material._renderTargetMask.HasValue)
 			{
 				igGraphicsRenderTargetMask renderTargetMask = new igGraphicsRenderTargetMask();
