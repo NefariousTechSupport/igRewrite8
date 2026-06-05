@@ -75,7 +75,7 @@ namespace igRewrite8
 			Scene scene = ctx.ImportFile(args[2], PostProcessSteps.JoinIdenticalVertices);
 
 			SuperChargersModel sscmodel = new SuperChargersModel();
-			CGraphicsSkinInfo skinInfo = sscmodel.ImportActor(scene);
+			string? error = sscmodel.ImportActor(scene, out CGraphicsSkinInfo? skinInfo);
 
 			igMetaObject materialHandleTableInfoMeta = igArkCore.GetObjectMeta("CMaterialHandleTableInfo")!;
 			igObject materialHandleTableInfo = materialHandleTableInfoMeta.ConstructInstance(igMemoryContext.Default);

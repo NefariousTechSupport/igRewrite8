@@ -11,6 +11,6 @@ namespace igLibrary.AssetConversion.Models
 		public abstract ModelType ImportModel(Scene model);
 
 		public abstract ModelData ExportActor(SkinType gameAsset);
-		public abstract SkinType ImportActor(Scene model);
+		public abstract string? ImportActor(Scene model, out SkinType? output);
 	}
 }

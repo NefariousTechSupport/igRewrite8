@@ -81,7 +81,7 @@ namespace igLibrary.AssetConversion.Models
 			return modelInfo;
 		}
 
-		public override CGraphicsSkinInfo ImportActor(Scene model)
+		public override string? ImportActor(Scene model, out CGraphicsSkinInfo? output)
 		{
 			igModelData modelData = igMetaObject.ConstructInstance<igModelData>();
 			modelData._name = null;
@@ -98,7 +98,12 @@ namespace igLibrary.AssetConversion.Models
 
 			// Figure out the skeleton
 			//Bone rootBone = model.Meshes[0].Bones[0];
-			Node rootNode = model.RootNode.FindNode("Bip001");
+			Node? rootNode = model.RootNode.FindNode("J_root");
+			if (rootNode == null)
+			{
+				output = null;
+				return "No bone with name \"J_Root\" was found";
+			}
 			List<Node> bones = new List<Node>();
 			PopulateBones(bones, rootNode);
 
@@ -144,15 +149,15 @@ namespace igLibrary.AssetConversion.Models
 				skeleton._inverseJointArray[i] = inverseOffsetMatrix;
 			}
 
-			CGraphicsSkinInfo skinInfo = igMetaObject.ConstructInstance<CGraphicsSkinInfo>();
-			skinInfo._name = "CGraphicsSkinInfo";
-			skinInfo._directory = null;
-			skinInfo._resolveState = true;
-			skinInfo._skin = modelData;
-			skinInfo._havokSkeleton = null;
-			skinInfo._skeleton = skeleton;
+			output = igMetaObject.ConstructInstance<CGraphicsSkinInfo>();
+			output._name = "CGraphicsSkinInfo";
+			output._directory = null;
+			output._resolveState = true;
+			output._skin = modelData;
+			output._havokSkeleton = null;
+			output._skeleton = skeleton;
 
-			return skinInfo;
+			return null;
 		}
 
 		private void PopulateBones(List<Node> bones, Node currentNode)
