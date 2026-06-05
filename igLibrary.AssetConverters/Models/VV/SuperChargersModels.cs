@@ -185,7 +185,7 @@ namespace igLibrary.AssetConversion.Models
 			drawCall._name = null;
 			drawCall._min = new igVec4f(mesh.BoundingBox.Min.X, mesh.BoundingBox.Min.Y, mesh.BoundingBox.Min.Z, 0);
 			drawCall._max = new igVec4f(mesh.BoundingBox.Max.X, mesh.BoundingBox.Max.Y, mesh.BoundingBox.Max.Z, 0);
-			drawCall._materialHandle = new igHandle("Persephone_materials,Persephone,3e.main");
+			drawCall._materialHandle = new igHandle("Replace.This");
 			drawCall._graphicsVertexBuffer = null;
 			drawCall._graphicsIndexBuffer = null;
 			drawCall._platformData = null;
@@ -264,13 +264,35 @@ namespace igLibrary.AssetConversion.Models
 
 			indexBuffer._data = new igMemory<byte>(igMemoryContext.Default, byteIndices);
 
+			string gfxPlatformString;
+			switch (igRegistry.GetRegistry()._gfxPlatform)
+			{
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_ASPEN:   gfxPlatformString = "Aspen";   break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_CAFE:    gfxPlatformString = "Cafe";    break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_DURANGO: gfxPlatformString = "Durango"; break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_DX:      gfxPlatformString = "DX";      break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_METAL:   gfxPlatformString = "Metal";   break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_PS3:     gfxPlatformString = "PS3";     break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_WII:     gfxPlatformString = "Wii";     break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_XENON:   gfxPlatformString = "Xenon";   break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_OSX:     gfxPlatformString = "OSX";     break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_DX11:    gfxPlatformString = "DX11";    break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_RASPI:   gfxPlatformString = "Raspi";   break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_NULL:    gfxPlatformString = "Null";    break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_ANDROID: gfxPlatformString = "Android"; break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_WGL:     gfxPlatformString = "Wgl";     break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_LGTV:    gfxPlatformString = "LGTV";    break;
+				case IG_GFX_PLATFORM.IG_GFX_PLATFORM_PS4:     gfxPlatformString = "PS4";     break;
+				default: throw new NotImplementedException($"GFX Platform {igRegistry.GetRegistry()._gfxPlatform} is unimplemented");
+			}
+
 
 			igVertexFormat vertexFormat = igMetaObject.ConstructInstance<igVertexFormat>();
 			vertexFormat._platform = IG_GFX_PLATFORM.IG_GFX_PLATFORM_DEFAULT;
 			vertexFormat._softwareBlendedFormat = null;
 			vertexFormat._blender = null;
 			vertexFormat._dynamic = false;
-			vertexFormat._platformFormat = new igHandle("vertexformat.igvertexformatps3").GetObjectAlias<igVertexFormatPlatform>()!;
+			vertexFormat._platformFormat = new igHandle($"vertexformat.igvertexformat{gfxPlatformString}").GetObjectAlias<igVertexFormatPlatform>()!;
 			vertexFormat._streams = new igMemory<igVertexStream>();
 			vertexFormat._softwareBlendedMultistreamFormat = null;
 			vertexFormat._enableSoftwareBlending = false;
