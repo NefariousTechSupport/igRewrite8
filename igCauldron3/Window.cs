@@ -58,6 +58,7 @@ namespace igCauldron3
 			controller = new ImGuiController(ClientSize.X, ClientSize.Y);
 			igTContext<igBaseGraphicsDevice>._instance = new igOpenGLGraphicsDevice();
 
+			_frames.Add(new MenuBarFrame(this));
 			_frames.Add(new ConfigFrame(this));
 		}
 
@@ -137,10 +138,19 @@ namespace igCauldron3
 
 			controller.Update(this, (float)e.Time);
 
+			ImGui.PushFont(Styles._currentFont);
+			ImGuiStylePtr style = ImGui.GetStyle();
+			ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new System.Numerics.Vector2(style.ItemSpacing.X, CauldronConfig._config._preferences._lineSpacing));
+	
+			ImGui.DockSpaceOverViewport(ImGui.GetMainViewport());
+
 			for(int i = 0; i < _frames.Count; i++)
 			{
 				_frames[i].Render();
 			}
+
+			ImGui.PopFont();
+			ImGui.PopStyleVar();
 
 			controller.Render();
 

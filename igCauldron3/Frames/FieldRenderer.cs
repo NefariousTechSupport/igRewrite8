@@ -94,7 +94,7 @@ namespace igCauldron3
 			if(field is igPropertyFieldMetaField) return;
 			ImGui.Text(label);
 			ImGui.SameLine();
-			RenderFieldNoLabel(id + label, value, field, cb);
+			RenderFieldNoLabel(id, value, field, cb);
 		}
 
 
@@ -130,7 +130,7 @@ namespace igCauldron3
 							ImGui.Text("Element " + i.ToString());
 							ImGui.SameLine();
 							int capturedI = i;
-							renderFunc.Invoke(i.ToString("%08X"), arrValue.GetValue(i), field, (newValue) => {
+							renderFunc.Invoke(i.ToString("08X"), arrValue.GetValue(i), field, (newValue) => {
 								arrValue.SetValue(newValue, capturedI);
 								cb.Invoke(arrValue);
 							});
@@ -348,7 +348,10 @@ namespace igCauldron3
 					for(int i = 0; i < vector.GetCount(); i++)
 					{
 						int capturedIndex = i;
-						RenderField(id + i.ToString(), $"Element {i}", vector.GetItem(i), memType, (newValue) => vector.SetItem(capturedIndex, newValue));
+						RenderField(id + i.ToString(), $"Element {i}", vector.GetItem(i), memType, (newValue) => {
+							vector.SetItem(capturedIndex, newValue);
+							cb.Invoke(vector);
+						});
 					}
 				}
 				ImGui.PushID(id + "$create$");
@@ -392,7 +395,10 @@ namespace igCauldron3
 						ImGui.PopID();
 						ImGui.SameLine();
 						int capturedIndex = i;
-						RenderField(id + i.ToString(), $"Element {i}", data.GetValue(i), memType, (newValue) => data.SetValue(newValue, capturedIndex));
+						RenderField(id + i.ToString(), $"Element {i}", data.GetValue(i), memType, (newValue) => {
+							data.SetValue(newValue, capturedIndex);
+							cb.Invoke(memValue);
+						});
 					}
 					if(remove >= 0)
 					{

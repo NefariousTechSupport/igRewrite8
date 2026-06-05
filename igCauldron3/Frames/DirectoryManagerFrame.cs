@@ -21,6 +21,7 @@ namespace igCauldron3
 		public static DirectoryManagerFrame _instance { get; private set; }
 
 		private static List<InspectorDrawOverride> _overrides = null!;
+		private static Dictionary<igStringRefList, PkgStringRefListOverride> _pkgOverride = new Dictionary<igStringRefList, PkgStringRefListOverride>();
 		public igObjectDirectoryList _dirs = new igObjectDirectoryList();
 		private int _dirIndex = 0;
 		public igObjectDirectory? CurrentDir => _dirIndex < _dirs._count ? _dirs[_dirIndex] : null;
@@ -85,6 +86,8 @@ namespace igCauldron3
 			ImGui.Begin("Directory Manager", ImGuiWindowFlags.HorizontalScrollbar);
 			if(ImGui.BeginTabBar("directory tabs", ImGuiTabBarFlags.FittingPolicyScroll))
 			{
+				int dirToRemove = -1;
+
 				for(int i = 0; i < _dirs._count; i++)
 				{
 					bool tabOpen = true;
@@ -101,10 +104,27 @@ namespace igCauldron3
 					}
 					if(tabOpen == false)
 					{
-						_dirs.Remove(i);
+						// we're assuming only one will be removed at a time
+						dirToRemove = i;
 					}
 				}
 				ImGui.EndTabBar();
+
+				if (dirToRemove >= 0)
+				{
+					igObjectDirectory dir = _dirs[dirToRemove];
+
+					_dirs.Remove(dirToRemove);
+
+					// remove it from the pkg list
+					for (int i = 0; i < dir._objectList.Count; i++)
+					{
+						if (dir._objectList[i] is igStringRefList pkgList)
+						{
+							_pkgOverride.Remove(pkgList);
+						}
+					}
+				}
 			}
 			ImGui.End();
 			base.Render();
@@ -117,6 +137,10 @@ namespace igCauldron3
 		/// <param name="dir">the directory</param>
 		private void RenderDirectory(igObjectDirectory dir)
 		{
+			bool isPkgDir = dir._name._string.EndsWith("_pkg")
+			 && dir._objectList._count > 0
+			 && dir.GetObjectOfType<igStringRefList>() != null;
+
 			if(ImGui.TreeNode("Objects"))
 			{
 				for(int i = 0; i < dir._objectList._count; i++)
@@ -127,7 +151,20 @@ namespace igCauldron3
 
 					ImGui.Text(name);
 					ImGui.SameLine();
-					RenderObject(i + name, dir._objectList[i]);
+					if (isPkgDir && dir._objectList[i] is igStringRefList pkgList)
+					{
+						if (!_pkgOverride.TryGetValue(pkgList, out PkgStringRefListOverride? pkgOverride))
+						{
+							pkgOverride = new PkgStringRefListOverride();
+							_pkgOverride.Add(pkgList, pkgOverride);
+						}
+
+						pkgOverride.Draw2(this, i + name, dir._objectList[i], dir._objectList[i].GetMeta());
+					}
+					else
+					{
+						RenderObject(i + name, dir._objectList[i]);
+					}
 				}
 				if(ImGui.Button("+"))
 				{

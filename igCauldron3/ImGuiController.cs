@@ -51,7 +51,7 @@ namespace igCauldron3
 		/// <summary>
 		/// Constructs a new ImGuiController.
 		/// </summary>
-		public ImGuiController(int width, int height)
+		public unsafe ImGuiController(int width, int height)
 		{
 			_windowWidth = width;
 			_windowHeight = height;
@@ -63,8 +63,30 @@ namespace igCauldron3
 
 			IntPtr context = ImGui.CreateContext();
 			ImGui.SetCurrentContext(context);
+
 			var io = ImGui.GetIO();
-			io.Fonts.AddFontDefault();
+
+			string fontPath = Environment.GetFolderPath(Environment.SpecialFolder.Fonts);
+			const float kFontSize = 24.0f;
+
+			Styles._arialFont = io.Fonts.AddFontFromFileTTF(Path.Combine(fontPath, "arial.ttf"), kFontSize);
+			Styles._comicSansFont = io.Fonts.AddFontFromFileTTF(Path.Combine(fontPath, "comic.ttf"), kFontSize);
+			Styles._consolasFont = io.Fonts.AddFontFromFileTTF(Path.Combine(fontPath, "consola.ttf"), kFontSize);
+			Styles._verdanaFont = io.Fonts.AddFontFromFileTTF(Path.Combine(fontPath, "verdana.ttf"), kFontSize);
+			Styles._dyslexicFont = io.Fonts.AddFontFromFileTTF("Fonts/OpenDyslexic3-Regular.ttf", kFontSize);
+			Styles._proggyCleanFont = io.Fonts.AddFontDefault();
+
+#if DEBUG // other operating systems might not work here
+			Debug.Assert(Styles._arialFont.NativePtr       != null);
+			Debug.Assert(Styles._comicSansFont.NativePtr   != null);
+			Debug.Assert(Styles._consolasFont.NativePtr    != null);
+			Debug.Assert(Styles._verdanaFont.NativePtr     != null);
+			Debug.Assert(Styles._dyslexicFont.NativePtr    != null);
+			Debug.Assert(Styles._proggyCleanFont.NativePtr != null);
+#endif // DEBUG
+
+			Styles._currentFont = Styles._proggyCleanFont;
+
 
 			//Set the config filepath to something in AppData
 			//The following does not feel like the intended way, but it's the only way that I saw
@@ -252,8 +274,6 @@ void main()
 
 			_frameBegun = true;
 			ImGui.NewFrame();
-	
-			ImGui.DockSpaceOverViewport(ImGui.GetMainViewport());
 		}
 
 		/// <summary>

@@ -84,6 +84,17 @@ namespace igLibrary.Core
 			public uint[]? _blocks;        // The block information
 			public byte[] _compressedData; // The actual compressed data
 
+			public DateTime FriendlyModTime
+			{
+				get => new DateTime(2000, 1, 1).AddSeconds(_modificationTime);
+				set
+				{
+					_modificationTime = (uint)(value - new DateTime(2000, 1, 1)).TotalSeconds;
+				}
+			}
+
+			public bool HasModTime => _modificationTime != 0;
+
 
 			/// <summary>
 			/// Determines the size of the blocks
@@ -92,7 +103,7 @@ namespace igLibrary.Core
 			/// <returns>The block type</returns>
 			public EBlockType GetBlockType(uint sectorSize)
 			{
-				if(_blocks == null) return EBlockType.kNone;
+				if(_blockIndex == 0xFFFFFFFF) return EBlockType.kNone;
 				if(0x7F * sectorSize < _length)
 				{
 					if(0x7FFF * sectorSize < _length)
@@ -425,7 +436,7 @@ namespace igLibrary.Core
 		/// <summary>
 		/// Go through and update all the file hashes
 		/// </summary>
-		private void UpdateFileHashes()
+		public void UpdateFileHashes()
 		{
 			for(int i = 0; i < _files.Count; i++)
 			{
@@ -659,6 +670,7 @@ namespace igLibrary.Core
 			 && type != CompressionType.kUncompressed)
 			{
 				fileInfo._blockIndex = 0xFFFFFFFF;
+				fileInfo._blocks = null;
 			}
 
 			//Add in setting the modification time for the funny
@@ -715,6 +727,32 @@ namespace igLibrary.Core
 
 
 		/// <summary>
+		/// Get a file
+		/// </summary>
+		/// <param name="filePath">the logical path of the file</param>
+		/// <returns>The <c>FileInfo</c> or null if it doesn't exist</returns>
+		public FileInfo? GetFile(string filePath)
+		{
+			return GetFile(HashFilePath(filePath));
+		}
+
+
+		/// <summary>
+		/// Get a file
+		/// </summary>
+		/// <param name="hash">the logical name hash of the file</param>
+		/// <returns>The <c>FileInfo</c> or null if it doesn't exist</returns>
+		public FileInfo? GetFile(uint hash)
+		{
+			//check if the file already exists, return it if so
+			int index = HashSearch(_files, _archiveHeader._numFiles, _archiveHeader._hashSearchDivider, _archiveHeader._hashSearchSlop, hash);
+			if(index >= 0) return _files[index];
+
+			return null;
+		}
+
+
+		/// <summary>
 		/// Get or add a file
 		/// </summary>
 		/// <param name="filePath">the logical path of the file</param>
@@ -759,7 +797,8 @@ namespace igLibrary.Core
 		/// </summary>
 		private void CalculateHashSearchProperties()
 		{
-			_archiveHeader._hashSearchDivider = uint.MaxValue / _archiveHeader._numFiles;
+			_archiveHeader._numFiles = (uint)_files.Count;
+			_archiveHeader._hashSearchDivider = uint.MaxValue / (_archiveHeader._numFiles == 0 ? 1 : _archiveHeader._numFiles);
 
 			int TopMatchIndex = 0;
 			for (int i = 0x0; i < _files.Count; i++)
@@ -994,6 +1033,17 @@ namespace igLibrary.Core
 		{
 			bool success = Delete(workItem._path);
 			workItem.SetStatus(success ? igFileWorkItem.Status.kStatusComplete : igFileWorkItem.Status.kStatusInvalidPath);
+		}
+
+
+		/// <summary>
+		/// Unlinks (deletes) a file
+		/// </summary>
+		/// <param name="fileInfo">the file info</param>
+		public void Unlink(FileInfo fileInfo)
+		{
+			_files.Remove(fileInfo);
+			CalculateHashSearchProperties();
 		}
 
 

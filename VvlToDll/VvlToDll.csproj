@@ -23,20 +23,4 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-
-
-	<!--==================-->
-	<!-- Post Build Tasks -->
-	<!--==================-->
-
-	<ItemGroup>
-		<ArkFiles Include="../Resources/ArkCore/**"/>
-	</ItemGroup>
-
-	<Target Name="Debug|Release" AfterTargets="AfterBuild">
-		<Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/ArkCore/%(RecursiveDir)" SkipUnchangedFiles="true"/>
-	</Target>
-	<Target Name="Debug|Release" AfterTargets="Publish">
-		<Copy SourceFiles="@(ArkFiles)" DestinationFolder="$(OutDir)/publish/ArkCore/%(RecursiveDir)" SkipUnchangedFiles="true"/>
-	</Target>
 </Project>

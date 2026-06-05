@@ -29,10 +29,16 @@ namespace igCauldron3
 		/// </summary>
 		public override void Render()
 		{
-			igObjectDirectory? currentDirectory = DirectoryManagerFrame._instance.CurrentDir;
+			DirectoryManagerFrame? dirManager = DirectoryManagerFrame._instance;
+			igObjectDirectory? currentDirectory = null;
+			if (dirManager != null)
+			{
+				currentDirectory = dirManager.CurrentDir;
+			}
+
 			if(ImGui.BeginMainMenuBar())
 			{
-				if(ImGui.BeginMenu("File"))
+				if(ImGui.BeginMenu("File", dirManager != null))
 				{
 					if(ImGui.MenuItem("Open"))
 					{
@@ -124,9 +130,24 @@ namespace igCauldron3
 					}
 					ImGui.EndMenu();
 				}
+				if (ImGui.BeginMenu("Edit"))
+				{
+					if (ImGui.MenuItem("Settings"))
+					{
+						if (!_wnd._frames.Any(x => x is SettingsFrame))
+						{
+							_wnd._frames.Add(new SettingsFrame(_wnd));
+						}
+						else
+						{
+							ImGui.SetWindowFocus("Settings");
+						}
+					}
+					ImGui.EndMenu();
+				}
 				if(ImGui.BeginMenu("Developer"))
 				{
-					if(ImGui.MenuItem("Dump Class"))
+					if(ImGui.MenuItem("Dump Class", dirManager != null))
 					{
 						_wnd._frames.Add(new DumpClassFrame(_wnd));
 					}
