@@ -15,4 +15,6 @@ namespace igLibrary.Entity
 		public bool _isEnabled = true;
 		public bool _isThreadSafe;
 	}
+
+	public class igComponentDataTable : igTUHashTable<igObject, string> {}
 }
