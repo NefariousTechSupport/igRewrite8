@@ -759,10 +759,15 @@ namespace igLibrary.Core
 		/// <returns>The <c>FileInfo</c></returns>
 		public FileInfo GetAddFile(string filePath)
 		{
-			//check if the file already exists, return it if so
 			uint hash = HashFilePath(filePath);
-			int index = HashSearch(_files, _archiveHeader._numFiles, _archiveHeader._hashSearchDivider, _archiveHeader._hashSearchSlop, hash);
-			if(index >= 0) return _files[index];
+
+			if (_files.Count != 0)
+			{
+				//check if the file already exists, return it if so
+				int index = HashSearch(_files, _archiveHeader._numFiles, _archiveHeader._hashSearchDivider, _archiveHeader._hashSearchSlop, hash);
+				if(index >= 0) return _files[index];
+			}
+
 
 			//if not, generate a new one
 			FileInfo file = new FileInfo();
