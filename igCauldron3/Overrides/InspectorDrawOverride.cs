@@ -28,5 +28,20 @@ namespace igCauldron3
 		/// <param name="obj">the object</param>
 		/// <param name="meta">the type of the object</param>
 		public abstract void Draw2(DirectoryManagerFrame dirFrame, string id, igObject obj, igMetaObject meta);
+
+
+		/// <summary>
+		/// Simpler way of rendering a field
+		/// </summary>
+		/// <param name="id">The id of the ui element</param>
+		/// <param name="target">The target of the operation</param>
+		/// <param name="field">The field to render of the target</param>
+		protected void RenderField(string id, igObject target, igMetaField field)
+		{
+			FieldRenderer.RenderField(id, field._fieldName!, field._fieldHandle!.GetValue(target), field, (newValue) =>
+			{
+				field._fieldHandle!.SetValue(target, newValue);
+			});
+		}
 	}
 }

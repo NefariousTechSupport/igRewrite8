@@ -17,7 +17,7 @@ namespace igLibrary.Gfx
 		public igVertexFormat _format;
 		public IG_GFX_DRAW _primitiveType;
 		public igMemory<byte> _packData;
-		public igVertexArray _vertexArray;
+		public igVertexArray? _vertexArray;
 		public int _vertexArrayRefCount;
 	}
 }

@@ -127,9 +127,6 @@ namespace igLibrary.Core
 		public static IEnumerable<igMetaFieldPlatformInfo> MetaFieldPlatformInfos => _metaFieldPlatformInfos.Values;
 
 
-
-
-
 		/// <summary>
 		/// Currently loaded game
 		/// </summary>
@@ -214,8 +211,6 @@ namespace igLibrary.Core
 		private static Dictionary<string, Type> _dynamicStructs = new Dictionary<string, Type>();
 
 
-
-
 		/// <summary>
 		/// Types to generate dynamic classes for
 		/// </summary>
@@ -276,6 +271,7 @@ namespace igLibrary.Core
 			_metaEnums.Clear();
 			_metaFieldPlatformInfos.Clear();
 			_compoundFieldInfos.Clear();
+			_game = EGame.EV_None;
 
 			// This doesn't fully work, the resources will remain loaded but igArkCore
 			// won't know about them at least
@@ -292,6 +288,8 @@ namespace igLibrary.Core
 		[Obsolete("Use ReadFromXmlFile instead")]
 		public static void ReadFromFile(EGame game)
 		{
+			_game = game;
+
 			System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
 
 			stopwatch.Start();

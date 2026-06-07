@@ -7,10 +7,11 @@
 */
 
 
-namespace igLibrary.Core
+namespace igLibrary.Anim
 {
-	public class igNamedObject : igObject
+	public class igSkeleton2 : igNamedObject
 	{
-		public string? _name;
+		public igSkeletonBoneList _boneList;
+		public igMemory<igMatrix44f> _inverseJointArray;
 	}
 }

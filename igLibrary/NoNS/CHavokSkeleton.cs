@@ -7,10 +7,14 @@
 */
 
 
-namespace igLibrary.Core
+using igLibrary.Anim;
+
+namespace igLibrary
 {
-	public class igNamedObject : igObject
+	public class CHavokSkeleton : igObject
 	{
-		public string? _name;
+		public igSkeleton2 _alchemySkeleton;
+		public ulong _havokSkeleton;
+		public igIntIntHashTable _boneIndexMap;
 	}
 }

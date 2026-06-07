@@ -47,8 +47,12 @@ namespace igLibrary.Core
 		/// Constructor taking in a string
 		/// </summary>
 		/// <param name="name">the string</param>
-		public igHandle(string name): this(new igHandleName(name))
+		public igHandle(string name)
 		{
+			string[] parts = name.Split('.');
+			if(parts.Length != 2) throw new FormatException("Handle string must be namespace.name");
+			_alias = new igName(parts[1]);
+			_namespace = new igName(parts[0]);
 		}
 
 
