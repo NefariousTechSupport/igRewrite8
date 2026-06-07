@@ -54,6 +54,24 @@ namespace igLibrary.Core
 
 
 		/// <summary>
+		/// Registers an externally loaded archive
+		/// </summary>
+		/// <param name="path">The path to the archive</param>
+		/// <param name="archive">The archive</param>
+		/// <returns>The archive</returns>
+		public igArchive RegisterArchive(string path, igArchive archive)
+		{
+			if (TryGetArchive(path, out igArchive? loaded))
+			{
+				throw new Exception("Archive already registered");
+			}
+
+			_archiveList.Append(archive);
+			return archive;
+		}
+
+
+		/// <summary>
 		/// Trys to get an already loaded archive
 		/// </summary>
 		/// <param name="path">The path of the archive to get</param>
