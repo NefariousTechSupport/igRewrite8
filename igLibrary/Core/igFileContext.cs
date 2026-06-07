@@ -131,11 +131,13 @@ namespace igLibrary.Core
 		}
 
 		public igArchive LoadArchive(string path) => _archiveManager.LoadArchive(path);
+		[Obsolete]
 		public void AddStorageDevice(igStorageDevice device)
 		{
 			_devices.Add(device);
 		}
 
+		[Obsolete]
 		public igFileDescriptor Open(string path)
 		{
 			igFilePath fp = new igFilePath();
