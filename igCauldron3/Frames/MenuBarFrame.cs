@@ -155,6 +155,10 @@ namespace igCauldron3
 					{
 						_wnd._frames.Add(new DemoWindowFrame(_wnd));
 					}
+					else if (ImGui.MenuItem("Create Skylander"))
+					{
+						_wnd._frames.Add(new CreateSkylanderFrame(_wnd));
+					}
 					ImGui.EndMenu();
 				}
 				ImGui.EndMainMenuBar();
