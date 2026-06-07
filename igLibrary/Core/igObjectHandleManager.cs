@@ -90,6 +90,19 @@ namespace igLibrary.Core
 				_objectToHandleTable.Add(dir._objectList[i], hnd);
 			}
 		}
+		public void RenameHandle(igHandleName oldName, igHandleName newName)
+		{
+			ulong handleKey = GetHandleKey(oldName._ns, oldName._name);
+			igHandle? handle = _handleTable.GetValueOrDefault(handleKey);
+			if (handle != null)
+			{
+				handle._namespace = newName._ns;
+				handle._alias = newName._name;
+
+				_handleTable.Remove(handleKey);
+				_handleTable.Add(GetHandleKey(newName._ns, newName._name), handle);
+			}
+		}
 		public void AddObject(igObjectDirectory dir, igObject obj, igName name)
 		{
 			igHandle hnd = new igHandle();
