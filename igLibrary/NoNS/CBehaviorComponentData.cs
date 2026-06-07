@@ -15,7 +15,7 @@ namespace igLibrary
 		public string  _characterName;
 		public string  _behaviorEventsFile;
 		public string  _startState;
-		public igObject _eventFilterData;
-		public igObject _handlers;
+		public CBehaviorEventFilterData _eventFilterData;
+		public CBehaviorLogicDataTable _handlers;
 	}
 }
