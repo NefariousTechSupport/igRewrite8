@@ -43,7 +43,7 @@ namespace igLibrary.Core
 		/// <summary>
 		/// Different compression formats
 		/// </summary>
-		enum CompressionType : uint
+		public enum CompressionType : uint
 		{
 			kUncompressed = 0,
 			kZlib = 1,
