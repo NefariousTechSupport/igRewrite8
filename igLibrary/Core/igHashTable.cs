@@ -132,7 +132,7 @@ namespace igLibrary.Core
 
 			for(int i = 0, hashI = 0; i < _keys.Length && hashI < _hashItemCount; i++)
 			{
-				if(KeyTraitsEqual(_keys[i], KeyTraitsInvalid()))
+				if (!KeyTraitsEqual(_keys[i], KeyTraitsInvalid()))
 				{
 					yield return new KeyValuePair<U, T>(_keys[i], _values[i]);
 				}
