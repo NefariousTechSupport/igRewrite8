@@ -22,6 +22,11 @@ namespace igLibrary.Core
 			dir._type = igObjectDirectory.FileType.kIGZ;
 			loader.Read(dir, true);
 			dir._fd = loader._fd;
+			// igObjectDirectory._loader was declared but never actually
+			// assigned anywhere, so igIGZSaver reading dir._loader?._version
+			// would always fall through to its own default. This is needed
+			// for the version fix in igIGZSaver.WriteFile to actually work.
+			dir._loader = loader;
 		}
 	}
 }

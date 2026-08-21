@@ -80,7 +80,17 @@ namespace igLibrary.Core
 		public void WriteFile(igObjectDirectory dir, Stream dst, IG_CORE_PLATFORM platform)
 		{
 			_platform = platform;
-			_version = 0x09;
+			// This used to be hardcoded to 0x09 for every save, no matter what
+			// version the source file actually was. That silently breaks
+			// anything that isn't version 9, for example Skylanders: Spyro's
+			// Adventure on Wii, which is version 5. The rest of this class
+			// already branches on _version in several places, it just never
+			// received the real value. dir._loader is the igIGZLoader that
+			// loaded this directory and already knows the real version, so use
+			// that when resaving a loaded file. Fall back to 9 only when the
+			// directory was never loaded from a file, i.e. brand new content
+			// created in the editor.
+			_version = dir._loader?._version ?? 0x09;
 			_stream = new StreamHelper(dst, igAlchemyCore.isPlatformBigEndian(platform) ? StreamHelper.Endianness.Big : StreamHelper.Endianness.Little);
 			_dir = dir;
 
