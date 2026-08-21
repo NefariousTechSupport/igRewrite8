@@ -2,6 +2,10 @@
 
 A modding tool for the alchemy engine
 
+## Disclaimer:
+
+This tool is proudly anti-AI, do not submit AI pull requests or AI issues, these will be rejected and ignored.
+
 ## Usage
 
 Create a new game config, in the game path, put the directory containing the `archives` folder, (e.g. for PS3 this'll be the `USRDIR` folder, and for Wii U this'll be the `content` folder).
