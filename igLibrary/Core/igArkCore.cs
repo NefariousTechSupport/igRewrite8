@@ -310,7 +310,6 @@ namespace igLibrary.Core
 		/// <param name="game">The game to load the metadata for</param>
 		public static void ReadFromXmlFile(EGame game)
 		{
-			_game = game;
 			System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
 
 			stopwatch.Start();
@@ -319,6 +318,10 @@ namespace igLibrary.Core
 			igArkCoreXmlFile.ArkCoreXmlError? error = loader.Load($"{igArkCoreFile.ArkCoreFolder}/{game}/metaobjects.xml",
 			                                                      $"{igArkCoreFile.ArkCoreFolder}/{game}/metaenums.xml",
 			                                                      $"{igArkCoreFile.ArkCoreFolder}/{game}/metafields.xml");
+
+			// Set here since the loading the xml data resets this
+			_game = game;
+
 			if (error != null)
 			{
 				throw new Exception(error.Message);
