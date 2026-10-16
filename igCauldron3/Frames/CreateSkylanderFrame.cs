@@ -11,6 +11,7 @@ using System.Diagnostics;
 using igLibrary;
 using igLibrary.Core;
 using igLibrary.Entity;
+using Kovah;
 using ImGuiNET;
 
 namespace igCauldron3
@@ -79,6 +80,8 @@ namespace igCauldron3
 
 			igObjectDirectory actorskinDir = CreateActorSkinDir();
 
+			// Copy files to output archive, havok data will be fixed up later
+
 			CopyFileToArchive(archive, pkg, "script",             "scripts/{0}_script.vvl");
 			pkg.Add("actorskin");
 			pkg.Add(actorskinDir._path);
@@ -138,12 +141,9 @@ namespace igCauldron3
 			Debug.Assert(actorData != null);
 			actorData._character = _name;
 			actorData._skin = _name;
-			actorData._characterAnimations = $"Skylanders/{_name}";
 			actorData._characterScript = $"scripts/{_name}";
 			CBehaviorComponentData? behaviorData = actorData.GetComponentData<CBehaviorComponentData>();
 			Debug.Assert(behaviorData != null);
-			behaviorData._behaviorFile = $"behaviors:\\Skylanders\\{kTemplateName}\\{kTemplateName}.hkp";
-			behaviorData._behaviorEventsFile = $"behavior_events:\\Skylanders\\{kTemplateName}_combat.igz";
 			// Directly modify keys and fix the hashtable
 			for (int k = 0; k < behaviorData._handlers._keys.Length; k++)
 			{
@@ -162,10 +162,64 @@ namespace igCauldron3
 			FixHandle(portalMasterPerkLogic, "EliteTrainingAttributeList");
 			FixHandle(portalMasterPerkLogic, "SkylanderCommanderAttributeList");
 
+			// Setup havok stuff, these are already added to the pkg, we just need
+			// to edit the data itself.
+
+			hkRootLevelContainer container = ReadHavokFile(behaviorData._behaviorFile);
+
+			for (uint v = 0; v < container.GetNumVariants(); v++)
+			{
+				hkRootLevelContainerNamedVariant variant = container.GetNamedVariant(v);
+				if (variant.Variant is hkbProjectData havokProject)
+				{
+					hkbProjectStringData? stringData = havokProject.StringData;
+					if (stringData != null)
+					{
+						RenameHavokPaths(stringData.AnimationFilenames);
+
+						RenameHavokBehaviours(stringData.BehaviorFilenames, archive);
+						RenameHavokCharacters(stringData.CharacterFilenames, archive);
+						RenameHavokPaths(stringData.BehaviorFilenames);
+						RenameHavokPaths(stringData.CharacterFilenames);
+
+						stringData.FullPathToSource = RenameHavokPath(stringData.FullPathToSource);
+					}
+				}
+			}
+
+			behaviorData._behaviorFile       = $"behaviors:/Skylanders/{_name}/{_name}.hkp";
+			behaviorData._behaviorEventsFile = $"behavior_events:/Skylanders/{_name}_combat.igz";
+			WriteHavokFile(behaviorData._behaviorFile, archive, container);
+
+			// Havok animation
+
+			container = ReadHavokFile($"anims/{actorData._characterAnimations}.hka");
+
+			for (uint v = 0; v < container.GetNumVariants(); v++)
+			{
+				hkRootLevelContainerNamedVariant variant = container.GetNamedVariant(v);
+				if (variant.Variant is hkaAnimationContainer animdb)
+				{
+					hkaAnimationBinding?[]? bindings = animdb.Bindings;
+					if (bindings != null)
+					{
+						RenameHavokAnimBindings(animdb.Bindings);
+					}
+				}
+			}
+
+			actorData._characterAnimations = $"Skylanders/{_name}";
+			WriteHavokFile($"anims/{actorData._characterAnimations}.hka", archive, container);
+
+			// Write alchemy characterdata out
+
 			MemoryStream characterDataStream = new MemoryStream();
 			characterData.WriteFile(characterDataStream, igRegistry.GetRegistry()._platform);
 			igArchive.FileInfo characterDataFile = archive.GetAddFile(characterData._path);
 			archive.Compress(characterDataFile, characterDataStream);
+
+			// Finally, save the archive
+
 			archive.Save($"{_name}.pak");
 		}
 
@@ -235,6 +289,377 @@ namespace igCauldron3
 
 			pkg.Add(type);
 			pkg.Add(dst);
+		}
+
+
+		/// <summary>
+		/// Rename an array of strings containing filepaths
+		/// </summary>
+		/// <param name="paths">The array of strings</param>
+		private void RenameHavokPaths(string?[]? paths)
+		{
+			if (paths == null)
+			{
+				return;
+			}
+
+			for (uint p = 0; p < paths.Length; p++)
+			{
+				RenameHavokPath(ref paths[p]);
+			}
+		}
+
+
+		/// <summary>
+		/// Rename a strings containing a filepath
+		/// </summary>
+		/// <param name="path">The file path</param>
+		private void RenameHavokPath(ref string? path)
+		{
+			path = RenameHavokPath(path);
+		}
+
+
+		/// <summary>
+		/// Rename a strings containing a filepath
+		/// </summary>
+		/// <param name="path">The file path</param>
+		/// <returns>The renamed string, or null if path is null</returns>
+		private string? RenameHavokPath(string? path)
+		{
+			if (path == null)
+			{
+				return null;
+			}
+
+			// Risk of this being a clbuttic mistake but let's hope not
+			return path.Replace(kTemplateName, _name, StringComparison.OrdinalIgnoreCase);
+		}
+
+
+		/// <summary>
+		/// Renames the references within the havok behaviour packfiles at the given paths
+		/// </summary>
+		/// <param name="paths">The paths</param>
+		/// <param name="archive">The archive to save the modified packfiles to</param>
+		private void RenameHavokBehaviours(string?[]? paths, igArchive archive)
+		{
+			if (paths == null)
+			{
+				return;
+			}
+
+			for (uint p = 0; p < paths.Length; p++)
+			{
+				RenameHavokBehaviour(paths[p], archive);
+			}
+		}
+
+
+		/// <summary>
+		/// Renames the references within a havok behaviour packfiles at the given path
+		/// </summary>
+		/// <param name="path">the path of the packfile</param>
+		/// <param name="archive">The archive to save the modified packfile to</param>
+		private void RenameHavokBehaviour(string? path, igArchive archive)
+		{
+			if (path == null)
+			{
+				return;
+			}
+
+			path = path.Replace('\\', '/');
+
+			string alchemyPath = $"behaviors:/Skylanders/{kTemplateName}/{path}";
+			hkRootLevelContainer container = ReadHavokFile(alchemyPath);
+
+			for (uint v = 0; v < container.GetNumVariants(); v++)
+			{
+				hkRootLevelContainerNamedVariant variant = container.GetNamedVariant(v);
+				if (variant.Variant is hkbBehaviorGraph graph)
+				{
+					graph.Name = $"{_name}_behavior.hkb";
+
+					if (graph.RootGenerator is hkbStateMachine stateMachine)
+					{
+						RenameHavokStateMachine(stateMachine);
+					}
+				}
+			}
+
+			WriteHavokFile(alchemyPath.Replace(kTemplateName, _name), archive, container);
+		}
+
+
+		/// <summary>
+		/// Rename references in a hkbStateMachine
+		/// </summary>
+		/// <param name="stateMachine">the hkbStateMachine</param>
+		private void RenameHavokStateMachine(hkbStateMachine? stateMachine)
+		{
+			if (stateMachine == null || stateMachine.States == null)
+			{
+				return;
+			}
+
+			for (int s = 0; s < stateMachine.States.Length; s++)
+			{
+				hkbStateMachineStateInfo? state = stateMachine.States[s];
+				if (state != null)
+				{
+					RenameHavokGenerator(state.Generator);
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Rename references in a hkbGenerator
+		/// </summary>
+		/// <param name="generator">the hkbGenerator</param>
+		private void RenameHavokGenerator(hkbGenerator? generator)
+		{
+			if (generator == null)
+			{
+				return;
+			}
+
+			if (generator is hkbStateMachine stateMachine)
+			{
+				RenameHavokStateMachine(stateMachine);
+			}
+			else if (generator is hkbModifierGenerator modifierGenerator)
+			{
+				RenameHavokGenerator(modifierGenerator.Generator);
+			}
+			else if (generator is hkbClipGenerator clipGenerator)
+			{
+				clipGenerator.AnimationName = RenameHavokPath(clipGenerator.AnimationName);
+			}
+			else if (generator is hkbLayerGenerator layerGenerator)
+			{
+				if (layerGenerator.Layers != null)
+				{
+					for (int l = 0; l < layerGenerator.Layers.Length; l++)
+					{
+						hkbLayer? layer = layerGenerator.Layers[l];
+						if (layer != null)
+						{
+							RenameHavokGenerator(layer.Generator);
+						}
+					}
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Renames the references within the havok character packfiles at the given paths
+		/// </summary>
+		/// <param name="paths">The paths</param>
+		/// <param name="archive">The archive to save the modified packfiles to</param>
+		private void RenameHavokCharacters(string?[]? paths, igArchive archive)
+		{
+			if (paths == null)
+			{
+				return;
+			}
+
+			for (uint p = 0; p < paths.Length; p++)
+			{
+				RenameHavokCharacter(paths[p], archive);
+			}
+		}
+
+
+		/// <summary>
+		/// Renames the references within a havok character packfile at the given path
+		/// </summary>
+		/// <param name="path">The path</param>
+		/// <param name="archive">The archive to save the modified packfiles to</param>
+		private void RenameHavokCharacter(string? path, igArchive archive)
+		{
+			if (path == null)
+			{
+				return;
+			}
+
+			path = path.Replace('\\', '/');
+
+			string alchemyPath = $"behaviors:/Skylanders/{kTemplateName}/{path}";
+			hkRootLevelContainer container = ReadHavokFile(alchemyPath);
+
+			for (uint v = 0; v < container.GetNumVariants(); v++)
+			{
+				hkRootLevelContainerNamedVariant variant = container.GetNamedVariant(v);
+				if (variant.Variant is hkbCharacterData character)
+				{
+					hkbCharacterStringData? stringData = character.StringData;
+					if (stringData != null)
+					{
+						stringData.BehaviorFilename = RenameHavokPath(stringData.BehaviorFilename);
+						stringData.Name             = RenameHavokPath(stringData.Name);
+						stringData.RigName          = RenameHavokPath(stringData.RigName);
+
+						RenameHavokAssetBundeStringData(stringData.AnimationBundleFilenameData);
+						RenameHavokAssetBundeStringData(stringData.AnimationBundleNameData);
+
+						RenameHavokFileNameMeshNamePairs(stringData.SkinNames);
+					}
+				}
+			}
+
+			WriteHavokFile(alchemyPath.Replace(kTemplateName, _name), archive, container);
+		}
+
+
+		/// <summary>
+		/// Renames the references within an array of hkbAssetBundleStringData objects
+		/// </summary>
+		/// <param name="stringDatas">The hkbAssetBundleStringDatas</param>
+		private void RenameHavokAssetBundeStringData(hkbAssetBundleStringData?[]? stringDatas)
+		{
+			if (stringDatas == null)
+			{
+				return;
+			}
+
+			for (int i = 0; i < stringDatas.Length; i++)
+			{
+				hkbAssetBundleStringData? stringData = stringDatas[i];
+				if (stringData == null)
+				{
+					continue;
+				}
+
+				RenameHavokPaths(stringData.AssetNames);
+				RenameHavokPath(stringData.BundleName);
+			}
+		}
+
+
+		/// <summary>
+		/// Renames the references within an array of hkbCharacterStringDataFileNameMeshNamePair objects
+		/// </summary>
+		/// <param name="pairs">The hkbCharacterStringDataFileNameMeshNamePairs</param>
+		private void RenameHavokFileNameMeshNamePairs(hkbCharacterStringDataFileNameMeshNamePair?[]? pairs)
+		{
+			if (pairs == null)
+			{
+				return;
+			}
+
+			for (int i = 0; i < pairs.Length; i++)
+			{
+				hkbCharacterStringDataFileNameMeshNamePair? pair = pairs[i];
+				if (pair == null)
+				{
+					continue;
+				}
+
+				pair.FileName = RenameHavokPath(pair.FileName);
+				pair.MeshName = RenameHavokPath(pair.MeshName);
+			}
+		}
+
+
+		/// <summary>
+		/// Renames the references within an array of hkaAnimationBinding objects
+		/// </summary>
+		/// <param name="bindings">The hkaAnimationBindings</param>
+		private void RenameHavokAnimBindings(hkaAnimationBinding?[]? bindings)
+		{
+			if (bindings == null)
+			{
+				return;
+			}
+
+			for (uint b = 0; b < bindings.Length; b++)
+			{
+				hkaAnimationBinding? binding = bindings[b];
+				if (binding == null)
+				{
+					continue;
+				}
+
+				binding.OriginalSkeletonName = RenameHavokPath(binding.OriginalSkeletonName);
+			}
+		}
+
+
+		/// <summary>
+		/// Reads a havok packfile
+		/// </summary>
+		/// <param name="path">The alchemy path of the packfile</param>
+		/// <returns>The hkRootLevelContainer</returns>
+		private hkRootLevelContainer ReadHavokFile(string path)
+		{
+			igFile behaviourFile = new igFile();
+			behaviourFile.Open(path);
+			bool success = HavokPackfileReader.Load(behaviourFile._file._handle, out hkRootLevelContainer? container);
+			Debug.Assert(success);
+			Debug.Assert(container != null);
+			return container;
+		}
+
+
+		/// <summary>
+		/// Writes a havok packfile
+		/// </summary>
+		/// <param name="path">The alchemy path to write to</param>
+		/// <param name="archive">The archive to save to</param>
+		/// <param name="container">The hkRootLevelContainer</param>
+		private void WriteHavokFile(string path, igArchive archive, hkRootLevelContainer container)
+		{
+			igFilePath filePath = new igFilePath();
+			filePath.Set(path);
+			path = filePath._nativePath;
+
+			igArchive.FileInfo fileInfo = archive.GetAddFile(path);
+			MemoryStream output = new MemoryStream();
+			GetHavokSaveInfo(out uint containerVersion, out EVersion metadataVersion, out bool is64bit, out Sapphire.StreamHelper.Endianness endianness, out bool reusePadding, out bool emptyBaseClassOptimisation);
+			HavokPackfileWriter.Save(output, containerVersion, metadataVersion, is64bit, endianness, reusePadding, emptyBaseClassOptimisation, 0, container);
+			output.Seek(0, SeekOrigin.Begin);
+			FileStream debug = File.OpenWrite(Path.GetFileName(path));
+			output.WriteTo(debug);
+			debug.Close();
+
+			archive.Compress(fileInfo, output);
+		}
+
+
+		/// <summary>
+		/// Helper function to get version information for the current game/platform
+		/// </summary>
+		/// <param name="containerVersion">The container version</param>
+		/// <param name="metadataVersion">The metadata version</param>
+		/// <param name="is64bit">Whether the platform is 64-bit</param>
+		/// <param name="endianness">The endianness of the platform</param>
+		/// <param name="reusePadding">Whether to reuse padding of a base class</param>
+		/// <param name="emptyBaseClassOptimisation">Whether to whatever this is</param>
+		/// <exception cref="NotImplementedException">Thrown if a game is not implemented</exception>
+		private static void GetHavokSaveInfo(out uint containerVersion, out EVersion metadataVersion, out bool is64bit, out Sapphire.StreamHelper.Endianness endianness, out bool reusePadding, out bool emptyBaseClassOptimisation)
+		{
+			IG_CORE_PLATFORM platform = igRegistry.GetRegistry()._platform;
+			is64bit = igAlchemyCore.isPlatform64Bit(platform);
+			endianness = igAlchemyCore.isPlatformBigEndian(platform) ? Sapphire.StreamHelper.Endianness.Big : Sapphire.StreamHelper.Endianness.Little;
+			// MSVC compiler
+			reusePadding = platform == IG_CORE_PLATFORM.IG_CORE_PLATFORM_WIN32
+			            || platform == IG_CORE_PLATFORM.IG_CORE_PLATFORM_WIN64
+			            || platform == IG_CORE_PLATFORM.IG_CORE_PLATFORM_DURANGO;
+			// Unsure
+			emptyBaseClassOptimisation = false;
+
+			switch (igArkCore.Game)
+			{
+				case igArkCore.EGame.EV_SkylandersSuperchargers:
+				case igArkCore.EGame.EV_SkylandersImaginators:
+					containerVersion = 0x0B;
+					metadataVersion = EVersion.hk_2014_1_0_r1;
+					break;
+				default:
+					throw new NotImplementedException($"Havok support for version {igArkCore.Game} unimplemented");
+			}
 		}
 	}
 }
