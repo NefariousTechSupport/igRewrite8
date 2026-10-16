@@ -171,12 +171,20 @@ namespace igCauldron3.Graphics
 		/// <param name="image">The igImage2 to create the texture with</param>
 		/// <returns>Returns an opengl texture handle</returns>
 		/// <exception cref="ArgumentNullException">thrown when the image is null</exception>
-		/// <exception cref="NotImplementedException">Thrown when a texture format isn't specified</exception>
-		public override unsafe int CreateTexture(igResourceUsage usage, igImage2 image)
+		public override unsafe bool CreateTexture(igResourceUsage usage, igImage2 image)
 		{
-			if(image == null) throw new ArgumentNullException("image is null!");
-			if(image._texHandle != -1) return image._texHandle;
-			if(image._format == null) throw new ArgumentNullException($"image._format for {image._name} is null! this shouldn't happen!");
+			if(image == null)
+			{
+				throw new ArgumentNullException("image is null!");
+			}
+			if(image._texHandle != -1)
+			{
+				return true;
+			}
+			if(image._format == null)
+			{
+				return false;
+			}
 
 			image._texHandle = GL.GenTexture();
 			GL.ActiveTexture(TextureUnit.Texture0);
@@ -199,8 +207,7 @@ namespace igCauldron3.Graphics
 					int formatIndex = Array.FindIndex<compressedMetaimage>(_compressedPlatformEnums, x => x._name == image._format._canonical._name);
 					if(formatIndex < 0)
 					{
-						GL.DeleteTexture(image._texHandle);
-						throw new NotImplementedException($"format {image._format._name} is not implemented!");
+						goto error;
 					}
 					uint mipWidth = (image._width + 3u) & ~3u;
 					uint mipHeight = (image._height + 3u) & ~3u;
@@ -221,8 +228,7 @@ namespace igCauldron3.Graphics
 					int formatIndex = Array.FindIndex<pixelMetaimage>(_pixelPlatformEnums, x => x._name == image._format._canonical._name);
 					if(formatIndex < 0)
 					{
-						GL.DeleteTexture(image._texHandle);
-						throw new NotImplementedException($"format {image._format._name} is not implemented!");
+						goto error;
 					}
 					for(int i = 0; i < image._levelCount; i++)
 					{
@@ -233,7 +239,11 @@ namespace igCauldron3.Graphics
 					}
 				}
 			}
-			return image._texHandle;
+			return true;
+		error:
+			GL.DeleteTexture(image._texHandle);
+			image._texHandle = -1;
+			return false;
 		}
 
 

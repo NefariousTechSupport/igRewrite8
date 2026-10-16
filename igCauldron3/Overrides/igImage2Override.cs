@@ -38,7 +38,7 @@ namespace igCauldron3
 		/// <param name="id">the id to render with</param>
 		/// <param name="obj">the object</param>
 		/// <param name="meta">the type of the object</param>
-		public unsafe override void Draw2(DirectoryManagerFrame dirFrame, string id, igObject obj, igMetaObject meta)
+		public override void Draw2(DirectoryManagerFrame dirFrame, string id, igObject obj, igMetaObject meta)
 		{
 			igImage2 image = (igImage2)obj;
 
@@ -55,7 +55,20 @@ namespace igCauldron3
 					return;
 				}
 
-				igTContext<igBaseGraphicsDevice>._instance.CreateTexture(igResourceUsage.kUsageDefault, image);
+				bool succeeded = igTContext<igBaseGraphicsDevice>._instance.CreateTexture(igResourceUsage.kUsageDefault, image);
+				if (!succeeded)
+				{
+					string error;
+					if (image._format == null)
+					{
+						error = "Failed to read the image format, the data may be corrupt or the metaimages may not be read properly! Please log a bug!";
+					}
+					else
+					{
+						error = $"Failed to interpret texture of format \"{image._format._name}\"! Please log a bug!";
+					}
+					ImGui.TextColored(Styles._errorTxt, error);
+				}
 			}
 
 			object? castName = image._name;
@@ -88,7 +101,10 @@ namespace igCauldron3
 					igTContext<igBaseGraphicsDevice>._instance.CreateTexture(igResourceUsage.kUsageDefault, image);
 				}
 			}
-			ImGui.Image((IntPtr)image._texHandle, new System.Numerics.Vector2(image._width, image._height), System.Numerics.Vector2.UnitY, System.Numerics.Vector2.UnitX);
+			if (image._texHandle != -1)
+			{
+				ImGui.Image((IntPtr)image._texHandle, new System.Numerics.Vector2(image._width, image._height), System.Numerics.Vector2.UnitY, System.Numerics.Vector2.UnitX);
+			}
 		}
 	}
 }
