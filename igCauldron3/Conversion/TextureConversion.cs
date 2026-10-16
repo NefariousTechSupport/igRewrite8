@@ -28,7 +28,7 @@ namespace igCauldron3.Conversion
 		/// <param name="ext">The file extension to write to</param>
 		public static void Export(igImage2 image, Stream dst, string ext)
 		{
-			int res = image.ConvertClone(igMetaImageInfo.FindFormat("r8g8b8a8"), igMemoryContext.Singleton.GetMemoryPoolByName("Image"), out igImage2? r8g8b8a8Image);
+			int res = image.ConvertClone(igImagePlugin.r8g8b8a8, igMemoryContext.Singleton.GetMemoryPoolByName("Image"), out igImage2? r8g8b8a8Image);
 			if (res != 0 || r8g8b8a8Image == null) return;
 			Image<Rgba32> output = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(r8g8b8a8Image._data.Buffer, r8g8b8a8Image._width, r8g8b8a8Image._height);
 			switch(ext)
