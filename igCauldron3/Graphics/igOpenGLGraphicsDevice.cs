@@ -7,6 +7,7 @@
 */
 
 
+using igLibrary.Core;
 using igLibrary.Gfx;
 using igLibrary.Graphics;
 using OpenTK.Graphics.OpenGL4;
@@ -207,7 +208,24 @@ namespace igCauldron3.Graphics
 					int formatIndex = Array.FindIndex<compressedMetaimage>(_compressedPlatformEnums, x => x._name == image._format._canonical._name);
 					if(formatIndex < 0)
 					{
-						goto error;
+						GL.DeleteTexture(image._texHandle);
+						image._texHandle = -1;
+
+						// We can't use the native format so use r8g8b8a8 instead
+						int errorCode = image.ConvertClone(igImagePlugin.r8g8b8a8, igMemoryContext.Singleton.GetMemoryPoolByName("Image"), out igImage2? r8g8b8a8Image);
+						if (errorCode < 0 || r8g8b8a8Image == null)
+						{
+							return false;
+						}
+
+						if (!CreateTexture(usage, r8g8b8a8Image))
+						{
+							return false;
+						}
+
+						image._texHandle = r8g8b8a8Image._texHandle;
+						// Texture should be properly allocated so we can just return
+						return true;
 					}
 					uint mipWidth = (image._width + 3u) & ~3u;
 					uint mipHeight = (image._height + 3u) & ~3u;
@@ -215,8 +233,14 @@ namespace igCauldron3.Graphics
 					uint blockHeight = image._format.GetBlockHeight();
 					for(int i = 0; i < image._levelCount; i++)
 					{
-						GL.CompressedTexImage2D(TextureTarget.Texture2D, i, _compressedPlatformEnums[formatIndex]._format,
-							(int)mipWidth, (int)mipHeight, 0, (int)image._format.GetTextureSize((int)mipWidth, (int)mipHeight, image._depth, 1, image._imageCount),
+						GL.CompressedTexImage2D(
+							TextureTarget.Texture2D,
+							i,
+							_compressedPlatformEnums[formatIndex]._format,
+							(int)mipWidth,
+							(int)mipHeight,
+							0,
+							(int)image._format.GetTextureSize((int)mipWidth, (int)mipHeight, image._depth, 1, image._imageCount),
 							(IntPtr)(data + image._format.GetTextureLevelOffset(image._width, image._height, image._depth, image._levelCount, image._imageCount, i, 0))
 						);
 						mipWidth >>= 1;     if(mipWidth < blockWidth)   mipWidth = blockWidth;
@@ -228,22 +252,27 @@ namespace igCauldron3.Graphics
 					int formatIndex = Array.FindIndex<pixelMetaimage>(_pixelPlatformEnums, x => x._name == image._format._canonical._name);
 					if(formatIndex < 0)
 					{
-						goto error;
+						GL.DeleteTexture(image._texHandle);
+						image._texHandle = -1;
+						return false;
 					}
 					for(int i = 0; i < image._levelCount; i++)
 					{
-						GL.TexImage2D(TextureTarget.Texture2D, i, _pixelPlatformEnums[formatIndex]._internalFormat,
-							image._width, image._height, 0, _pixelPlatformEnums[formatIndex]._format, _pixelPlatformEnums[formatIndex]._pixelType,
+						GL.TexImage2D(
+							TextureTarget.Texture2D,
+							i,
+							_pixelPlatformEnums[formatIndex]._internalFormat,
+							image._width >> i,
+							image._height >> i,
+							0,
+							_pixelPlatformEnums[formatIndex]._format,
+							_pixelPlatformEnums[formatIndex]._pixelType,
 							(IntPtr)(data + image.GetTextureLevelOffset(i, 0))
 						);
 					}
 				}
 			}
 			return true;
-		error:
-			GL.DeleteTexture(image._texHandle);
-			image._texHandle = -1;
-			return false;
 		}
 
 
