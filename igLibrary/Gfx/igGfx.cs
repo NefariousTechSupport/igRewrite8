@@ -1072,6 +1072,100 @@ namespace igLibrary.Gfx
 				}
 			}
 		}
+
+
+		private static unsafe void Convert_bc4_to_r8g8b8a8(byte* src, byte* dst, byte stride, bool isSigned, uint numBlocks, uint blockWidth, uint blockHeight, uint dstPixelWidth)
+		{
+			// Note: isSigned isn't implemented right now
+			for(uint i = 0; i < numBlocks; i++, src += stride)
+			{
+				byte   a0    = src[0x00];
+				byte   a1    = src[0x01];
+				ulong  aCodes= ((ulong)src[0x07] << 40) | ((ulong)src[0x06] << 32) | ((uint)src[0x05] << 24) | ((uint)src[0x04] << 16) | ((uint)src[0x03] << 8) | src[0x02];
+
+				//Multiply by 4 cos block size
+				uint pixelX = (i % blockWidth) << 2;
+				uint pixelY = (i / blockWidth) << 2;
+
+				for(uint j = 0; j < 16; j++)
+				{
+					uint pixelOffset = ((pixelY + (j >> 2)) * dstPixelWidth + pixelX + (j & 3)) << 2;	//Multiply by 4 cos r8g8b8a8 pixel size
+					byte code = (byte)((aCodes >> (int)(j * 3)) & 0x07);
+
+					//Could potentially cause an IndexOutOfBoundsException when the target width or height is not a multiple of 4
+					if(a0 > a1) switch(code)
+					{
+						case 0:
+							dst[pixelOffset] = a0;
+							break;
+						case 1:
+							dst[pixelOffset] = a1;
+							break;
+						case 2:
+							dst[pixelOffset] = unchecked((byte)((6u*a0 +    a1) / 7u));
+							break;
+						case 3:
+							dst[pixelOffset] = unchecked((byte)((5u*a0 + 2u*a1) / 7u));
+							break;
+						case 4:
+							dst[pixelOffset] = unchecked((byte)((4u*a0 + 3u*a1) / 7u));
+							break;
+						case 5:
+							dst[pixelOffset] = unchecked((byte)((3u*a0 + 4u*a1) / 7u));
+							break;
+						case 6:
+							dst[pixelOffset] = unchecked((byte)((2u*a0 + 5u*a1) / 7u));
+							break;
+						case 7:
+							dst[pixelOffset] = unchecked((byte)((   a0 + 7u*a1) / 7u));
+							break;
+					}
+					else switch(code)
+					{
+						case 0:
+							dst[pixelOffset] = a0;
+							break;
+						case 1:
+							dst[pixelOffset] = a1;
+							break;
+						case 2:
+							dst[pixelOffset] = unchecked((byte)((4u*a0 +    a1) / 5u));
+							break;
+						case 3:
+							dst[pixelOffset] = unchecked((byte)((3u*a0 + 2u*a1) / 5u));
+							break;
+						case 4:
+							dst[pixelOffset] = unchecked((byte)((2u*a0 + 3u*a1) / 5u));
+							break;
+						case 5:
+							dst[pixelOffset] = unchecked((byte)((1u*a0 + 4u*a1) / 5u));
+							break;
+						case 6:
+							dst[pixelOffset] = 0;
+							break;
+						case 7:
+							dst[pixelOffset] = 0xFF;
+							break;
+					}
+				}
+			}
+		}
+
+
+		public static unsafe void Convert_dxn_to_r8g8b8a8(igImageLevel source, igImageLevel target)
+		{
+			uint numBlocks = source._imageSize / 0x10;
+			uint blockWidth = (source._width + 3) >> 2;
+			uint blockHeight = (source._height + 3) >> 2;
+
+			Convert_bc4_to_r8g8b8a8(source._imageData + 0x00, target._imageData + 0x00, 0x10, false, numBlocks, blockWidth, blockHeight, target._width);
+			Convert_bc4_to_r8g8b8a8(source._imageData + 0x08, target._imageData + 0x01, 0x10, false, numBlocks, blockWidth, blockHeight, target._width);
+
+			for (int i = 0; i < target._imageSize; i += 4)
+			{
+				target._imageData[i + 3] = 0xFF;
+			}
+		}
 #endregion Image conversion
 	}
 }
