@@ -1,0 +1,3 @@
+[submodule "Dependencies/Kovah"]
+	path = Dependencies/Kovah
+	url = https://github.com/NefariousTechSupport/Kovah

@@ -30,6 +30,8 @@
 		<ProjectReference Include="..\igLibrary.AssetConverters\igLibrary.AssetConverters.csproj" />
 	</ItemGroup>
 
+	<Import Project="../SharedPropertySheets/ImportKovah.props" />
+
 	<!-- Package References -->
 
 	<ItemGroup>
