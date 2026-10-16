@@ -94,6 +94,8 @@ namespace igLibrary.Gfx
 			public const uint FourCC_DXT3 = 0x33545844;
 			public const uint FourCC_DXT4 = 0x34545844;
 			public const uint FourCC_DXT5 = 0x35545844;
+			public const uint FourCC_ATI2 = 0x32495441;
+
 			[FieldOffset(0x00)] public uint dwSize;
 			[FieldOffset(0x04)] public DdsPixelFormatFlags dwFlags;
 			[FieldOffset(0x08)] public uint dwFourCC;
@@ -135,6 +137,7 @@ namespace igLibrary.Gfx
 				     if(image._format._name.StartsWith("dxt1")) header.ddspf.dwFourCC = DdsPixelFormat.FourCC_DXT1;
 				else if(image._format._name.StartsWith("dxt3")) header.ddspf.dwFourCC = DdsPixelFormat.FourCC_DXT3;
 				else if(image._format._name.StartsWith("dxt5")) header.ddspf.dwFourCC = DdsPixelFormat.FourCC_DXT5;
+				else if(image._format._name.StartsWith("dxn"))  header.ddspf.dwFourCC = DdsPixelFormat.FourCC_ATI2;
 				else throw new NotImplementedException($"format {image._format._name} is not supported for export");
 			}
 			else
