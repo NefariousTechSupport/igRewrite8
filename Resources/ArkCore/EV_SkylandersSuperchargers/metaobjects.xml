@@ -5297,7 +5297,7 @@
 	<metaobject type="igMetaObject" refname="igVfxDrawTexturedOperator" basetype="igVfxDrawOperator">
 		<metafields>
 			<metafield type="igUnsignedIntMetaField" offset="0x0010" name="_texturedFlags"/>
-			<metafield type="igHandleMetaField" offset="0x0014" name="_material" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igFxMaterial"/>
+			<metafield type="igHandleMetaField" offset="0x0014" name="_material" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igMaterial"/>
 			<metafield type="igObjectRefMetaField" offset="0x0018" name="_animatedFrame" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igVfxAnimatedFrame"/>
 			<metafield type="igObjectRefMetaField" offset="0x001C" name="_animatedFrameMask" construct="false" destruct="false" reconstruct="false" refCounted="true" metaobject="igVfxAnimatedFrame"/>
 			<metafield type="igStructMetaField" offset="0x0020" name="_animatedFrameInstance" implicitAlignment="false" requiredAlignment="4" typeSize="0x04" align="0x04"/>

@@ -68,6 +68,43 @@ public class MetadataTest
 
 
 	/// <summary>
+	/// Ensure #75 does not regress, similar to ImaginatorsMaterialTypeBug
+	/// </summary>
+	public void igVfxDrawTexturedOperatorMaterialHandleBug(igArkCore.EGame game)
+	{
+		igArkCore.ReadFromXmlFile(game);
+
+		// igVfxDrawTexturedOperator
+
+		igMetaObject? drawTexturedOperator = igArkCore.GetObjectMeta("igVfxDrawTexturedOperator");
+		Assert.NotNull(drawTexturedOperator);
+		igMetaField? materialField = drawTexturedOperator.GetFieldByName("_material");
+		Assert.NotNull(materialField);
+		Assert.IsType<igHandleMetaField>(materialField);
+		igHandleMetaField materialHandleField = (igHandleMetaField)materialField;
+		Assert.NotNull(materialHandleField._metaObject);
+		Assert.Equal("igMaterial", materialHandleField._metaObject._name);
+	}
+
+
+
+	/// <summary>
+	/// Ensure #75 does not regress, similar to ImaginatorsMaterialTypeBug
+	/// </summary>
+	[Fact]
+	public void SuperChargersigVfxDrawTexturedOperatorMaterialHandleBug() => igVfxDrawTexturedOperatorMaterialHandleBug(igArkCore.EGame.EV_SkylandersSuperchargers);
+
+
+
+	/// <summary>
+	/// Ensure #75 does not regress, similar to ImaginatorsMaterialTypeBug
+	/// </summary>
+	[Fact]
+	public void ImaginatorsigVfxDrawTexturedOperatorMaterialHandleBug() => igVfxDrawTexturedOperatorMaterialHandleBug(igArkCore.EGame.EV_SkylandersImaginators);
+
+
+
+	/// <summary>
 	/// Ensure issues for imaginators #60, #61, and #62 are not regressed
 	/// </summary>
 	[Fact]
