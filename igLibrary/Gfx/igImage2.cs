@@ -42,10 +42,19 @@ namespace igLibrary.Gfx
 		public unsafe int ConvertClone(igMetaImage target, igMemoryPool pool, out igImage2? other)
 		{
 			other = null;
-			if(_format == null) return -1;
+			if(_format == null)
+			{
+				return -1;
+			}
 
-			if(!_format.TryGetConvertFunction(target, out Action<igImageLevel, igImageLevel>? convertFunction)) return -2;
-			if(convertFunction == null) return -2;
+			if(!_format.TryGetConvertFunction(target, out Action<igImageLevel, igImageLevel>? convertFunction))
+			{
+				return -2;
+			}
+			if(convertFunction == null)
+			{
+				return -2;
+			}
 
 			other = new igImage2();
 			other._width = _width;

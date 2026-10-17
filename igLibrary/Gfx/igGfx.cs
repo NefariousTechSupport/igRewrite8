@@ -7,8 +7,6 @@
 */
 
 
-using igLibrary.Core;
-
 namespace igLibrary.Gfx
 {
 	/// <summary>
@@ -765,6 +763,11 @@ namespace igLibrary.Gfx
 		}
 
 #region Image conversion
+
+		public static unsafe void CopyTexture(igImageLevel source, igImageLevel target)
+		{
+			Buffer.MemoryCopy(source._imageData, target._imageData, target._imageSize, source._imageSize);
+		}
 
 		public static unsafe void Convert_r8g8b8a8_to_b8g8r8a8(igImageLevel source, igImageLevel target)
 		{
