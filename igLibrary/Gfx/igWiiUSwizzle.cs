@@ -53,14 +53,7 @@ namespace igLibrary.Gfx
 		{
 			try
 			{
-				if (metaimage.IsOfType(igImagePlugin.r8g8b8a8) || metaimage.IsOfType(igImagePlugin.r8g8b8a8_srgb))
-				{
-					var surf = GX2.CreateGx2Texture(imageData, "", 0, 0, width, height, 1, (uint)GX2.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM, 0, (uint)GX2.GX2SurfaceDimension.DIM_2D, 0);
-					surf.tileMode = (uint)GetTileModeForR8G8B8A8_UNORM(width, height);
-					surf.data = imageData;
-					return GX2.Decode(surf, 0, 0);
-				}
-				else
+				if (metaimage._isCompressed)
 				{
 					uint format = (uint)(metaimage.IsOfType(igImagePlugin.dxt1) || metaimage.IsOfType(igImagePlugin.dxt1_srgb) ? GX2.GX2SurfaceFormat.T_BC1_UNORM : GX2.GX2SurfaceFormat.T_BC5_UNORM);
 					uint formatHash = igHash.Hash(metaimage._name);
@@ -85,12 +78,33 @@ namespace igLibrary.Gfx
 					}
 					return deswizzledData.ToArray();
 				}
+				else
+				{
+					GX2.GX2SurfaceFormat pixelFormat = GX2.GX2SurfaceFormat.INVALID;
+					if (metaimage.IsOfType(igImagePlugin.r8g8b8a8) || metaimage.IsOfType(igImagePlugin.r8g8b8a8_srgb))
+					{
+						pixelFormat = GX2.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM;
+					}
+					else if (metaimage.IsOfType(igImagePlugin.l8a8))
+					{
+						pixelFormat = GX2.GX2SurfaceFormat.TC_R8_G8_UNORM;
+					}
+
+					if (pixelFormat != GX2.GX2SurfaceFormat.INVALID)
+					{
+						var surf = GX2.CreateGx2Texture(imageData, "", 0, 0, width, height, 1, (uint)pixelFormat, 0, (uint)GX2.GX2SurfaceDimension.DIM_2D, 0);
+						surf.tileMode = (uint)GetTileModeForR8G8B8A8_UNORM(width, height);
+						surf.data = imageData;
+						return GX2.Decode(surf, 0, 0);
+					}
+				}
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine(e);
-				return imageData;
 			}
+
+			return imageData;
 		}
 
 		/// <summary>
