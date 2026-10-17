@@ -59,15 +59,15 @@ namespace igLibrary.Gfx
 
 
 		/// <summary>
-		/// Metadata for uh some kind of texture format
+		/// Metadata for the luminance channel in a texture format
 		/// </summary>
-		public struct igMetaImageLInfo
+		public struct igMetaImageLuminanceInfo
 		{
 			public string _name;
 			public byte _lBits;
 
 
-			public igMetaImageLInfo(string name, byte lBits)
+			public igMetaImageLuminanceInfo(string name, byte lBits)
 			{
 				_name = name;
 				_lBits = lBits;
@@ -312,13 +312,13 @@ namespace igLibrary.Gfx
 		/// <summary>
 		/// The list of some kind of texture format
 		/// </summary>
-		public static readonly igMetaImageLInfo[] lInfo = new igMetaImageLInfo[]
+		public static readonly igMetaImageLuminanceInfo[] lInfo = new igMetaImageLuminanceInfo[]
 		{
-			new igMetaImageLInfo( "l16", 0x10),
-			new igMetaImageLInfo(  "l4", 0x04),
-			new igMetaImageLInfo("l4a4", 0x04),
-			new igMetaImageLInfo(  "l8", 0x08),
-			new igMetaImageLInfo("l8a8", 0x08)
+			new igMetaImageLuminanceInfo( "l16", 0x10),
+			new igMetaImageLuminanceInfo(  "l4", 0x04),
+			new igMetaImageLuminanceInfo("l4a4", 0x04),
+			new igMetaImageLuminanceInfo(  "l8", 0x08),
+			new igMetaImageLuminanceInfo("l8a8", 0x08)
 		};
 
 
@@ -528,7 +528,7 @@ namespace igLibrary.Gfx
 				{
 					canonMeta._bitsPerPixel = (byte)(pixelInfos[pixelIndex]._rBits + pixelInfos[pixelIndex]._gBits + pixelInfos[pixelIndex]._bBits + pixelInfos[pixelIndex]._aBits);
 				}
-				int lIndex = Array.FindIndex<igMetaImageLInfo>(lInfo, x => x._name == canonMeta._name);
+				int lIndex = Array.FindIndex<igMetaImageLuminanceInfo>(lInfo, x => x._name == canonMeta._name);
 				if(lIndex >= 0)
 				{
 					canonMeta._bitsPerPixel += lInfo[lIndex]._lBits;
