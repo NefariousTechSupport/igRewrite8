@@ -857,6 +857,18 @@ namespace igLibrary.Gfx
 		}
 
 
+		public static unsafe void Convert_l8a8_to_r8g8b8a8(igImageLevel source, igImageLevel target)
+		{
+			for(uint i = 0; i < source._imageSize; i += 2)
+			{
+				target._imageData[(i << 1) + 0] = source._imageData[i + 0];
+				target._imageData[(i << 1) + 1] = source._imageData[i + 0];
+				target._imageData[(i << 1) + 2] = source._imageData[i + 0];
+				target._imageData[(i << 1) + 3] = source._imageData[i + 1];
+			}
+		}
+
+
 		public static unsafe void Convert_dxt1_to_r8g8b8a8(igImageLevel source, igImageLevel target)
 		{
 			uint numBlocks = source._imageSize / 0x08;

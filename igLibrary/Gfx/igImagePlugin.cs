@@ -167,6 +167,7 @@ namespace igLibrary.Gfx
 			     r8g8b8a8.AppendConvertFunction(b8g8r8a8, igGfx.Convert_r8g8b8a8_to_b8g8r8a8);
 			r8g8b8a8_srgb.AppendConvertFunction(b8g8r8a8, igGfx.Convert_r8g8b8a8_to_b8g8r8a8);
 			     b8g8r8a8.AppendConvertFunction(r8g8b8a8, igGfx.Convert_b8g8r8a8_to_r8g8b8a8);
+			         l8a8.AppendConvertFunction(r8g8b8a8, igGfx.Convert_l8a8_to_r8g8b8a8);
 			     r5g5b5a1.AppendConvertFunction(r8g8b8a8, igGfx.Convert_r5g5b5a1_to_r8g8b8a8);
 			       r5g6b5.AppendConvertFunction(r8g8b8a8, igGfx.Convert_r5g6b5_to_r8g8b8a8);
 			           a8.AppendConvertFunction(r8g8b8a8, igGfx.Convert_a8_to_r8g8b8a8);
