@@ -7,6 +7,7 @@
 */
 
 
+using System.Diagnostics;
 using igLibrary.Core;
 using igLibrary.Gfx;
 using igLibrary.Graphics;
@@ -28,6 +29,7 @@ namespace igCauldron3.Graphics
 			public PixelInternalFormat _internalFormat;
 			public PixelFormat _format;
 			public PixelType _pixelType;
+			public int[]? _swizzleParams;
 
 
 			/// <summary>
@@ -37,12 +39,24 @@ namespace igCauldron3.Graphics
 			/// <param name="internalFormat">The opengl internal pixel format enum</param>
 			/// <param name="format">The opengl pixel format enum</param>
 			/// <param name="pixelType">The opengl pixel type</param>
-			public pixelMetaimage(string name, PixelInternalFormat internalFormat, PixelFormat format, PixelType pixelType)
+			public pixelMetaimage(string name, PixelInternalFormat internalFormat, PixelFormat format, PixelType pixelType, All[]? swizzleParams = null)
 			{
 				_name = name;
 				_internalFormat = internalFormat;
 				_format = format;
 				_pixelType = pixelType;
+				_swizzleParams = null;
+				if (swizzleParams != null)
+				{
+					Debug.Assert(swizzleParams.Length == 4);
+					_swizzleParams = new int[4]
+					{
+						(int)swizzleParams[0],
+						(int)swizzleParams[1],
+						(int)swizzleParams[2],
+						(int)swizzleParams[3]
+					};
+				}
 			}
 		}
 
@@ -96,7 +110,7 @@ namespace igCauldron3.Graphics
 			//new pixelMetaimage(                       "l4",),
 			//new pixelMetaimage(                     "l4a4",),
 			//new pixelMetaimage(                       "l8",),
-			//new pixelMetaimage(                     "l8a8",),
+			new pixelMetaimage(                     "l8a8", PixelInternalFormat.Rg8, PixelFormat.Rg, PixelType.UnsignedByte, new All[4] { All.Red, All.Red, All.Red, All.Green }),
 			//new pixelMetaimage(          "p4_r4g4b4a3x1",),
 			//new pixelMetaimage(            "p4_r8g8b8a8",),
 			//new pixelMetaimage(          "p8_r4g4b4a3x1",),
@@ -255,6 +269,11 @@ namespace igCauldron3.Graphics
 						GL.DeleteTexture(image._texHandle);
 						image._texHandle = -1;
 						return false;
+					}
+
+					if (_pixelPlatformEnums[formatIndex]._swizzleParams != null)
+					{
+						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleRgba, _pixelPlatformEnums[formatIndex]._swizzleParams);
 					}
 					for(int i = 0; i < image._levelCount; i++)
 					{
