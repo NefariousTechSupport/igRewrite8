@@ -109,7 +109,6 @@ namespace igLibrary.Gfx
 					targetLevel._imageSize = target.GetTextureSize((int)targetLevel._width, (int)targetLevel._height, _depth, 1, 1);
 
 					convertFunction.Invoke(sourceLevel, targetLevel);
-					break;
 				}
 			}
 			return 0;
